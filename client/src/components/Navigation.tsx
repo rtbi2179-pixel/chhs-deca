@@ -44,7 +44,7 @@ export default function Navigation() {
               <div className="flex items-center gap-3 group">
                 <div className="relative">
                   <img
-                    src="https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/ch-paw-logo-MaaCLA7GZJbck6PHDqKTEQ.webp"
+                    src="https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/ch-paw-raw-Ts2uEmXBWx2WUwAFeEiF7m.png"
                     alt="CH Paw Logo"
                     className="w-9 h-9 group-hover:drop-shadow-[0_0_12px_oklch(0.55_0.22_260/0.6)] transition-all duration-300"
                   />
