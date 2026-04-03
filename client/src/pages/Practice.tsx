@@ -156,9 +156,9 @@ export default function Practice() {
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono-data tracking-widest uppercase mb-4">
             {questions.length}+ Practice Questions
           </div>
-          <h1 className="font-display text-5xl sm:text-7xl text-white mb-4">PRACTICE EXAM</h1>
+            <h1 className="font-display text-5xl sm:text-7xl text-white mb-4">PRACTICE EXAM & ROLEPLAY</h1>
           <p className="text-white/60 text-lg max-w-2xl">
-            Real DECA-style questions across all career clusters. Practice, learn from explanations, and track your score.
+            Real DECA-style questions and roleplay event scenarios across all career clusters. Practice, learn from explanations, and track your score.
           </p>
         </div>
       </div>
@@ -234,7 +234,7 @@ export default function Practice() {
                   { label: 'TeachDECA Exams', url: 'https://teachdeca.org/' },
                   { label: 'Quizlet DECA Sets', url: 'https://quizlet.com/subject/deca/' },
                   { label: 'DECA Exam Blueprints', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints' },
-                  { label: 'State High DECA Tests', url: 'https://sites.google.com/scasd.org/statehighdeca/practice-test-resources' },
+                  { label: 'Roleplay Practice Guide', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints' },
                 ].map(({ label, url }) => (
                   <a
                     key={url}
