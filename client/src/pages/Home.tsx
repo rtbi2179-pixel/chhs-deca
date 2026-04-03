@@ -185,7 +185,7 @@ export default function Home() {
 
               {/* DECA Glass Award Image */}
               <motion.img
-                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/deca-glass-raw-Ts2uEmXBWx2WUwAFeEiF7m.png"
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/deca-glass-raw_4bb84ef8.png"
                 alt="DECA Glass Award - First Place ICDC"
                 className="relative z-10 w-full max-w-md h-auto drop-shadow-[0_0_60px_oklch(0.55_0.22_260/0.5)]"
                 animate={{
@@ -441,7 +441,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-8">
             <div className="flex items-center gap-3">
               <img
-                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/ch-paw-raw-Ts2uEmXBWx2WUwAFeEiF7m.png"
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/ch-paw-raw_b4eafc24.png"
                 alt="CH Paw Logo"
                 className="w-10 h-10"
               />
