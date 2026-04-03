@@ -43,10 +43,12 @@ export default function Navigation() {
             <Link href="/">
               <div className="flex items-center gap-3 group">
                 <div className="relative">
-                  <div className="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-display text-lg group-hover:shadow-[0_0_20px_oklch(0.55_0.22_260/0.6)] transition-shadow duration-300">
-                    D
-                  </div>
-                  <div className="absolute inset-0 rounded-lg bg-blue-500 opacity-0 group-hover:opacity-20 blur-md transition-opacity duration-300" />
+                  <img
+                    src="https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/ch-paw-logo-MaaCLA7GZJbck6PHDqKTEQ.webp"
+                    alt="CH Paw Logo"
+                    className="w-9 h-9 group-hover:drop-shadow-[0_0_12px_oklch(0.55_0.22_260/0.6)] transition-all duration-300"
+                  />
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-20 blur-md transition-opacity duration-300" />
                 </div>
                 <div>
                   <span className="font-display text-xl text-white tracking-wider">CHHS DECA</span>

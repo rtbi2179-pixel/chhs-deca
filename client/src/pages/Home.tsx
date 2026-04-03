@@ -440,7 +440,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-8">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-display text-xl">D</div>
+              <img
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/ch-paw-logo-MaaCLA7GZJbck6PHDqKTEQ.webp"
+                alt="CH Paw Logo"
+                className="w-10 h-10"
+              />
               <div>
                 <div className="font-display text-xl text-white tracking-wider">CHHS DECA</div>
                 <div className="text-blue-400/60 text-xs font-mono-data tracking-widest">ROAD TO ICDC</div>
