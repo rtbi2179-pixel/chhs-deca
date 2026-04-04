@@ -632,7 +632,7 @@ export default function Events() {
           backgroundPosition: 'center',
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-[oklch(0.07_0.01_265/0.7)] via-[oklch(0.07_0.01_265/0.85)] to-[oklch(0.07_0.01_265)]" />
+        {/* Dark overlay removed for transparency */}
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono-data tracking-widest uppercase mb-4">
             60+ Competitive Events

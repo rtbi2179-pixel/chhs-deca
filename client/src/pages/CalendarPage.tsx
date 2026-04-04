@@ -132,8 +132,7 @@ export default function CalendarPage() {
     <div className="min-h-screen bg-[oklch(0.07_0.01_265)]">
       {/* Header */}
       <div className="relative pt-32 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[oklch(0.09_0.015_265)] to-[oklch(0.07_0.01_265)]" />
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
+        {/* Background overlays removed for transparency */}
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono-data tracking-widest uppercase mb-4">
             2025–2026 Season

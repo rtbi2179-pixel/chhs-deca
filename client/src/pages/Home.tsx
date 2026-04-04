@@ -93,17 +93,9 @@ export default function Home() {
           backgroundPosition: 'center right',
         }}
       >
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[oklch(0.07_0.01_265)] via-[oklch(0.07_0.01_265/0.88)] to-[oklch(0.07_0.01_265/0.25)]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[oklch(0.07_0.01_265)] via-transparent to-transparent" />
+        {/* Dark overlay - removed for transparency */}
 
-        {/* Animated grid lines */}
-        <div className="absolute inset-0 opacity-5"
-          style={{
-            backgroundImage: 'linear-gradient(oklch(0.55 0.22 260) 1px, transparent 1px), linear-gradient(90deg, oklch(0.55 0.22 260) 1px, transparent 1px)',
-            backgroundSize: '80px 80px',
-          }}
-        />
+        {/* Animated grid lines - removed for transparency */}
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-16">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-4rem)]">
@@ -177,15 +169,11 @@ export default function Home() {
               transition={{ delay: 0.3, duration: 0.8 }}
               className="relative h-[500px] lg:h-[700px] hidden lg:flex items-center justify-center"
             >
-              {/* Glow backdrop */}
-              <div className="absolute inset-0 rounded-2xl" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-blue-600/15 rounded-full blur-3xl animate-pulse-glow" />
-              <div className="absolute top-1/4 right-1/4 w-32 h-32 bg-blue-400/10 rounded-full blur-2xl" />
-              <div className="absolute bottom-1/4 left-1/3 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl" />
+              {/* Glow backdrop - removed for transparency */}
 
               {/* DECA Glass Award Image */}
               <motion.img
-                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/deca-glass-raw_4bb84ef8.png"
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/deca-glass-fixed_b5739b0c.png"
                 alt="DECA Glass Award - First Place ICDC"
                 className="relative z-10 w-full max-w-md h-auto drop-shadow-[0_0_60px_oklch(0.55_0.22_260/0.5)]"
                 animate={{
