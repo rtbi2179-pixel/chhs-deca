@@ -42,6 +42,8 @@ export default function Discussions() {
 
   const createThreadMutation = trpc.discussions.createThread.useMutation()
   const createReplyMutation = trpc.discussions.createReply.useMutation()
+  const deleteThreadMutation = trpc.discussions.deleteThread.useMutation()
+  const deleteReplyMutation = trpc.discussions.deleteReply.useMutation()
 
   const handleCreateThread = async () => {
     if (!isAuthenticated) {
@@ -97,6 +99,31 @@ export default function Discussions() {
   const handleThreadClick = (e: React.MouseEvent, threadId: number | null) => {
     e.stopPropagation()
     setSelectedThreadId(selectedThreadId === threadId ? null : threadId)
+  }
+
+  const handleDeleteThread = async (e: React.MouseEvent, threadId: number) => {
+    e.stopPropagation()
+    if (!confirm('Are you sure you want to delete this thread? All replies will also be deleted.')) return
+    
+    try {
+      await deleteThreadMutation.mutateAsync({ threadId })
+      setSelectedThreadId(null)
+      toast.success('Thread deleted')
+    } catch (error) {
+      toast.error('Failed to delete thread')
+    }
+  }
+
+  const handleDeleteReply = async (e: React.MouseEvent, replyId: number) => {
+    e.stopPropagation()
+    if (!confirm('Are you sure you want to delete this reply?')) return
+    
+    try {
+      await deleteReplyMutation.mutateAsync({ replyId })
+      toast.success('Reply deleted')
+    } catch (error) {
+      toast.error('Failed to delete reply')
+    }
   }
 
   const filteredThreads = threads.filter(t =>
@@ -304,9 +331,20 @@ export default function Discussions() {
                               <span>{thread?.views || 0} views</span>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 text-white/40">
-                            <MessageCircle size={16} />
-                            <span className="text-sm font-semibold">0</span>
+                          <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-2 text-white/40">
+                              <MessageCircle size={16} />
+                              <span className="text-sm font-semibold">0</span>
+                            </div>
+                            {(isThreadAuthor || user?.role === 'admin') && (
+                              <button
+                                onClick={(e) => handleDeleteThread(e, thread?.id || 0)}
+                                className="text-white/40 hover:text-red-400 transition-colors"
+                                title="Delete thread"
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -335,12 +373,9 @@ export default function Discussions() {
                                           <Heart size={12} />
                                           {r.reply?.likes || 0}
                                         </div>
-                                        {user?.id === r.author?.id && (
+                                        {(user?.id === r.author?.id || user?.role === 'admin') && (
                                           <button
-                                            onClick={(e) => {
-                                              e.stopPropagation()
-                                              toast.info('Delete functionality coming soon')
-                                            }}
+                                            onClick={(e) => handleDeleteReply(e, r.reply?.id || 0)}
                                             className="text-white/40 hover:text-red-400 transition-colors"
                                             title="Delete reply"
                                           >

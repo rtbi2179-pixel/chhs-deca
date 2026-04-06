@@ -147,11 +147,16 @@ const categoryIcons: Record<string, any> = {
   fundraiser: Zap,
 }
 
-export default function Volunteer() {
+const Volunteer = () => {
   const { user, isAuthenticated } = useAuth()
   const [expandedId, setExpandedId] = useState<number | null>(null)
   const [signedUpIds, setSignedUpIds] = useState<number[]>([])
+  const [showSignups, setShowSignups] = useState<number | null>(null)
   const signUpMutation = trpc.volunteers.signUp.useMutation()
+  const { data: signups = [] } = trpc.volunteers.getByOpportunity.useQuery(
+    { opportunityId: showSignups || 0 },
+    { enabled: !!showSignups }
+  )
 
   const handleSignUp = async (opportunityId: number) => {
     if (!isAuthenticated) {
@@ -277,6 +282,16 @@ export default function Volunteer() {
                       <div className="flex items-center justify-between">
                         <span className="text-white/40 text-xs">{opp.spotsFilled}/{opp.spotsTotal} spots filled</span>
                         <div className="flex items-center gap-2">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setShowSignups(opp.id)
+                            }}
+                            className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white text-xs font-semibold transition-all border border-white/10 hover:border-blue-500/30"
+                            title="View who signed up"
+                          >
+                            View Signups ({opp.spotsFilled})
+                          </button>
                           {isSigned && (
                             <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-green-500/20 border border-green-500/30 text-green-300 text-xs font-semibold">
                               <CheckCircle size={12} />
@@ -360,6 +375,53 @@ export default function Volunteer() {
           </Link>
         </motion.div>
       </section>
+
+      {/* ── Signups Modal ── */}
+      <AnimatePresence>
+        {showSignups && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowSignups(null)}
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-[oklch(0.12_0.01_265)] border border-blue-500/30 rounded-2xl p-6 max-w-md w-full max-h-96 overflow-y-auto"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-white font-bold text-lg">Volunteers Signed Up</h3>
+                <button
+                  onClick={() => setShowSignups(null)}
+                  className="text-white/40 hover:text-white transition-colors"
+                >
+                  ✕
+                </button>
+              </div>
+              
+              {signups.length === 0 ? (
+                <p className="text-white/50 text-center py-8">No one has signed up yet</p>
+              ) : (
+                <div className="space-y-3">
+                  {signups.map((item: any, idx: number) => (
+                    <div key={idx} className="p-3 bg-white/5 rounded-lg border border-white/10">
+                      <p className="text-white font-semibold text-sm">{item.user?.name}</p>
+                      <p className="text-white/50 text-xs">{item.user?.email}</p>
+                      <p className="text-blue-400 text-xs mt-1 capitalize">Status: {item.signup?.status?.replace('_', ' ')}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
+
+export default Volunteer

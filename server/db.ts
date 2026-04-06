@@ -3,6 +3,8 @@ import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
+const ADMIN_EMAILS = ['rtbi2179@gmail.com', 'sahan.mallampati@gmail.com'];
+
 let _db: ReturnType<typeof drizzle> | null = null;
 
 // Lazily create the drizzle instance so local tooling can run without a DB.
@@ -55,7 +57,7 @@ export async function upsertUser(user: InsertUser): Promise<void> {
     if (user.role !== undefined) {
       values.role = user.role;
       updateSet.role = user.role;
-    } else if (user.openId === ENV.ownerOpenId) {
+    } else if (user.openId === ENV.ownerOpenId || (user.email && ADMIN_EMAILS.includes(user.email))) {
       values.role = 'admin';
       updateSet.role = 'admin';
     }
@@ -177,4 +179,47 @@ export async function getDiscussionReplies(threadId: number) {
   }).from(discussionReplies)
     .innerJoin(users, eq(discussionReplies.userId, users.id))
     .where(eq(discussionReplies.threadId, threadId));
+}
+
+// Delete discussion thread (only owner or admin)
+export async function deleteDiscussionThread(threadId: number, userId: number, userRole: string): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+
+  try {
+    const thread = await db.select().from(discussionThreads).where(eq(discussionThreads.id, threadId)).limit(1);
+    if (thread.length === 0) return false;
+
+    // Only owner or admin can delete
+    if (thread[0].userId !== userId && userRole !== 'admin') return false;
+
+    // Delete replies first
+    await db.delete(discussionReplies).where(eq(discussionReplies.threadId, threadId));
+    // Then delete thread
+    await db.delete(discussionThreads).where(eq(discussionThreads.id, threadId));
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to delete thread:", error);
+    return false;
+  }
+}
+
+// Delete discussion reply (only owner or admin)
+export async function deleteDiscussionReply(replyId: number, userId: number, userRole: string): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+
+  try {
+    const reply = await db.select().from(discussionReplies).where(eq(discussionReplies.id, replyId)).limit(1);
+    if (reply.length === 0) return false;
+
+    // Only owner or admin can delete
+    if (reply[0].userId !== userId && userRole !== 'admin') return false;
+
+    await db.delete(discussionReplies).where(eq(discussionReplies.id, replyId));
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to delete reply:", error);
+    return false;
+  }
 }

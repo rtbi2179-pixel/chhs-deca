@@ -61,6 +61,18 @@ export const appRouter = router({
     getReplies: publicProcedure
       .input(z.object({ threadId: z.number() }))
       .query(({ input }) => db.getDiscussionReplies(input.threadId)),
+    deleteThread: protectedProcedure
+      .input(z.object({ threadId: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        const success = await db.deleteDiscussionThread(input.threadId, ctx.user.id, ctx.user.role);
+        return { success };
+      }),
+    deleteReply: protectedProcedure
+      .input(z.object({ replyId: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        const success = await db.deleteDiscussionReply(input.replyId, ctx.user.id, ctx.user.role);
+        return { success };
+      }),
   }),
 });
 
