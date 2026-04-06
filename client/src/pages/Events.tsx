@@ -571,12 +571,12 @@ function EventCard({ event }: { event: DECAEvent }) {
         <div className="px-5 pb-5 border-t border-white/5">
           <p className="text-white/60 text-sm mt-4 mb-4">{event.description}</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {event.resources.map((res) => {
+            {event.resources.map((res, idx) => {
               const Icon = resourceIcons[res.type]
               const color = resourceColors[res.type]
               return (
                 <a
-                  key={res.url}
+                  key={`${event.code}-${idx}`}
                   href={res.url}
                   target="_blank"
                   rel="noopener noreferrer"

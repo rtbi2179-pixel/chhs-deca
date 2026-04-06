@@ -171,22 +171,6 @@ export default function Home() {
             >
               {/* Glow backdrop - removed for transparency */}
 
-              {/* DECA Glass Award Image */}
-              <motion.img
-                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/deca-glass-fixed_b5739b0c.png"
-                alt="DECA Glass Award - First Place ICDC"
-                className="relative z-10 w-full max-w-md h-auto drop-shadow-[0_0_60px_oklch(0.55_0.22_260/0.5)]"
-                animate={{
-                  rotateZ: [-2, 2, -2],
-                  y: [-8, 8, -8],
-                }}
-                transition={{
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-              />
-
               {/* Floating DECA badge */}
               <motion.div
                 animate={{ y: [-6, 6, -6] }}
@@ -423,6 +407,37 @@ export default function Home() {
         </motion.div>
       </section>
 
+      {/* ── Discussion Forum ── */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="section-divider mb-16" />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="text-center mb-10">
+            <h2 className="font-display text-4xl sm:text-5xl text-white mb-3">COMMUNITY DISCUSSION</h2>
+            <p className="text-white/60 text-lg">Ask questions, share tips, and learn from your teammates</p>
+          </div>
+          <div className="glass-card p-8 border-blue-500/20 text-center">
+            <div className="mb-6">
+              <Users size={40} className="mx-auto text-blue-400 mb-4" />
+              <p className="text-white/60 text-lg mb-6">Join the CHHS DECA community discussion board to ask questions about events, share study tips, and connect with teammates.</p>
+            </div>
+            <a
+              href="https://www.deca.org/forums"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-all hover:shadow-[0_0_30px_oklch(0.55_0.22_260/0.4)]"
+            >
+              Join Discussion
+              <ChevronRight size={16} />
+            </a>
+          </div>
+        </motion.div>
+      </section>
+
       {/* ── Footer ── */}
       <footer className="border-t border-white/5 py-12 px-4 sm:px-6 lg:px-8 mt-8">
         <div className="max-w-7xl mx-auto">
@@ -448,7 +463,7 @@ export default function Home() {
           <div className="section-divider mb-6" />
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-white/20 text-xs font-mono-data">
             <span>© 2025–2026 CHHS DECA Chapter. All rights reserved.</span>
-            <span>Built for students, by students. Road to ICDC.</span>
+            <span>Built by Sahan Mallampati & Ricardo Burciaga</span>
           </div>
         </div>
       </footer>
