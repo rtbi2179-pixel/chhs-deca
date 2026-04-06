@@ -5,8 +5,12 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Users, Clock, MapPin, CheckCircle, Star, ChevronDown, ChevronUp, Heart, Trophy, Zap } from 'lucide-react'
+import { Users, Clock, MapPin, CheckCircle, Star, ChevronDown, ChevronUp, Heart, Trophy, Zap, LogIn } from 'lucide-react'
 import { toast } from 'sonner'
+import { useAuth } from '@/_core/hooks/useAuth'
+import { trpc } from '@/lib/trpc'
+import { getLoginUrl } from '@/const'
+import { Link } from 'wouter'
 
 interface VolunteerOpportunity {
   id: number
@@ -98,399 +102,264 @@ const opportunities: VolunteerOpportunity[] = [
     spotsTotal: 8,
     spotsFilled: 2,
     category: 'competition',
-    description: 'Volunteer at the Texas DECA State CDC. Assist with event logistics, competitor guidance, and general support.',
-    tasks: ['Assist with competitor registration', 'Guide participants', 'Support event room operations', 'Help with awards ceremony'],
+    description: 'Support the Texas DECA State Competition as a volunteer. Help with registration, logistics, and event management.',
+    tasks: ['Manage competitor check-in', 'Assist with room assignments', 'Support event coordinators', 'Help with awards ceremony'],
   },
   {
     id: 7,
-    title: 'Business Plan Workshop Facilitator',
-    date: 'February 9, 2026',
-    time: '3:30 PM – 5:30 PM',
-    location: 'CHHS Room 204',
-    hours: 2,
-    spotsTotal: 6,
+    title: 'ICDC 2026 Volunteer',
+    date: 'April 25-28, 2026',
+    time: 'Full conference',
+    location: 'Orlando, FL',
+    hours: 20,
+    spotsTotal: 5,
     spotsFilled: 1,
-    category: 'chapter',
-    description: 'Help first-year DECA members develop their written event business plans with guidance and feedback.',
-    tasks: ['Review business plan drafts', 'Provide feedback on structure', 'Share tips from your experience', 'Help with formatting and citations'],
+    category: 'competition',
+    description: 'Represent CHHS at the International Career Development Conference in Orlando. Help with logistics and support our competitors.',
+    tasks: ['Assist with team logistics', 'Help with event management', 'Support competitors', 'Represent CHHS professionally'],
   },
   {
     id: 8,
-    title: 'Chapter Awards Banquet Setup',
-    date: 'May 11, 2026',
-    time: '3:00 PM – 6:00 PM',
-    location: 'CHHS Cafeteria',
-    hours: 3,
+    title: 'Mentorship Program Mentor',
+    date: 'Ongoing',
+    time: 'Flexible',
+    location: 'CHHS Campus',
+    hours: 5,
     spotsTotal: 12,
-    spotsFilled: 5,
+    spotsFilled: 8,
     category: 'chapter',
-    description: 'Help set up and decorate for the annual CHHS DECA Awards Banquet celebrating the year\'s achievements.',
-    tasks: ['Set up tables and chairs', 'Arrange decorations', 'Prepare award displays', 'Assist with AV setup', 'Welcome guests'],
+    description: 'Mentor a new DECA member and help them prepare for their first competition. Share your experience and knowledge!',
+    tasks: ['Meet with mentee weekly', 'Help with event selection', 'Practice role-plays', 'Provide feedback and encouragement'],
   },
 ]
 
-const categoryConfig = {
-  competition: { label: 'Competition', color: 'text-blue-300', bg: 'bg-blue-500/15', border: 'border-blue-500/30', icon: Trophy },
-  community: { label: 'Community Service', color: 'text-green-300', bg: 'bg-green-500/15', border: 'border-green-500/30', icon: Heart },
-  chapter: { label: 'Chapter Event', color: 'text-purple-300', bg: 'bg-purple-500/15', border: 'border-purple-500/30', icon: Star },
-  fundraiser: { label: 'Fundraiser', color: 'text-yellow-300', bg: 'bg-yellow-500/15', border: 'border-yellow-500/30', icon: Zap },
+const categoryColors: Record<string, string> = {
+  competition: 'from-blue-600/20 to-blue-800/10 border-blue-500/20',
+  community: 'from-green-600/20 to-green-800/10 border-green-500/20',
+  chapter: 'from-purple-600/20 to-purple-800/10 border-purple-500/20',
+  fundraiser: 'from-orange-600/20 to-orange-800/10 border-orange-500/20',
 }
 
-interface SignUpFormData {
-  name: string
-  email: string
-  grade: string
-  phone: string
-  notes: string
-}
-
-function OpportunityCard({ opp, onSignUp }: { opp: VolunteerOpportunity; onSignUp: (opp: VolunteerOpportunity) => void }) {
-  const [expanded, setExpanded] = useState(false)
-  const cfg = categoryConfig[opp.category]
-  const Icon = cfg.icon
-  const spotsLeft = opp.spotsTotal - opp.spotsFilled
-  const fillPercent = (opp.spotsFilled / opp.spotsTotal) * 100
-  const isFull = spotsLeft === 0
-
-  return (
-    <div className={`glass-card overflow-hidden ${isFull ? 'opacity-60' : ''}`}>
-      <div className="p-6">
-        <div className="flex items-start justify-between gap-4 mb-4">
-          <div className="flex items-start gap-4">
-            <div className={`shrink-0 p-2.5 rounded-xl ${cfg.bg} border ${cfg.border}`}>
-              <Icon size={18} className={cfg.color} />
-            </div>
-            <div>
-              <div className="flex flex-wrap items-center gap-2 mb-1">
-                <span className={`text-xs px-2 py-0.5 rounded-full border ${cfg.bg} ${cfg.color} ${cfg.border}`}>{cfg.label}</span>
-                <span className="text-white/30 text-xs font-mono-data">{opp.hours}h</span>
-              </div>
-              <h3 className="text-white font-bold text-base leading-tight">{opp.title}</h3>
-            </div>
-          </div>
-          {isFull ? (
-            <span className="shrink-0 text-xs px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white/30">Full</span>
-          ) : (
-            <button
-              onClick={() => onSignUp(opp)}
-              className="shrink-0 text-xs px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium transition-all hover:shadow-[0_0_15px_oklch(0.55_0.22_260/0.3)]"
-            >
-              Sign Up
-            </button>
-          )}
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
-          <div className="flex items-center gap-1.5 text-white/50 text-xs">
-            <Clock size={12} className="text-blue-400" />
-            {opp.date}
-          </div>
-          <div className="flex items-center gap-1.5 text-white/50 text-xs">
-            <Clock size={12} className="text-blue-400" />
-            {opp.time}
-          </div>
-          <div className="flex items-center gap-1.5 text-white/50 text-xs">
-            <MapPin size={12} className="text-blue-400" />
-            {opp.location}
-          </div>
-        </div>
-
-        {/* Spots progress */}
-        <div className="mb-4">
-          <div className="flex justify-between text-xs mb-1.5">
-            <span className="text-white/40">{opp.spotsFilled}/{opp.spotsTotal} spots filled</span>
-            <span className={`font-mono-data ${spotsLeft <= 3 ? 'text-red-400' : 'text-white/40'}`}>
-              {isFull ? 'No spots left' : `${spotsLeft} spot${spotsLeft !== 1 ? 's' : ''} left`}
-            </span>
-          </div>
-          <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-            <div
-              className={`h-full rounded-full transition-all duration-500 ${fillPercent >= 80 ? 'bg-red-500' : fillPercent >= 50 ? 'bg-yellow-500' : 'bg-blue-500'}`}
-              style={{ width: `${fillPercent}%` }}
-            />
-          </div>
-        </div>
-
-        <p className="text-white/50 text-sm leading-relaxed mb-3">{opp.description}</p>
-
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="flex items-center gap-1.5 text-blue-400 hover:text-blue-300 text-xs transition-colors"
-        >
-          {expanded ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
-          {expanded ? 'Hide tasks' : 'View tasks'}
-        </button>
-      </div>
-
-      <AnimatePresence>
-        {expanded && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            style={{ overflow: 'hidden' }}
-          >
-            <div className="px-6 pb-6 border-t border-white/5 pt-4">
-              <h4 className="text-white/60 text-xs font-mono-data tracking-widest uppercase mb-3">Tasks & Responsibilities</h4>
-              <ul className="space-y-2">
-                {opp.tasks.map((task, i) => (
-                  <li key={i} className="flex items-start gap-2.5 text-white/60 text-sm">
-                    <CheckCircle size={13} className="text-blue-400 mt-0.5 shrink-0" />
-                    {task}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  )
-}
-
-function SignUpModal({ opp, onClose }: { opp: VolunteerOpportunity; onClose: () => void }) {
-  const [form, setForm] = useState<SignUpFormData>({ name: '', email: '', grade: '', phone: '', notes: '' })
-  const [submitted, setSubmitted] = useState(false)
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!form.name || !form.email || !form.grade) {
-      toast.error('Please fill in all required fields.')
-      return
-    }
-    setSubmitted(true)
-    toast.success(`Signed up for "${opp.title}"! Check your email for confirmation.`)
-  }
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        className="relative w-full max-w-md glass-card p-8 border-blue-500/20"
-      >
-        {submitted ? (
-          <div className="text-center py-4">
-            <CheckCircle size={48} className="text-green-400 mx-auto mb-4" />
-            <h3 className="text-white text-xl font-bold mb-2">You're Signed Up!</h3>
-            <p className="text-white/60 text-sm mb-2">
-              You've registered for <strong className="text-white">{opp.title}</strong>.
-            </p>
-            <p className="text-white/40 text-xs mb-6">Your advisor will confirm your spot via email. See you there!</p>
-            <button onClick={onClose} className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-medium transition-all">
-              Done
-            </button>
-          </div>
-        ) : (
-          <>
-            <div className="mb-6">
-              <h3 className="text-white text-xl font-bold mb-1">Sign Up</h3>
-              <p className="text-white/50 text-sm">{opp.title}</p>
-              <div className="flex items-center gap-3 mt-2 text-white/40 text-xs">
-                <span className="flex items-center gap-1"><Clock size={11} />{opp.date}</span>
-                <span className="flex items-center gap-1"><MapPin size={11} />{opp.location}</span>
-              </div>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-white/60 text-xs mb-1.5">Full Name <span className="text-red-400">*</span></label>
-                <input
-                  type="text"
-                  value={form.name}
-                  onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                  placeholder="Your full name"
-                  className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder:text-white/25 focus:outline-none focus:border-blue-500/50 transition-all"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-white/60 text-xs mb-1.5">Email <span className="text-red-400">*</span></label>
-                <input
-                  type="email"
-                  value={form.email}
-                  onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                  placeholder="your.email@school.edu"
-                  className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder:text-white/25 focus:outline-none focus:border-blue-500/50 transition-all"
-                  required
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-white/60 text-xs mb-1.5">Grade <span className="text-red-400">*</span></label>
-                  <select
-                    value={form.grade}
-                    onChange={e => setForm(f => ({ ...f, grade: e.target.value }))}
-                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all"
-                    required
-                  >
-                    <option value="" className="bg-gray-900">Select grade</option>
-                    <option value="9" className="bg-gray-900">9th Grade</option>
-                    <option value="10" className="bg-gray-900">10th Grade</option>
-                    <option value="11" className="bg-gray-900">11th Grade</option>
-                    <option value="12" className="bg-gray-900">12th Grade</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-white/60 text-xs mb-1.5">Phone (optional)</label>
-                  <input
-                    type="tel"
-                    value={form.phone}
-                    onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                    placeholder="555-0123"
-                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder:text-white/25 focus:outline-none focus:border-blue-500/50 transition-all"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-white/60 text-xs mb-1.5">Notes (optional)</label>
-                <textarea
-                  value={form.notes}
-                  onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
-                  placeholder="Any questions or special circumstances..."
-                  rows={3}
-                  className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder:text-white/25 focus:outline-none focus:border-blue-500/50 transition-all resize-none"
-                />
-              </div>
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 text-white/60 hover:text-white rounded-lg text-sm font-medium transition-all"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-semibold transition-all hover:shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)]"
-                >
-                  Sign Up
-                </button>
-              </div>
-            </form>
-          </>
-        )}
-      </motion.div>
-    </div>
-  )
+const categoryIcons: Record<string, any> = {
+  competition: Trophy,
+  community: Heart,
+  chapter: Users,
+  fundraiser: Zap,
 }
 
 export default function Volunteer() {
-  const [selectedOpp, setSelectedOpp] = useState<VolunteerOpportunity | null>(null)
-  const [filterCategory, setFilterCategory] = useState<'all' | 'competition' | 'community' | 'chapter' | 'fundraiser'>('all')
+  const { user, isAuthenticated } = useAuth()
+  const [expandedId, setExpandedId] = useState<number | null>(null)
+  const [signedUpIds, setSignedUpIds] = useState<number[]>([])
+  const signUpMutation = trpc.volunteers.signUp.useMutation()
 
-  const filtered = filterCategory === 'all'
-    ? opportunities
-    : opportunities.filter(o => o.category === filterCategory)
+  const handleSignUp = async (opportunityId: number) => {
+    if (!isAuthenticated) {
+      window.location.href = getLoginUrl()
+      return
+    }
 
-  const totalHours = opportunities.reduce((sum, o) => sum + o.hours, 0)
-  const totalSpots = opportunities.reduce((sum, o) => sum + (o.spotsTotal - o.spotsFilled), 0)
+    try {
+      await signUpMutation.mutateAsync({ opportunityId })
+      setSignedUpIds(prev => [...prev, opportunityId])
+      toast.success('Successfully signed up for this opportunity!')
+    } catch (error) {
+      toast.error('Failed to sign up. Please try again.')
+    }
+  }
 
   return (
     <div className="min-h-screen bg-[oklch(0.07_0.01_265)]">
-      {/* Header */}
-      <div className="relative pt-32 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        {/* Background overlays removed for transparency */}
-        <div className="relative z-10 max-w-7xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono-data tracking-widest uppercase mb-4">
-            {opportunities.length} Opportunities Available
-          </div>
-          <h1 className="font-display text-5xl sm:text-7xl text-white mb-4">VOLUNTEER</h1>
-          <p className="text-white/60 text-lg max-w-2xl">
-            Earn community service hours, build your DECA portfolio, and give back to the chapter. Sign up for volunteer opportunities below.
-          </p>
-
-          {/* Stats */}
-          <div className="flex flex-wrap gap-6 mt-8">
-            <div className="flex items-center gap-2">
-              <Clock size={16} className="text-blue-400" />
-              <span className="text-white font-bold font-mono-data">{totalHours}</span>
-              <span className="text-white/50 text-sm">total hours available</span>
+      {/* ── Hero Section ── */}
+      <section className="relative py-20 px-4 sm:px-6 lg:px-8 border-b border-white/5">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono-data tracking-widest uppercase mb-4">
+              <Heart size={12} />
+              Give Back to DECA
             </div>
-            <div className="flex items-center gap-2">
-              <Users size={16} className="text-blue-400" />
-              <span className="text-white font-bold font-mono-data">{totalSpots}</span>
-              <span className="text-white/50 text-sm">spots remaining</span>
-            </div>
-          </div>
+            <h1 className="font-display text-5xl sm:text-6xl text-white mb-4">
+              VOLUNTEER OPPORTUNITIES
+            </h1>
+            <p className="text-white/60 text-lg max-w-2xl mx-auto">
+              Build your leadership portfolio, earn community service hours, and help make CHHS DECA events amazing.
+            </p>
+          </motion.div>
         </div>
-      </div>
+      </section>
 
-      {/* Filters */}
-      <div className="sticky top-16 z-30 bg-[oklch(0.07_0.01_265/0.95)] backdrop-blur-xl border-b border-white/5 px-4 sm:px-6 lg:px-8 py-4">
-        <div className="max-w-7xl mx-auto flex flex-wrap gap-2">
-          {(['all', 'competition', 'community', 'chapter', 'fundraiser'] as const).map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setFilterCategory(cat)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all duration-200 ${
-                filterCategory === cat
-                  ? 'bg-blue-600 border-blue-500 text-white'
-                  : 'bg-white/5 border-white/10 text-white/60 hover:text-white hover:border-white/20'
-              }`}
+      {/* ── Auth Prompt ── */}
+      {!isAuthenticated && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-blue-900/20 border-b border-blue-500/20 px-4 sm:px-6 lg:px-8 py-4"
+        >
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <LogIn size={18} className="text-blue-400" />
+              <span className="text-white/80">Sign in to sign up for volunteer opportunities</span>
+            </div>
+            <a
+              href={getLoginUrl()}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-colors"
             >
-              {cat === 'all' ? 'All' : categoryConfig[cat].label}
-            </button>
-          ))}
-        </div>
-      </div>
+              Sign In
+            </a>
+          </div>
+        </motion.div>
+      )}
 
-      {/* Opportunities Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          {filtered.map(opp => (
-            <OpportunityCard key={opp.id} opp={opp} onSignUp={setSelectedOpp} />
-          ))}
-        </div>
+      {/* ── Opportunities Grid ── */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 gap-6">
+          {opportunities.map((opp, index) => {
+            const Icon = categoryIcons[opp.category]
+            const isSigned = signedUpIds.includes(opp.id)
+            const spotsRemaining = opp.spotsTotal - opp.spotsFilled
 
-        {/* Info Banner */}
-        <div className="mt-8 glass-card p-6 border-blue-500/20 bg-blue-500/5">
-          <div className="flex items-start gap-4">
-            <div className="p-2 rounded-xl bg-blue-500/15 border border-blue-500/30">
-              <Users size={20} className="text-blue-400" />
-            </div>
-            <div>
-              <h3 className="text-white font-bold mb-1">Questions about volunteering?</h3>
-              <p className="text-white/60 text-sm leading-relaxed">
-                Contact your DECA advisor for more information about volunteer opportunities, hour verification, and how volunteer service counts toward your DECA portfolio. Community service is a key component of DECA membership and looks great on college applications!
-              </p>
-              <div className="mt-3 flex flex-wrap gap-3">
-                <a
-                  href="https://www.deca.org"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-400 hover:text-blue-300 text-sm transition-colors"
+            return (
+              <motion.div
+                key={opp.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <div
+                  className={`group relative p-6 rounded-xl bg-gradient-to-br ${categoryColors[opp.category]} border transition-all duration-300 cursor-pointer hover:border-opacity-100`}
+                  onClick={() => setExpandedId(expandedId === opp.id ? null : opp.id)}
                 >
-                  Learn about DECA community service →
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="p-2 rounded-lg bg-white/5 border border-white/10">
+                          <Icon size={20} className="text-blue-400" />
+                        </div>
+                        <div>
+                          <h3 className="text-white font-bold text-lg">{opp.title}</h3>
+                          <p className="text-white/50 text-xs font-mono-data uppercase tracking-wider">{opp.category}</p>
+                        </div>
+                      </div>
 
-      {/* Sign Up Modal */}
-      <AnimatePresence>
-        {selectedOpp && (
-          <SignUpModal opp={selectedOpp} onClose={() => setSelectedOpp(null)} />
-        )}
-      </AnimatePresence>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+                        <div className="flex items-center gap-2 text-white/60 text-sm">
+                          <Clock size={14} />
+                          <span>{opp.date}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-white/60 text-sm">
+                          <MapPin size={14} />
+                          <span>{opp.location}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-white/60 text-sm">
+                          <Star size={14} />
+                          <span>{opp.hours} hours</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-white/60 text-sm">
+                          <Users size={14} />
+                          <span>{spotsRemaining} spots left</span>
+                        </div>
+                      </div>
 
-      {/* Footer */}
-      <footer className="border-t border-white/5 py-12 px-4 sm:px-6 lg:px-8 mt-8">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-display text-base">D</div>
-            <span className="text-white/60 text-sm">CHHS DECA © 2025–2026</span>
-          </div>
-          <div className="flex items-center gap-6 text-white/30 text-sm">
-            <a href="https://www.deca.org" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">DECA.org</a>
-          </div>
+                      {/* Progress bar */}
+                      <div className="w-full bg-white/5 rounded-full h-2 mb-4">
+                        <div
+                          className="bg-gradient-to-r from-blue-500 to-blue-400 h-full rounded-full transition-all"
+                          style={{ width: `${(opp.spotsFilled / opp.spotsTotal) * 100}%` }}
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <span className="text-white/40 text-xs">{opp.spotsFilled}/{opp.spotsTotal} spots filled</span>
+                        <div className="flex items-center gap-2">
+                          {isSigned && (
+                            <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-green-500/20 border border-green-500/30 text-green-300 text-xs font-semibold">
+                              <CheckCircle size={12} />
+                              Signed Up
+                            </div>
+                          )}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleSignUp(opp.id)
+                            }}
+                            disabled={isSigned || spotsRemaining === 0 || signUpMutation.isPending}
+                            className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${
+                              isSigned
+                                ? 'bg-green-600/20 text-green-300 cursor-default'
+                                : spotsRemaining === 0
+                                ? 'bg-gray-600/20 text-gray-300 cursor-not-allowed'
+                                : 'bg-blue-600 hover:bg-blue-500 text-white hover:shadow-[0_0_20px_oklch(0.55_0.22_260/0.3)]'
+                            }`}
+                          >
+                            {signUpMutation.isPending ? 'Signing up...' : isSigned ? 'Signed Up' : spotsRemaining === 0 ? 'Full' : 'Sign Up'}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <motion.div
+                      animate={{ rotate: expandedId === opp.id ? 180 : 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <ChevronDown size={20} className="text-white/40" />
+                    </motion.div>
+                  </div>
+
+                  {/* Expanded Details */}
+                  <AnimatePresence>
+                    {expandedId === opp.id && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="mt-6 pt-6 border-t border-white/10"
+                      >
+                        <p className="text-white/70 mb-4">{opp.description}</p>
+                        <div>
+                          <h4 className="text-white font-semibold mb-3">Responsibilities:</h4>
+                          <ul className="space-y-2">
+                            {opp.tasks.map((task, i) => (
+                              <li key={i} className="flex items-start gap-2 text-white/60 text-sm">
+                                <CheckCircle size={14} className="text-blue-400 mt-0.5 flex-shrink-0" />
+                                <span>{task}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </motion.div>
+            )
+          })}
         </div>
-      </footer>
+      </section>
+
+      {/* ── Footer CTA ── */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-white/5">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center"
+        >
+          <h2 className="font-display text-4xl text-white mb-4">Questions?</h2>
+          <p className="text-white/60 mb-6">Contact the CHHS DECA leadership team or check our discussion board for more info.</p>
+          <Link href="/discussions">
+            <button className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-all hover:shadow-[0_0_30px_oklch(0.55_0.22_260/0.4)]">
+              Ask in Discussions
+            </button>
+          </Link>
+        </motion.div>
+      </section>
     </div>
   )
 }

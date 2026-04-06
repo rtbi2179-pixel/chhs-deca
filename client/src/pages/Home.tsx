@@ -8,7 +8,7 @@
 
 import { Link } from 'wouter'
 import { motion } from 'framer-motion'
-
+import { useAuth } from '@/_core/hooks/useAuth'
 import { Trophy, BookOpen, Calendar, Users, ArrowRight, Star, Target, Zap, Globe, ChevronRight } from 'lucide-react'
 
 const HERO_BG = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/deca-hero-bg-3D56BJM7ugEtwwxPTqT3y7.webp'
@@ -82,6 +82,10 @@ const fadeUp = {
 }
 
 export default function Home() {
+  // The userAuth hooks provides authentication state
+  // To implement login/logout functionality, simply call logout() or redirect to getLoginUrl()
+  let { user, loading, error, isAuthenticated, logout } = useAuth();
+
   return (
     <div className="min-h-screen bg-[oklch(0.07_0.01_265)]">
       {/* ── Hero Section ── */}

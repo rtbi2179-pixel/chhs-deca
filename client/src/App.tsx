@@ -11,8 +11,8 @@ import Practice from "./pages/Practice";
 import CalendarPage from "./pages/CalendarPage";
 import Volunteer from "./pages/Volunteer";
 import Discussions from "./pages/Discussions";
-
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path="/" component={Home} />
