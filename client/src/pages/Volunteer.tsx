@@ -3,7 +3,7 @@
  * Volunteer opportunities with sign-up forms and hour tracking
  */
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Users, Clock, MapPin, CheckCircle, Star, ChevronDown, ChevronUp, Heart, Trophy, Zap, LogIn } from 'lucide-react'
 import { toast } from 'sonner'
@@ -20,7 +20,6 @@ interface VolunteerOpportunity {
   location: string
   hours: number
   spotsTotal: number
-  spotsFilled: number
   description: string
   tasks: string[]
   category: 'competition' | 'community' | 'chapter' | 'fundraiser'
@@ -35,7 +34,6 @@ const opportunities: VolunteerOpportunity[] = [
     location: 'CHHS Main Campus',
     hours: 8,
     spotsTotal: 15,
-    spotsFilled: 7,
     category: 'competition',
     description: 'Help run the district DECA competition by assisting judges, managing check-in, and supporting event logistics.',
     tasks: ['Check-in competitor registration', 'Guide participants to event rooms', 'Assist judges with materials', 'Help with scoring and tabulation', 'Set up and break down event spaces'],
@@ -48,7 +46,6 @@ const opportunities: VolunteerOpportunity[] = [
     location: 'CHHS Library',
     hours: 3,
     spotsTotal: 8,
-    spotsFilled: 3,
     category: 'community',
     description: 'Teach basic financial literacy concepts to middle school students from a partner school.',
     tasks: ['Present budgeting basics', 'Lead interactive activities', 'Assist students with worksheets', 'Answer questions about personal finance'],
@@ -61,7 +58,6 @@ const opportunities: VolunteerOpportunity[] = [
     location: 'Local Food Bank',
     hours: 5,
     spotsTotal: 20,
-    spotsFilled: 12,
     category: 'community',
     description: 'Annual DECA Week community service event. Help sort and distribute food at the local food bank.',
     tasks: ['Sort donated food items', 'Pack food boxes', 'Assist with distribution', 'Help with inventory tracking'],
@@ -74,7 +70,6 @@ const opportunities: VolunteerOpportunity[] = [
     location: 'CHHS Parking Lot',
     hours: 5,
     spotsTotal: 25,
-    spotsFilled: 18,
     category: 'fundraiser',
     description: 'Help raise funds for chapter competition travel expenses by running our annual car wash fundraiser.',
     tasks: ['Wash and dry vehicles', 'Collect donations', 'Manage customer flow', 'Handle marketing/signage'],
@@ -87,7 +82,6 @@ const opportunities: VolunteerOpportunity[] = [
     location: 'CHHS Cafeteria',
     hours: 4,
     spotsTotal: 10,
-    spotsFilled: 4,
     category: 'chapter',
     description: 'Serve as a mock judge for fellow DECA members preparing for district competition. Great for alumni and upperclassmen!',
     tasks: ['Review judge scoring rubrics', 'Evaluate role-play presentations', 'Provide constructive feedback', 'Score written event presentations'],
@@ -100,7 +94,6 @@ const opportunities: VolunteerOpportunity[] = [
     location: 'Dallas Convention Center',
     hours: 12,
     spotsTotal: 8,
-    spotsFilled: 2,
     category: 'competition',
     description: 'Support the Texas DECA State Competition as a volunteer. Help with registration, logistics, and event management.',
     tasks: ['Manage competitor check-in', 'Assist with room assignments', 'Support event coordinators', 'Help with awards ceremony'],
@@ -113,7 +106,6 @@ const opportunities: VolunteerOpportunity[] = [
     location: 'Orlando, FL',
     hours: 20,
     spotsTotal: 5,
-    spotsFilled: 1,
     category: 'competition',
     description: 'Represent CHHS at the International Career Development Conference in Orlando. Help with logistics and support our competitors.',
     tasks: ['Assist with team logistics', 'Help with event management', 'Support competitors', 'Represent CHHS professionally'],
@@ -126,7 +118,6 @@ const opportunities: VolunteerOpportunity[] = [
     location: 'CHHS Campus',
     hours: 5,
     spotsTotal: 12,
-    spotsFilled: 8,
     category: 'chapter',
     description: 'Mentor a new DECA member and help them prepare for their first competition. Share your experience and knowledge!',
     tasks: ['Meet with mentee weekly', 'Help with event selection', 'Practice role-plays', 'Provide feedback and encouragement'],
@@ -152,11 +143,26 @@ const Volunteer = () => {
   const [expandedId, setExpandedId] = useState<number | null>(null)
   const [signedUpIds, setSignedUpIds] = useState<number[]>([])
   const [showSignups, setShowSignups] = useState<number | null>(null)
+  
+  // Load all signups from database
+  const { data: allSignups = [] } = trpc.volunteers.getAllSignups.useQuery()
+  
   const signUpMutation = trpc.volunteers.signUp.useMutation()
   const { data: signups = [] } = trpc.volunteers.getByOpportunity.useQuery(
     { opportunityId: showSignups || 0 },
     { enabled: !!showSignups }
   )
+
+  // Calculate spotsFilled for each opportunity based on real signups
+  const opportunitiesWithRealCounts = useMemo(() => {
+    return opportunities.map(opp => {
+      const signupCount = allSignups.filter((s: any) => s.signup?.opportunityId === opp.id).length
+      return {
+        ...opp,
+        spotsFilled: signupCount
+      }
+    })
+  }, [allSignups])
 
   const handleSignUp = async (opportunityId: number) => {
     if (!isAuthenticated) {
@@ -223,7 +229,7 @@ const Volunteer = () => {
       {/* ── Opportunities Grid ── */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 gap-6">
-          {opportunities.map((opp, index) => {
+          {opportunitiesWithRealCounts.map((opp, index) => {
             const Icon = categoryIcons[opp.category]
             const isSigned = signedUpIds.includes(opp.id)
             const spotsRemaining = opp.spotsTotal - opp.spotsFilled
@@ -317,13 +323,6 @@ const Volunteer = () => {
                         </div>
                       </div>
                     </div>
-
-                    <motion.div
-                      animate={{ rotate: expandedId === opp.id ? 180 : 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <ChevronDown size={20} className="text-white/40" />
-                    </motion.div>
                   </div>
 
                   {/* Expanded Details */}
@@ -333,16 +332,16 @@ const Volunteer = () => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="mt-6 pt-6 border-t border-white/10"
+                        className="mt-4 pt-4 border-t border-white/10"
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        <p className="text-white/70 mb-4">{opp.description}</p>
+                        <p className="text-white/70 text-sm mb-4">{opp.description}</p>
                         <div>
-                          <h4 className="text-white font-semibold mb-3">Responsibilities:</h4>
+                          <h4 className="text-white font-semibold text-sm mb-3">Tasks:</h4>
                           <ul className="space-y-2">
                             {opp.tasks.map((task, i) => (
                               <li key={i} className="flex items-start gap-2 text-white/60 text-sm">
-                                <CheckCircle size={14} className="text-blue-400 mt-0.5 flex-shrink-0" />
+                                <span className="text-blue-400 mt-1">•</span>
                                 <span>{task}</span>
                               </li>
                             ))}
@@ -358,21 +357,26 @@ const Volunteer = () => {
         </div>
       </section>
 
-      {/* ── Footer CTA ── */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-white/5">
+      {/* ── FAQ Section ── */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="section-divider mb-16" />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center"
+          transition={{ duration: 0.6 }}
         >
-          <h2 className="font-display text-4xl text-white mb-4">Questions?</h2>
-          <p className="text-white/60 mb-6">Contact the CHHS DECA leadership team or check our discussion board for more info.</p>
-          <Link href="/discussions">
-            <button className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-all hover:shadow-[0_0_30px_oklch(0.55_0.22_260/0.4)]">
-              Ask in Discussions
-            </button>
-          </Link>
+          <h2 className="font-display text-4xl text-white mb-8">QUESTIONS?</h2>
+          <div className="glass-card p-8 border-blue-500/20">
+            <p className="text-white/60 text-lg mb-6">
+              Have questions about volunteering? Want to suggest a new opportunity? Reach out to the DECA leadership team or ask in our community discussions.
+            </p>
+            <Link href="/discussions">
+              <button className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-all hover:shadow-[0_0_30px_oklch(0.55_0.22_260/0.4)]">
+                Ask in Discussions
+              </button>
+            </Link>
+          </div>
         </motion.div>
       </section>
 

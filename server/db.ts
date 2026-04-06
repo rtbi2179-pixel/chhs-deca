@@ -126,6 +126,19 @@ export async function getUserVolunteerSignups(userId: number) {
     .where(eq(volunteerSignups.userId, userId));
 }
 
+export async function getAllVolunteerSignups() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const signups = await db.select({
+    signup: volunteerSignups,
+    user: users,
+  }).from(volunteerSignups)
+    .innerJoin(users, eq(volunteerSignups.userId, users.id));
+  
+  return signups;
+}
+
 // Discussion queries
 export async function createDiscussionThread(userId: number, title: string, content: string, category: string) {
   const db = await getDb();

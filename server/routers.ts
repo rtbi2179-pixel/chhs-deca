@@ -38,6 +38,8 @@ export const appRouter = router({
       .query(({ input }) => db.getVolunteersByOpportunity(input.opportunityId)),
     getUserSignups: protectedProcedure
       .query(({ ctx }) => db.getUserVolunteerSignups(ctx.user.id)),
+    getAllSignups: publicProcedure
+      .query(() => db.getAllVolunteerSignups()),
   }),
 
   discussions: router({
