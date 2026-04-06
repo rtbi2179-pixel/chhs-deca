@@ -10,6 +10,7 @@ import Events from "./pages/Events";
 import Practice from "./pages/Practice";
 import CalendarPage from "./pages/CalendarPage";
 import Volunteer from "./pages/Volunteer";
+import Discussions from "./pages/Discussions";
 
 function Router() {
   return (
@@ -19,6 +20,7 @@ function Router() {
       <Route path="/practice" component={Practice} />
       <Route path="/calendar" component={CalendarPage} />
       <Route path="/volunteer" component={Volunteer} />
+      <Route path="/discussions" component={Discussions} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

@@ -425,15 +425,12 @@ export default function Home() {
               <Users size={40} className="mx-auto text-blue-400 mb-4" />
               <p className="text-white/60 text-lg mb-6">Join the CHHS DECA community discussion board to ask questions about events, share study tips, and connect with teammates.</p>
             </div>
-            <a
-              href="https://www.deca.org/forums"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-all hover:shadow-[0_0_30px_oklch(0.55_0.22_260/0.4)]"
-            >
-              Join Discussion
-              <ChevronRight size={16} />
-            </a>
+            <Link href="/discussions">
+              <button className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-all hover:shadow-[0_0_30px_oklch(0.55_0.22_260/0.4)]">
+                View Discussions
+                <ChevronRight size={16} />
+              </button>
+            </Link>
           </div>
         </motion.div>
       </section>
