@@ -174,43 +174,6 @@ export default function Home() {
               className="relative h-[500px] lg:h-[700px] hidden lg:flex items-center justify-center"
             >
               {/* Glow backdrop - removed for transparency */}
-
-              {/* Floating DECA badge */}
-              <motion.div
-                animate={{ y: [-6, 6, -6] }}
-                transition={{ duration: 3.5, repeat: Infinity }}
-                className="absolute top-8 right-4 glass-card px-4 py-3 text-center border-blue-500/20"
-              >
-                <div className="font-display text-2xl text-blue-400">DECA</div>
-                <div className="text-white/50 text-xs font-mono-data tracking-wider">GLASS AWARD</div>
-              </motion.div>
-
-              {/* ICDC badge */}
-              <motion.div
-                animate={{ y: [6, -6, 6] }}
-                transition={{ duration: 4, repeat: Infinity, delay: 1 }}
-                className="absolute bottom-20 left-4 glass-card px-4 py-3"
-              >
-                <div className="flex items-center gap-2">
-                  <Trophy size={16} className="text-yellow-400" />
-                  <div>
-                    <div className="text-white text-sm font-semibold">ICDC 2026</div>
-                    <div className="text-white/40 text-xs">Orlando, FL</div>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Score badge */}
-              <motion.div
-                animate={{ y: [-4, 4, -4] }}
-                transition={{ duration: 5, repeat: Infinity, delay: 2 }}
-                className="absolute top-1/2 right-2 glass-card px-3 py-2"
-              >
-                <div className="flex items-center gap-1.5">
-                  <Star size={12} className="text-blue-400" />
-                  <span className="text-white/70 text-xs font-mono-data">Top Scorer</span>
-                </div>
-              </motion.div>
             </motion.div>
           </div>
         </div>
