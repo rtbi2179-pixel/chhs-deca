@@ -5,7 +5,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MessageSquare, Heart, MessageCircle, Send, LogIn, Plus, Search, Filter } from 'lucide-react'
+import { MessageSquare, Heart, MessageCircle, Send, LogIn, Plus, Search, Filter, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { trpc } from '@/lib/trpc'
@@ -69,7 +69,9 @@ export default function Discussions() {
     }
   }
 
-  const handleCreateReply = async () => {
+  const handleCreateReply = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    
     if (!isAuthenticated) {
       window.location.href = getLoginUrl()
       return
@@ -90,6 +92,11 @@ export default function Discussions() {
     } catch (error) {
       toast.error('Failed to post reply')
     }
+  }
+
+  const handleThreadClick = (e: React.MouseEvent, threadId: number | null) => {
+    e.stopPropagation()
+    setSelectedThreadId(selectedThreadId === threadId ? null : threadId)
   }
 
   const filteredThreads = threads.filter(t =>
@@ -269,6 +276,7 @@ export default function Discussions() {
                   const thread = item.thread
                   const author = item.author
                   const isSelected = selectedThreadId === thread?.id
+                  const isThreadAuthor = user?.id === author?.id
 
                   return (
                     <motion.div
@@ -276,26 +284,30 @@ export default function Discussions() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      onClick={() => setSelectedThreadId(isSelected ? null : thread?.id || null)}
-                      className={`p-4 rounded-lg border transition-all cursor-pointer ${
+                      className={`p-4 rounded-lg border transition-all ${
                         isSelected
                           ? 'bg-blue-600/20 border-blue-500/50'
                           : 'bg-white/3 border-white/10 hover:bg-white/5 hover:border-blue-500/30'
                       }`}
                     >
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1 min-w-0">
-                          <h4 className="text-white font-semibold mb-1 truncate">{thread?.title}</h4>
-                          <p className="text-white/60 text-sm mb-2 line-clamp-2">{thread?.content}</p>
-                          <div className="flex items-center gap-4 text-white/40 text-xs">
-                            <span>{author?.name}</span>
-                            <span>•</span>
-                            <span>{thread?.views || 0} views</span>
+                      <div
+                        onClick={(e) => handleThreadClick(e, thread?.id || null)}
+                        className="cursor-pointer"
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-white font-semibold mb-1 truncate">{thread?.title}</h4>
+                            <p className="text-white/60 text-sm mb-2 line-clamp-2">{thread?.content}</p>
+                            <div className="flex items-center gap-4 text-white/40 text-xs">
+                              <span>{author?.name}</span>
+                              <span>•</span>
+                              <span>{thread?.views || 0} views</span>
+                            </div>
                           </div>
-                        </div>
-                        <div className="flex items-center gap-2 text-white/40">
-                          <MessageCircle size={16} />
-                          <span className="text-sm font-semibold">0</span>
+                          <div className="flex items-center gap-2 text-white/40">
+                            <MessageCircle size={16} />
+                            <span className="text-sm font-semibold">0</span>
+                          </div>
                         </div>
                       </div>
 
@@ -307,6 +319,7 @@ export default function Discussions() {
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
                             className="mt-4 pt-4 border-t border-white/10"
+                            onClick={(e) => e.stopPropagation()}
                           >
                             {/* Replies */}
                             <div className="space-y-3 mb-4 max-h-64 overflow-y-auto">
@@ -317,9 +330,23 @@ export default function Discussions() {
                                   <div key={r.reply?.id} className="p-3 bg-white/3 rounded-lg">
                                     <div className="flex items-start justify-between gap-2 mb-2">
                                       <span className="text-white/70 text-sm font-semibold">{r.author?.name}</span>
-                                      <div className="flex items-center gap-1 text-white/40 text-xs">
-                                        <Heart size={12} />
-                                        {r.reply?.likes || 0}
+                                      <div className="flex items-center gap-2">
+                                        <div className="flex items-center gap-1 text-white/40 text-xs">
+                                          <Heart size={12} />
+                                          {r.reply?.likes || 0}
+                                        </div>
+                                        {user?.id === r.author?.id && (
+                                          <button
+                                            onClick={(e) => {
+                                              e.stopPropagation()
+                                              toast.info('Delete functionality coming soon')
+                                            }}
+                                            className="text-white/40 hover:text-red-400 transition-colors"
+                                            title="Delete reply"
+                                          >
+                                            <Trash2 size={14} />
+                                          </button>
+                                        )}
                                       </div>
                                     </div>
                                     <p className="text-white/60 text-sm">{r.reply?.content}</p>
@@ -330,12 +357,16 @@ export default function Discussions() {
 
                             {/* Reply Form */}
                             {isAuthenticated && (
-                              <div className="flex gap-2">
+                              <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
                                 <input
                                   type="text"
                                   placeholder="Write a reply..."
                                   value={newReplyContent}
-                                  onChange={e => setNewReplyContent(e.target.value)}
+                                  onChange={(e) => {
+                                    e.stopPropagation()
+                                    setNewReplyContent(e.target.value)
+                                  }}
+                                  onClick={(e) => e.stopPropagation()}
                                   className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:border-blue-500/50"
                                 />
                                 <button
