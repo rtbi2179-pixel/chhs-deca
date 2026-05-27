@@ -6,7 +6,7 @@
 
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'wouter'
-import { Menu, X, Trophy, BookOpen, Calendar, Users, Home, ChevronRight, MessageSquare } from 'lucide-react'
+import { Menu, X, Trophy, BookOpen, Calendar, Users, Home, ChevronRight, MessageSquare, Mic } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const navLinks = [
@@ -16,6 +16,7 @@ const navLinks = [
   { href: '/calendar', label: 'Calendar', icon: Calendar },
   { href: '/volunteer', label: 'Volunteer', icon: Users },
   { href: '/discussions', label: 'Discussions', icon: MessageSquare },
+  { href: '/speech-ai', label: 'Speech AI', icon: Mic },
 ]
 
 export default function Navigation() {

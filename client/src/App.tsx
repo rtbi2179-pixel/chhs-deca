@@ -11,6 +11,7 @@ import Practice from "./pages/Practice";
 import CalendarPage from "./pages/CalendarPage";
 import Volunteer from "./pages/Volunteer";
 import Discussions from "./pages/Discussions";
+import SpeechAI from "./pages/SpeechAI";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -21,6 +22,7 @@ function Router() {
       <Route path="/calendar" component={CalendarPage} />
       <Route path="/volunteer" component={Volunteer} />
       <Route path="/discussions" component={Discussions} />
+      <Route path="/speech-ai" component={SpeechAI} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
