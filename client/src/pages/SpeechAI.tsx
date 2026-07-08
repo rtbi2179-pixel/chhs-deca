@@ -15,7 +15,7 @@ const aiTools = [
     href: 'https://chhsdeca-hn7kwxwp.manus.space',
     title: 'Roleplay Event AI',
     description: 'Practice roleplay scenarios with AI feedback. Get real-time coaching and performance analysis for roleplay competitive events.',
-    icon: '🎤',
+    icon: 'Mic',
     color: 'from-blue-600/20 to-blue-800/10',
     border: 'border-blue-500/20 hover:border-blue-500/50',
     glow: 'hover:shadow-[0_0_30px_oklch(0.55_0.22_260/0.2)]',
@@ -25,7 +25,7 @@ const aiTools = [
     href: 'https://chhsdeca-9shazsx7.manus.space/',
     title: 'Written Event AI Grader',
     description: 'Submit your written event responses and receive detailed AI evaluation. Get scoring feedback and improvement suggestions.',
-    icon: '✍️',
+    icon: 'Pen',
     color: 'from-purple-600/20 to-purple-800/10',
     border: 'border-purple-500/20 hover:border-purple-500/50',
     glow: 'hover:shadow-[0_0_30px_oklch(0.65_0.22_290/0.2)]',
@@ -78,7 +78,7 @@ export default function SpeechAI() {
 
                   <div className="relative z-10">
                     <div className="flex items-start justify-between mb-4">
-                      <div className="text-5xl">{icon}</div>
+                      <div className="text-5xl font-bold text-blue-400">{icon}</div>
                       <div className="flex items-center gap-2">
                         <span className="text-xs text-white/30 font-mono">{tag}</span>
                         <ChevronRight
