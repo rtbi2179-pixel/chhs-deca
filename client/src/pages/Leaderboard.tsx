@@ -101,7 +101,7 @@ export default function Leaderboard() {
                           {index + 1}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-foreground">{entry.user.name || "Anonymous"}</td>
+                      <td className="px-6 py-4 text-foreground">{entry.user?.name || entry.user?.username || "Anonymous"}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
                           <div className="w-24 bg-background border border-border rounded-full h-2">
