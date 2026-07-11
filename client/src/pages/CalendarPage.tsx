@@ -98,6 +98,8 @@ export default function CalendarPage() {
   const [viewMonth, setViewMonth] = useState(today.getMonth())
   const [selectedEvent, setSelectedEvent] = useState<CalEvent | null>(null)
   const [filterType, setFilterType] = useState<EventType | 'All'>('All')
+  const [adminModeActive, setAdminModeActive] = useState(false)
+  const [neonOverlayRef, setNeonOverlayRef] = useState<HTMLDivElement | null>(null)
 
   const daysInMonth = getDaysInMonth(viewYear, viewMonth)
   const firstDay = getFirstDayOfMonth(viewYear, viewMonth)
@@ -144,10 +146,19 @@ export default function CalendarPage() {
             {user && (user.role === 'admin' || user.role === 'super_admin') && (
               <button
                 onClick={() => {
-                  const neonOverlay = document.createElement('div')
-                  neonOverlay.style.cssText = 'position: fixed; inset: 0; pointer-events: none; z-index: 40; background: radial-gradient(circle at center, rgba(59,130,246,0.15) 0%, transparent 70%); box-shadow: inset 0 0 60px rgba(59,130,246,0.4), 0 0 40px rgba(59,130,246,0.3); border: 2px solid rgba(59,130,246,0.8);'
-                  document.body.appendChild(neonOverlay)
-                  setTimeout(() => neonOverlay.remove(), 30000)
+                  if (adminModeActive) {
+                    if (neonOverlayRef) {
+                      neonOverlayRef.remove()
+                      setNeonOverlayRef(null)
+                    }
+                    setAdminModeActive(false)
+                  } else {
+                    const neonOverlay = document.createElement('div')
+                    neonOverlay.style.cssText = 'position: fixed; inset: 0; pointer-events: none; z-index: 40; background: radial-gradient(circle at center, rgba(59,130,246,0.15) 0%, transparent 70%); box-shadow: inset 0 0 60px rgba(59,130,246,0.4), 0 0 40px rgba(59,130,246,0.3); border: 2px solid rgba(59,130,246,0.8);'
+                    document.body.appendChild(neonOverlay)
+                    setNeonOverlayRef(neonOverlay)
+                    setAdminModeActive(true)
+                  }
                 }}
                 className="px-4 py-2 bg-yellow-600/20 hover:bg-yellow-600/30 hover:shadow-[0_0_20px_rgba(250,204,21,0.6)] border border-yellow-500/30 text-yellow-400 rounded-lg transition text-sm font-semibold whitespace-nowrap"
                 title="Manage calendar (admin only)"
