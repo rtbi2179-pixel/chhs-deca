@@ -194,9 +194,19 @@ const Volunteer = () => {
               <Heart size={12} />
               Give Back to DECA
             </div>
-            <h1 className="font-display text-5xl sm:text-6xl text-white mb-4">
-              VOLUNTEER OPPORTUNITIES
-            </h1>
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <h1 className="font-display text-5xl sm:text-6xl text-white">
+                VOLUNTEER OPPORTUNITIES
+              </h1>
+              {user && (user.role === 'admin' || user.role === 'super_admin') && (
+                <button
+                  className="px-4 py-2 bg-yellow-600/20 hover:bg-yellow-600/30 border border-yellow-500/30 text-yellow-400 rounded-lg transition text-sm font-semibold whitespace-nowrap"
+                  title="Manage volunteer opportunities (admin only)"
+                >
+                  👑 Manage
+                </button>
+              )}
+            </div>
             <p className="text-white/60 text-lg max-w-2xl mx-auto">
               Build your leadership portfolio, earn community service hours, and help make CHHS DECA events amazing.
             </p>

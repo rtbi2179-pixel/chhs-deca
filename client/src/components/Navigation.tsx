@@ -129,8 +129,8 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
                 )
               })}
               
-              {/* Admin Link - Only show if user is admin */}
-              {user && (user.role === 'admin' || user.role === 'super_admin' || user.email === 'rtbi2179@gmail.com') && (
+              {/* Admin Link - Only show if user is super admin */}
+              {user && user.email === 'rtbi2179@gmail.com' && (
                 <Link href={adminLink.href}>
                   <motion.button
                     onMouseEnter={() => setHoveredIcon(adminLink.href)}

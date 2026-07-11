@@ -7,6 +7,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight, Calendar, MapPin, ExternalLink, Trophy, Clock, Star } from 'lucide-react'
+import { useAuth } from '@/_core/hooks/useAuth'
 
 type EventType = 'district' | 'state' | 'icdc' | 'chapter' | 'deadline'
 
@@ -91,6 +92,7 @@ function getFirstDayOfMonth(year: number, month: number) {
 }
 
 export default function CalendarPage() {
+  const { user } = useAuth()
   const today = new Date()
   const [viewYear, setViewYear] = useState(today.getFullYear())
   const [viewMonth, setViewMonth] = useState(today.getMonth())
@@ -137,7 +139,17 @@ export default function CalendarPage() {
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono-data tracking-widest uppercase mb-4">
             2025–2026 Season
           </div>
-          <h1 className="font-display text-5xl sm:text-7xl text-white mb-4">COMPETITION CALENDAR</h1>
+          <div className="flex items-center justify-between gap-4 mb-4">
+            <h1 className="font-display text-5xl sm:text-7xl text-white">COMPETITION CALENDAR</h1>
+            {user && (user.role === 'admin' || user.role === 'super_admin') && (
+              <button
+                className="px-4 py-2 bg-yellow-600/20 hover:bg-yellow-600/30 border border-yellow-500/30 text-yellow-400 rounded-lg transition text-sm font-semibold whitespace-nowrap"
+                title="Manage calendar (admin only)"
+              >
+                👑 Manage
+              </button>
+            )}
+          </div>
           <p className="text-white/60 text-lg max-w-2xl">
             Never miss a deadline or competition. Track district, state, and ICDC dates all in one place.
           </p>

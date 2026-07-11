@@ -14,11 +14,10 @@ export function AdminPanel() {
   const promoteAdminMutation = trpc.auth.promoteToAdmin.useMutation();
   const demoteAdminMutation = trpc.auth.demoteFromAdmin.useMutation();
 
-  // Check if user is super admin or main account
-  const isSuperAdmin = user?.role === "super_admin" || user?.email === "rtbi2179@gmail.com";
-  const isAdmin = user?.role === "admin" || isSuperAdmin;
+  // Check if user is super admin
+  const isSuperAdmin = user?.email === "rtbi2179@gmail.com";
 
-  if (!isAdmin) {
+  if (!isSuperAdmin) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">

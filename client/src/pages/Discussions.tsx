@@ -145,9 +145,19 @@ export default function Discussions() {
               <MessageSquare size={12} />
               Community Forum
             </div>
-            <h1 className="font-display text-5xl sm:text-6xl text-white mb-4">
-              DISCUSSIONS
-            </h1>
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <h1 className="font-display text-5xl sm:text-6xl text-white">
+                DISCUSSIONS
+              </h1>
+              {user && (user.role === 'admin' || user.role === 'super_admin') && (
+                <button
+                  className="ml-4 px-4 py-2 bg-yellow-600/20 hover:bg-yellow-600/30 border border-yellow-500/30 text-yellow-400 rounded-lg transition text-sm font-semibold"
+                  title="Manage discussions (admin only)"
+                >
+                  👑 Manage
+                </button>
+              )}
+            </div>
             <p className="text-white/60 text-lg max-w-2xl mx-auto">
               Ask questions, share tips, and connect with your DECA teammates.
             </p>
