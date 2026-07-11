@@ -359,7 +359,7 @@ export default function Discussions() {
                               <MessageCircle size={16} />
                               <span className="text-sm font-semibold">0</span>
                             </div>
-                            {(isThreadAuthor || user?.role === 'admin') && (
+                            {(isThreadAuthor || (user?.role === 'admin' && adminModeActive)) && (
                               <button
                                 onClick={(e) => handleDeleteThread(e, thread?.id || 0)}
                                 className="text-white/40 hover:text-red-400 transition-colors"
@@ -396,7 +396,7 @@ export default function Discussions() {
                                           <Heart size={12} />
                                           {r.reply?.likes || 0}
                                         </div>
-                                        {(user?.id === r.author?.id || user?.role === 'admin') && (
+                                        {(user?.id === r.author?.id || (user?.role === 'admin' && adminModeActive)) && (
                                           <button
                                             onClick={(e) => handleDeleteReply(e, r.reply?.id || 0)}
                                             className="text-white/40 hover:text-red-400 transition-colors"
