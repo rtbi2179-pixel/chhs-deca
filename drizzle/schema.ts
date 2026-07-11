@@ -235,3 +235,42 @@ export const ipRateLimits = mysqlTable("ipRateLimits", {
 
 export type IpRateLimit = typeof ipRateLimits.$inferSelect;
 export type InsertIpRateLimit = typeof ipRateLimits.$inferInsert;
+
+// Announcements
+export const announcements = mysqlTable("announcements", {
+  id: int("id").autoincrement().primaryKey(),
+  schoolCode: varchar("schoolCode", { length: 255 }).notNull(),
+  authorId: int("authorId").notNull().references(() => users.id),
+  title: varchar("title", { length: 500 }).notNull(),
+  content: text("content").notNull(),
+  imageUrl: varchar("imageUrl", { length: 1024 }),
+  fileUrl: varchar("fileUrl", { length: 1024 }),
+  fileName: varchar("fileName", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Announcement = typeof announcements.$inferSelect;
+export type InsertAnnouncement = typeof announcements.$inferInsert;
+
+export const announcementLikes = mysqlTable("announcementLikes", {
+  id: int("id").autoincrement().primaryKey(),
+  announcementId: int("announcementId").notNull().references(() => announcements.id, { onDelete: "cascade" }),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AnnouncementLike = typeof announcementLikes.$inferSelect;
+export type InsertAnnouncementLike = typeof announcementLikes.$inferInsert;
+
+export const announcementComments = mysqlTable("announcementComments", {
+  id: int("id").autoincrement().primaryKey(),
+  announcementId: int("announcementId").notNull().references(() => announcements.id, { onDelete: "cascade" }),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  content: text("content").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AnnouncementComment = typeof announcementComments.$inferSelect;
+export type InsertAnnouncementComment = typeof announcementComments.$inferInsert;

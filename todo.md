@@ -23,3 +23,12 @@
 - [x] Protect all routes except Home page
 - [x] Add login button to top-right navigation
 - [x] Test authentication flow and access restrictions
+
+- [ ] Create announcements section with admin posting capability
+- [ ] Implement file/image upload for announcements
+- [ ] Add email notifications to all chapter members when announcement is posted
+- [ ] Build announcements feed UI (SportsU style)
+- [ ] Implement like functionality on announcements
+- [ ] Add comment functionality on announcements
+- [ ] Create admin announcement management (edit/delete)
+- [ ] Add announcements tab to navigation

@@ -1,6 +1,6 @@
-import { eq, and, inArray } from "drizzle-orm";
+import { eq, and, inArray, desc, count, asc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits } from "../drizzle/schema";
+import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments} from "../drizzle/schema";
 import { ENV } from './_core/env';
 import bcrypt from 'bcryptjs';
 
@@ -925,3 +925,153 @@ export async function getAllAdmins() {
 /**
  * Delete discussion reply
  */
+
+// ===== ANNOUNCEMENTS =====
+export async function createAnnouncement(input: {
+  schoolCode: string
+  authorId: number
+  title: string
+  content: string
+  imageUrl?: string
+  fileUrl?: string
+  fileName?: string
+}) {
+  const db = getDb()
+  const now = new Date().getTime()
+  
+  const result = await db.insert(announcements).values({
+    schoolCode: input.schoolCode,
+    authorId: input.authorId,
+    title: input.title,
+    content: input.content,
+    imageUrl: input.imageUrl,
+    fileUrl: input.fileUrl,
+    fileName: input.fileName,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  })
+  
+  return result
+}
+
+export async function getAnnouncementsBySchool(schoolCode: string) {
+  const db = getDb()
+  
+  const result = await db
+    .select({
+      id: announcements.id,
+      schoolCode: announcements.schoolCode,
+      authorId: announcements.authorId,
+      authorName: users.name,
+      title: announcements.title,
+      content: announcements.content,
+      imageUrl: announcements.imageUrl,
+      fileUrl: announcements.fileUrl,
+      fileName: announcements.fileName,
+      createdAt: announcements.createdAt,
+      updatedAt: announcements.updatedAt,
+    })
+    .from(announcements)
+    .leftJoin(users, eq(announcements.authorId, users.id))
+    .where(eq(announcements.schoolCode, schoolCode))
+    .orderBy(desc(announcements.createdAt))
+  
+  return result
+}
+
+export async function likeAnnouncement(announcementId: number, userId: number) {
+  const db = getDb()
+  
+  // Check if already liked
+  const existing = await db
+    .select()
+    .from(announcementLikes)
+    .where(
+      and(
+        eq(announcementLikes.announcementId, announcementId),
+        eq(announcementLikes.userId, userId)
+      )
+    )
+  
+  if (existing.length > 0) {
+    // Unlike
+    await db
+      .delete(announcementLikes)
+      .where(
+        and(
+          eq(announcementLikes.announcementId, announcementId),
+          eq(announcementLikes.userId, userId)
+        )
+      )
+    return { liked: false }
+  } else {
+    // Like
+    await db.insert(announcementLikes).values({
+      announcementId,
+      userId,
+      createdAt: new Date(),
+    })
+    return { liked: true }
+  }
+}
+
+export async function getAnnouncementLikes(announcementId: number) {
+  const db = getDb()
+  
+  const result = await db
+    .select({ count: count() })
+    .from(announcementLikes)
+    .where(eq(announcementLikes.announcementId, announcementId))
+  
+  return result[0]?.count || 0
+}
+
+export async function addAnnouncementComment(announcementId: number, userId: number, content: string) {
+  const db = getDb()
+  
+  const result = await db.insert(announcementComments).values({
+    announcementId,
+    userId,
+    content,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  })
+  
+  return result
+}
+
+export async function getAnnouncementComments(announcementId: number) {
+  const db = getDb()
+  
+  const result = await db
+    .select({
+      id: announcementComments.id,
+      userId: announcementComments.userId,
+      userName: users.name,
+      content: announcementComments.content,
+      createdAt: announcementComments.createdAt,
+    })
+    .from(announcementComments)
+    .leftJoin(users, eq(announcementComments.userId, users.id))
+    .where(eq(announcementComments.announcementId, announcementId))
+    .orderBy(asc(announcementComments.createdAt))
+  
+  return result
+}
+
+export async function deleteAnnouncement(announcementId: number) {
+  const db = getDb()
+  
+  await db.delete(announcements).where(eq(announcements.id, announcementId))
+}
+
+export async function getUsersBySchoolCode(schoolCode: string) {
+  const db = getDb()
+  
+  const result = await db
+    .select({ email: users.email })
+    .from(users)
+    .where(eq(users.schoolCode, schoolCode))
+  
+  return result
+}
