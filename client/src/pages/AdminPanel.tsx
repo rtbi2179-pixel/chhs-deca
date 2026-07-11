@@ -121,9 +121,9 @@ export function AdminPanel() {
               {admins.length === 0 ? (
                 <p className="text-foreground/60">No admins yet</p>
               ) : (
-                admins.map((admin: any) => (
+                admins.map((admin: any, index: number) => (
                   <div
-                    key={admin.admin?.id}
+                    key={admin.admin?.email || index}
                     className="flex items-center justify-between p-4 bg-background border border-yellow-500/20 rounded hover:border-yellow-500/50 hover:shadow-[0_0_15px_rgba(250,204,21,0.3)] transition"
                   >
                     <div>
