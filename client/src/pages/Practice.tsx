@@ -299,8 +299,8 @@ export default function Practice() {
             )}
 
             {/* Action Buttons */}
-            <div className="flex gap-4 justify-between">
-              <div className="flex gap-4">
+            <div className="flex gap-4 justify-between items-center">
+              <div className="flex gap-4 items-center">
                 <Button
                   onClick={handlePreviousQuestion}
                   disabled={currentQuestionIndex === 0}
@@ -315,6 +315,27 @@ export default function Practice() {
                 >
                   Next
                 </Button>
+                <div className="flex items-center gap-2 ml-4 pl-4 border-l border-border">
+                  <label htmlFor="question-jump-bottom" className="text-foreground font-semibold whitespace-nowrap">Jump to:</label>
+                  <input
+                    id="question-jump-bottom"
+                    type="number"
+                    min="1"
+                    max={filteredQuestions.length}
+                    value={currentQuestionIndex + 1}
+                    onChange={(e) => {
+                      const num = parseInt(e.target.value);
+                      if (num >= 1 && num <= filteredQuestions.length) {
+                        setCurrentQuestionIndex(num - 1);
+                        setSelectedAnswer(null);
+                        setShowResult(false);
+                        setShowExplanation(false);
+                      }
+                    }}
+                    className="w-16 px-3 py-2 bg-background border border-border text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <span className="text-foreground/70 whitespace-nowrap">/ {filteredQuestions.length}</span>
+                </div>
               </div>
 
               {!showResult ? (
