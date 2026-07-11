@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Loader2, ChevronDown } from "lucide-react";
 
 export default function Practice() {
   const [selectedCluster, setSelectedCluster] = useState<string>("all");
@@ -10,6 +10,7 @@ export default function Practice() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
+  const [showExplanation, setShowExplanation] = useState(false);
   const [score, setScore] = useState(0);
   const [totalAnswered, setTotalAnswered] = useState(0);
 
@@ -51,6 +52,7 @@ export default function Practice() {
     if (!currentQuestion || !selectedAnswer) return;
 
     setShowResult(true);
+    setShowExplanation(false);
     if (selectedAnswer === currentQuestion.correctAnswer) {
       setScore(score + 1);
     }
@@ -62,6 +64,7 @@ export default function Practice() {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedAnswer(null);
       setShowResult(false);
+      setShowExplanation(false);
     }
   };
 
@@ -70,6 +73,7 @@ export default function Practice() {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
       setSelectedAnswer(null);
       setShowResult(false);
+      setShowExplanation(false);
     }
   };
 
@@ -77,6 +81,7 @@ export default function Practice() {
     setCurrentQuestionIndex(0);
     setSelectedAnswer(null);
     setShowResult(false);
+    setShowExplanation(false);
     setScore(0);
     setTotalAnswered(0);
   };
@@ -138,6 +143,7 @@ export default function Practice() {
                       setCurrentQuestionIndex(0);
                       setSelectedAnswer(null);
                       setShowResult(false);
+                      setShowExplanation(false);
                     }}
                     className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
                       selectedCluster === cluster.value
@@ -162,6 +168,7 @@ export default function Practice() {
                       setCurrentQuestionIndex(0);
                       setSelectedAnswer(null);
                       setShowResult(false);
+                      setShowExplanation(false);
                     }}
                     className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
                       selectedDifficulty === difficulty.value
@@ -230,17 +237,39 @@ export default function Practice() {
               })}
             </div>
 
-            {/* Explanation (shown after answer) */}
+            {/* Result Notification with Collapsible Explanation */}
             {showResult && (
-              <div className={`p-4 rounded-lg mb-8 ${
+              <div className={`rounded-lg mb-8 ${
                 selectedAnswer === currentQuestion.correctAnswer
-                  ? "bg-green-600/20 border border-green-600 text-green-400"
-                  : "bg-red-600/20 border border-red-600 text-red-400"
+                  ? "bg-green-600/20 border border-green-600"
+                  : "bg-red-600/20 border border-red-600"
               }`}>
-                <p className="font-semibold mb-2">
-                  {selectedAnswer === currentQuestion.correctAnswer ? "Correct!" : "Incorrect"}
-                </p>
-                <p className="text-sm">{currentQuestion.explanation}</p>
+                <button
+                  onClick={() => setShowExplanation(!showExplanation)}
+                  className={`w-full text-left p-4 flex items-center justify-between ${
+                    selectedAnswer === currentQuestion.correctAnswer
+                      ? "text-green-400"
+                      : "text-red-400"
+                  }`}
+                >
+                  <span className="font-semibold">
+                    {selectedAnswer === currentQuestion.correctAnswer ? "Correct!" : "Incorrect"}
+                  </span>
+                  <ChevronDown
+                    className={`w-5 h-5 transition-transform ${showExplanation ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                {/* Expandable Explanation */}
+                {showExplanation && (
+                  <div className={`px-4 pb-4 border-t ${
+                    selectedAnswer === currentQuestion.correctAnswer
+                      ? "border-green-600"
+                      : "border-red-600"
+                  }`}>
+                    <p className="text-sm mt-3">{currentQuestion.explanation}</p>
+                  </div>
+                )}
               </div>
             )}
 
