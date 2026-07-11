@@ -44,21 +44,12 @@ export function Announcements() {
 
     setUploading(true)
     try {
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('type', 'image')
-      
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      })
-      
-      if (!response.ok) throw new Error('Upload failed')
-      const data = await response.json()
-      setImageUrl(data.url)
-      toast.success('Image uploaded!')
+      // For now, just use the file name as placeholder
+      // In production, implement file upload to S3
+      setImageUrl(URL.createObjectURL(file))
+      toast.success('Image selected!')
     } catch (error) {
-      toast.error('Failed to upload image')
+      toast.error('Failed to select image')
     } finally {
       setUploading(false)
     }
@@ -70,22 +61,13 @@ export function Announcements() {
 
     setUploading(true)
     try {
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('type', 'file')
-      
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      })
-      
-      if (!response.ok) throw new Error('Upload failed')
-      const data = await response.json()
-      setFileUrl(data.url)
+      // For now, just use the file name as placeholder
+      // In production, implement file upload to S3
+      setFileUrl(URL.createObjectURL(file))
       setFileName(file.name)
-      toast.success('File uploaded!')
+      toast.success('File selected!')
     } catch (error) {
-      toast.error('Failed to upload file')
+      toast.error('Failed to select file')
     } finally {
       setUploading(false)
     }

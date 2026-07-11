@@ -6,7 +6,6 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import * as db from "./db";
 import { getAnnouncementsBySchool, createAnnouncement, likeAnnouncement, getAnnouncementLikes, addAnnouncementComment, getAnnouncementComments, deleteAnnouncement } from "./db";
-import { getAnnouncementsBySchool, createAnnouncement, likeAnnouncement, getAnnouncementLikes, addAnnouncementComment, getAnnouncementComments, deleteAnnouncement, updateAnnouncement }
 import { notifyOwner } from "./_core/notification";
 import { questions } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
@@ -68,30 +67,6 @@ export const announcementsRouter = router({
     .input(z.object({ announcementId: z.number() }))
     .query(async ({ input }) => {
       return await getAnnouncementComments(input.announcementId)
-    }),
-
-
-  update: protectedProcedure
-    .input(z.object({
-      announcementId: z.number(),
-      title: z.string().min(1).optional(),
-      content: z.string().min(1).optional(),
-      imageUrl: z.string().optional(),
-      fileUrl: z.string().optional(),
-      fileName: z.string().optional(),
-    }))
-    .mutation(async ({ ctx, input }) => {
-      if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
-        throw new TRPCError({ code: 'FORBIDDEN' })
-      }
-      
-      return await updateAnnouncement(input.announcementId, {
-        title: input.title,
-        content: input.content,
-        imageUrl: input.imageUrl,
-        fileUrl: input.fileUrl,
-        fileName: input.fileName,
-      })
     }),
 
   delete: protectedProcedure
