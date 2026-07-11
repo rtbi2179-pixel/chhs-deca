@@ -5,7 +5,6 @@ import { useAuth } from "@/_core/hooks/useAuth";
 
 export function AdminPanel() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<"admins" | "discussions" | "calendar" | "volunteers">("admins");
   const [emailToPromote, setEmailToPromote] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -64,147 +63,96 @@ export function AdminPanel() {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
+        {/* Header with Neon Glow */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2 flex items-center gap-2">
-            <span className="text-yellow-500">👑</span> Admin Panel
+          <h1 className="text-4xl font-bold mb-2 flex items-center gap-3">
+            <span className="text-yellow-500 text-5xl">👑</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 drop-shadow-[0_0_20px_rgba(250,204,21,0.8)]">
+              SUPER ADMIN PANEL
+            </span>
           </h1>
-          <p className="text-foreground/70">Manage your DECA hub</p>
-        </div>
-
-        {/* Tabs */}
-        <div className="flex gap-2 mb-6 border-b border-border overflow-x-auto">
-          <button
-            onClick={() => setActiveTab("admins")}
-            className={`px-4 py-2 font-semibold transition whitespace-nowrap ${
-              activeTab === "admins"
-                ? "text-yellow-500 border-b-2 border-yellow-500"
-                : "text-foreground/70 hover:text-foreground"
-            }`}
-          >
-            👑 Admins
-          </button>
-          <button
-            onClick={() => setActiveTab("discussions")}
-            className={`px-4 py-2 font-semibold transition whitespace-nowrap ${
-              activeTab === "discussions"
-                ? "text-yellow-500 border-b-2 border-yellow-500"
-                : "text-foreground/70 hover:text-foreground"
-            }`}
-          >
-            💬 Discussions
-          </button>
-          <button
-            onClick={() => setActiveTab("calendar")}
-            className={`px-4 py-2 font-semibold transition whitespace-nowrap ${
-              activeTab === "calendar"
-                ? "text-yellow-500 border-b-2 border-yellow-500"
-                : "text-foreground/70 hover:text-foreground"
-            }`}
-          >
-            📅 Calendar
-          </button>
-          <button
-            onClick={() => setActiveTab("volunteers")}
-            className={`px-4 py-2 font-semibold transition whitespace-nowrap ${
-              activeTab === "volunteers"
-                ? "text-yellow-500 border-b-2 border-yellow-500"
-                : "text-foreground/70 hover:text-foreground"
-            }`}
-          >
-            🤝 Volunteers
-          </button>
+          <p className="text-foreground/70">Manage admin roles and user permissions</p>
         </div>
 
         {/* Message */}
         {message && (
-          <div className={`mb-6 p-4 rounded ${message.includes("✅") ? "bg-green-500/10 text-green-400" : "bg-red-500/10 text-red-400"}`}>
+          <div className={`mb-6 p-4 rounded border-2 ${
+            message.includes("✅") 
+              ? "bg-green-500/20 text-green-300 border-green-500 shadow-[0_0_20px_rgba(34,197,94,0.5)]" 
+              : "bg-red-500/20 text-red-300 border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.5)]"
+          }`}>
             {message}
           </div>
         )}
 
-        {/* Admin Management Tab */}
-        {activeTab === "admins" && isSuperAdmin && (
-          <div className="space-y-6">
-            {/* Promote Admin Form */}
-            <div className="bg-card border border-border rounded-lg p-6">
-              <h2 className="text-xl font-bold text-foreground mb-4">Promote Admin</h2>
-              <form onSubmit={handlePromoteAdmin} className="flex gap-2">
-                <input
-                  type="email"
-                  value={emailToPromote}
-                  onChange={(e) => setEmailToPromote(e.target.value)}
-                  placeholder="Enter email to promote"
-                  className="flex-1 px-4 py-2 bg-background border border-border rounded text-foreground placeholder-foreground/50 focus:outline-none focus:border-yellow-500"
-                  required
-                />
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="bg-yellow-600 hover:bg-yellow-700 disabled:bg-yellow-600/50 text-white font-semibold px-6 py-2 rounded transition flex items-center gap-2"
-                >
-                  {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-                  <Plus className="w-4 h-4" />
-                  Promote
-                </button>
-              </form>
-            </div>
+        {/* Admin Management Section */}
+        <div className="space-y-6">
+          {/* Promote Admin Form */}
+          <div className="bg-card border-2 border-yellow-500/30 rounded-lg p-6 shadow-[0_0_30px_rgba(250,204,21,0.2)]">
+            <h2 className="text-xl font-bold text-yellow-400 mb-4 drop-shadow-[0_0_10px_rgba(250,204,21,0.6)]">
+              ⚡ Promote Admin
+            </h2>
+            <form onSubmit={handlePromoteAdmin} className="flex gap-2">
+              <input
+                type="email"
+                value={emailToPromote}
+                onChange={(e) => setEmailToPromote(e.target.value)}
+                placeholder="Enter email to promote"
+                className="flex-1 px-4 py-2 bg-background border-2 border-yellow-500/50 rounded text-foreground placeholder-foreground/50 focus:outline-none focus:border-yellow-400 focus:shadow-[0_0_15px_rgba(250,204,21,0.5)]"
+                required
+              />
+              <button
+                type="submit"
+                disabled={loading}
+                className="px-6 py-2 bg-gradient-to-r from-yellow-500 to-yellow-400 text-black font-bold rounded hover:shadow-[0_0_20px_rgba(250,204,21,0.8)] transition disabled:opacity-50 flex items-center gap-2"
+              >
+                {loading ? <Loader2 size={18} className="animate-spin" /> : <Plus size={18} />}
+                Promote
+              </button>
+            </form>
+          </div>
 
-            {/* Current Admins */}
-            <div className="bg-card border border-border rounded-lg p-6">
-              <h2 className="text-xl font-bold text-foreground mb-4">Current Admins ({admins.length})</h2>
-              <div className="space-y-2">
-                {admins.map((admin) => (
-                  <div key={admin.id} className="flex items-center justify-between bg-background p-3 rounded border border-border">
+          {/* Current Admins List */}
+          <div className="bg-card border-2 border-yellow-500/30 rounded-lg p-6 shadow-[0_0_30px_rgba(250,204,21,0.2)]">
+            <h2 className="text-xl font-bold text-yellow-400 mb-4 drop-shadow-[0_0_10px_rgba(250,204,21,0.6)]">
+              👥 Current Admins
+            </h2>
+            <div className="space-y-3">
+              {admins.length === 0 ? (
+                <p className="text-foreground/60">No admins yet</p>
+              ) : (
+                admins.map((admin: any) => (
+                  <div
+                    key={admin.admin?.id}
+                    className="flex items-center justify-between p-4 bg-background border border-yellow-500/20 rounded hover:border-yellow-500/50 hover:shadow-[0_0_15px_rgba(250,204,21,0.3)] transition"
+                  >
                     <div>
-                      <p className="font-semibold text-foreground">{admin.name || admin.email}</p>
-                      <p className="text-sm text-foreground/60">{admin.email}</p>
-                      <p className="text-xs text-yellow-500 mt-1">
-                        {admin.role === "super_admin" ? "👑 Super Admin" : "👤 Admin"}
+                      <p className="text-yellow-300 font-semibold">{admin.admin?.email}</p>
+                      <p className="text-foreground/50 text-sm">
+                        Promoted on {new Date(admin.admin?.createdAt).toLocaleDateString()}
                       </p>
                     </div>
-                    {admin.role !== "super_admin" && (
-                      <button
-                        onClick={() => handleDemoteAdmin(admin.email)}
-                        disabled={loading}
-                        className="bg-red-600/20 hover:bg-red-600/30 text-red-400 p-2 rounded transition"
-                      >
-                        <Minus className="w-4 h-4" />
-                      </button>
-                    )}
+                    <button
+                      onClick={() => handleDemoteAdmin(admin.admin?.email)}
+                      disabled={loading}
+                      className="px-4 py-2 bg-red-500/20 hover:bg-red-500/40 text-red-400 border border-red-500/30 rounded transition disabled:opacity-50 flex items-center gap-2"
+                    >
+                      <Minus size={16} />
+                      Demote
+                    </button>
                   </div>
-                ))}
-              </div>
+                ))
+              )}
             </div>
           </div>
-        )}
 
-        {/* Discussions Tab */}
-        {activeTab === "discussions" && (
-          <div className="bg-card border border-border rounded-lg p-6">
-            <h2 className="text-xl font-bold text-foreground mb-4">Manage Discussions</h2>
-            <p className="text-foreground/70">Delete inappropriate comments and manage discussions</p>
-            <p className="text-sm text-foreground/50 mt-2">Coming soon...</p>
+          {/* Info Box */}
+          <div className="bg-blue-500/10 border-2 border-blue-500/30 rounded-lg p-6 shadow-[0_0_20px_rgba(59,130,246,0.2)]">
+            <p className="text-blue-300">
+              <strong>💡 Note:</strong> Feature management (discussions, calendar, volunteers) is handled by regular admins through the "Manage" buttons on their respective pages.
+            </p>
           </div>
-        )}
-
-        {/* Calendar Tab */}
-        {activeTab === "calendar" && (
-          <div className="bg-card border border-border rounded-lg p-6">
-            <h2 className="text-xl font-bold text-foreground mb-4">Manage Calendar</h2>
-            <p className="text-foreground/70">Add and remove competition dates</p>
-            <p className="text-sm text-foreground/50 mt-2">Coming soon...</p>
-          </div>
-        )}
-
-        {/* Volunteers Tab */}
-        {activeTab === "volunteers" && (
-          <div className="bg-card border border-border rounded-lg p-6">
-            <h2 className="text-xl font-bold text-foreground mb-4">Manage Volunteer Opportunities</h2>
-            <p className="text-foreground/70">Create, edit, and manage volunteer sign-ups</p>
-            <p className="text-sm text-foreground/50 mt-2">Coming soon...</p>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );
