@@ -14,7 +14,6 @@ export default function LoginSignup() {
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [schoolCode, setSchoolCode] = useState("");
   const [schoolCodePassword, setSchoolCodePassword] = useState("");
 
   // Mutations
@@ -29,15 +28,9 @@ export default function LoginSignup() {
 
     try {
       // Validate school code password
-      const selectedSchool = schoolCodes.find(s => s.code === schoolCode);
+      const selectedSchool = schoolCodes.find(s => s.code === schoolCodePassword);
       if (!selectedSchool) {
-        setError("Please select a valid school");
-        setLoading(false);
-        return;
-      }
-      
-      if (schoolCodePassword !== selectedSchool.code) {
-        setError("Invalid school code password");
+        setError("Invalid school code. Please check with your DECA advisor.");
         setLoading(false);
         return;
       }
@@ -47,7 +40,7 @@ export default function LoginSignup() {
         lastName,
         username,
         password,
-        schoolCode,
+        schoolCode: schoolCodePassword,
       });
 
       // After signup, login automatically
@@ -132,26 +125,7 @@ export default function LoginSignup() {
 
               <div>
                 <label className="block text-foreground font-semibold mb-2 text-sm">
-                  School
-                </label>
-                <select
-                  value={schoolCode}
-                  onChange={(e) => setSchoolCode(e.target.value)}
-                  required
-                  className="w-full px-4 py-2 bg-background border border-border rounded text-foreground focus:outline-none focus:border-blue-500"
-                >
-                  <option value="">Select your school</option>
-                  {schoolCodes.map((code) => (
-                    <option key={code.id} value={code.code}>
-                      {code.schoolName}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-foreground font-semibold mb-2 text-sm">
-                  School Code Password
+                  School Code
                 </label>
                 <input
                   type="password"
@@ -159,9 +133,9 @@ export default function LoginSignup() {
                   onChange={(e) => setSchoolCodePassword(e.target.value)}
                   required
                   className="w-full px-4 py-2 bg-background border border-border rounded text-foreground placeholder-foreground/50 focus:outline-none focus:border-blue-500"
-                  placeholder="Enter your school's access code"
+                  placeholder="Enter your school code"
                 />
-                <p className="text-foreground/50 text-xs mt-1">Ask your DECA advisor for the school code password</p>
+                <p className="text-foreground/50 text-xs mt-1">Ask your DECA advisor for your school code</p>
               </div>
             </>
           )}
@@ -216,7 +190,6 @@ export default function LoginSignup() {
               setLastName("");
               setUsername("");
               setPassword("");
-              setSchoolCode("");
               setSchoolCodePassword("");
             }}
             className="text-blue-400 hover:text-blue-300 font-semibold text-sm"
