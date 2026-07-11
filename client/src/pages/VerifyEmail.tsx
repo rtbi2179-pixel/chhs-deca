@@ -7,12 +7,20 @@ export function VerifyEmail() {
   const search = useSearch();
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [message, setMessage] = useState("");
+  const [email, setEmail] = useState("");
+  const [resendLoading, setResendLoading] = useState(false);
 
   const verifyMutation = trpc.auth.verifyEmail.useMutation();
+  const resendMutation = trpc.auth.resendEmailVerification.useMutation();
 
   useEffect(() => {
     const params = new URLSearchParams(search);
     const token = params.get("token");
+    const emailParam = params.get("email");
+
+    if (emailParam) {
+      setEmail(emailParam);
+    }
 
     if (!token) {
       setStatus("error");
@@ -36,6 +44,23 @@ export function VerifyEmail() {
 
     verify();
   }, [search]);
+
+  const handleResend = async () => {
+    if (!email) {
+      alert("Email not found. Please try signing up again.");
+      return;
+    }
+
+    setResendLoading(true);
+    try {
+      await resendMutation.mutateAsync({ email });
+      alert("Verification email sent! Please check your inbox.");
+    } catch (error: any) {
+      alert(error.message || "Failed to resend verification email");
+    } finally {
+      setResendLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
@@ -63,12 +88,22 @@ export function VerifyEmail() {
               <XCircle className="w-12 h-12 mx-auto mb-4 text-red-500" />
               <h1 className="text-2xl font-bold text-foreground mb-2">Verification Failed</h1>
               <p className="text-foreground/70 mb-6">{message}</p>
-              <a
-                href="/"
-                className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded transition"
-              >
-                Back to Login
-              </a>
+              <div className="space-y-3">
+                <button
+                  onClick={handleResend}
+                  disabled={resendLoading || !email}
+                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 text-white font-semibold py-2 rounded transition flex items-center justify-center gap-2"
+                >
+                  {resendLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+                  {resendLoading ? "Sending..." : "Resend Verification Email"}
+                </button>
+                <a
+                  href="/"
+                  className="block bg-foreground/10 hover:bg-foreground/20 text-foreground font-semibold py-2 rounded transition"
+                >
+                  Back to Login
+                </a>
+              </div>
             </>
           )}
         </div>

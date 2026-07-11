@@ -676,3 +676,16 @@ export async function verifyTwoFactorCode(userId: number, code: string) {
 
   return { success: true };
 }
+
+/**
+ * Get user by email
+ */
+export async function getUserByEmail(email: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.select()
+    .from(users)
+    .where(eq(users.email, email))
+    .limit(1);
+  return result[0] || null;
+}

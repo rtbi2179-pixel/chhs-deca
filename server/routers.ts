@@ -95,6 +95,46 @@ export const appRouter = router({
           throw new Error(error.message);
         }
       }),
+    generateTwoFactorCode: protectedProcedure
+      .mutation(async ({ ctx }) => {
+        try {
+          const result = await db.generateTwoFactorCode(ctx.user.id);
+          return { success: true, message: "2FA code sent to email" };
+        } catch (error: any) {
+          throw new Error(error.message);
+        }
+      }),
+    verifyTwoFactorCode: publicProcedure
+      .input(z.object({
+        userId: z.number(),
+        code: z.string().length(6, "Code must be 6 digits"),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        try {
+          await db.verifyTwoFactorCode(input.userId, input.code);
+          const cookieOptions = getSessionCookieOptions(ctx.req);
+          ctx.res.cookie(COOKIE_NAME, input.userId.toString(), cookieOptions);
+          return { success: true, message: "2FA verification successful" };
+        } catch (error: any) {
+          throw new Error(error.message);
+        }
+      }),
+    resendEmailVerification: publicProcedure
+      .input(z.object({
+        email: z.string().email("Valid email is required"),
+      }))
+      .mutation(async ({ input }) => {
+        try {
+          const user = await db.getUserByEmail(input.email);
+          if (!user) {
+            throw new Error("User not found");
+          }
+          await db.sendEmailVerification(user.id);
+          return { success: true, message: "Verification email sent" };
+        } catch (error: any) {
+          throw new Error(error.message);
+        }
+      }),
   }),
 
   volunteers: router({
