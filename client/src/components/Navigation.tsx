@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'wouter'
-import { Menu, X, Trophy, BookOpen, Calendar, Users, Home, LogOut, MessageSquare, Mic } from 'lucide-react'
+import { Menu, X, Trophy, BookOpen, Calendar, Users, Home, LogOut, MessageSquare, Mic, Crown } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { trpc } from '@/lib/trpc'
@@ -14,6 +14,8 @@ const navLinks = [
   { href: '/discussions', label: 'Discussions', icon: MessageSquare },
   { href: '/speech-ai', label: 'Speech AI', icon: Mic },
 ]
+
+const adminLink = { href: '/admin', label: 'Admin', icon: Crown }
 
 interface NavigationProps {
   onLoginRequired?: () => void
@@ -126,6 +128,49 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
                   </Link>
                 )
               })}
+              
+              {/* Admin Link - Only show if user is admin */}
+              {user && (user.role === 'admin' || user.role === 'super_admin' || user.email === 'rtbi2179@gmail.com') && (
+                <Link href={adminLink.href}>
+                  <motion.button
+                    onMouseEnter={() => setHoveredIcon(adminLink.href)}
+                    onMouseLeave={() => setHoveredIcon(null)}
+                    layout
+                    className={`relative px-2 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 whitespace-nowrap ${
+                      location === adminLink.href
+                        ? 'text-yellow-400 bg-yellow-500/10'
+                        : 'text-yellow-400/60 hover:text-yellow-400 hover:bg-yellow-500/5'
+                    }`}
+                  >
+                    <adminLink.icon size={20} />
+                    
+                    {/* Expandable Label */}
+                    <motion.span
+                      initial={false}
+                      animate={{
+                        opacity: hoveredIcon === adminLink.href ? 1 : 0,
+                        width: hoveredIcon === adminLink.href ? 'auto' : 0,
+                        marginLeft: hoveredIcon === adminLink.href ? 4 : 0,
+                      }}
+                      transition={{
+                        duration: 0.2,
+                        ease: 'easeOut',
+                      }}
+                      className="text-xs font-medium overflow-hidden"
+                    >
+                      {adminLink.label}
+                    </motion.span>
+
+                    {location === adminLink.href && (
+                      <motion.div
+                        layoutId="nav-indicator"
+                        className="absolute bottom-1 left-2 right-2 h-0.5 bg-yellow-500 rounded-full"
+                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                      />
+                    )}
+                  </motion.button>
+                </Link>
+              )}
             </nav>
 
             {/* Right Side - Auth */}

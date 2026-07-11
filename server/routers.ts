@@ -151,6 +151,57 @@ export const appRouter = router({
           throw new Error(error.message);
         }
       }),
+    
+    promoteToAdmin: publicProcedure
+      .input(z.object({
+        email: z.string().email("Valid email is required"),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        try {
+          // Only super_admin can promote
+          if (ctx.user?.role !== "super_admin") {
+            throw new Error("Only super admins can promote users");
+          }
+          
+          const result = await db.promoteToAdmin(input.email);
+          return result;
+        } catch (error: any) {
+          throw new Error(error.message);
+        }
+      }),
+    
+    demoteFromAdmin: publicProcedure
+      .input(z.object({
+        email: z.string().email("Valid email is required"),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        try {
+          // Only super_admin can demote
+          if (ctx.user?.role !== "super_admin") {
+            throw new Error("Only super admins can demote users");
+          }
+          
+          const result = await db.demoteFromAdmin(input.email);
+          return result;
+        } catch (error: any) {
+          throw new Error(error.message);
+        }
+      }),
+    
+    getAllAdmins: publicProcedure
+      .query(async ({ ctx }) => {
+        try {
+          // Only admins can view admin list
+          if (!ctx.user || (ctx.user.role !== "admin" && ctx.user.role !== "super_admin")) {
+            throw new Error("Unauthorized");
+          }
+          
+          const admins = await db.getAllAdmins();
+          return admins;
+        } catch (error: any) {
+          throw new Error(error.message);
+        }
+      }),
   }),
 
   volunteers: router({

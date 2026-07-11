@@ -873,3 +873,55 @@ export async function resetIpRateLimit(ipAddress: string, endpoint: string) {
       )
     );
 }
+
+/**
+ * Promote user to admin
+ */
+export async function promoteToAdmin(email: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const user = await getUserByEmail(email);
+  if (!user) throw new Error("User not found");
+  
+  await db.update(users)
+    .set({ role: "admin" })
+    .where(eq(users.id, user.id));
+  
+  return { success: true, user };
+}
+
+/**
+ * Demote admin to user
+ */
+export async function demoteFromAdmin(email: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const user = await getUserByEmail(email);
+  if (!user) throw new Error("User not found");
+  
+  await db.update(users)
+    .set({ role: "user" })
+    .where(eq(users.id, user.id));
+  
+  return { success: true, user };
+}
+
+/**
+ * Get all admins
+ */
+export async function getAllAdmins() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const admins = await db.select()
+    .from(users)
+    .where(inArray(users.role, ["admin", "super_admin"]));
+  
+  return admins;
+}
+
+/**
+ * Delete discussion reply
+ */
