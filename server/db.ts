@@ -936,8 +936,11 @@ export async function createAnnouncement(input: {
   fileUrl?: string
   fileName?: string
 }) {
-  const db = getDb()
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
   const now = new Date().getTime()
+  
+  if (!db) throw new Error("Database connection failed")
   
   const result = await db.insert(announcements).values({
     schoolCode: input.schoolCode,
@@ -955,7 +958,8 @@ export async function createAnnouncement(input: {
 }
 
 export async function getAnnouncementsBySchool(schoolCode: string) {
-  const db = getDb()
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
   
   const result = await db
     .select({
@@ -980,7 +984,8 @@ export async function getAnnouncementsBySchool(schoolCode: string) {
 }
 
 export async function likeAnnouncement(announcementId: number, userId: number) {
-  const db = getDb()
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
   
   // Check if already liked
   const existing = await db
@@ -1016,7 +1021,8 @@ export async function likeAnnouncement(announcementId: number, userId: number) {
 }
 
 export async function getAnnouncementLikes(announcementId: number) {
-  const db = getDb()
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
   
   const result = await db
     .select({ count: count() })
@@ -1027,7 +1033,8 @@ export async function getAnnouncementLikes(announcementId: number) {
 }
 
 export async function addAnnouncementComment(announcementId: number, userId: number, content: string) {
-  const db = getDb()
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
   
   const result = await db.insert(announcementComments).values({
     announcementId,
@@ -1041,7 +1048,8 @@ export async function addAnnouncementComment(announcementId: number, userId: num
 }
 
 export async function getAnnouncementComments(announcementId: number) {
-  const db = getDb()
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
   
   const result = await db
     .select({
@@ -1060,13 +1068,15 @@ export async function getAnnouncementComments(announcementId: number) {
 }
 
 export async function deleteAnnouncement(announcementId: number) {
-  const db = getDb()
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
   
   await db.delete(announcements).where(eq(announcements.id, announcementId))
 }
 
 export async function getUsersBySchoolCode(schoolCode: string) {
-  const db = getDb()
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
   
   const result = await db
     .select({ email: users.email })

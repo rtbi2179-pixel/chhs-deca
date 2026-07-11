@@ -10,6 +10,76 @@ import { notifyOwner } from "./_core/notification";
 import { questions } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 
+export const announcementsRouter = router({
+  getBySchool: publicProcedure
+    .input(z.object({ schoolCode: z.string() }))
+    .query(async ({ input }) => {
+      return await getAnnouncementsBySchool(input.schoolCode)
+    }),
+
+  create: protectedProcedure
+    .input(z.object({
+      title: z.string().min(1),
+      content: z.string().min(1),
+      imageUrl: z.string().optional(),
+      fileUrl: z.string().optional(),
+      fileName: z.string().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
+        throw new TRPCError({ code: 'FORBIDDEN' })
+      }
+      
+      if (!ctx.user.schoolCode) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'User has no school code' })
+      }
+
+      return await createAnnouncement({
+        schoolCode: ctx.user.schoolCode,
+        authorId: ctx.user.id,
+        title: input.title,
+        content: input.content,
+        imageUrl: input.imageUrl,
+        fileUrl: input.fileUrl,
+        fileName: input.fileName,
+      })
+    }),
+
+  like: protectedProcedure
+    .input(z.object({ announcementId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      return await likeAnnouncement(input.announcementId, ctx.user.id)
+    }),
+
+  getLikes: publicProcedure
+    .input(z.object({ announcementId: z.number() }))
+    .query(async ({ input }) => {
+      return await getAnnouncementLikes(input.announcementId)
+    }),
+
+  addComment: protectedProcedure
+    .input(z.object({ announcementId: z.number(), content: z.string().min(1) }))
+    .mutation(async ({ ctx, input }) => {
+      return await addAnnouncementComment(input.announcementId, ctx.user.id, input.content)
+    }),
+
+  getComments: publicProcedure
+    .input(z.object({ announcementId: z.number() }))
+    .query(async ({ input }) => {
+      return await getAnnouncementComments(input.announcementId)
+    }),
+
+  delete: protectedProcedure
+    .input(z.object({ announcementId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
+        throw new TRPCError({ code: 'FORBIDDEN' })
+      }
+      
+      return await deleteAnnouncement(input.announcementId)
+    }),
+})
+
 export const appRouter = router({
   announcements: announcementsRouter,
   system: systemRouter,
@@ -322,72 +392,3 @@ export const appRouter = router({
 export type AppRouter = typeof appRouter;
 
 // ===== ANNOUNCEMENTS ROUTER =====
-export const announcementsRouter = router({
-  getBySchool: publicProcedure
-    .input(z.object({ schoolCode: z.string() }))
-    .query(async ({ input }) => {
-      return await getAnnouncementsBySchool(input.schoolCode)
-    }),
-
-  create: protectedProcedure
-    .input(z.object({
-      title: z.string().min(1),
-      content: z.string().min(1),
-      imageUrl: z.string().optional(),
-      fileUrl: z.string().optional(),
-      fileName: z.string().optional(),
-    }))
-    .mutation(async ({ ctx, input }) => {
-      if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
-        throw new TRPCError({ code: 'FORBIDDEN' })
-      }
-      
-      if (!ctx.user.schoolCode) {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'User has no school code' })
-      }
-
-      return await createAnnouncement({
-        schoolCode: ctx.user.schoolCode,
-        authorId: ctx.user.id,
-        title: input.title,
-        content: input.content,
-        imageUrl: input.imageUrl,
-        fileUrl: input.fileUrl,
-        fileName: input.fileName,
-      })
-    }),
-
-  like: protectedProcedure
-    .input(z.object({ announcementId: z.number() }))
-    .mutation(async ({ ctx, input }) => {
-      return await likeAnnouncement(input.announcementId, ctx.user.id)
-    }),
-
-  getLikes: publicProcedure
-    .input(z.object({ announcementId: z.number() }))
-    .query(async ({ input }) => {
-      return await getAnnouncementLikes(input.announcementId)
-    }),
-
-  addComment: protectedProcedure
-    .input(z.object({ announcementId: z.number(), content: z.string().min(1) }))
-    .mutation(async ({ ctx, input }) => {
-      return await addAnnouncementComment(input.announcementId, ctx.user.id, input.content)
-    }),
-
-  getComments: publicProcedure
-    .input(z.object({ announcementId: z.number() }))
-    .query(async ({ input }) => {
-      return await getAnnouncementComments(input.announcementId)
-    }),
-
-  delete: protectedProcedure
-    .input(z.object({ announcementId: z.number() }))
-    .mutation(async ({ ctx, input }) => {
-      if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
-        throw new TRPCError({ code: 'FORBIDDEN' })
-      }
-      
-      return await deleteAnnouncement(input.announcementId)
-    }),
-})
