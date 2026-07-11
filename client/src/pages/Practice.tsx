@@ -48,15 +48,31 @@ export default function Practice() {
     setSelectedAnswer(answer);
   };
 
-  const handleSubmitAnswer = () => {
+  const updateLeaderboardMutation = trpc.practice.updateLeaderboard.useMutation();
+
+  const handleSubmitAnswer = async () => {
     if (!currentQuestion || !selectedAnswer) return;
+
+    const isCorrect = selectedAnswer === currentQuestion.correctAnswer;
+    const newScore = isCorrect ? score + 1 : score;
+    const newTotalAnswered = totalAnswered + 1;
 
     setShowResult(true);
     setShowExplanation(false);
-    if (selectedAnswer === currentQuestion.correctAnswer) {
-      setScore(score + 1);
+    if (isCorrect) {
+      setScore(newScore);
     }
-    setTotalAnswered(totalAnswered + 1);
+    setTotalAnswered(newTotalAnswered);
+
+    try {
+      await updateLeaderboardMutation.mutateAsync({
+        correctAnswers: newScore,
+        totalAnswered: newTotalAnswered,
+        cluster: currentQuestion.cluster,
+      });
+    } catch (error) {
+      console.error("Failed to update leaderboard", error);
+    }
   };
 
   const handleNextQuestion = () => {
@@ -90,6 +106,10 @@ export default function Practice() {
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (!currentQuestion) return;
+      
+      // Don't trigger shortcuts if user is typing in an input field
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') return;
 
       switch (e.key) {
         case "ArrowLeft":

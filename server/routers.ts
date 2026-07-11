@@ -84,6 +84,11 @@ export const appRouter = router({
     getLeaderboardByCluster: publicProcedure
       .input(z.object({ cluster: z.string(), limit: z.number().optional() }))
       .query(({ input }) => db.getLeaderboardByCluster(input.cluster, input.limit)),
+    updateLeaderboard: protectedProcedure
+      .input(z.object({ correctAnswers: z.number(), totalAnswered: z.number(), cluster: z.string() }))
+      .mutation(async ({ input, ctx }) => {
+        return db.updateLeaderboard(ctx.user.id, input.correctAnswers, input.totalAnswered, input.cluster);
+      }),
   }),
 
   discussions: router({
