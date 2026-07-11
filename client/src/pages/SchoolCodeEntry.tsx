@@ -63,8 +63,13 @@ export function SchoolCodeEntry() {
     } catch (err: any) {
       const errorMsg = err.message || "School code verification failed";
       
+      // Check if rate limited by IP
+      if (errorMsg.includes("Too many") || errorMsg.includes("rate limit")) {
+        setError("Too many attempts from your IP. Please try again in 30 minutes.");
+        setStatus("error");
+      }
       // Check if email was blacklisted
-      if (errorMsg.includes("blacklisted")) {
+      else if (errorMsg.includes("blacklisted")) {
         setStatus("blacklisted");
         setError("This email has been blocked due to too many failed attempts.");
       } else {

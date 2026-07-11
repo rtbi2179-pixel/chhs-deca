@@ -219,3 +219,19 @@ export const schoolCodeAttempts = mysqlTable("schoolCodeAttempts", {
 
 export type SchoolCodeAttempt = typeof schoolCodeAttempts.$inferSelect;
 export type InsertSchoolCodeAttempt = typeof schoolCodeAttempts.$inferInsert;
+
+/**
+ * Rate limiting for IP addresses
+ */
+export const ipRateLimits = mysqlTable("ipRateLimits", {
+  id: int("id").autoincrement().primaryKey(),
+  ipAddress: varchar("ipAddress", { length: 45 }).notNull(), // IPv4 or IPv6
+  endpoint: varchar("endpoint", { length: 255 }).notNull(), // e.g., "signup", "school-code"
+  attemptCount: int("attemptCount").default(0).notNull(),
+  lastAttemptAt: timestamp("lastAttemptAt").defaultNow().onUpdateNow().notNull(),
+  blockedUntil: timestamp("blockedUntil"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type IpRateLimit = typeof ipRateLimits.$inferSelect;
+export type InsertIpRateLimit = typeof ipRateLimits.$inferInsert;

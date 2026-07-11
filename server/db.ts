@@ -1,6 +1,6 @@
 import { eq, and, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts } from "../drizzle/schema";
+import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import bcrypt from 'bcryptjs';
 
@@ -764,4 +764,112 @@ export async function resetSchoolCodeAttempts(email: string) {
   if (!db) throw new Error("Database not available");
   await db.delete(schoolCodeAttempts)
     .where(eq(schoolCodeAttempts.email, email));
+}
+
+/**
+ * Check if IP is rate limited
+ */
+export async function checkIpRateLimit(ipAddress: string, endpoint: string, maxAttempts: number = 10, windowMinutes: number = 15) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const now = new Date();
+  const windowStart = new Date(now.getTime() - windowMinutes * 60 * 1000);
+  
+  const result = await db.select()
+    .from(ipRateLimits)
+    .where(
+      and(
+        eq(ipRateLimits.ipAddress, ipAddress),
+        eq(ipRateLimits.endpoint, endpoint)
+      )
+    )
+    .limit(1);
+  
+  if (result.length === 0) {
+    return { isLimited: false, attempts: 0, blockedUntil: null };
+  }
+  
+  const record = result[0];
+  
+  // Check if currently blocked
+  if (record.blockedUntil && new Date() < record.blockedUntil) {
+    return { isLimited: true, attempts: record.attemptCount, blockedUntil: record.blockedUntil };
+  }
+  
+  // Check if within window
+  if (record.lastAttemptAt >= windowStart) {
+    return { isLimited: record.attemptCount >= maxAttempts, attempts: record.attemptCount, blockedUntil: null };
+  }
+  
+  return { isLimited: false, attempts: 0, blockedUntil: null };
+}
+
+/**
+ * Track IP attempt
+ */
+export async function trackIpAttempt(ipAddress: string, endpoint: string, blockDurationMinutes: number = 30) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const existing = await db.select()
+    .from(ipRateLimits)
+    .where(
+      and(
+        eq(ipRateLimits.ipAddress, ipAddress),
+        eq(ipRateLimits.endpoint, endpoint)
+      )
+    )
+    .limit(1);
+  
+  if (existing.length > 0) {
+    const record = existing[0];
+    const newAttemptCount = record.attemptCount + 1;
+    
+    // Block if exceeded limit
+    let blockedUntil = null;
+    if (newAttemptCount >= 10) {
+      blockedUntil = new Date(Date.now() + blockDurationMinutes * 60 * 1000);
+    }
+    
+    await db.update(ipRateLimits)
+      .set({
+        attemptCount: newAttemptCount,
+        blockedUntil,
+        lastAttemptAt: new Date(),
+      })
+      .where(
+        and(
+          eq(ipRateLimits.ipAddress, ipAddress),
+          eq(ipRateLimits.endpoint, endpoint)
+        )
+      );
+    
+    return newAttemptCount;
+  } else {
+    await db.insert(ipRateLimits)
+      .values({
+        ipAddress,
+        endpoint,
+        attemptCount: 1,
+      });
+    
+    return 1;
+  }
+}
+
+/**
+ * Reset IP rate limit
+ */
+export async function resetIpRateLimit(ipAddress: string, endpoint: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(ipRateLimits)
+    .where(
+      and(
+        eq(ipRateLimits.ipAddress, ipAddress),
+        eq(ipRateLimits.endpoint, endpoint)
+      )
+    );
 }

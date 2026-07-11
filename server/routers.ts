@@ -27,8 +27,20 @@ export const appRouter = router({
         password: z.string().min(6, "Password must be at least 6 characters"),
         schoolCode: z.string().min(1, "School code is required"),
       }))
-      .mutation(async ({ input }) => {
+      .mutation(async ({ input, ctx }) => {
         try {
+          // Get client IP
+          const clientIp = ctx.req.headers['x-forwarded-for']?.toString().split(',')[0] || ctx.req.socket.remoteAddress || 'unknown';
+          
+          // Check rate limit
+          const rateLimit = await db.checkIpRateLimit(clientIp, 'signup');
+          if (rateLimit.isLimited) {
+            throw new Error("Too many signup attempts. Please try again later.");
+          }
+          
+          // Track attempt
+          await db.trackIpAttempt(clientIp, 'signup');
+          
           await db.createCustomAuthUser(
             input.firstName,
             input.lastName,
@@ -36,6 +48,10 @@ export const appRouter = router({
             input.password,
             input.schoolCode
           );
+          
+          // Reset on success
+          await db.resetIpRateLimit(clientIp, 'signup');
+          
           return { success: true };
         } catch (error: any) {
           throw new Error(error.message);
