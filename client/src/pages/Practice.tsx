@@ -222,12 +222,12 @@ export default function Practice() {
               >
                 View Leaderboard
               </Button>
-              <Button 
+              <button
                 onClick={() => setShowStudySessions(!showStudySessions)}
-                className="bg-green-600 hover:bg-green-700"
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded font-medium transition-colors"
               >
                 Study Sessions
-              </Button>
+              </button>
               <div className="flex items-center gap-2">
               <label htmlFor="question-jump" className="text-foreground font-semibold">Jump to:</label>
               <input
