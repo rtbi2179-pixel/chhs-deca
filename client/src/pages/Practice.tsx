@@ -118,15 +118,40 @@ export default function Practice() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2">DECA Practice Questions</h1>
-          <p className="text-foreground/70">
-            Question {currentQuestionIndex + 1} of {filteredQuestions.length}
-          </p>
-          {totalAnswered > 0 && (
-            <p className="text-foreground/70 mt-2">
-              Score: {score} / {totalAnswered} ({Math.round((score / totalAnswered) * 100)}%)
-            </p>
-          )}
+          <h1 className="text-4xl font-bold text-foreground mb-4">DECA Practice Questions</h1>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <p className="text-lg font-semibold text-foreground">
+                Question {currentQuestionIndex + 1} of {filteredQuestions.length}
+              </p>
+              {totalAnswered > 0 && (
+                <p className="text-foreground/70 mt-1">
+                  Score: {score} / {totalAnswered} ({Math.round((score / totalAnswered) * 100)}%)
+                </p>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              <label htmlFor="question-jump" className="text-foreground font-semibold">Jump to:</label>
+              <input
+                id="question-jump"
+                type="number"
+                min="1"
+                max={filteredQuestions.length}
+                value={currentQuestionIndex + 1}
+                onChange={(e) => {
+                  const num = parseInt(e.target.value);
+                  if (num >= 1 && num <= filteredQuestions.length) {
+                    setCurrentQuestionIndex(num - 1);
+                    setSelectedAnswer(null);
+                    setShowResult(false);
+                    setShowExplanation(false);
+                  }
+                }}
+                className="w-16 px-3 py-2 bg-background border border-border text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <span className="text-foreground/70">/ {filteredQuestions.length}</span>
+            </div>
+          </div>
         </div>
 
         {/* Filters */}
