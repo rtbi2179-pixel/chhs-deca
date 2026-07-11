@@ -274,3 +274,24 @@ export const announcementComments = mysqlTable("announcementComments", {
 
 export type AnnouncementComment = typeof announcementComments.$inferSelect;
 export type InsertAnnouncementComment = typeof announcementComments.$inferInsert;
+
+
+/**
+ * Calendar events for competitions and deadlines
+ */
+export const calendarEvents = mysqlTable("calendarEvents", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  date: varchar("date", { length: 10 }).notNull(), // YYYY-MM-DD format
+  time: varchar("time", { length: 5 }), // HH:MM format
+  location: varchar("location", { length: 255 }),
+  link: varchar("link", { length: 500 }),
+  type: mysqlEnum("type", ["district", "state", "icdc", "chapter", "deadline"]).notNull(),
+  createdBy: int("createdBy").notNull().references(() => users.id, { onDelete: "cascade" }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CalendarEvent = typeof calendarEvents.$inferSelect;
+export type InsertCalendarEvent = typeof calendarEvents.$inferInsert;

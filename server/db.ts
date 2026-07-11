@@ -1,6 +1,6 @@
 import { eq, and, inArray, desc, count, asc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments} from "../drizzle/schema";
+import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments, calendarEvents, CalendarEvent, InsertCalendarEvent} from "../drizzle/schema";
 import { ENV } from './_core/env';
 import bcrypt from 'bcryptjs';
 
@@ -1083,5 +1083,60 @@ export async function getUsersBySchoolCode(schoolCode: string) {
     .from(users)
     .where(eq(users.schoolCode, schoolCode))
   
+  return result
+}
+
+
+// Calendar Events
+export async function getAllCalendarEvents() {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  const result = await db
+    .select({
+      id: calendarEvents.id,
+      title: calendarEvents.title,
+      description: calendarEvents.description,
+      date: calendarEvents.date,
+      time: calendarEvents.time,
+      location: calendarEvents.location,
+      link: calendarEvents.link,
+      type: calendarEvents.type,
+      createdBy: calendarEvents.createdBy,
+      createdAt: calendarEvents.createdAt,
+      updatedAt: calendarEvents.updatedAt,
+    })
+    .from(calendarEvents)
+    .orderBy(asc(calendarEvents.date))
+  return result
+}
+
+export async function createCalendarEvent(event: InsertCalendarEvent) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  const result = await db.insert(calendarEvents).values({
+    ...event,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  })
+  return result
+}
+
+export async function updateCalendarEvent(id: number, event: Partial<InsertCalendarEvent>) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  const result = await db
+    .update(calendarEvents)
+    .set({
+      ...event,
+      updatedAt: new Date(),
+    })
+    .where(eq(calendarEvents.id, id))
+  return result
+}
+
+export async function deleteCalendarEvent(id: number) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  const result = await db.delete(calendarEvents).where(eq(calendarEvents.id, id))
   return result
 }

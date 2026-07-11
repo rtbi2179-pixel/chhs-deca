@@ -10,6 +10,8 @@ import { ChevronLeft, ChevronRight, Calendar, MapPin, ExternalLink, Trophy, Cloc
 import { useAuth } from '@/_core/hooks/useAuth'
 import { useAdminMode } from '@/contexts/AdminModeContext'
 import { toast } from 'sonner'
+import { Trash2, Edit2 } from 'lucide-react'
+import { trpc } from '@/lib/trpc'
 
 type EventType = 'district' | 'state' | 'icdc' | 'chapter' | 'deadline'
 
@@ -101,18 +103,49 @@ export default function CalendarPage() {
   const [viewMonth, setViewMonth] = useState(today.getMonth())
   const [selectedEvent, setSelectedEvent] = useState<CalEvent | null>(null)
   const [filterType, setFilterType] = useState<EventType | 'All'>('All')
+  
+  // Fetch calendar events from API
+  const { data: apiEvents = [] } = trpc.calendar.getAll.useQuery()
+  const deleteEventMutation = trpc.calendar.delete.useMutation()
+  
+  // Convert API events to CalEvent format
+  const convertedEvents: CalEvent[] = apiEvents.map(e => ({
+    id: e.id,
+    title: e.title,
+    description: e.description || '',
+    date: e.date,
+    time: e.time || undefined,
+    location: e.location || undefined,
+    link: e.link || undefined,
+    type: e.type as EventType,
+  }))
+  
+  // Use API events if available, otherwise fall back to hardcoded
+  const events = apiEvents.length > 0 ? convertedEvents : calendarEvents
 
   const daysInMonth = getDaysInMonth(viewYear, viewMonth)
   const firstDay = getFirstDayOfMonth(viewYear, viewMonth)
 
-  const monthEvents = calendarEvents.filter(e => {
+  const monthEvents = events.filter(e => {
     const d = new Date(e.date)
     return d.getFullYear() === viewYear && d.getMonth() === viewMonth
   })
 
   const getEventsForDay = (day: number) => {
     const dateStr = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
-    return monthEvents.filter(e => e.date === dateStr)
+    return events.filter(e => e.date === dateStr && (filterType === 'All' || e.type === filterType))
+  }
+  
+  const handleDeleteEvent = async (eventId: number) => {
+    if (confirm('Are you sure you want to delete this event?')) {
+      try {
+        await deleteEventMutation.mutateAsync({ id: eventId })
+        setSelectedEvent(null)
+        toast.success('Event deleted')
+      } catch (error) {
+        toast.error('Failed to delete event')
+      }
+    }
   }
 
   const prevMonth = () => {
@@ -292,17 +325,39 @@ export default function CalendarPage() {
                   )}
                 </div>
                 <p className="text-white/60 text-sm leading-relaxed mb-4">{selectedEvent.description}</p>
-                {selectedEvent.link && (
-                  <a
-                    href={selectedEvent.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-lg transition-all"
-                  >
-                    Learn More
-                    <ExternalLink size={13} />
-                  </a>
-                )}
+                <div className="flex gap-2 flex-wrap">
+                  {selectedEvent.link && (
+                    <a
+                      href={selectedEvent.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-lg transition-all"
+                    >
+                      Learn More
+                      <ExternalLink size={13} />
+                    </a>
+                  )}
+                  {adminModeActive && user && (user.role === 'admin' || user.role === 'super_admin') && (
+                    <>
+                      <button
+                        onClick={() => {
+                          // TODO: Implement edit functionality
+                          toast.info('Edit event - coming soon')
+                        }}
+                        className="px-4 py-2 bg-yellow-600/20 hover:bg-yellow-600/30 text-yellow-400 text-sm font-medium rounded-lg transition-all border border-yellow-500/30"
+                      >
+                        ✏️ Edit
+                      </button>
+                      <button
+                        onClick={() => selectedEvent && handleDeleteEvent(selectedEvent.id)}
+                        disabled={deleteEventMutation.isPending}
+                        className="px-4 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 text-sm font-medium rounded-lg transition-all border border-red-500/30 disabled:opacity-50"
+                      >
+                        🗑️ Delete
+                      </button>
+                    </>
+                  )}
+                </div>
               </motion.div>
             )}
           </div>

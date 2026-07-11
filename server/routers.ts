@@ -7,7 +7,6 @@ import { z } from "zod";
 import * as db from "./db";
 import { getAnnouncementsBySchool, createAnnouncement, likeAnnouncement, getAnnouncementLikes, addAnnouncementComment, getAnnouncementComments, deleteAnnouncement } from "./db";
 import { notifyOwner } from "./_core/notification";
-import { sendAnnouncementNotification } from "./_core/email";
 import { questions } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 
@@ -46,21 +45,22 @@ export const announcementsRouter = router({
       })
 
       // Send email notifications to all chapter members
-      try {
-        const chapterMembers = await db.getUsersBySchoolCode(ctx.user.schoolCode)
-        const emails = chapterMembers.map(m => m.email).filter((e): e is string => !!e)
-        
-        if (emails.length > 0) {
-          await sendAnnouncementNotification(emails, {
-            title: input.title,
-            content: input.content,
-            authorName: ctx.user.name || 'DECA Admin',
-          })
-        }
-      } catch (error) {
-        console.error('Failed to send announcement notifications:', error)
-        // Don't fail the announcement creation if email fails
-      }
+      // TODO: Implement email notifications when SMTP is configured
+      // try {
+      //   const chapterMembers = await db.getUsersBySchoolCode(ctx.user.schoolCode)
+      //   const emails = chapterMembers.map(m => m.email).filter((e): e is string => !!e)
+      //   
+      //   if (emails.length > 0) {
+      //     // await sendAnnouncementNotification(emails, {
+      //     //   title: input.title,
+      //     //   content: input.content,
+      //     //   authorName: ctx.user.name || 'DECA Admin',
+      //     // })
+      //   }
+      // } catch (error) {
+      //   console.error('Failed to send announcement notifications:', error)
+      //   // Don't fail the announcement creation if email fails
+      // }
 
       return announcement
     }),
@@ -99,6 +99,55 @@ export const announcementsRouter = router({
       return await deleteAnnouncement(input.announcementId)
     }),
 })
+
+export const calendarRouter = router({
+  getAll: publicProcedure.query(() => db.getAllCalendarEvents()),
+  create: protectedProcedure
+    .input(z.object({
+      title: z.string(),
+      description: z.string().optional(),
+      date: z.string(),
+      time: z.string().optional(),
+      location: z.string().optional(),
+      link: z.string().optional(),
+      type: z.enum(['district', 'state', 'icdc', 'chapter', 'deadline']),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Only admins can create events' });
+      }
+      return db.createCalendarEvent({
+        ...input,
+        createdBy: ctx.user.id,
+      });
+    }),
+  update: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      title: z.string().optional(),
+      description: z.string().optional(),
+      date: z.string().optional(),
+      time: z.string().optional(),
+      location: z.string().optional(),
+      link: z.string().optional(),
+      type: z.enum(['district', 'state', 'icdc', 'chapter', 'deadline']).optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Only admins can update events' });
+      }
+      const { id, ...updateData } = input;
+      return db.updateCalendarEvent(id, updateData);
+    }),
+  delete: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Only admins can delete events' });
+      }
+      return db.deleteCalendarEvent(input.id);
+    }),
+});
 
 export const appRouter = router({
   announcements: announcementsRouter,
@@ -381,6 +430,8 @@ export const appRouter = router({
       .input(z.object({ cluster: z.string(), limit: z.number().default(50) }))
       .query(({ input }) => db.getLeaderboardByCluster(input.cluster, input.limit)),
   }),
+
+  calendar: calendarRouter,
 
   discussions: router({
     getThreads: publicProcedure
