@@ -1,4 +1,3 @@
-
 import re
 import json
 
@@ -14,6 +13,8 @@ def parse_deca_questions(text_content):
     correct_explanation_pattern = re.compile(r"^Correct\s*\(([A-D])\):\s*(.*)")
     # Matches A — why plausible but wrong: ... distractor explanation
     distractor_explanation_pattern = re.compile(r"^([A-D])\s+\—\s+why plausible but wrong:\s*(.*)")
+    # Pattern to match and remove PDF headers like "Page 13 7. Question Bank — Marketing Cluster..."
+    pdf_header_pattern = re.compile(r"Page\s+\d+\s+\d+\.\s+Question Bank\s*—.*?\d+\)\s+\d+\s+original items.*?distractor\.\s+")
 
     lines = text_content.split("\n")
     current_question = None
@@ -51,15 +52,36 @@ def parse_deca_questions(text_content):
             }
             
             # Now, backtrack to find the question text (lines before this metadata line)
+            # Stop when encountering explanation patterns or empty lines
             question_text_lines = []
             j = i - 1
             while j >= 0:
                 prev_line = lines[j].strip()
-                if not prev_line or prev_line.startswith("--- PAGE") or prev_line.startswith("DECA Cluster Exam") or metadata_pattern.match(prev_line):
-                    break # Stop if empty, page break, header, or previous question metadata
+                if not prev_line or prev_line.startswith("--- PAGE") or prev_line.startswith("DECA Cluster"):
+                    break # Stop if empty, page break, or header
+                # Stop if we encounter explanation patterns
+                if correct_explanation_pattern.match(prev_line) or distractor_explanation_pattern.match(prev_line):
+                    break
+                # Stop if we encounter option patterns
+                if option_pattern.match(prev_line):
+                    break
+                # Stop if we encounter previous question metadata
+                if metadata_pattern.match(prev_line):
+                    break
                 question_text_lines.insert(0, prev_line)
                 j -= 1
-            current_question["questionText"] = " ".join(question_text_lines).strip()
+            
+            # Join the question text lines
+            question_text = " ".join(question_text_lines).strip()
+            
+            # Remove PDF header patterns from the question text
+            question_text = pdf_header_pattern.sub("", question_text)
+            # Also remove any remaining "Page X Y. Question Bank..." patterns
+            question_text = re.sub(r"Page\s+\d+\s+\d+\.\s+Question Bank.*?distractor\.\s+", "", question_text)
+            # Clean up any leading/trailing whitespace and multiple spaces
+            question_text = re.sub(r"\s+", " ", question_text).strip()
+            
+            current_question["questionText"] = question_text
 
             i += 1 # Move past the metadata line
             continue
