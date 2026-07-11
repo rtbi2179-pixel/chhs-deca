@@ -1,6 +1,6 @@
-import { eq, and } from "drizzle-orm";
+import { eq, and, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard } from "../drizzle/schema";
+import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 const ADMIN_EMAILS = ['rtbi2179@gmail.com', 'sahan.mallampati@gmail.com'];
@@ -322,4 +322,45 @@ export async function updateLeaderboard(userId: number, correctAnswers: number, 
       lastUpdated: new Date(),
     }).where(eq(leaderboard.userId, userId));
   }
+}
+
+// Study Sessions
+export async function getBookmarkedQuestionsWithDetails(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const bookmarkedIds = await db.select({ questionId: bookmarks.questionId })
+    .from(bookmarks)
+    .where(eq(bookmarks.userId, userId));
+  
+  if (bookmarkedIds.length === 0) return [];
+  
+  const questionIds = bookmarkedIds.map(b => b.questionId);
+  const questionsData = await db.select()
+    .from(questions)
+    .where(inArray(questions.id, questionIds));
+  
+  return questionsData;
+}
+
+export async function createStudySession(userId: number, name: string, questionIds: number[]) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const session = await db.insert(studySessions).values({
+    userId,
+    title: name,
+    totalQuestions: questionIds.length,
+  });
+  
+  if (questionIds.length > 0) {
+    await db.insert(sessionQuestions).values(
+      questionIds.map(qId => ({
+        sessionId: session[0].insertId,
+        questionId: qId,
+      }))
+    );
+  }
+  
+  return session;
 }

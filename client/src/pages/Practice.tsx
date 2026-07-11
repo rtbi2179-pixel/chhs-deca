@@ -13,6 +13,8 @@ export default function Practice() {
   const [showExplanation, setShowExplanation] = useState(false);
   const [score, setScore] = useState(0);
   const [totalAnswered, setTotalAnswered] = useState(0);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [leaderboardCluster, setLeaderboardCluster] = useState<string>("overall");
 
   // Fetch all questions from the database
   const { data: allQuestions, isLoading } = trpc.practice.getQuestions.useQuery({
@@ -189,7 +191,14 @@ export default function Practice() {
                 </p>
               )}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
+              <Button 
+                onClick={() => setShowLeaderboard(true)}
+                className="bg-purple-600 hover:bg-purple-700"
+              >
+                View Leaderboard
+              </Button>
+              <div className="flex items-center gap-2">
               <label htmlFor="question-jump" className="text-foreground font-semibold">Jump to:</label>
               <input
                 id="question-jump"
@@ -209,6 +218,7 @@ export default function Practice() {
                 className="w-16 px-3 py-2 bg-background border border-border text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <span className="text-foreground/70">/ {filteredQuestions.length}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -418,6 +428,73 @@ export default function Practice() {
               )}
             </div>
           </Card>
+        )}
+
+        {/* Leaderboard Modal */}
+        {showLeaderboard && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto border border-border">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h2 className="text-2xl font-bold text-foreground">Leaderboard</h2>
+                    <p className="text-foreground/70 text-sm">Top performers in DECA practice</p>
+                  </div>
+                  <button
+                    onClick={() => setShowLeaderboard(false)}
+                    className="text-foreground/70 hover:text-foreground text-2xl"
+                  >
+                    ×
+                  </button>
+                </div>
+
+                <div className="mb-6">
+                  <label className="block text-foreground font-semibold mb-3 text-sm">Filter by Cluster</label>
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                    {[
+                      { value: "overall", label: "Overall" },
+                      { value: "Marketing", label: "Marketing" },
+                      { value: "Business Management & Administration", label: "Business Mgmt" },
+                      { value: "Finance", label: "Finance" },
+                      { value: "Hospitality & Tourism", label: "Hospitality" },
+                    ].map((cluster) => (
+                      <button
+                        key={cluster.value}
+                        onClick={() => setLeaderboardCluster(cluster.value)}
+                        className={`px-3 py-2 rounded text-sm transition-colors ${
+                          leaderboardCluster === cluster.value
+                            ? "bg-blue-600 text-white"
+                            : "bg-background border border-border text-foreground hover:bg-border"
+                        }`}
+                      >
+                        {cluster.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="bg-blue-600/10 border-b border-border">
+                        <th className="px-4 py-3 text-left text-foreground font-semibold">Rank</th>
+                        <th className="px-4 py-3 text-left text-foreground font-semibold">Name</th>
+                        <th className="px-4 py-3 text-left text-foreground font-semibold">Accuracy</th>
+                        <th className="px-4 py-3 text-left text-foreground font-semibold">Answered</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colSpan={4} className="px-4 py-8 text-center text-foreground/70">
+                          No leaderboard data yet. Start practicing!
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </Card>
+          </div>
         )}
       </div>
     </div>

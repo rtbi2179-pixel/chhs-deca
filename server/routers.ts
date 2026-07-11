@@ -89,6 +89,13 @@ export const appRouter = router({
       .mutation(async ({ input, ctx }) => {
         return db.updateLeaderboard(ctx.user.id, input.correctAnswers, input.totalAnswered, input.cluster);
       }),
+    getBookmarkedQuestions: protectedProcedure
+      .query(async ({ ctx }) => db.getBookmarkedQuestionsWithDetails(ctx.user.id)),
+    createStudySession: protectedProcedure
+      .input(z.object({ name: z.string(), questionIds: z.array(z.number()) }))
+      .mutation(async ({ input, ctx }) => {
+        return db.createStudySession(ctx.user.id, input.name, input.questionIds);
+      }),
   }),
 
   discussions: router({
