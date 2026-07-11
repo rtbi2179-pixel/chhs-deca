@@ -103,10 +103,22 @@ export default function CalendarPage() {
   const [viewMonth, setViewMonth] = useState(today.getMonth())
   const [selectedEvent, setSelectedEvent] = useState<CalEvent | null>(null)
   const [filterType, setFilterType] = useState<EventType | 'All'>('All')
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [editingEvent, setEditingEvent] = useState<CalEvent | null>(null)
+  const [newEvent, setNewEvent] = useState({ title: '', description: '', date: '', time: '', location: '', link: '', type: 'chapter' as EventType })
   
   // Fetch calendar events from API
+  const utils = trpc.useUtils()
   const { data: apiEvents = [] } = trpc.calendar.getAll.useQuery()
-  const deleteEventMutation = trpc.calendar.delete.useMutation()
+  const deleteEventMutation = trpc.calendar.delete.useMutation({
+    onSuccess: () => utils.calendar.getAll.invalidate()
+  })
+  const createEventMutation = trpc.calendar.create.useMutation({
+    onSuccess: () => { utils.calendar.getAll.invalidate(); setShowAddModal(false); setNewEvent({ title: '', description: '', date: '', time: '', location: '', link: '', type: 'chapter' }) }
+  })
+  const updateEventMutation = trpc.calendar.update.useMutation({
+    onSuccess: () => { utils.calendar.getAll.invalidate(); setEditingEvent(null); setSelectedEvent(null) }
+  })
   
   // Convert API events to CalEvent format
   const convertedEvents: CalEvent[] = apiEvents.map(e => ({
@@ -178,25 +190,31 @@ export default function CalendarPage() {
           <div className="flex items-center justify-between gap-4 mb-4">
             <h1 className="font-display text-5xl sm:text-7xl text-white">COMPETITION CALENDAR</h1>
             {user && (user.role === 'admin' || user.role === 'super_admin') && (
-              <button
-                onClick={() => {
-                  if (adminModeActive) {
-                    deactivateAdminMode()
-                    toast.info('🔵 Admin mode deactivated')
-                  } else {
-                    const neonOverlay = document.createElement('div')
-                    neonOverlay.style.cssText = 'position: fixed; inset: 0; pointer-events: none; z-index: 40; background: radial-gradient(circle at center, rgba(59,130,246,0.15) 0%, transparent 70%); box-shadow: inset 0 0 60px rgba(59,130,246,0.4), 0 0 40px rgba(59,130,246,0.3); border: 2px solid rgba(59,130,246,0.8);'
-                    document.body.appendChild(neonOverlay)
-                    setNeonOverlayRef(neonOverlay)
-                    setAdminModeActive(true)
-                    toast.info('🔵 YOU ARE IN ADMIN MODE')
-                  }
-                }}
-                className="px-4 py-2 bg-yellow-600/20 hover:bg-yellow-600/30 hover:shadow-[0_0_20px_rgba(250,204,21,0.6)] border border-yellow-500/30 text-yellow-400 rounded-lg transition text-sm font-semibold whitespace-nowrap"
-                title="Manage calendar (admin only)"
-              >
-                👑 Manage
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    if (adminModeActive) {
+                      deactivateAdminMode()
+                      toast.info('🔵 Admin mode deactivated')
+                    } else {
+                      setAdminModeActive(true)
+                      toast.info('🔵 YOU ARE IN ADMIN MODE')
+                    }
+                  }}
+                  className="px-4 py-2 bg-yellow-600/20 hover:bg-yellow-600/30 hover:shadow-[0_0_20px_rgba(250,204,21,0.6)] border border-yellow-500/30 text-yellow-400 rounded-lg transition text-sm font-semibold whitespace-nowrap"
+                  title="Manage calendar (admin only)"
+                >
+                  {adminModeActive ? '🔴 Exit Admin' : '👑 Manage'}
+                </button>
+                {adminModeActive && (
+                  <button
+                    onClick={() => setShowAddModal(true)}
+                    className="px-4 py-2 bg-blue-600/30 hover:bg-blue-600/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.6)] border border-blue-500/50 text-blue-300 rounded-lg transition text-sm font-semibold whitespace-nowrap"
+                  >
+                    ➕ Add Event
+                  </button>
+                )}
+              </div>
             )}
           </div>
           <p className="text-white/60 text-lg max-w-2xl">
@@ -340,10 +358,7 @@ export default function CalendarPage() {
                   {adminModeActive && (
                     <>
                       <button
-                        onClick={() => {
-                          // TODO: Implement edit functionality
-                          toast.info('Edit event - coming soon')
-                        }}
+                        onClick={() => selectedEvent && setEditingEvent(selectedEvent)}
                         className="px-4 py-2 bg-yellow-600/20 hover:bg-yellow-600/30 text-yellow-400 text-sm font-medium rounded-lg transition-all border border-yellow-500/30"
                       >
                         ✏️ Edit
@@ -467,6 +482,139 @@ export default function CalendarPage() {
           </div>
         </div>
       </footer>
+
+      {/* Add Event Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="bg-[oklch(0.10_0.01_265)] border border-blue-500/30 rounded-xl p-6 w-full max-w-md mx-4 shadow-[0_0_40px_rgba(59,130,246,0.3)]">
+            <h2 className="text-xl font-bold text-blue-300 mb-4">➕ Add New Event</h2>
+            <div className="space-y-3">
+              <input
+                type="text"
+                placeholder="Event title *"
+                value={newEvent.title}
+                onChange={e => setNewEvent(p => ({ ...p, title: e.target.value }))}
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-blue-500/50 text-sm"
+              />
+              <textarea
+                placeholder="Description"
+                value={newEvent.description}
+                onChange={e => setNewEvent(p => ({ ...p, description: e.target.value }))}
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-blue-500/50 text-sm h-20 resize-none"
+              />
+              <input
+                type="date"
+                value={newEvent.date}
+                onChange={e => setNewEvent(p => ({ ...p, date: e.target.value }))}
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500/50 text-sm"
+              />
+              <input
+                type="time"
+                value={newEvent.time}
+                onChange={e => setNewEvent(p => ({ ...p, time: e.target.value }))}
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500/50 text-sm"
+              />
+              <input
+                type="text"
+                placeholder="Location"
+                value={newEvent.location}
+                onChange={e => setNewEvent(p => ({ ...p, location: e.target.value }))}
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-blue-500/50 text-sm"
+              />
+              <input
+                type="url"
+                placeholder="Link (optional)"
+                value={newEvent.link}
+                onChange={e => setNewEvent(p => ({ ...p, link: e.target.value }))}
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-blue-500/50 text-sm"
+              />
+              <select
+                value={newEvent.type}
+                onChange={e => setNewEvent(p => ({ ...p, type: e.target.value as EventType }))}
+                className="w-full px-3 py-2 bg-[oklch(0.12_0.01_265)] border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500/50 text-sm"
+              >
+                <option value="chapter">Chapter</option>
+                <option value="district">District</option>
+                <option value="state">State</option>
+                <option value="icdc">ICDC</option>
+                <option value="deadline">Deadline</option>
+              </select>
+            </div>
+            <div className="flex gap-3 mt-5">
+              <button
+                onClick={() => setShowAddModal(false)}
+                className="flex-1 px-4 py-2 bg-white/5 hover:bg-white/10 text-white/60 rounded-lg transition text-sm"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  if (!newEvent.title || !newEvent.date) { toast.error('Title and date are required'); return }
+                  try {
+                    await createEventMutation.mutateAsync(newEvent)
+                    toast.success('Event created!')
+                  } catch (e: any) { toast.error(e.message || 'Failed to create event') }
+                }}
+                disabled={createEventMutation.isPending}
+                className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition text-sm disabled:opacity-50"
+              >
+                {createEventMutation.isPending ? 'Creating...' : 'Create Event'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Event Modal */}
+      {editingEvent && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="bg-[oklch(0.10_0.01_265)] border border-yellow-500/30 rounded-xl p-6 w-full max-w-md mx-4 shadow-[0_0_40px_rgba(250,204,21,0.2)]">
+            <h2 className="text-xl font-bold text-yellow-300 mb-4">✏️ Edit Event</h2>
+            <div className="space-y-3">
+              <input type="text" placeholder="Event title *" value={editingEvent.title}
+                onChange={e => setEditingEvent(p => p ? { ...p, title: e.target.value } : null)}
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-yellow-500/50 text-sm" />
+              <textarea placeholder="Description" value={editingEvent.description || ''}
+                onChange={e => setEditingEvent(p => p ? { ...p, description: e.target.value } : null)}
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-yellow-500/50 text-sm h-20 resize-none" />
+              <input type="date" value={editingEvent.date}
+                onChange={e => setEditingEvent(p => p ? { ...p, date: e.target.value } : null)}
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-yellow-500/50 text-sm" />
+              <input type="time" value={editingEvent.time || ''}
+                onChange={e => setEditingEvent(p => p ? { ...p, time: e.target.value } : null)}
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-yellow-500/50 text-sm" />
+              <input type="text" placeholder="Location" value={editingEvent.location || ''}
+                onChange={e => setEditingEvent(p => p ? { ...p, location: e.target.value } : null)}
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-yellow-500/50 text-sm" />
+              <select value={editingEvent.type}
+                onChange={e => setEditingEvent(p => p ? { ...p, type: e.target.value as EventType } : null)}
+                className="w-full px-3 py-2 bg-[oklch(0.12_0.01_265)] border border-white/10 rounded-lg text-white focus:outline-none focus:border-yellow-500/50 text-sm">
+                <option value="chapter">Chapter</option>
+                <option value="district">District</option>
+                <option value="state">State</option>
+                <option value="icdc">ICDC</option>
+                <option value="deadline">Deadline</option>
+              </select>
+            </div>
+            <div className="flex gap-3 mt-5">
+              <button onClick={() => setEditingEvent(null)}
+                className="flex-1 px-4 py-2 bg-white/5 hover:bg-white/10 text-white/60 rounded-lg transition text-sm">Cancel</button>
+              <button
+                onClick={async () => {
+                  if (!editingEvent.title || !editingEvent.date) { toast.error('Title and date are required'); return }
+                  try {
+                    await updateEventMutation.mutateAsync({ id: editingEvent.id, title: editingEvent.title, description: editingEvent.description, date: editingEvent.date, time: editingEvent.time, location: editingEvent.location, type: editingEvent.type })
+                    toast.success('Event updated!')
+                  } catch (e: any) { toast.error(e.message || 'Failed to update event') }
+                }}
+                disabled={updateEventMutation.isPending}
+                className="flex-1 px-4 py-2 bg-yellow-600 hover:bg-yellow-500 text-black font-semibold rounded-lg transition text-sm disabled:opacity-50">
+                {updateEventMutation.isPending ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

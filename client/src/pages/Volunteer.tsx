@@ -204,17 +204,9 @@ const Volunteer = () => {
                 <button
                   onClick={() => {
                     if (adminModeActive) {
-                      if (neonOverlayRef) {
-                        neonOverlayRef.remove()
-                        setNeonOverlayRef(null)
-                      }
-                      setAdminModeActive(false)
+                      deactivateAdminMode()
                       toast.info('🔵 Admin mode deactivated')
                     } else {
-                      const neonOverlay = document.createElement('div')
-                      neonOverlay.style.cssText = 'position: fixed; inset: 0; pointer-events: none; z-index: 40; background: radial-gradient(circle at center, rgba(59,130,246,0.15) 0%, transparent 70%); box-shadow: inset 0 0 60px rgba(59,130,246,0.4), 0 0 40px rgba(59,130,246,0.3); border: 2px solid rgba(59,130,246,0.8);'
-                      document.body.appendChild(neonOverlay)
-                      setNeonOverlayRef(neonOverlay)
                       setAdminModeActive(true)
                       toast.info('🔵 YOU ARE IN ADMIN MODE')
                     }

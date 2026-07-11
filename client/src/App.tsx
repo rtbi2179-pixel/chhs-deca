@@ -26,7 +26,6 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { useState, useEffect } from "react";
 import { Toast, useToast } from "./components/Toast";
 import { useLocation } from "wouter";
-import { useAdminMode } from "./contexts/AdminModeContext";
 
 function ProtectedRoute({ component: Component, ...rest }: any) {
   const { user, loading } = useAuth();
@@ -48,12 +47,6 @@ function ProtectedRoute({ component: Component, ...rest }: any) {
 
 function Router({ isAuthenticated, showLoginRequired }: { isAuthenticated: boolean; showLoginRequired: () => void }) {
   const [location] = useLocation();
-  const { deactivateAdminMode } = useAdminMode();
-
-  // Deactivate admin mode when navigating to a different page
-  useEffect(() => {
-    deactivateAdminMode();
-  }, [location, deactivateAdminMode]);
 
   return (
     <Switch>
