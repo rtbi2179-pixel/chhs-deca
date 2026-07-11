@@ -1,6 +1,6 @@
 import { eq, and, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes } from "../drizzle/schema";
+import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import bcrypt from 'bcryptjs';
 
@@ -688,4 +688,80 @@ export async function getUserByEmail(email: string) {
     .where(eq(users.email, email))
     .limit(1);
   return result[0] || null;
+}
+
+/**
+ * Check if email is blacklisted
+ */
+export async function isEmailBlacklisted(email: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.select()
+    .from(emailBlacklist)
+    .where(eq(emailBlacklist.email, email))
+    .limit(1);
+  return result.length > 0;
+}
+
+/**
+ * Blacklist an email
+ */
+export async function blacklistEmail(email: string, reason: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(emailBlacklist)
+    .values({ email, reason })
+    .onDuplicateKeyUpdate({ set: { reason } });
+}
+
+/**
+ * Track school code attempt
+ */
+export async function trackSchoolCodeAttempt(email: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const existing = await db.select()
+    .from(schoolCodeAttempts)
+    .where(eq(schoolCodeAttempts.email, email))
+    .limit(1);
+  
+  if (existing.length > 0) {
+    await db.update(schoolCodeAttempts)
+      .set({ attemptCount: existing[0].attemptCount + 1 })
+      .where(eq(schoolCodeAttempts.email, email));
+  } else {
+    await db.insert(schoolCodeAttempts)
+      .values({ email, attemptCount: 1 });
+  }
+  
+  const updated = await db.select()
+    .from(schoolCodeAttempts)
+    .where(eq(schoolCodeAttempts.email, email))
+    .limit(1);
+  
+  return updated[0]?.attemptCount || 0;
+}
+
+/**
+ * Get school code attempts for email
+ */
+export async function getSchoolCodeAttempts(email: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.select()
+    .from(schoolCodeAttempts)
+    .where(eq(schoolCodeAttempts.email, email))
+    .limit(1);
+  return result[0]?.attemptCount || 0;
+}
+
+/**
+ * Reset school code attempts
+ */
+export async function resetSchoolCodeAttempts(email: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(schoolCodeAttempts)
+    .where(eq(schoolCodeAttempts.email, email));
 }

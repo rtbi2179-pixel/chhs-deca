@@ -14,12 +14,9 @@ export default function LoginSignup() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [schoolCodePassword, setSchoolCodePassword] = useState("");
 
   // Mutations
-  const signupMutation = trpc.auth.signup.useMutation();
   const loginMutation = trpc.auth.login.useMutation();
-  const { data: schoolCodes = [] } = trpc.auth.getSchoolCodes.useQuery();
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,32 +24,16 @@ export default function LoginSignup() {
     setLoading(true);
 
     try {
-      // Validate school code password
-      const selectedSchool = schoolCodes.find(s => s.code === schoolCodePassword);
-      if (!selectedSchool) {
-        setError("Invalid school code. Please check with your DECA advisor.");
-        setLoading(false);
-        return;
-      }
-
-      await signupMutation.mutateAsync({
+      // Redirect to school code entry page with form data
+      const params = new URLSearchParams({
+        email,
         firstName,
         lastName,
-        email,
-        password,
-        schoolCode: schoolCodePassword,
-      });
-
-      // After signup, login automatically
-      await loginMutation.mutateAsync({
-        email,
         password,
       });
-
-      window.location.href = '/';
+      window.location.href = `/school-code?${params.toString()}`;
     } catch (err: any) {
       setError(err.message || "Signup failed");
-    } finally {
       setLoading(false);
     }
   };
@@ -68,7 +49,7 @@ export default function LoginSignup() {
         password,
       });
 
-      window.location.href = '/';
+      window.location.href = "/";
     } catch (err: any) {
       setError(err.message || "Login failed");
     } finally {
@@ -122,21 +103,6 @@ export default function LoginSignup() {
                   placeholder="Doe"
                 />
               </div>
-
-              <div>
-                <label className="block text-foreground font-semibold mb-2 text-sm">
-                  School Code
-                </label>
-                <input
-                  type="password"
-                  value={schoolCodePassword}
-                  onChange={(e) => setSchoolCodePassword(e.target.value)}
-                  required
-                  className="w-full px-4 py-2 bg-background border border-border rounded text-foreground placeholder-foreground/50 focus:outline-none focus:border-blue-500"
-                  placeholder="Enter your school code"
-                />
-                <p className="text-foreground/50 text-xs mt-1">Ask your DECA advisor for your school code</p>
-              </div>
             </>
           )}
 
@@ -150,7 +116,7 @@ export default function LoginSignup() {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full px-4 py-2 bg-background border border-border rounded text-foreground placeholder-foreground/50 focus:outline-none focus:border-blue-500"
-              placeholder="john@example.com"
+              placeholder="you@example.com"
             />
           </div>
 
@@ -174,17 +140,14 @@ export default function LoginSignup() {
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 flex items-center justify-center gap-2"
           >
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-            {isSignup ? "Create Account" : "Sign In"}
+            {isSignup ? "Continue to School Code" : "Sign In"}
           </Button>
         </form>
 
         <div className="mt-6 text-center space-y-3">
           {!isSignup && (
             <div>
-              <a
-                href="/forgot-password"
-                className="text-blue-400 hover:text-blue-300 text-sm"
-              >
+              <a href="/forgot-password" className="text-blue-400 hover:text-blue-300 text-sm">
                 Forgot password?
               </a>
             </div>
@@ -201,7 +164,6 @@ export default function LoginSignup() {
                 setLastName("");
                 setEmail("");
                 setPassword("");
-                setSchoolCodePassword("");
               }}
               className="text-blue-400 hover:text-blue-300 font-semibold text-sm"
             >

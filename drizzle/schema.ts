@@ -192,3 +192,30 @@ export const schoolCodes = mysqlTable("schoolCodes", {
 
 export type SchoolCode = typeof schoolCodes.$inferSelect;
 export type InsertSchoolCode = typeof schoolCodes.$inferInsert;
+
+/**
+ * Email blacklist for failed signup attempts
+ */
+export const emailBlacklist = mysqlTable("emailBlacklist", {
+  id: int("id").autoincrement().primaryKey(),
+  email: varchar("email", { length: 320 }).notNull().unique(),
+  reason: varchar("reason", { length: 255 }).notNull(), // "school_code_attempts_exceeded"
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type EmailBlacklist = typeof emailBlacklist.$inferSelect;
+export type InsertEmailBlacklist = typeof emailBlacklist.$inferInsert;
+
+/**
+ * School code attempt tracking
+ */
+export const schoolCodeAttempts = mysqlTable("schoolCodeAttempts", {
+  id: int("id").autoincrement().primaryKey(),
+  email: varchar("email", { length: 320 }).notNull(),
+  attemptCount: int("attemptCount").default(0).notNull(),
+  lastAttemptAt: timestamp("lastAttemptAt").defaultNow().onUpdateNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SchoolCodeAttempt = typeof schoolCodeAttempts.$inferSelect;
+export type InsertSchoolCodeAttempt = typeof schoolCodeAttempts.$inferInsert;

@@ -18,6 +18,7 @@ import { VerifyEmail } from "./pages/VerifyEmail";
 import { ResetPassword } from "./pages/ResetPassword";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { TwoFactorAuth } from "./pages/TwoFactorAuth";
+import { SchoolCodeEntry } from "./pages/SchoolCodeEntry";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useState, useEffect } from "react";
 import { Toast, useToast } from "./components/Toast";
@@ -56,6 +57,7 @@ function Router({ isAuthenticated, showLoginRequired }: { isAuthenticated: boole
       <Route path="/reset-password" component={ResetPassword} />
       <Route path="/forgot-password" component={ForgotPassword} />
       <Route path="/2fa" component={TwoFactorAuth} />
+      <Route path="/school-code" component={SchoolCodeEntry} />
 
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
