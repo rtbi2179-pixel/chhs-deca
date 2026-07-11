@@ -39,8 +39,10 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
     window.location.href = '/'
   }
 
-  const handleProtectedNavClick = (href: string) => {
+  const handleProtectedNavClick = (e: React.MouseEvent, href: string) => {
     if (!user) {
+      e.preventDefault()
+      e.stopPropagation()
       onLoginRequired?.()
     }
   }
@@ -85,7 +87,7 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
                 return (
                   <Link key={href} href={isProtected && !user ? '#' : href}>
                     <motion.button
-                      onClick={() => isProtected && handleProtectedNavClick(href)}
+                      onClick={(e) => isProtected && handleProtectedNavClick(e, href)}
                       onMouseEnter={() => setHoveredIcon(href)}
                       onMouseLeave={() => setHoveredIcon(null)}
                       layout
@@ -178,9 +180,9 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
                 return (
                   <Link key={href} href={isProtected && !user ? '#' : href}>
                     <div
-                      onClick={() => {
+                      onClick={(e) => {
                         if (isProtected && !user) {
-                          handleProtectedNavClick(href)
+                          handleProtectedNavClick(e as any, href)
                         } else {
                           setMobileOpen(false)
                         }
