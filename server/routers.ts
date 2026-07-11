@@ -63,6 +63,27 @@ export const appRouter = router({
 
         return query;
       }),
+    addBookmark: protectedProcedure
+      .input(z.object({ questionId: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        return db.addBookmark(ctx.user.id, input.questionId);
+      }),
+    removeBookmark: protectedProcedure
+      .input(z.object({ questionId: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        return db.removeBookmark(ctx.user.id, input.questionId);
+      }),
+    getBookmarks: protectedProcedure
+      .query(({ ctx }) => db.getUserBookmarks(ctx.user.id)),
+    isBookmarked: protectedProcedure
+      .input(z.object({ questionId: z.number() }))
+      .query(({ input, ctx }) => db.isQuestionBookmarked(ctx.user.id, input.questionId)),
+    getLeaderboard: publicProcedure
+      .input(z.object({ limit: z.number().optional() }))
+      .query(({ input }) => db.getLeaderboard(input.limit)),
+    getLeaderboardByCluster: publicProcedure
+      .input(z.object({ cluster: z.string(), limit: z.number().optional() }))
+      .query(({ input }) => db.getLeaderboardByCluster(input.cluster, input.limit)),
   }),
 
   discussions: router({

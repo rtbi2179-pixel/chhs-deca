@@ -1,6 +1,6 @@
 import { eq, and } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply } from "../drizzle/schema";
+import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 const ADMIN_EMAILS = ['rtbi2179@gmail.com', 'sahan.mallampati@gmail.com'];
@@ -234,5 +234,92 @@ export async function deleteDiscussionReply(replyId: number, userId: number, use
   } catch (error) {
     console.error("[Database] Failed to delete reply:", error);
     return false;
+  }
+}
+
+// Bookmark queries
+export async function addBookmark(userId: number, questionId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(bookmarks).values({
+    userId,
+    questionId,
+  });
+  return result;
+}
+
+export async function removeBookmark(userId: number, questionId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  return db.delete(bookmarks).where(
+    and(eq(bookmarks.userId, userId), eq(bookmarks.questionId, questionId))
+  );
+}
+
+export async function getUserBookmarks(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return db.select().from(bookmarks).where(eq(bookmarks.userId, userId));
+}
+
+export async function isQuestionBookmarked(userId: number, questionId: number) {
+  const db = await getDb();
+  if (!db) return false;
+  
+  const result = await db.select().from(bookmarks).where(
+    and(eq(bookmarks.userId, userId), eq(bookmarks.questionId, questionId))
+  ).limit(1);
+  
+  return result.length > 0;
+}
+
+// Leaderboard queries
+export async function getLeaderboard(limit: number = 100) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return db.select({
+    leaderboard: leaderboard,
+    user: users,
+  }).from(leaderboard)
+    .innerJoin(users, eq(leaderboard.userId, users.id))
+    .orderBy((t) => t.leaderboard.accuracyPercentage)
+    .limit(limit);
+}
+
+export async function getLeaderboardByCluster(cluster: string, limit: number = 100) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return db.select().from(leaderboard)
+    .innerJoin(users, eq(leaderboard.userId, users.id))
+    .orderBy((t) => t.leaderboard.accuracyPercentage)
+    .limit(limit);
+}
+
+export async function updateLeaderboard(userId: number, correctAnswers: number, totalAnswered: number, cluster: string) {
+  const db = await getDb();
+  if (!db) return;
+  
+  const accuracy = Math.round((correctAnswers / totalAnswered) * 100);
+  const existing = await db.select().from(leaderboard).where(eq(leaderboard.userId, userId)).limit(1);
+  
+  if (existing.length === 0) {
+    await db.insert(leaderboard).values({
+      userId,
+      totalQuestionsAnswered: totalAnswered,
+      totalCorrectAnswers: correctAnswers,
+      accuracyPercentage: accuracy,
+    });
+  } else {
+    await db.update(leaderboard).set({
+      totalQuestionsAnswered: existing[0].totalQuestionsAnswered + totalAnswered,
+      totalCorrectAnswers: existing[0].totalCorrectAnswers + correctAnswers,
+      accuracyPercentage: accuracy,
+      lastUpdated: new Date(),
+    }).where(eq(leaderboard.userId, userId));
   }
 }

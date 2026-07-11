@@ -6,3 +6,11 @@
 - [x] Create tRPC procedures in `server/routers.ts` to fetch and manage questions
 - [x] Design and implement the Practice UI (`client/src/pages/Practice.tsx`) to display questions with filtering, scoring, and progress tracking
 - [x] Test the question bank and practice functionality
+
+- [ ] Add keyboard shortcuts (arrow keys, Enter) to Practice page
+- [ ] Create bookmarking UI with bookmark button on questions
+- [ ] Build study sessions feature to create custom quizzes from bookmarks
+- [ ] Implement leaderboard page with performance rankings by cluster
+- [ ] Add database schema for bookmarks, study sessions, and leaderboard data
+- [ ] Create tRPC procedures for bookmark management and leaderboard queries
+- [ ] Test keyboard shortcuts, bookmarking, and leaderboard functionality

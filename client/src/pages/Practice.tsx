@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -85,6 +85,45 @@ export default function Practice() {
     setScore(0);
     setTotalAnswered(0);
   };
+
+  // Keyboard shortcuts: Arrow keys for navigation, Enter to submit
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (!currentQuestion) return;
+
+      switch (e.key) {
+        case "ArrowLeft":
+          e.preventDefault();
+          if (currentQuestionIndex > 0) {
+            setCurrentQuestionIndex(currentQuestionIndex - 1);
+            setSelectedAnswer(null);
+            setShowResult(false);
+            setShowExplanation(false);
+          }
+          break;
+        case "ArrowRight":
+          e.preventDefault();
+          if (currentQuestionIndex < filteredQuestions.length - 1) {
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
+            setSelectedAnswer(null);
+            setShowResult(false);
+            setShowExplanation(false);
+          }
+          break;
+        case "Enter":
+          e.preventDefault();
+          if (showResult) {
+            handleResetQuiz();
+          } else if (selectedAnswer) {
+            handleSubmitAnswer();
+          }
+          break;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [currentQuestionIndex, selectedAnswer, showResult, filteredQuestions.length]);
 
   if (isLoading) {
     return (
@@ -214,7 +253,10 @@ export default function Practice() {
           <Card className="p-8 border border-border mb-8">
             {/* Question Text */}
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-foreground mb-4">{currentQuestion.questionText}</h2>
+              <div className="flex items-start justify-between mb-4">
+                <h2 className="text-2xl font-bold text-foreground flex-1">{currentQuestion.questionText}</h2>
+                <BookmarkButton questionId={currentQuestion.id} />
+              </div>
               <div className="flex gap-4 text-sm">
                 <span className="px-3 py-1 bg-blue-600/20 text-blue-400 rounded-full">
                   {currentQuestion.cluster}
@@ -360,4 +402,55 @@ export default function Practice() {
       </div>
     </div>
   );
+}
+
+// Bookmark Button Component
+function BookmarkButton({ questionId }: { questionId: number }) {
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const { user } = useAuth();
+  const addBookmarkMutation = trpc.practice.addBookmark.useMutation();
+  const removeBookmarkMutation = trpc.practice.removeBookmark.useMutation();
+  const checkBookmarkQuery = trpc.practice.isBookmarked.useQuery({ questionId }, { enabled: !!user });
+
+  useEffect(() => {
+    if (checkBookmarkQuery.data !== undefined) {
+      setIsBookmarked(checkBookmarkQuery.data);
+    }
+  }, [checkBookmarkQuery.data]);
+
+  const handleToggleBookmark = async () => {
+    if (!user) return;
+    
+    try {
+      if (isBookmarked) {
+        await removeBookmarkMutation.mutateAsync({ questionId });
+      } else {
+        await addBookmarkMutation.mutateAsync({ questionId });
+      }
+      setIsBookmarked(!isBookmarked);
+    } catch (error) {
+      console.error("Failed to toggle bookmark", error);
+    }
+  };
+
+  if (!user) return null;
+
+  return (
+    <button
+      onClick={handleToggleBookmark}
+      className={`p-2 rounded-lg transition-colors ml-4 ${
+        isBookmarked
+          ? "bg-yellow-600/20 text-yellow-400 border border-yellow-600"
+          : "bg-background border border-border text-foreground hover:bg-border"
+      }`}
+      title={isBookmarked ? "Remove bookmark" : "Add bookmark"}
+    >
+      <span className="text-xl">{isBookmarked ? "★" : "☆"}</span>
+    </button>
+  );
+}
+
+function useAuth() {
+  const { data: user } = trpc.auth.me.useQuery();
+  return { user };
 }

@@ -103,3 +103,70 @@ export const questions = mysqlTable("questions", {
 
 export type Question = typeof questions.$inferSelect;
 export type InsertQuestion = typeof questions.$inferInsert;
+
+/**
+ * Bookmarked questions for study
+ */
+export const bookmarks = mysqlTable("bookmarks", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  questionId: int("questionId").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Bookmark = typeof bookmarks.$inferSelect;
+export type InsertBookmark = typeof bookmarks.$inferInsert;
+
+/**
+ * Study sessions created from bookmarks
+ */
+export const studySessions = mysqlTable("studySessions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  cluster: varchar("cluster", { length: 255 }),
+  difficulty: varchar("difficulty", { length: 50 }),
+  totalQuestions: int("totalQuestions").notNull(),
+  questionsAnswered: int("questionsAnswered").default(0).notNull(),
+  correctAnswers: int("correctAnswers").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type StudySession = typeof studySessions.$inferSelect;
+export type InsertStudySession = typeof studySessions.$inferInsert;
+
+/**
+ * Questions included in study sessions
+ */
+export const sessionQuestions = mysqlTable("sessionQuestions", {
+  id: int("id").autoincrement().primaryKey(),
+  sessionId: int("sessionId").notNull(),
+  questionId: int("questionId").notNull(),
+  userAnswer: varchar("userAnswer", { length: 1 }),
+  isCorrect: int("isCorrect").default(0).notNull(), // 0 or 1 (boolean)
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SessionQuestion = typeof sessionQuestions.$inferSelect;
+export type InsertSessionQuestion = typeof sessionQuestions.$inferInsert;
+
+/**
+ * Leaderboard data (aggregated performance metrics)
+ */
+export const leaderboard = mysqlTable("leaderboard", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  totalQuestionsAnswered: int("totalQuestionsAnswered").default(0).notNull(),
+  totalCorrectAnswers: int("totalCorrectAnswers").default(0).notNull(),
+  accuracyPercentage: int("accuracyPercentage").default(0).notNull(), // 0-100
+  marketingScore: int("marketingScore").default(0).notNull(),
+  businessManagementScore: int("businessManagementScore").default(0).notNull(),
+  financeScore: int("financeScore").default(0).notNull(),
+  hospitalityScore: int("hospitalityScore").default(0).notNull(),
+  lastUpdated: timestamp("lastUpdated").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Leaderboard = typeof leaderboard.$inferSelect;
+export type InsertLeaderboard = typeof leaderboard.$inferInsert;
