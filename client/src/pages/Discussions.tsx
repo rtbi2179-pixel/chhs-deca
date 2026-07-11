@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { MessageSquare, Heart, MessageCircle, Send, LogIn, Plus, Search, Filter, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuth } from '@/_core/hooks/useAuth'
+import { useAdminMode } from '@/contexts/AdminModeContext'
 import { trpc } from '@/lib/trpc'
 import { getLoginUrl } from '@/const'
 
@@ -21,6 +22,7 @@ const categories = [
 
 export default function Discussions() {
   const { user, isAuthenticated } = useAuth()
+  const { adminModeActive, setAdminModeActive, neonOverlayRef, setNeonOverlayRef, deactivateAdminMode } = useAdminMode()
   const [selectedCategory, setSelectedCategory] = useState<string>('general')
   const [searchQuery, setSearchQuery] = useState('')
   const [showNewThread, setShowNewThread] = useState(false)
@@ -28,8 +30,6 @@ export default function Discussions() {
   const [newThreadTitle, setNewThreadTitle] = useState('')
   const [newThreadContent, setNewThreadContent] = useState('')
   const [newReplyContent, setNewReplyContent] = useState('')
-  const [adminModeActive, setAdminModeActive] = useState(false)
-  const [neonOverlayRef, setNeonOverlayRef] = useState<HTMLDivElement | null>(null)
 
   // Fetch threads
   const { data: threads = [] } = trpc.discussions.getThreads.useQuery({
@@ -131,11 +131,7 @@ export default function Discussions() {
   const handleManageClick = () => {
     if (adminModeActive) {
       // Toggle off
-      if (neonOverlayRef) {
-        neonOverlayRef.remove()
-        setNeonOverlayRef(null)
-      }
-      setAdminModeActive(false)
+      deactivateAdminMode()
       toast.info('🔵 Admin mode deactivated')
     } else {
       // Toggle on
@@ -144,7 +140,7 @@ export default function Discussions() {
       document.body.appendChild(neonOverlay)
       setNeonOverlayRef(neonOverlay)
       setAdminModeActive(true)
-      toast.success('🔵 YOU ARE IN ADMIN MODE', { description: 'Management tools are now active' })
+      toast.info('🔵 YOU ARE IN ADMIN MODE')
     }
   }
 

@@ -4,10 +4,12 @@
  * Monthly view with event badges
  */
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight, Calendar, MapPin, ExternalLink, Trophy, Clock, Star } from 'lucide-react'
 import { useAuth } from '@/_core/hooks/useAuth'
+import { useAdminMode } from '@/contexts/AdminModeContext'
+import { toast } from 'sonner'
 
 type EventType = 'district' | 'state' | 'icdc' | 'chapter' | 'deadline'
 
@@ -93,13 +95,12 @@ function getFirstDayOfMonth(year: number, month: number) {
 
 export default function CalendarPage() {
   const { user } = useAuth()
+  const { adminModeActive, setAdminModeActive, neonOverlayRef, setNeonOverlayRef, deactivateAdminMode } = useAdminMode()
   const today = new Date()
   const [viewYear, setViewYear] = useState(today.getFullYear())
   const [viewMonth, setViewMonth] = useState(today.getMonth())
   const [selectedEvent, setSelectedEvent] = useState<CalEvent | null>(null)
   const [filterType, setFilterType] = useState<EventType | 'All'>('All')
-  const [adminModeActive, setAdminModeActive] = useState(false)
-  const [neonOverlayRef, setNeonOverlayRef] = useState<HTMLDivElement | null>(null)
 
   const daysInMonth = getDaysInMonth(viewYear, viewMonth)
   const firstDay = getFirstDayOfMonth(viewYear, viewMonth)
@@ -147,17 +148,15 @@ export default function CalendarPage() {
               <button
                 onClick={() => {
                   if (adminModeActive) {
-                    if (neonOverlayRef) {
-                      neonOverlayRef.remove()
-                      setNeonOverlayRef(null)
-                    }
-                    setAdminModeActive(false)
+                    deactivateAdminMode()
+                    toast.info('🔵 Admin mode deactivated')
                   } else {
                     const neonOverlay = document.createElement('div')
                     neonOverlay.style.cssText = 'position: fixed; inset: 0; pointer-events: none; z-index: 40; background: radial-gradient(circle at center, rgba(59,130,246,0.15) 0%, transparent 70%); box-shadow: inset 0 0 60px rgba(59,130,246,0.4), 0 0 40px rgba(59,130,246,0.3); border: 2px solid rgba(59,130,246,0.8);'
                     document.body.appendChild(neonOverlay)
                     setNeonOverlayRef(neonOverlay)
                     setAdminModeActive(true)
+                    toast.info('🔵 YOU ARE IN ADMIN MODE')
                   }
                 }}
                 className="px-4 py-2 bg-yellow-600/20 hover:bg-yellow-600/30 hover:shadow-[0_0_20px_rgba(250,204,21,0.6)] border border-yellow-500/30 text-yellow-400 rounded-lg transition text-sm font-semibold whitespace-nowrap"

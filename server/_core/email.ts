@@ -79,3 +79,47 @@ export async function sendPasswordResetEmail(email: string, token: string) {
     return false;
   }
 }
+
+export async function sendAnnouncementNotification(
+  emails: string[],
+  announcement: {
+    title: string;
+    content: string;
+    authorName?: string;
+  }
+) {
+  if (emails.length === 0) {
+    return true; // No emails to send
+  }
+
+  try {
+    await transporter.sendMail({
+      from: process.env.EMAIL_FROM || 'noreply@chhs-deca.com',
+      bcc: emails, // Send to all chapter members via BCC
+      subject: `New Announcement: ${announcement.title}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #0066cc;">New Announcement from CHHS DECA</h2>
+          <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="margin-top: 0; color: #333;">${announcement.title}</h3>
+            ${announcement.authorName ? `<p style="color: #666; font-size: 14px;">Posted by ${announcement.authorName}</p>` : ''}
+            <p style="color: #333; line-height: 1.6;">${announcement.content.replace(/\n/g, '<br>')}</p>
+          </div>
+          <p style="color: #666; font-size: 14px;">
+            <a href="${process.env.VITE_FRONTEND_URL || 'http://localhost:3000'}/announcements" style="color: #0066cc; text-decoration: none;">
+              View all announcements
+            </a>
+          </p>
+          <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+          <p style="color: #999; font-size: 12px;">
+            You received this email because you are a member of the CHHS DECA chapter.
+          </p>
+        </div>
+      `,
+    });
+    return true;
+  } catch (error) {
+    console.error('Error sending announcement notification:', error);
+    return false;
+  }
+}

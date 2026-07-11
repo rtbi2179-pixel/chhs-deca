@@ -61,7 +61,7 @@ export function AdminPanel() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-6 pt-32">
       <div className="max-w-6xl mx-auto">
         {/* Header with Neon Glow */}
         <div className="mb-8">

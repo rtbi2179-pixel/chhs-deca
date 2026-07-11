@@ -4,6 +4,7 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { AdminModeProvider } from "./contexts/AdminModeContext";
 import Navigation from "./components/Navigation";
 import Home from "./pages/Home";
 import Events from "./pages/Events";
@@ -24,6 +25,8 @@ import { Announcements } from "./pages/Announcements";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useState, useEffect } from "react";
 import { Toast, useToast } from "./components/Toast";
+import { useLocation } from "wouter";
+import { useAdminMode } from "./contexts/AdminModeContext";
 
 function ProtectedRoute({ component: Component, ...rest }: any) {
   const { user, loading } = useAuth();
@@ -44,6 +47,14 @@ function ProtectedRoute({ component: Component, ...rest }: any) {
 }
 
 function Router({ isAuthenticated, showLoginRequired }: { isAuthenticated: boolean; showLoginRequired: () => void }) {
+  const [location] = useLocation();
+  const { deactivateAdminMode } = useAdminMode();
+
+  // Deactivate admin mode when navigating to a different page
+  useEffect(() => {
+    deactivateAdminMode();
+  }, [location, deactivateAdminMode]);
+
   return (
     <Switch>
       <Route path="/" component={Home} />
@@ -87,12 +98,14 @@ function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="dark">
-        <TooltipProvider>
-          <Toaster />
-          <Toast toasts={toasts} onRemove={removeToast} />
-          <Navigation onLoginRequired={handleLoginRequired} />
-          <Router isAuthenticated={isAuthenticated} showLoginRequired={handleLoginRequired} />
-        </TooltipProvider>
+        <AdminModeProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Toast toasts={toasts} onRemove={removeToast} />
+            <Navigation onLoginRequired={handleLoginRequired} />
+            <Router isAuthenticated={isAuthenticated} showLoginRequired={handleLoginRequired} />
+          </TooltipProvider>
+        </AdminModeProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );

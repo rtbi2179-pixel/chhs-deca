@@ -7,6 +7,7 @@ import { z } from "zod";
 import * as db from "./db";
 import { getAnnouncementsBySchool, createAnnouncement, likeAnnouncement, getAnnouncementLikes, addAnnouncementComment, getAnnouncementComments, deleteAnnouncement } from "./db";
 import { notifyOwner } from "./_core/notification";
+import { sendAnnouncementNotification } from "./_core/email";
 import { questions } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 
@@ -34,7 +35,7 @@ export const announcementsRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'User has no school code' })
       }
 
-      return await createAnnouncement({
+      const announcement = await createAnnouncement({
         schoolCode: ctx.user.schoolCode,
         authorId: ctx.user.id,
         title: input.title,
@@ -43,6 +44,25 @@ export const announcementsRouter = router({
         fileUrl: input.fileUrl,
         fileName: input.fileName,
       })
+
+      // Send email notifications to all chapter members
+      try {
+        const chapterMembers = await db.getUsersBySchoolCode(ctx.user.schoolCode)
+        const emails = chapterMembers.map(m => m.email).filter((e): e is string => !!e)
+        
+        if (emails.length > 0) {
+          await sendAnnouncementNotification(emails, {
+            title: input.title,
+            content: input.content,
+            authorName: ctx.user.name || 'DECA Admin',
+          })
+        }
+      } catch (error) {
+        console.error('Failed to send announcement notifications:', error)
+        // Don't fail the announcement creation if email fails
+      }
+
+      return announcement
     }),
 
   like: protectedProcedure

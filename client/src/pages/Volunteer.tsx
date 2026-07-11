@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Users, Clock, MapPin, CheckCircle, Star, ChevronDown, ChevronUp, Heart, Trophy, Zap, LogIn } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuth } from '@/_core/hooks/useAuth'
+import { useAdminMode } from '@/contexts/AdminModeContext'
 import { trpc } from '@/lib/trpc'
 import { getLoginUrl } from '@/const'
 import { Link } from 'wouter'
@@ -140,11 +141,10 @@ const categoryIcons: Record<string, any> = {
 
 const Volunteer = () => {
   const { user, isAuthenticated } = useAuth()
+  const { adminModeActive, setAdminModeActive, neonOverlayRef, setNeonOverlayRef, deactivateAdminMode } = useAdminMode()
   const [expandedId, setExpandedId] = useState<number | null>(null)
   const [signedUpIds, setSignedUpIds] = useState<number[]>([])
   const [showSignups, setShowSignups] = useState<number | null>(null)
-  const [adminModeActive, setAdminModeActive] = useState(false)
-  const [neonOverlayRef, setNeonOverlayRef] = useState<HTMLDivElement | null>(null)
   
   // Load all signups from database
   const { data: allSignups = [] } = trpc.volunteers.getAllSignups.useQuery()
@@ -216,7 +216,7 @@ const Volunteer = () => {
                       document.body.appendChild(neonOverlay)
                       setNeonOverlayRef(neonOverlay)
                       setAdminModeActive(true)
-                      toast.success('🔵 YOU ARE IN ADMIN MODE', { description: 'Management tools are now active' })
+                      toast.info('🔵 YOU ARE IN ADMIN MODE')
                     }
                   }}
                   className="px-4 py-2 bg-yellow-600/20 hover:bg-yellow-600/30 hover:shadow-[0_0_20px_rgba(250,204,21,0.6)] border border-yellow-500/30 text-yellow-400 rounded-lg transition text-sm font-semibold whitespace-nowrap"
