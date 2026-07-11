@@ -6,16 +6,16 @@ import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-or
  * Columns use camelCase to match both database fields and generated types.
  */
 export const users = mysqlTable("users", {
-  /**
-   * Surrogate primary key. Auto-incremented numeric value managed by the database.
-   * Use this for relations between tables.
-   */
   id: int("id").autoincrement().primaryKey(),
-  /** Manus OAuth identifier (openId) returned from the OAuth callback. Unique per user. */
-  openId: varchar("openId", { length: 64 }).notNull().unique(),
+  openId: varchar("openId", { length: 64 }).unique(),
+  username: varchar("username", { length: 255 }).unique(),
+  passwordHash: varchar("passwordHash", { length: 255 }),
+  schoolCode: varchar("schoolCode", { length: 50 }),
+  firstName: varchar("firstName", { length: 100 }),
+  lastName: varchar("lastName", { length: 100 }),
   name: text("name"),
   email: varchar("email", { length: 320 }),
-  loginMethod: varchar("loginMethod", { length: 64 }),
+  loginMethod: varchar("loginMethod", { length: 64 }).default("custom"),
   role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
@@ -170,3 +170,17 @@ export const leaderboard = mysqlTable("leaderboard", {
 
 export type Leaderboard = typeof leaderboard.$inferSelect;
 export type InsertLeaderboard = typeof leaderboard.$inferInsert;
+
+/**
+ * School codes whitelist for signup validation
+ */
+export const schoolCodes = mysqlTable("schoolCodes", {
+  id: int("id").autoincrement().primaryKey(),
+  code: varchar("code", { length: 50 }).notNull().unique(),
+  schoolName: varchar("schoolName", { length: 255 }).notNull(),
+  isActive: int("isActive").default(1).notNull(), // 0 or 1 (boolean)
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SchoolCode = typeof schoolCodes.$inferSelect;
+export type InsertSchoolCode = typeof schoolCodes.$inferInsert;

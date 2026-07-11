@@ -19,6 +19,45 @@ export const appRouter = router({
         success: true,
       } as const;
     }),
+    signup: publicProcedure
+      .input(z.object({
+        firstName: z.string().min(1, "First name is required"),
+        lastName: z.string().min(1, "Last name is required"),
+        username: z.string().min(3, "Username must be at least 3 characters"),
+        password: z.string().min(6, "Password must be at least 6 characters"),
+        schoolCode: z.string().min(1, "School code is required"),
+      }))
+      .mutation(async ({ input }) => {
+        try {
+          await db.createCustomAuthUser(
+            input.firstName,
+            input.lastName,
+            input.username,
+            input.password,
+            input.schoolCode
+          );
+          return { success: true };
+        } catch (error: any) {
+          throw new Error(error.message);
+        }
+      }),
+    login: publicProcedure
+      .input(z.object({
+        username: z.string(),
+        password: z.string(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        try {
+          const user = await db.authenticateUser(input.username, input.password);
+          const cookieOptions = getSessionCookieOptions(ctx.req);
+          ctx.res.cookie(COOKIE_NAME, user.id.toString(), cookieOptions);
+          return { success: true, user };
+        } catch (error: any) {
+          throw new Error(error.message);
+        }
+      }),
+    getSchoolCodes: publicProcedure
+      .query(() => db.getActiveSchoolCodes()),
   }),
 
   volunteers: router({
@@ -47,90 +86,89 @@ export const appRouter = router({
   practice: router({
     getQuestions: publicProcedure
       .input(z.object({ cluster: z.string().optional(), difficulty: z.string().optional() }))
-      .query(async ({ input, ctx }) => {
-        const dbInstance = await db.getDb();
-        if (!dbInstance) return [];
+      .query(async ({ input }) => {
+        const db_instance = await db.getDb();
+        if (!db_instance) return [];
 
-        let query = dbInstance.select().from(questions);
+        let baseQuery = db_instance.select().from(questions);
 
-        if (input.cluster) {
-          query = query.where(eq(questions.cluster, input.cluster)) as any;
+        if (input.cluster && input.cluster !== "all") {
+          baseQuery = baseQuery.where(eq(questions.cluster, input.cluster)) as any;
         }
 
-        if (input.difficulty) {
-          query = query.where(eq(questions.difficulty, input.difficulty)) as any;
+        if (input.difficulty && input.difficulty !== "all") {
+          baseQuery = baseQuery.where(eq(questions.difficulty, input.difficulty)) as any;
         }
 
-        return query;
+        return await baseQuery;
       }),
+
     addBookmark: protectedProcedure
       .input(z.object({ questionId: z.number() }))
-      .mutation(async ({ input, ctx }) => {
-        return db.addBookmark(ctx.user.id, input.questionId);
-      }),
+      .mutation(({ input, ctx }) => db.addBookmark(ctx.user.id, input.questionId)),
+
     removeBookmark: protectedProcedure
       .input(z.object({ questionId: z.number() }))
-      .mutation(async ({ input, ctx }) => {
-        return db.removeBookmark(ctx.user.id, input.questionId);
-      }),
-    getBookmarks: protectedProcedure
-      .query(({ ctx }) => db.getUserBookmarks(ctx.user.id)),
+      .mutation(({ input, ctx }) => db.removeBookmark(ctx.user.id, input.questionId)),
+
     isBookmarked: protectedProcedure
       .input(z.object({ questionId: z.number() }))
       .query(({ input, ctx }) => db.isQuestionBookmarked(ctx.user.id, input.questionId)),
-    getLeaderboard: publicProcedure
-      .input(z.object({ limit: z.number().optional() }))
-      .query(({ input }) => db.getLeaderboard(input.limit)),
-    getLeaderboardByCluster: publicProcedure
-      .input(z.object({ cluster: z.string(), limit: z.number().optional() }))
-      .query(({ input }) => db.getLeaderboardByCluster(input.cluster, input.limit)),
-    updateLeaderboard: protectedProcedure
-      .input(z.object({ correctAnswers: z.number(), totalAnswered: z.number(), cluster: z.string() }))
-      .mutation(async ({ input, ctx }) => {
-        return db.updateLeaderboard(ctx.user.id, input.correctAnswers, input.totalAnswered, input.cluster);
-      }),
+
     getBookmarkedQuestions: protectedProcedure
-      .query(async ({ ctx }) => db.getBookmarkedQuestionsWithDetails(ctx.user.id)),
+      .query(({ ctx }) => db.getBookmarkedQuestionsWithDetails(ctx.user.id)),
+
     createStudySession: protectedProcedure
-      .input(z.object({ name: z.string(), questionIds: z.array(z.number()) }))
+      .input(z.object({
+        name: z.string().min(1),
+        questionIds: z.array(z.number()),
+      }))
+      .mutation(({ input, ctx }) => db.createStudySession(ctx.user.id, input.name, input.questionIds)),
+
+    updateLeaderboard: protectedProcedure
+      .input(z.object({
+        correctAnswers: z.number(),
+        totalAnswered: z.number(),
+        cluster: z.string(),
+      }))
       .mutation(async ({ input, ctx }) => {
-        return db.createStudySession(ctx.user.id, input.name, input.questionIds);
+        await db.updateLeaderboard(ctx.user.id, input.correctAnswers, input.totalAnswered, input.cluster);
+        return { success: true };
       }),
+
+    getLeaderboard: publicProcedure
+      .input(z.object({ limit: z.number().default(50) }))
+      .query(({ input }) => db.getLeaderboard(input.limit)),
+
+    getLeaderboardByCluster: publicProcedure
+      .input(z.object({ cluster: z.string(), limit: z.number().default(50) }))
+      .query(({ input }) => db.getLeaderboardByCluster(input.cluster, input.limit)),
   }),
 
   discussions: router({
-    createThread: protectedProcedure
-      .input(z.object({ title: z.string(), content: z.string(), category: z.string() }))
-      .mutation(async ({ input, ctx }) => {
-        return db.createDiscussionThread(ctx.user.id, input.title, input.content, input.category);
-      }),
     getThreads: publicProcedure
       .input(z.object({ category: z.string().optional() }).optional())
-      .query(({ input }) => db.getDiscussionThreads(input?.category)),
-    createReply: protectedProcedure
-      .input(z.object({ threadId: z.number(), content: z.string() }))
-      .mutation(async ({ input, ctx }) => {
-        const reply = await db.createDiscussionReply(input.threadId, ctx.user.id, input.content);
-        
-        // TODO: Notify thread author about new reply
-        
-        return reply;
-      }),
+      .query(() => db.getDiscussionThreads()),
+
+    createThread: protectedProcedure
+      .input(z.object({ title: z.string(), content: z.string(), category: z.string().default("general") }))
+      .mutation(({ input, ctx }) => db.createDiscussionThread(ctx.user.id, input.title, input.content, input.category)),
+
     getReplies: publicProcedure
       .input(z.object({ threadId: z.number() }))
       .query(({ input }) => db.getDiscussionReplies(input.threadId)),
+
+    createReply: protectedProcedure
+      .input(z.object({ threadId: z.number(), content: z.string() }))
+      .mutation(({ input, ctx }) => db.createDiscussionReply(ctx.user.id, input.threadId, input.content)),
+
     deleteThread: protectedProcedure
       .input(z.object({ threadId: z.number() }))
-      .mutation(async ({ input, ctx }) => {
-        const success = await db.deleteDiscussionThread(input.threadId, ctx.user.id, ctx.user.role);
-        return { success };
-      }),
+      .mutation(({ input, ctx }) => db.deleteDiscussionThread(input.threadId, ctx.user.id, ctx.user.role)),
+
     deleteReply: protectedProcedure
       .input(z.object({ replyId: z.number() }))
-      .mutation(async ({ input, ctx }) => {
-        const success = await db.deleteDiscussionReply(input.replyId, ctx.user.id, ctx.user.role);
-        return { success };
-      }),
+      .mutation(({ input, ctx }) => db.deleteDiscussionReply(input.replyId, ctx.user.id, ctx.user.role)),
   }),
 });
 

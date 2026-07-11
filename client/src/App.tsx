@@ -13,12 +13,34 @@ import Volunteer from "./pages/Volunteer";
 import Discussions from "./pages/Discussions";
 import SpeechAI from "./pages/SpeechAI";
 import Leaderboard from "./pages/Leaderboard";
+import LoginSignup from "./pages/LoginSignup";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { useState, useEffect } from "react";
+import { Toast, useToast } from "./components/Toast";
 
-function Router() {
-  // make sure to consider if you need authentication for certain routes
+function ProtectedRoute({ component: Component, ...rest }: any) {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-foreground">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Home />;
+  }
+
+  return <Component {...rest} />;
+}
+
+function Router({ isAuthenticated, showLoginRequired }: { isAuthenticated: boolean; showLoginRequired: () => void }) {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/login" component={LoginSignup} />
       <Route path="/events" component={Events} />
       <Route path="/practice" component={Practice} />
       <Route path="/leaderboard" component={Leaderboard} />
@@ -34,13 +56,28 @@ function Router() {
 }
 
 function App() {
+  const { user, loading } = useAuth();
+  const { toasts, addToast, removeToast } = useToast();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    if (!loading) {
+      setIsAuthenticated(!!user);
+    }
+  }, [user, loading]);
+
+  const handleLoginRequired = () => {
+    addToast("Log in required", "warning", 3000);
+  };
+
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
-          <Navigation />
-          <Router />
+          <Toast toasts={toasts} onRemove={removeToast} />
+          <Navigation onLoginRequired={handleLoginRequired} />
+          <Router isAuthenticated={isAuthenticated} showLoginRequired={handleLoginRequired} />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
@@ -48,4 +85,3 @@ function App() {
 }
 
 export default App;
-// Force rebuild 1783376791

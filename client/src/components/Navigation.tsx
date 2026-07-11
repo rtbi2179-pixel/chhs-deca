@@ -1,13 +1,9 @@
-/*
- * CHHS DECA Navigation — Cinematic Dark Editorial
- * Floating glassmorphic top bar with backdrop blur
- * Active state: blue underline grow + text glow
- */
-
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'wouter'
-import { Menu, X, Trophy, BookOpen, Calendar, Users, Home, ChevronRight, MessageSquare, Mic, BarChart3 } from 'lucide-react'
+import { Menu, X, Trophy, BookOpen, Calendar, Users, Home, ChevronRight, MessageSquare, Mic, LogOut } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useAuth } from '@/_core/hooks/useAuth'
+import { trpc } from '@/lib/trpc'
 
 const navLinks = [
   { href: '/', label: 'Home', icon: Home },
@@ -19,16 +15,34 @@ const navLinks = [
   { href: '/speech-ai', label: 'Speech AI', icon: Mic },
 ]
 
-export default function Navigation() {
+interface NavigationProps {
+  onLoginRequired?: () => void
+}
+
+export default function Navigation({ onLoginRequired }: NavigationProps) {
   const [location] = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const { user } = useAuth()
+  const logoutMutation = trpc.auth.logout.useMutation()
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  const handleLogout = async () => {
+    await logoutMutation.mutateAsync()
+    window.location.href = '/'
+  }
+
+  const handleProtectedNavClick = (href: string) => {
+    if (!user) {
+      onLoginRequired?.()
+      return
+    }
+  }
 
   return (
     <>
@@ -65,14 +79,16 @@ export default function Navigation() {
             <nav className="hidden md:flex items-center gap-1">
               {navLinks.map(({ href, label, icon: Icon }) => {
                 const isActive = location === href
+                const isProtected = href !== '/'
                 return (
-                  <Link key={href} href={href}>
+                  <Link key={href} href={isProtected && !user ? '#' : href}>
                     <div
+                      onClick={() => isProtected && handleProtectedNavClick(href)}
                       className={`relative flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 group ${
                         isActive
                           ? 'text-blue-400 bg-blue-500/10'
                           : 'text-white/70 hover:text-white hover:bg-white/5'
-                      }`}
+                      } ${isProtected && !user ? 'cursor-not-allowed opacity-50' : ''}`}
                     >
                       <Icon size={15} className={isActive ? 'text-blue-400' : 'text-white/40 group-hover:text-white/70'} />
                       {label}
@@ -91,15 +107,25 @@ export default function Navigation() {
 
             {/* CTA + Mobile Toggle */}
             <div className="flex items-center gap-3">
-              <a
-                href="https://www.deca.org"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hidden md:flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)]"
-              >
-                DECA.org
-                <ChevronRight size={14} />
-              </a>
+              {user ? (
+                <div className="hidden md:flex items-center gap-3">
+                  <span className="text-white/70 text-sm">{user.name || user.username}</span>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-sm font-medium rounded-lg transition-all duration-200"
+                  >
+                    <LogOut size={14} />
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <Link href="/login">
+                  <button className="hidden md:flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)]">
+                    Login
+                    <ChevronRight size={14} />
+                  </button>
+                </Link>
+              )}
               <button
                 className="md:hidden p-2 text-white/70 hover:text-white transition-colors"
                 onClick={() => setMobileOpen(!mobileOpen)}
@@ -125,15 +151,22 @@ export default function Navigation() {
             <nav className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1">
               {navLinks.map(({ href, label, icon: Icon }) => {
                 const isActive = location === href
+                const isProtected = href !== '/'
                 return (
-                  <Link key={href} href={href}>
+                  <Link key={href} href={isProtected && !user ? '#' : href}>
                     <div
+                      onClick={() => {
+                        if (isProtected && !user) {
+                          handleProtectedNavClick(href)
+                        } else {
+                          setMobileOpen(false)
+                        }
+                      }}
                       className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                         isActive
                           ? 'text-blue-400 bg-blue-500/10 border border-blue-500/20'
                           : 'text-white/70 hover:text-white hover:bg-white/5'
-                      }`}
-                      onClick={() => setMobileOpen(false)}
+                      } ${isProtected && !user ? 'cursor-not-allowed opacity-50' : ''}`}
                     >
                       <Icon size={16} />
                       {label}
@@ -141,16 +174,35 @@ export default function Navigation() {
                   </Link>
                 )
               })}
-              <a
-                href="https://www.deca.org"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 mt-2 px-4 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg"
-                onClick={() => setMobileOpen(false)}
-              >
-                Visit DECA.org
-                <ChevronRight size={14} />
-              </a>
+              <div className="border-t border-white/10 mt-2 pt-2">
+                {user ? (
+                  <>
+                    <div className="px-4 py-2 text-white/70 text-sm mb-2">
+                      {user.name || user.username}
+                    </div>
+                    <button
+                      onClick={() => {
+                        handleLogout()
+                        setMobileOpen(false)
+                      }}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-600 text-white text-sm font-medium rounded-lg"
+                    >
+                      <LogOut size={14} />
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <Link href="/login">
+                    <button
+                      onClick={() => setMobileOpen(false)}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg"
+                    >
+                      Login
+                      <ChevronRight size={14} />
+                    </button>
+                  </Link>
+                )}
+              </div>
             </nav>
           </motion.div>
         )}

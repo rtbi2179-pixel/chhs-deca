@@ -9,8 +9,17 @@
 
 - [x] Add keyboard shortcuts (arrow keys, Enter) to Practice page
 - [x] Create bookmarking UI with bookmark button on questions
-- [x] Build study sessions feature to create custom quizzes from bookmarks
+- [x] Build study sessions feature to create custom quizzes from bookmarks (now with full backend integration)
 - [x] Implement leaderboard page with performance rankings by cluster
 - [x] Add database schema for bookmarks, study sessions, and leaderboard data
 - [x] Create tRPC procedures for bookmark management and leaderboard queries
 - [x] Test keyboard shortcuts, bookmarking, and leaderboard functionality
+
+- [ ] Implement custom authentication system (username/password/school code)
+- [ ] Create school code whitelist in database
+- [ ] Build login/signup page with form validation
+- [ ] Add authentication context and hooks
+- [ ] Implement toast notification system for access denial
+- [ ] Protect all routes except Home page
+- [ ] Add login button to top-right navigation
+- [ ] Test authentication flow and access restrictions

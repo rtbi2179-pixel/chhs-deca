@@ -1,7 +1,8 @@
 import { eq, and, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions } from "../drizzle/schema";
+import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes } from "../drizzle/schema";
 import { ENV } from './_core/env';
+import bcrypt from 'bcryptjs';
 
 const ADMIN_EMAILS = ['rtbi2179@gmail.com', 'sahan.mallampati@gmail.com'];
 
@@ -363,4 +364,132 @@ export async function createStudySession(userId: number, name: string, questionI
   }
   
   return session;
+}
+
+
+// Custom Authentication Functions
+
+/**
+ * Validate school code against whitelist
+ */
+export async function validateSchoolCode(code: string): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+
+  const result = await db.select()
+    .from(schoolCodes)
+    .where(and(eq(schoolCodes.code, code), eq(schoolCodes.isActive, 1)))
+    .limit(1);
+
+  return result.length > 0;
+}
+
+/**
+ * Create a new user with custom auth (username/password/school code)
+ */
+export async function createCustomAuthUser(
+  firstName: string,
+  lastName: string,
+  username: string,
+  password: string,
+  schoolCode: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  // Validate school code
+  const isValidCode = await validateSchoolCode(schoolCode);
+  if (!isValidCode) {
+    throw new Error("Invalid or inactive school code");
+  }
+
+  // Check if username already exists
+  const existingUser = await db.select()
+    .from(users)
+    .where(eq(users.username, username))
+    .limit(1);
+
+  if (existingUser.length > 0) {
+    throw new Error("Username already exists");
+  }
+
+  // Hash password
+  const saltRounds = 10;
+  const passwordHash = await bcrypt.hash(password, saltRounds);
+
+  // Create user
+  const result = await db.insert(users).values({
+    firstName,
+    lastName,
+    username,
+    passwordHash,
+    schoolCode,
+    name: `${firstName} ${lastName}`,
+    loginMethod: "custom",
+    role: "user",
+  });
+
+  return result;
+}
+
+/**
+ * Authenticate user with username and password
+ */
+export async function authenticateUser(username: string, password: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const user = await db.select()
+    .from(users)
+    .where(eq(users.username, username))
+    .limit(1);
+
+  if (user.length === 0) {
+    throw new Error("Invalid username or password");
+  }
+
+  const foundUser = user[0];
+  if (!foundUser.passwordHash) {
+    throw new Error("Invalid username or password");
+  }
+
+  // Compare password
+  const isPasswordValid = await bcrypt.compare(password, foundUser.passwordHash);
+  if (!isPasswordValid) {
+    throw new Error("Invalid username or password");
+  }
+
+  // Update last signed in
+  await db.update(users)
+    .set({ lastSignedIn: new Date() })
+    .where(eq(users.id, foundUser.id));
+
+  return foundUser;
+}
+
+/**
+ * Get user by username
+ */
+export async function getUserByUsername(username: string) {
+  const db = await getDb();
+  if (!db) return null;
+
+  const result = await db.select()
+    .from(users)
+    .where(eq(users.username, username))
+    .limit(1);
+
+  return result.length > 0 ? result[0] : null;
+}
+
+/**
+ * Get all active school codes
+ */
+export async function getActiveSchoolCodes() {
+  const db = await getDb();
+  if (!db) return [];
+
+  return db.select()
+    .from(schoolCodes)
+    .where(eq(schoolCodes.isActive, 1));
 }
