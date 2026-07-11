@@ -75,52 +75,54 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
               </div>
             </Link>
 
-            {/* Desktop Nav - Icon Only */}
-            <nav className="hidden md:flex items-center gap-2">
+            {/* Desktop Nav - Expandable on Hover */}
+            <nav className="hidden md:flex items-center gap-1">
               {navLinks.map(({ href, label, icon: Icon }) => {
                 const isActive = location === href
                 const isProtected = href !== '/'
+                const isHovered = hoveredIcon === href
+                
                 return (
-                  <div key={href} className="relative group">
-                    <Link href={isProtected && !user ? '#' : href}>
-                      <button
-                        onClick={() => isProtected && handleProtectedNavClick(href)}
-                        onMouseEnter={() => setHoveredIcon(href)}
-                        onMouseLeave={() => setHoveredIcon(null)}
-                        className={`relative p-2 rounded-lg transition-all duration-200 ${
-                          isActive
-                            ? 'text-blue-400 bg-blue-500/10'
-                            : 'text-white/60 hover:text-white hover:bg-white/5'
-                        } ${isProtected && !user ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  <Link key={href} href={isProtected && !user ? '#' : href}>
+                    <motion.button
+                      onClick={() => isProtected && handleProtectedNavClick(href)}
+                      onMouseEnter={() => setHoveredIcon(href)}
+                      onMouseLeave={() => setHoveredIcon(null)}
+                      layout
+                      className={`relative px-2 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 whitespace-nowrap ${
+                        isActive
+                          ? 'text-blue-400 bg-blue-500/10'
+                          : 'text-white/60 hover:text-white hover:bg-white/5'
+                      } ${isProtected && !user ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    >
+                      <Icon size={20} />
+                      
+                      {/* Expandable Label */}
+                      <motion.span
+                        initial={false}
+                        animate={{
+                          opacity: isHovered ? 1 : 0,
+                          width: isHovered ? 'auto' : 0,
+                          marginLeft: isHovered ? 4 : 0,
+                        }}
+                        transition={{
+                          duration: 0.2,
+                          ease: 'easeOut',
+                        }}
+                        className="text-xs font-medium overflow-hidden"
                       >
-                        <Icon size={20} />
-                        {isActive && (
-                          <motion.div
-                            layoutId="nav-indicator"
-                            className="absolute bottom-1 left-2 right-2 h-0.5 bg-blue-500 rounded-full"
-                            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                          />
-                        )}
-                      </button>
-                    </Link>
-                    
-                    {/* Tooltip */}
-                    <AnimatePresence mode="wait">
-                      {hoveredIcon === href && (
+                        {label}
+                      </motion.span>
+
+                      {isActive && (
                         <motion.div
-                          key="tooltip"
-                          initial={{ opacity: 0, y: -4, scale: 0.95 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: -4, scale: 0.95 }}
-                          transition={{ duration: 0.15, ease: "easeOut" }}
-                          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-white/15 backdrop-blur-md border border-white/30 rounded-lg text-white text-xs font-medium whitespace-nowrap pointer-events-none shadow-lg"
-                        >
-                          {label}
-                          <div className="absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 bg-white/15 border-r border-b border-white/30 transform rotate-45" />
-                        </motion.div>
+                          layoutId="nav-indicator"
+                          className="absolute bottom-1 left-2 right-2 h-0.5 bg-blue-500 rounded-full"
+                          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                        />
                       )}
-                    </AnimatePresence>
-                  </div>
+                    </motion.button>
+                  </Link>
                 )
               })}
             </nav>
