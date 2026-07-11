@@ -1140,3 +1140,49 @@ export async function deleteCalendarEvent(id: number) {
   const result = await db.delete(calendarEvents).where(eq(calendarEvents.id, id))
   return result
 }
+
+
+// Volunteer Opportunity Management (Admin)
+export async function createVolunteerOpportunityAdmin(title: string, description: string, date: Date, spotsAvailable: number) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  const result = await db.insert(volunteerOpportunities).values({
+    title,
+    description,
+    date,
+    spotsAvailable,
+  })
+  
+  return result
+}
+
+export async function updateVolunteerOpportunityAdmin(id: number, updates: { title?: string; description?: string; date?: Date; spotsAvailable?: number }) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  return db.update(volunteerOpportunities)
+    .set(updates)
+    .where(eq(volunteerOpportunities.id, id))
+}
+
+export async function deleteVolunteerOpportunityAdmin(id: number) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  // Delete all signups for this opportunity first
+  await db.delete(volunteerSignups)
+    .where(eq(volunteerSignups.opportunityId, id))
+  
+  // Then delete the opportunity
+  return db.delete(volunteerOpportunities)
+    .where(eq(volunteerOpportunities.id, id))
+}
+
+export async function getAllVolunteerOpportunitiesAdmin() {
+  const db = await getDb()
+  if (!db) return []
+  
+  return db.select().from(volunteerOpportunities)
+    .orderBy(volunteerOpportunities.date)
+}

@@ -145,9 +145,23 @@ const Volunteer = () => {
   const [expandedId, setExpandedId] = useState<number | null>(null)
   const [signedUpIds, setSignedUpIds] = useState<number[]>([])
   const [showSignups, setShowSignups] = useState<number | null>(null)
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [editingOpp, setEditingOpp] = useState<any | null>(null)
+  const [newOpp, setNewOpp] = useState({ title: '', description: '', date: '', spotsAvailable: 1 })
   
   // Load all signups from database
   const { data: allSignups = [] } = trpc.volunteers.getAllSignups.useQuery()
+  const utils = trpc.useUtils()
+  const { data: dbOpportunities = [] } = trpc.volunteers.getAll.useQuery()
+  const createOppMutation = trpc.volunteers.create.useMutation({
+    onSuccess: () => { utils.volunteers.getAll.invalidate(); setShowAddModal(false); setNewOpp({ title: '', description: '', date: '', spotsAvailable: 1 }) }
+  })
+  const updateOppMutation = trpc.volunteers.update.useMutation({
+    onSuccess: () => { utils.volunteers.getAll.invalidate(); setEditingOpp(null) }
+  })
+  const deleteOppMutation = trpc.volunteers.delete.useMutation({
+    onSuccess: () => { utils.volunteers.getAll.invalidate() }
+  })
   
   const signUpMutation = trpc.volunteers.signUp.useMutation()
   const { data: signups = [] } = trpc.volunteers.getByOpportunity.useQuery(
@@ -201,7 +215,8 @@ const Volunteer = () => {
                 VOLUNTEER OPPORTUNITIES
               </h1>
               {user && (user.role === 'admin' || user.role === 'super_admin') && (
-                <button
+                <div className="flex items-center gap-2">
+                  <button
                   onClick={() => {
                     if (adminModeActive) {
                       deactivateAdminMode()
@@ -214,8 +229,17 @@ const Volunteer = () => {
                   className="px-4 py-2 bg-yellow-600/20 hover:bg-yellow-600/30 hover:shadow-[0_0_20px_rgba(250,204,21,0.6)] border border-yellow-500/30 text-yellow-400 rounded-lg transition text-sm font-semibold whitespace-nowrap"
                   title="Manage volunteer opportunities (admin only)"
                 >
-                  👑 Manage
+                  {adminModeActive ? "🔴 Exit Admin" : "👑 Manage"}
                 </button>
+                {adminModeActive && (
+                  <button
+                    onClick={() => setShowAddModal(true)}
+                    className="px-4 py-2 bg-blue-600/30 hover:bg-blue-600/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.6)] border border-blue-500/50 text-blue-300 rounded-lg transition text-sm font-semibold whitespace-nowrap"
+                  >
+                    ➕ Add Opportunity
+                  </button>
+                )}
+                </div>
               )}
             </div>
             <p className="text-white/60 text-lg max-w-2xl mx-auto">

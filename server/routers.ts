@@ -367,6 +367,44 @@ export const appRouter = router({
       .query(({ ctx }) => db.getUserVolunteerSignups(ctx.user.id)),
     getAllSignups: publicProcedure
       .query(() => db.getAllVolunteerSignups()),
+    getAll: publicProcedure
+      .query(() => db.getAllVolunteerOpportunitiesAdmin()),
+    create: protectedProcedure
+      .input(z.object({
+        title: z.string().min(1),
+        description: z.string().optional(),
+        date: z.date(),
+        spotsAvailable: z.number().min(1),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only admins can create opportunities' });
+        }
+        return db.createVolunteerOpportunityAdmin(input.title, input.description || '', input.date, input.spotsAvailable);
+      }),
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        title: z.string().optional(),
+        description: z.string().optional(),
+        date: z.date().optional(),
+        spotsAvailable: z.number().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only admins can update opportunities' });
+        }
+        const { id, ...updates } = input;
+        return db.updateVolunteerOpportunityAdmin(id, updates);
+      }),
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only admins can delete opportunities' });
+        }
+        return db.deleteVolunteerOpportunityAdmin(input.id);
+      }),
   }),
 
   practice: router({
