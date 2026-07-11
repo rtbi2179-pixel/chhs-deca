@@ -128,10 +128,10 @@ export default function Discussions() {
 
   const handleManageClick = () => {
     const neonOverlay = document.createElement('div')
-    neonOverlay.style.cssText = 'position: fixed; inset: 0; pointer-events: none; z-index: 40; background: radial-gradient(circle at center, rgba(250,204,21,0.15) 0%, transparent 70%); box-shadow: inset 0 0 60px rgba(250,204,21,0.4), 0 0 40px rgba(250,204,21,0.3); border: 2px solid rgba(250,204,21,0.5);'
+    neonOverlay.style.cssText = 'position: fixed; inset: 0; pointer-events: none; z-index: 40; background: radial-gradient(circle at center, rgba(59,130,246,0.15) 0%, transparent 70%); box-shadow: inset 0 0 60px rgba(59,130,246,0.4), 0 0 40px rgba(59,130,246,0.3); border: 2px solid rgba(59,130,246,0.8);'
     document.body.appendChild(neonOverlay)
-    setTimeout(() => neonOverlay.remove(), 3000)
-    toast.success('🟡 ADMIN MODE ACTIVATED')
+    setTimeout(() => neonOverlay.remove(), 30000)
+    toast.success('🔵 YOU ARE IN ADMIN MODE', { description: 'Management tools are now active' })
   }
 
   const filteredThreads = threads.filter(t =>
