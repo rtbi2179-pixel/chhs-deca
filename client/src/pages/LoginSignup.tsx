@@ -178,24 +178,36 @@ export default function LoginSignup() {
           </Button>
         </form>
 
-        <div className="mt-6 text-center">
-          <p className="text-foreground/70 text-sm mb-2">
-            {isSignup ? "Already have an account?" : "Don't have an account?"}
-          </p>
-          <button
-            onClick={() => {
-              setIsSignup(!isSignup);
-              setError(null);
-              setFirstName("");
-              setLastName("");
-              setEmail("");
-              setPassword("");
-              setSchoolCodePassword("");
-            }}
-            className="text-blue-400 hover:text-blue-300 font-semibold text-sm"
-          >
-            {isSignup ? "Sign In" : "Create Account"}
-          </button>
+        <div className="mt-6 text-center space-y-3">
+          {!isSignup && (
+            <div>
+              <a
+                href="/forgot-password"
+                className="text-blue-400 hover:text-blue-300 text-sm"
+              >
+                Forgot password?
+              </a>
+            </div>
+          )}
+          <div>
+            <p className="text-foreground/70 text-sm mb-2">
+              {isSignup ? "Already have an account?" : "Don't have an account?"}
+            </p>
+            <button
+              onClick={() => {
+                setIsSignup(!isSignup);
+                setError(null);
+                setFirstName("");
+                setLastName("");
+                setEmail("");
+                setPassword("");
+                setSchoolCodePassword("");
+              }}
+              className="text-blue-400 hover:text-blue-300 font-semibold text-sm"
+            >
+              {isSignup ? "Sign In" : "Create Account"}
+            </button>
+          </div>
         </div>
       </Card>
     </div>

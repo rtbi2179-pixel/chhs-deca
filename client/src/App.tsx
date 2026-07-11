@@ -14,6 +14,9 @@ import Discussions from "./pages/Discussions";
 import SpeechAI from "./pages/SpeechAI";
 import Leaderboard from "./pages/Leaderboard";
 import LoginSignup from "./pages/LoginSignup";
+import { VerifyEmail } from "./pages/VerifyEmail";
+import { ResetPassword } from "./pages/ResetPassword";
+import { ForgotPassword } from "./pages/ForgotPassword";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useState, useEffect } from "react";
 import { Toast, useToast } from "./components/Toast";
@@ -48,6 +51,9 @@ function Router({ isAuthenticated, showLoginRequired }: { isAuthenticated: boole
       <Route path="/volunteer" component={Volunteer} />
       <Route path="/discussions" component={Discussions} />
       <Route path="/speech-ai" component={SpeechAI} />
+      <Route path="/verify-email" component={VerifyEmail} />
+      <Route path="/reset-password" component={ResetPassword} />
+      <Route path="/forgot-password" component={ForgotPassword} />
 
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />

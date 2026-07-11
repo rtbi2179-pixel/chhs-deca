@@ -58,6 +58,43 @@ export const appRouter = router({
       }),
     getSchoolCodes: publicProcedure
       .query(() => db.getActiveSchoolCodes()),
+    requestPasswordReset: publicProcedure
+      .input(z.object({
+        email: z.string().email("Valid email is required"),
+      }))
+      .mutation(async ({ input }) => {
+        try {
+          const result = await db.requestPasswordReset(input.email);
+          return { success: true, message: "Password reset email sent" };
+        } catch (error: any) {
+          throw new Error(error.message);
+        }
+      }),
+    resetPassword: publicProcedure
+      .input(z.object({
+        token: z.string(),
+        newPassword: z.string().min(6, "Password must be at least 6 characters"),
+      }))
+      .mutation(async ({ input }) => {
+        try {
+          await db.resetPassword(input.token, input.newPassword);
+          return { success: true, message: "Password reset successful" };
+        } catch (error: any) {
+          throw new Error(error.message);
+        }
+      }),
+    verifyEmail: publicProcedure
+      .input(z.object({
+        token: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        try {
+          await db.verifyEmail(input.token);
+          return { success: true, message: "Email verified successfully" };
+        } catch (error: any) {
+          throw new Error(error.message);
+        }
+      }),
   }),
 
   volunteers: router({
