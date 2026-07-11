@@ -105,17 +105,18 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
                     </Link>
                     
                     {/* Tooltip */}
-                    <AnimatePresence>
+                    <AnimatePresence mode="wait">
                       {hoveredIcon === href && (
                         <motion.div
-                          initial={{ opacity: 0, y: -8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -8 }}
-                          transition={{ duration: 0.2 }}
-                          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg text-white text-xs font-medium whitespace-nowrap pointer-events-none"
+                          key="tooltip"
+                          initial={{ opacity: 0, y: -4, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: -4, scale: 0.95 }}
+                          transition={{ duration: 0.15, ease: "easeOut" }}
+                          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-white/15 backdrop-blur-md border border-white/30 rounded-lg text-white text-xs font-medium whitespace-nowrap pointer-events-none shadow-lg"
                         >
                           {label}
-                          <div className="absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 bg-white/10 border-r border-b border-white/20 transform rotate-45" />
+                          <div className="absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 bg-white/15 border-r border-b border-white/30 transform rotate-45" />
                         </motion.div>
                       )}
                     </AnimatePresence>
