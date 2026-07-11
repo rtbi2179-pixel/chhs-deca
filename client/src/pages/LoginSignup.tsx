@@ -12,7 +12,7 @@ export default function LoginSignup() {
   // Form state
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [schoolCodePassword, setSchoolCodePassword] = useState("");
 
@@ -38,14 +38,14 @@ export default function LoginSignup() {
       await signupMutation.mutateAsync({
         firstName,
         lastName,
-        username,
+        email,
         password,
         schoolCode: schoolCodePassword,
       });
 
       // After signup, login automatically
       await loginMutation.mutateAsync({
-        username,
+        email,
         password,
       });
 
@@ -64,7 +64,7 @@ export default function LoginSignup() {
 
     try {
       await loginMutation.mutateAsync({
-        username,
+        email,
         password,
       });
 
@@ -142,15 +142,15 @@ export default function LoginSignup() {
 
           <div>
             <label className="block text-foreground font-semibold mb-2 text-sm">
-              Username
+              Email
             </label>
             <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full px-4 py-2 bg-background border border-border rounded text-foreground placeholder-foreground/50 focus:outline-none focus:border-blue-500"
-              placeholder="johndoe"
+              placeholder="john@example.com"
             />
           </div>
 
@@ -188,7 +188,7 @@ export default function LoginSignup() {
               setError(null);
               setFirstName("");
               setLastName("");
-              setUsername("");
+              setEmail("");
               setPassword("");
               setSchoolCodePassword("");
             }}

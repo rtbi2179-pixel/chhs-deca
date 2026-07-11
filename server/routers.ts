@@ -23,7 +23,7 @@ export const appRouter = router({
       .input(z.object({
         firstName: z.string().min(1, "First name is required"),
         lastName: z.string().min(1, "Last name is required"),
-        username: z.string().min(3, "Username must be at least 3 characters"),
+        email: z.string().email("Valid email is required"),
         password: z.string().min(6, "Password must be at least 6 characters"),
         schoolCode: z.string().min(1, "School code is required"),
       }))
@@ -32,7 +32,7 @@ export const appRouter = router({
           await db.createCustomAuthUser(
             input.firstName,
             input.lastName,
-            input.username,
+            input.email,
             input.password,
             input.schoolCode
           );
@@ -43,12 +43,12 @@ export const appRouter = router({
       }),
     login: publicProcedure
       .input(z.object({
-        username: z.string(),
+        email: z.string().email("Valid email is required"),
         password: z.string(),
       }))
       .mutation(async ({ input, ctx }) => {
         try {
-          const user = await db.authenticateUser(input.username, input.password);
+          const user = await db.authenticateUser(input.email, input.password);
           const cookieOptions = getSessionCookieOptions(ctx.req);
           ctx.res.cookie(COOKIE_NAME, user.id.toString(), cookieOptions);
           return { success: true, user };
