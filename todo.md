@@ -32,3 +32,8 @@
 - [x] Add comment functionality on announcements
 - [x] Create admin announcement management (edit/delete)
 - [x] Add announcements tab to navigation
+
+- [x] Add personal stats card to leaderboard (rank, accuracy, questions answered)
+- [x] Show comparison to top performer on leaderboard
+- [x] Create achievement badges system (100% Accuracy, 500+ Questions, 1000+ Questions, 95%+ Accuracy, Top Performer)
+- [x] Highlight current user's row in leaderboard
