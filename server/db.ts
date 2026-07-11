@@ -1,4 +1,5 @@
 import { eq, and, inArray, desc, count, asc } from "drizzle-orm";
+import { randomBytes } from "crypto";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments, calendarEvents, CalendarEvent, InsertCalendarEvent} from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -527,7 +528,7 @@ export async function requestPasswordReset(email: string) {
     throw new Error("Email not found");
   }
 
-  const token = require('crypto').randomBytes(32).toString('hex');
+  const token = randomBytes(32).toString('hex');
   const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 
   await db.update(users)
@@ -582,7 +583,7 @@ export async function sendEmailVerification(userId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
-  const token = require('crypto').randomBytes(32).toString('hex');
+  const token = randomBytes(32).toString('hex');
   const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
   await db.update(users)
