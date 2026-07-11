@@ -15,6 +15,16 @@ export default function Practice() {
   const [totalAnswered, setTotalAnswered] = useState(0);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [leaderboardCluster, setLeaderboardCluster] = useState<string>("overall");
+  const [showStudySessions, setShowStudySessions] = useState(false);
+  const [sessionName, setSessionName] = useState("");
+
+  // Fetch bookmarked questions
+  const { data: bookmarkedQuestions = [] } = trpc.practice.getBookmarkedQuestions.useQuery(undefined, {
+    enabled: showStudySessions,
+  });
+
+  // Create study session mutation
+  const createSessionMutation = trpc.practice.createStudySession.useMutation();
 
   // Fetch all questions from the database
   const { data: allQuestions, isLoading } = trpc.practice.getQuestions.useQuery({
@@ -51,6 +61,20 @@ export default function Practice() {
   };
 
   const updateLeaderboardMutation = trpc.practice.updateLeaderboard.useMutation();
+
+  const handleCreateStudySession = async () => {
+    if (!sessionName.trim() || bookmarkedQuestions.length === 0) return;
+
+    try {
+      await createSessionMutation.mutateAsync({
+        name: sessionName,
+        questionIds: bookmarkedQuestions.map((q: any) => q.id),
+      });
+      setSessionName('');
+    } catch (error) {
+      console.error('Failed to create study session', error);
+    }
+  };
 
   const handleSubmitAnswer = async () => {
     if (!currentQuestion || !selectedAnswer) return;
@@ -197,6 +221,12 @@ export default function Practice() {
                 className="bg-purple-600 hover:bg-purple-700"
               >
                 View Leaderboard
+              </Button>
+              <Button 
+                onClick={() => setShowStudySessions(!showStudySessions)}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                Study Sessions
               </Button>
               <div className="flex items-center gap-2">
               <label htmlFor="question-jump" className="text-foreground font-semibold">Jump to:</label>
@@ -364,68 +394,118 @@ export default function Practice() {
                       ? "border-green-600"
                       : "border-red-600"
                   }`}>
-                    <p className="text-sm mt-3">{currentQuestion.explanation}</p>
+                    <p className="text-foreground/90 mt-4">{currentQuestion.explanation}</p>
                   </div>
                 )}
               </div>
             )}
 
-            {/* Action Buttons */}
-            <div className="flex gap-4 justify-between items-center">
-              <div className="flex gap-4 items-center">
-                <Button
-                  onClick={handlePreviousQuestion}
-                  disabled={currentQuestionIndex === 0}
-                  className="bg-gray-600 hover:bg-gray-700 disabled:opacity-50"
-                >
-                  Previous
-                </Button>
-                <Button
-                  onClick={handleNextQuestion}
-                  disabled={currentQuestionIndex === filteredQuestions.length - 1}
-                  className="bg-gray-600 hover:bg-gray-700 disabled:opacity-50"
-                >
-                  Next
-                </Button>
-                <div className="flex items-center gap-2 ml-4 pl-4 border-l border-border">
-                  <label htmlFor="question-jump-bottom" className="text-foreground font-semibold whitespace-nowrap">Jump to:</label>
-                  <input
-                    id="question-jump-bottom"
-                    type="number"
-                    min="1"
-                    max={filteredQuestions.length}
-                    value={currentQuestionIndex + 1}
-                    onChange={(e) => {
-                      const num = parseInt(e.target.value);
-                      if (num >= 1 && num <= filteredQuestions.length) {
-                        setCurrentQuestionIndex(num - 1);
-                        setSelectedAnswer(null);
-                        setShowResult(false);
-                        setShowExplanation(false);
-                      }
-                    }}
-                    className="w-16 px-3 py-2 bg-background border border-border text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <span className="text-foreground/70 whitespace-nowrap">/ {filteredQuestions.length}</span>
-                </div>
+            {/* Submit/Next Buttons */}
+            <div className="flex gap-4 justify-between">
+              <Button
+                onClick={handlePreviousQuestion}
+                disabled={currentQuestionIndex === 0}
+                className="bg-gray-600 hover:bg-gray-700 disabled:opacity-50"
+              >
+                Previous
+              </Button>
+
+              <div className="flex gap-2">
+                {!showResult ? (
+                  <Button
+                    onClick={handleSubmitAnswer}
+                    disabled={!selectedAnswer}
+                    className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    Submit Answer
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handleNextQuestion}
+                    disabled={currentQuestionIndex === filteredQuestions.length - 1}
+                    className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    Next
+                  </Button>
+                )}
               </div>
 
-              {!showResult ? (
-                <Button
-                  onClick={handleSubmitAnswer}
-                  disabled={!selectedAnswer}
-                  className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
-                >
-                  Submit Answer
-                </Button>
+              <div className="flex items-center gap-2">
+                <label htmlFor="question-jump-bottom" className="text-foreground font-semibold text-sm">Jump to:</label>
+                <input
+                  id="question-jump-bottom"
+                  type="number"
+                  min="1"
+                  max={filteredQuestions.length}
+                  value={currentQuestionIndex + 1}
+                  onChange={(e) => {
+                    const num = parseInt(e.target.value);
+                    if (num >= 1 && num <= filteredQuestions.length) {
+                      setCurrentQuestionIndex(num - 1);
+                      setSelectedAnswer(null);
+                      setShowResult(false);
+                      setShowExplanation(false);
+                    }
+                  }}
+                  className="w-16 px-3 py-2 bg-background border border-border text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <span className="text-foreground/70 text-sm">/ {filteredQuestions.length}</span>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* Study Sessions Section */}
+        {showStudySessions && (
+          <Card className="mt-6 p-6 border border-border">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-foreground">Study Sessions</h3>
+              <button
+                onClick={() => setShowStudySessions(false)}
+                className="text-foreground/70 hover:text-foreground text-2xl"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-foreground font-semibold mb-3 text-sm">Bookmarked Questions</label>
+              {bookmarkedQuestions.length === 0 ? (
+                <p className="text-foreground/70 text-sm mb-4">No bookmarked questions yet. Bookmark questions from the practice quiz to create a study session.</p>
               ) : (
-                <Button
-                  onClick={handleResetQuiz}
-                  className="bg-purple-600 hover:bg-purple-700"
-                >
-                  Start Over
-                </Button>
+                <div className="mb-4">
+                  <p className="text-foreground text-sm mb-3">
+                    You have <span className="font-bold text-blue-400">{bookmarkedQuestions.length}</span> bookmarked questions
+                  </p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="Enter session name (e.g., 'Marketing Review')"
+                      value={sessionName}
+                      onChange={(e) => setSessionName(e.target.value)}
+                      className="flex-1 px-3 py-2 bg-background border border-border rounded text-foreground placeholder-foreground/50 focus:outline-none focus:border-blue-500"
+                    />
+                    <button
+                      onClick={handleCreateStudySession}
+                      disabled={createSessionMutation.isPending || !sessionName.trim()}
+                      className="px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-blue-600/50 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
+                    >
+                      {createSessionMutation.isPending ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        'Create'
+                      )}
+                    </button>
+                  </div>
+                </div>
               )}
+            </div>
+
+            <div>
+              <label className="block text-foreground font-semibold mb-3 text-sm">How It Works</label>
+              <p className="text-foreground/70 text-xs">
+                Study sessions allow you to create custom quizzes from your bookmarked questions. Bookmark questions while taking the practice quiz, then create a session here to review them.
+              </p>
             </div>
           </Card>
         )}
@@ -461,7 +541,7 @@ export default function Practice() {
                       <button
                         key={cluster.value}
                         onClick={() => setLeaderboardCluster(cluster.value)}
-                        className={`px-3 py-2 rounded text-sm transition-colors ${
+                        className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                           leaderboardCluster === cluster.value
                             ? "bg-blue-600 text-white"
                             : "bg-background border border-border text-foreground hover:bg-border"
@@ -473,25 +553,7 @@ export default function Practice() {
                   </div>
                 </div>
 
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="bg-blue-600/10 border-b border-border">
-                        <th className="px-4 py-3 text-left text-foreground font-semibold">Rank</th>
-                        <th className="px-4 py-3 text-left text-foreground font-semibold">Name</th>
-                        <th className="px-4 py-3 text-left text-foreground font-semibold">Accuracy</th>
-                        <th className="px-4 py-3 text-left text-foreground font-semibold">Answered</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td colSpan={4} className="px-4 py-8 text-center text-foreground/70">
-                          No leaderboard data yet. Start practicing!
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                <LeaderboardContent cluster={leaderboardCluster} />
               </div>
             </Card>
           </div>
@@ -503,51 +565,90 @@ export default function Practice() {
 
 // Bookmark Button Component
 function BookmarkButton({ questionId }: { questionId: number }) {
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  const { user } = useAuth();
+  const { data: isBookmarked } = trpc.practice.isBookmarked.useQuery({ questionId });
   const addBookmarkMutation = trpc.practice.addBookmark.useMutation();
   const removeBookmarkMutation = trpc.practice.removeBookmark.useMutation();
-  const checkBookmarkQuery = trpc.practice.isBookmarked.useQuery({ questionId }, { enabled: !!user });
-
-  useEffect(() => {
-    if (checkBookmarkQuery.data !== undefined) {
-      setIsBookmarked(checkBookmarkQuery.data);
-    }
-  }, [checkBookmarkQuery.data]);
 
   const handleToggleBookmark = async () => {
-    if (!user) return;
-    
     try {
       if (isBookmarked) {
         await removeBookmarkMutation.mutateAsync({ questionId });
       } else {
         await addBookmarkMutation.mutateAsync({ questionId });
       }
-      setIsBookmarked(!isBookmarked);
     } catch (error) {
       console.error("Failed to toggle bookmark", error);
     }
   };
 
-  if (!user) return null;
-
   return (
     <button
       onClick={handleToggleBookmark}
-      className={`p-2 rounded-lg transition-colors ml-4 ${
-        isBookmarked
-          ? "bg-yellow-600/20 text-yellow-400 border border-yellow-600"
-          : "bg-background border border-border text-foreground hover:bg-border"
-      }`}
-      title={isBookmarked ? "Remove bookmark" : "Add bookmark"}
+      className="text-2xl hover:scale-110 transition-transform"
+      title={isBookmarked ? "Remove bookmark" : "Bookmark this question"}
     >
-      <span className="text-xl">{isBookmarked ? "★" : "☆"}</span>
+      {isBookmarked ? "★" : "☆"}
     </button>
   );
 }
 
-function useAuth() {
-  const { data: user } = trpc.auth.me.useQuery();
-  return { user };
+// Leaderboard Content Component
+function LeaderboardContent({ cluster }: { cluster: string }) {
+  const { data: leaderboard = [], isLoading } = trpc.practice.getLeaderboardByCluster.useQuery(
+    { cluster, limit: 50 },
+    { enabled: cluster === "overall" ? false : true }
+  );
+
+  const { data: overallLeaderboard = [] } = trpc.practice.getLeaderboard.useQuery(
+    { limit: 50 },
+    { enabled: cluster === "overall" }
+  );
+
+  const displayData = cluster === "overall" ? overallLeaderboard : leaderboard;
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
+      </div>
+    );
+  }
+
+  if (!displayData || displayData.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-foreground/70">No leaderboard data yet. Start answering questions to appear here!</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full">
+        <thead>
+          <tr className="border-b border-border">
+            <th className="text-left px-4 py-3 text-foreground font-semibold">Rank</th>
+            <th className="text-left px-4 py-3 text-foreground font-semibold">Student</th>
+            <th className="text-center px-4 py-3 text-foreground font-semibold">Accuracy</th>
+            <th className="text-center px-4 py-3 text-foreground font-semibold">Questions</th>
+            <th className="text-center px-4 py-3 text-foreground font-semibold">Correct</th>
+          </tr>
+        </thead>
+        <tbody>
+          {displayData.map((entry: any, index: number) => {
+            const accuracy = entry.totalAnswered > 0 ? Math.round((entry.correctAnswers / entry.totalAnswered) * 100) : 0;
+            return (
+              <tr key={index} className="border-b border-border/50 hover:bg-background/50">
+                <td className="px-4 py-3 text-foreground font-bold">{index + 1}</td>
+                <td className="px-4 py-3 text-foreground">{entry.user?.name || "Anonymous"}</td>
+                <td className="px-4 py-3 text-center text-foreground">{accuracy}%</td>
+                <td className="px-4 py-3 text-center text-foreground">{entry.totalAnswered}</td>
+                <td className="px-4 py-3 text-center text-foreground font-semibold text-green-400">{entry.correctAnswers}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
 }

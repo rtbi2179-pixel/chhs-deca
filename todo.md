@@ -9,7 +9,7 @@
 
 - [x] Add keyboard shortcuts (arrow keys, Enter) to Practice page
 - [x] Create bookmarking UI with bookmark button on questions
-- [ ] Build study sessions feature to create custom quizzes from bookmarks
+- [x] Build study sessions feature to create custom quizzes from bookmarks
 - [x] Implement leaderboard page with performance rankings by cluster
 - [x] Add database schema for bookmarks, study sessions, and leaderboard data
 - [x] Create tRPC procedures for bookmark management and leaderboard queries
