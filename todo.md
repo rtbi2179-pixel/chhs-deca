@@ -37,3 +37,7 @@
 - [x] Show comparison to top performer on leaderboard
 - [x] Create achievement badges system (100% Accuracy, 500+ Questions, 1000+ Questions, 95%+ Accuracy, Top Performer)
 - [x] Highlight current user's row in leaderboard
+- [x] Create calendar events database table
+- [x] Implement calendar CRUD API endpoints
+- [x] Add admin delete functionality for calendar events
+- [x] Add admin edit button UI (backend ready for implementation)

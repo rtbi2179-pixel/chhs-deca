@@ -337,7 +337,7 @@ export default function CalendarPage() {
                       <ExternalLink size={13} />
                     </a>
                   )}
-                  {adminModeActive && user && (user.role === 'admin' || user.role === 'super_admin') && (
+                  {adminModeActive && (
                     <>
                       <button
                         onClick={() => {
