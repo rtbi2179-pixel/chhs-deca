@@ -5,6 +5,8 @@ import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import * as db from "./db";
 import { notifyOwner } from "./_core/notification";
+import { questions } from "../drizzle/schema";
+import { eq } from "drizzle-orm";
 
 export const appRouter = router({
   system: systemRouter,
@@ -40,6 +42,27 @@ export const appRouter = router({
       .query(({ ctx }) => db.getUserVolunteerSignups(ctx.user.id)),
     getAllSignups: publicProcedure
       .query(() => db.getAllVolunteerSignups()),
+  }),
+
+  practice: router({
+    getQuestions: publicProcedure
+      .input(z.object({ cluster: z.string().optional(), difficulty: z.string().optional() }))
+      .query(async ({ input, ctx }) => {
+        const dbInstance = await db.getDb();
+        if (!dbInstance) return [];
+
+        let query = dbInstance.select().from(questions);
+
+        if (input.cluster) {
+          query = query.where(eq(questions.cluster, input.cluster)) as any;
+        }
+
+        if (input.difficulty) {
+          query = query.where(eq(questions.difficulty, input.difficulty)) as any;
+        }
+
+        return query;
+      }),
   }),
 
   discussions: router({

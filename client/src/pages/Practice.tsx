@@ -1,19 +1,288 @@
+import { useState, useMemo } from "react";
+import { trpc } from "@/lib/trpc";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Loader2 } from "lucide-react";
+
 export default function Practice() {
+  const [selectedCluster, setSelectedCluster] = useState<string>("all");
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string>("all");
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [showResult, setShowResult] = useState(false);
+  const [score, setScore] = useState(0);
+  const [totalAnswered, setTotalAnswered] = useState(0);
+
+  // Fetch all questions from the database
+  const { data: allQuestions, isLoading } = trpc.practice.getQuestions.useQuery({
+    cluster: selectedCluster === "all" ? undefined : selectedCluster,
+    difficulty: selectedDifficulty === "all" ? undefined : selectedDifficulty,
+  });
+
+  // Filter questions based on selections
+  const filteredQuestions = useMemo(() => {
+    if (!allQuestions) return [];
+    return allQuestions;
+  }, [allQuestions]);
+
+  const currentQuestion = filteredQuestions[currentQuestionIndex];
+
+  const clusters = [
+    { value: "all", label: "All Clusters" },
+    { value: "Marketing", label: "Marketing" },
+    { value: "Business Management & Administration", label: "Business Management" },
+    { value: "Finance", label: "Finance" },
+    { value: "Hospitality & Tourism", label: "Hospitality & Tourism" },
+  ];
+
+  const difficulties = [
+    { value: "all", label: "All Levels" },
+    { value: "Easy", label: "Easy" },
+    { value: "Medium", label: "Medium" },
+    { value: "Hard", label: "Hard" },
+  ];
+
+  const handleAnswerSelect = (answer: string) => {
+    if (showResult) return; // Prevent changing answer after submission
+    setSelectedAnswer(answer);
+  };
+
+  const handleSubmitAnswer = () => {
+    if (!currentQuestion || !selectedAnswer) return;
+
+    setShowResult(true);
+    if (selectedAnswer === currentQuestion.correctAnswer) {
+      setScore(score + 1);
+    }
+    setTotalAnswered(totalAnswered + 1);
+  };
+
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex < filteredQuestions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setSelectedAnswer(null);
+      setShowResult(false);
+    }
+  };
+
+  const handlePreviousQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+      setSelectedAnswer(null);
+      setShowResult(false);
+    }
+  };
+
+  const handleResetQuiz = () => {
+    setCurrentQuestionIndex(0);
+    setSelectedAnswer(null);
+    setShowResult(false);
+    setScore(0);
+    setTotalAnswered(0);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+          <p className="text-foreground">Loading practice questions...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!filteredQuestions || filteredQuestions.length === 0) {
+    return (
+      <div className="min-h-screen bg-background p-8">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-4xl font-bold text-foreground mb-8">Practice Questions</h1>
+          <Card className="p-8 text-center">
+            <p className="text-foreground mb-4">No questions found for the selected filters.</p>
+            <Button onClick={handleResetQuiz} className="bg-blue-600 hover:bg-blue-700">
+              Reset Filters
+            </Button>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div style={{ width: '100%', minHeight: 'calc(100vh - 80px)', backgroundColor: '#000' }}>
-      <iframe
-        src="https://www.decademy.app/practice"
-        style={{
-          width: '100%',
-          height: '100%',
-          border: 'none',
-          display: 'block',
-          minHeight: 'calc(100vh - 80px)',
-        }}
-        title="Decademy Practice"
-        allow="accelerometer; ambient-light-sensor; autoplay; battery; camera; display-capture; document-domain; encrypted-media; execution-while-not-rendered; execution-while-out-of-viewport; fullscreen; geolocation; gyroscope; magnetometer; microphone; midi; navigation-timing; payment; picture-in-picture; publicKeyCredentials-get; sync-xhr; usb; vr; wake-lock; xr-spatial-tracking"
-        allowFullScreen
-      />
+    <div className="min-h-screen bg-background p-8">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-foreground mb-2">DECA Practice Questions</h1>
+          <p className="text-foreground/70">
+            Question {currentQuestionIndex + 1} of {filteredQuestions.length}
+          </p>
+          {totalAnswered > 0 && (
+            <p className="text-foreground/70 mt-2">
+              Score: {score} / {totalAnswered} ({Math.round((score / totalAnswered) * 100)}%)
+            </p>
+          )}
+        </div>
+
+        {/* Filters */}
+        <Card className="p-6 mb-8 border border-border">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-foreground font-semibold mb-3">Cluster</label>
+              <div className="space-y-2">
+                {clusters.map((cluster) => (
+                  <button
+                    key={cluster.value}
+                    onClick={() => {
+                      setSelectedCluster(cluster.value);
+                      setCurrentQuestionIndex(0);
+                      setSelectedAnswer(null);
+                      setShowResult(false);
+                    }}
+                    className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                      selectedCluster === cluster.value
+                        ? "bg-blue-600 text-white"
+                        : "bg-background border border-border text-foreground hover:bg-border"
+                    }`}
+                  >
+                    {cluster.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-foreground font-semibold mb-3">Difficulty</label>
+              <div className="space-y-2">
+                {difficulties.map((difficulty) => (
+                  <button
+                    key={difficulty.value}
+                    onClick={() => {
+                      setSelectedDifficulty(difficulty.value);
+                      setCurrentQuestionIndex(0);
+                      setSelectedAnswer(null);
+                      setShowResult(false);
+                    }}
+                    className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                      selectedDifficulty === difficulty.value
+                        ? "bg-blue-600 text-white"
+                        : "bg-background border border-border text-foreground hover:bg-border"
+                    }`}
+                  >
+                    {difficulty.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* Question Card */}
+        {currentQuestion && (
+          <Card className="p-8 border border-border mb-8">
+            {/* Question Text */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-foreground mb-4">{currentQuestion.questionText}</h2>
+              <div className="flex gap-4 text-sm">
+                <span className="px-3 py-1 bg-blue-600/20 text-blue-400 rounded-full">
+                  {currentQuestion.cluster}
+                </span>
+                <span className="px-3 py-1 bg-purple-600/20 text-purple-400 rounded-full">
+                  {currentQuestion.difficulty}
+                </span>
+              </div>
+            </div>
+
+            {/* Answer Options */}
+            <div className="space-y-3 mb-8">
+              {["A", "B", "C", "D"].map((option) => {
+                const optionKey = `option${option}` as keyof typeof currentQuestion;
+                const optionText = currentQuestion[optionKey] as string;
+
+                if (!optionText) return null;
+
+                const isSelected = selectedAnswer === option;
+                const isCorrect = option === currentQuestion.correctAnswer;
+                const isWrong = isSelected && option !== currentQuestion.correctAnswer;
+
+                let buttonClass = "bg-background border border-border text-foreground hover:bg-border";
+                if (showResult) {
+                  if (isCorrect) {
+                    buttonClass = "bg-green-600/20 border border-green-600 text-green-400";
+                  } else if (isWrong) {
+                    buttonClass = "bg-red-600/20 border border-red-600 text-red-400";
+                  }
+                } else if (isSelected) {
+                  buttonClass = "bg-blue-600 text-white border border-blue-600";
+                }
+
+                return (
+                  <button
+                    key={option}
+                    onClick={() => handleAnswerSelect(option)}
+                    disabled={showResult}
+                    className={`w-full text-left p-4 rounded-lg transition-colors ${buttonClass}`}
+                  >
+                    <span className="font-bold mr-3">{option}.</span>
+                    {optionText}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Explanation (shown after answer) */}
+            {showResult && (
+              <div className={`p-4 rounded-lg mb-8 ${
+                selectedAnswer === currentQuestion.correctAnswer
+                  ? "bg-green-600/20 border border-green-600 text-green-400"
+                  : "bg-red-600/20 border border-red-600 text-red-400"
+              }`}>
+                <p className="font-semibold mb-2">
+                  {selectedAnswer === currentQuestion.correctAnswer ? "Correct!" : "Incorrect"}
+                </p>
+                <p className="text-sm">{currentQuestion.explanation}</p>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex gap-4 justify-between">
+              <div className="flex gap-4">
+                <Button
+                  onClick={handlePreviousQuestion}
+                  disabled={currentQuestionIndex === 0}
+                  className="bg-gray-600 hover:bg-gray-700 disabled:opacity-50"
+                >
+                  Previous
+                </Button>
+                <Button
+                  onClick={handleNextQuestion}
+                  disabled={currentQuestionIndex === filteredQuestions.length - 1}
+                  className="bg-gray-600 hover:bg-gray-700 disabled:opacity-50"
+                >
+                  Next
+                </Button>
+              </div>
+
+              {!showResult ? (
+                <Button
+                  onClick={handleSubmitAnswer}
+                  disabled={!selectedAnswer}
+                  className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+                >
+                  Submit Answer
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleResetQuiz}
+                  className="bg-purple-600 hover:bg-purple-700"
+                >
+                  Start Over
+                </Button>
+              )}
+            </div>
+          </Card>
+        )}
+      </div>
     </div>
   );
 }

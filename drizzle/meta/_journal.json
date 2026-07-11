@@ -15,6 +15,13 @@
       "when": 1775446016099,
       "tag": "0001_worried_tyrannus",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1783536362269,
+      "tag": "0002_neat_glorian",
+      "breakpoints": true
     }
   ]
 }

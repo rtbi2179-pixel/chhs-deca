@@ -82,3 +82,24 @@ export const discussionReplies = mysqlTable("discussionReplies", {
 
 export type DiscussionReply = typeof discussionReplies.$inferSelect;
 export type InsertDiscussionReply = typeof discussionReplies.$inferInsert;
+
+/**
+ * DECA Practice Questions
+ */
+export const questions = mysqlTable("questions", {
+  id: int("id").autoincrement().primaryKey(),
+  cluster: varchar("cluster", { length: 255 }).notNull(),
+  instructionalArea: varchar("instructional_area", { length: 255 }).notNull(),
+  questionText: text("question_text").notNull(),
+  optionA: text("option_a").notNull(),
+  optionB: text("option_b").notNull(),
+  optionC: text("option_c").notNull(),
+  optionD: text("option_d").notNull(),
+  correctAnswer: varchar("correct_answer", { length: 1 }).notNull(), // A, B, C, or D
+  explanation: text("explanation"),
+  difficulty: varchar("difficulty", { length: 50 }).notNull(), // Easy, Medium, Hard
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type Question = typeof questions.$inferSelect;
+export type InsertQuestion = typeof questions.$inferInsert;
