@@ -15,6 +15,7 @@ export default function LoginSignup() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [schoolCode, setSchoolCode] = useState("");
+  const [schoolCodePassword, setSchoolCodePassword] = useState("");
 
   // Mutations
   const signupMutation = trpc.auth.signup.useMutation();
@@ -27,6 +28,20 @@ export default function LoginSignup() {
     setLoading(true);
 
     try {
+      // Validate school code password
+      const selectedSchool = schoolCodes.find(s => s.code === schoolCode);
+      if (!selectedSchool) {
+        setError("Please select a valid school");
+        setLoading(false);
+        return;
+      }
+      
+      if (schoolCodePassword !== selectedSchool.code) {
+        setError("Invalid school code password");
+        setLoading(false);
+        return;
+      }
+
       await signupMutation.mutateAsync({
         firstName,
         lastName,
@@ -117,7 +132,7 @@ export default function LoginSignup() {
 
               <div>
                 <label className="block text-foreground font-semibold mb-2 text-sm">
-                  School Code
+                  School
                 </label>
                 <select
                   value={schoolCode}
@@ -132,6 +147,21 @@ export default function LoginSignup() {
                     </option>
                   ))}
                 </select>
+              </div>
+
+              <div>
+                <label className="block text-foreground font-semibold mb-2 text-sm">
+                  School Code Password
+                </label>
+                <input
+                  type="password"
+                  value={schoolCodePassword}
+                  onChange={(e) => setSchoolCodePassword(e.target.value)}
+                  required
+                  className="w-full px-4 py-2 bg-background border border-border rounded text-foreground placeholder-foreground/50 focus:outline-none focus:border-blue-500"
+                  placeholder="Enter your school's access code"
+                />
+                <p className="text-foreground/50 text-xs mt-1">Ask your DECA advisor for the school code password</p>
               </div>
             </>
           )}
@@ -187,6 +217,7 @@ export default function LoginSignup() {
               setUsername("");
               setPassword("");
               setSchoolCode("");
+              setSchoolCodePassword("");
             }}
             className="text-blue-400 hover:text-blue-300 font-semibold text-sm"
           >
