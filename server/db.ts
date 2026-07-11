@@ -390,7 +390,7 @@ export async function validateSchoolCode(code: string): Promise<boolean> {
 export async function createCustomAuthUser(
   firstName: string,
   lastName: string,
-  username: string,
+  email: string,
   password: string,
   schoolCode: string
 ) {
@@ -403,14 +403,14 @@ export async function createCustomAuthUser(
     throw new Error("Invalid or inactive school code");
   }
 
-  // Check if username already exists
+  // Check if email already exists
   const existingUser = await db.select()
     .from(users)
-    .where(eq(users.username, username))
+    .where(eq(users.email, email))
     .limit(1);
 
   if (existingUser.length > 0) {
-    throw new Error("Username already exists");
+    throw new Error("Email already exists");
   }
 
   // Hash password
@@ -421,7 +421,7 @@ export async function createCustomAuthUser(
   const result = await db.insert(users).values({
     firstName,
     lastName,
-    username,
+    email,
     passwordHash,
     schoolCode,
     name: `${firstName} ${lastName}`,
@@ -435,22 +435,22 @@ export async function createCustomAuthUser(
 /**
  * Authenticate user with username and password
  */
-export async function authenticateUser(username: string, password: string) {
+export async function authenticateUser(email: string, password: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
   const user = await db.select()
     .from(users)
-    .where(eq(users.username, username))
+    .where(eq(users.email, email))
     .limit(1);
 
   if (user.length === 0) {
-    throw new Error("Invalid username or password");
+    throw new Error("Invalid email or password");
   }
 
   const foundUser = user[0];
   if (!foundUser.passwordHash) {
-    throw new Error("Invalid username or password");
+    throw new Error("Invalid email or password");
   }
 
   // Compare password
@@ -508,4 +508,171 @@ export async function getUserById(id: number) {
     .limit(1);
 
   return result.length > 0 ? result[0] : null;
+}
+
+
+/**
+ * Request password reset
+ */
+export async function requestPasswordReset(email: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const user = await db.select()
+    .from(users)
+    .where(eq(users.email, email))
+    .limit(1);
+
+  if (user.length === 0) {
+    throw new Error("Email not found");
+  }
+
+  const token = require('crypto').randomBytes(32).toString('hex');
+  const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+  await db.update(users)
+    .set({
+      passwordResetToken: token,
+      passwordResetExpiresAt: expiresAt,
+    })
+    .where(eq(users.id, user[0].id));
+
+  return { token, email: user[0].email };
+}
+
+/**
+ * Reset password with token
+ */
+export async function resetPassword(token: string, newPassword: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const user = await db.select()
+    .from(users)
+    .where(eq(users.passwordResetToken, token))
+    .limit(1);
+
+  if (user.length === 0) {
+    throw new Error("Invalid or expired reset token");
+  }
+
+  const foundUser = user[0];
+  if (!foundUser.passwordResetExpiresAt || new Date() > foundUser.passwordResetExpiresAt) {
+    throw new Error("Reset token has expired");
+  }
+
+  const saltRounds = 10;
+  const passwordHash = await bcrypt.hash(newPassword, saltRounds);
+
+  await db.update(users)
+    .set({
+      passwordHash,
+      passwordResetToken: null,
+      passwordResetExpiresAt: null,
+    })
+    .where(eq(users.id, foundUser.id));
+
+  return { success: true };
+}
+
+/**
+ * Send email verification
+ */
+export async function sendEmailVerification(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const token = require('crypto').randomBytes(32).toString('hex');
+  const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+  await db.update(users)
+    .set({
+      emailVerificationToken: token,
+      emailVerificationExpiresAt: expiresAt,
+    })
+    .where(eq(users.id, userId));
+
+  const user = await getUserById(userId);
+  return { token, email: user?.email };
+}
+
+/**
+ * Verify email with token
+ */
+export async function verifyEmail(token: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const user = await db.select()
+    .from(users)
+    .where(eq(users.emailVerificationToken, token))
+    .limit(1);
+
+  if (user.length === 0) {
+    throw new Error("Invalid verification token");
+  }
+
+  const foundUser = user[0];
+  if (!foundUser.emailVerificationExpiresAt || new Date() > foundUser.emailVerificationExpiresAt) {
+    throw new Error("Verification token has expired");
+  }
+
+  await db.update(users)
+    .set({
+      emailVerified: true,
+      emailVerificationToken: null,
+      emailVerificationExpiresAt: null,
+    })
+    .where(eq(users.id, foundUser.id));
+
+  return { success: true };
+}
+
+/**
+ * Generate and send 2FA code
+ */
+export async function generateTwoFactorCode(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+  await db.update(users)
+    .set({
+      twoFactorCode: code,
+      twoFactorExpiresAt: expiresAt,
+    })
+    .where(eq(users.id, userId));
+
+  const user = await getUserById(userId);
+  return { code, email: user?.email };
+}
+
+/**
+ * Verify 2FA code
+ */
+export async function verifyTwoFactorCode(userId: number, code: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const user = await getUserById(userId);
+  if (!user) throw new Error("User not found");
+
+  if (user.twoFactorCode !== code) {
+    throw new Error("Invalid verification code");
+  }
+
+  if (!user.twoFactorExpiresAt || new Date() > user.twoFactorExpiresAt) {
+    throw new Error("Verification code has expired");
+  }
+
+  await db.update(users)
+    .set({
+      twoFactorCode: null,
+      twoFactorExpiresAt: null,
+    })
+    .where(eq(users.id, userId));
+
+  return { success: true };
 }
