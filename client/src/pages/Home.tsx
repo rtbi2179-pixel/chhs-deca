@@ -10,6 +10,7 @@ import { Link } from 'wouter'
 import { motion } from 'framer-motion'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { Trophy, BookOpen, Calendar, Users, ArrowRight, Star, Target, Zap, Globe, ChevronRight } from 'lucide-react'
+import { useToast } from '@/components/Toast'
 
 const HERO_BG = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/deca-hero-bg-3D56BJM7ugEtwwxPTqT3y7.webp'
 
@@ -85,6 +86,14 @@ export default function Home() {
   // The userAuth hooks provides authentication state
   // To implement login/logout functionality, simply call logout() or redirect to getLoginUrl()
   let { user, loading, error, isAuthenticated, logout } = useAuth();
+  const { addToast } = useToast();
+
+  const handleProtectedClick = (e: React.MouseEvent) => {
+    if (!user) {
+      e.preventDefault();
+      addToast('Log in required', 'warning', 3000);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[oklch(0.07_0.01_265)]">
@@ -127,7 +136,7 @@ export default function Home() {
                 </p>
 
                 <div className="flex flex-wrap gap-3">
-                  <Link href="/events">
+                  <Link href={user ? "/events" : "#"} onClick={handleProtectedClick}>
                     <motion.div
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
@@ -137,7 +146,7 @@ export default function Home() {
                       <ArrowRight size={16} />
                     </motion.div>
                   </Link>
-                  <Link href="/practice">
+                  <Link href={user ? "/practice" : "#"} onClick={handleProtectedClick}>
                     <motion.div
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
@@ -220,7 +229,7 @@ export default function Home() {
               viewport={{ once: true }}
               variants={fadeUp}
             >
-              <Link href={href}>
+              <Link href={user ? href : "#"} onClick={handleProtectedClick}>
                 <div
                   className={`group relative p-8 rounded-2xl bg-gradient-to-br ${color} border ${border} ${glow} transition-all duration-300 cursor-pointer overflow-hidden`}
                 >

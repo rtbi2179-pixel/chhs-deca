@@ -257,9 +257,24 @@ class SDKServer {
   }
 
   async authenticateRequest(req: Request): Promise<User> {
-    // Regular authentication flow
+    // Try custom auth first (username/password based)
     const cookies = this.parseCookies(req.headers.cookie);
     const sessionCookie = cookies.get(COOKIE_NAME);
+    
+    // Check if this is a custom auth session (numeric user ID)
+    if (sessionCookie && /^\d+$/.test(sessionCookie)) {
+      try {
+        const userId = parseInt(sessionCookie, 10);
+        const user = await db.getUserById(userId);
+        if (user) {
+          return user;
+        }
+      } catch (error) {
+        console.warn("[Auth] Custom auth failed:", error);
+      }
+    }
+
+    // Fall back to OAuth authentication
     const session = await this.verifySession(sessionCookie);
 
     if (!session) {

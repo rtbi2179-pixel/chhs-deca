@@ -15,11 +15,11 @@
 - [x] Create tRPC procedures for bookmark management and leaderboard queries
 - [x] Test keyboard shortcuts, bookmarking, and leaderboard functionality
 
-- [ ] Implement custom authentication system (username/password/school code)
-- [ ] Create school code whitelist in database
-- [ ] Build login/signup page with form validation
-- [ ] Add authentication context and hooks
-- [ ] Implement toast notification system for access denial
-- [ ] Protect all routes except Home page
-- [ ] Add login button to top-right navigation
-- [ ] Test authentication flow and access restrictions
+- [x] Implement custom authentication system (username/password/school code)
+- [x] Create school code whitelist in database
+- [x] Build login/signup page with form validation
+- [x] Add authentication context and hooks
+- [x] Implement toast notification system for access denial
+- [x] Protect all routes except Home page
+- [x] Add login button to top-right navigation
+- [x] Test authentication flow and access restrictions

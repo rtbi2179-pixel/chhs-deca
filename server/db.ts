@@ -493,3 +493,19 @@ export async function getActiveSchoolCodes() {
     .from(schoolCodes)
     .where(eq(schoolCodes.isActive, 1));
 }
+
+
+/**
+ * Get user by ID (for custom auth)
+ */
+export async function getUserById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+
+  const result = await db.select()
+    .from(users)
+    .where(eq(users.id, id))
+    .limit(1);
+
+  return result.length > 0 ? result[0] : null;
+}
