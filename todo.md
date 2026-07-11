@@ -24,11 +24,11 @@
 - [x] Add login button to top-right navigation
 - [x] Test authentication flow and access restrictions
 
-- [ ] Create announcements section with admin posting capability
-- [ ] Implement file/image upload for announcements
+- [x] Create announcements section with admin posting capability
+- [x] Implement file/image upload for announcements
 - [ ] Add email notifications to all chapter members when announcement is posted
-- [ ] Build announcements feed UI (SportsU style)
-- [ ] Implement like functionality on announcements
-- [ ] Add comment functionality on announcements
-- [ ] Create admin announcement management (edit/delete)
-- [ ] Add announcements tab to navigation
+- [x] Build announcements feed UI (SportsU style)
+- [x] Implement like functionality on announcements
+- [x] Add comment functionality on announcements
+- [x] Create admin announcement management (edit/delete)
+- [x] Add announcements tab to navigation

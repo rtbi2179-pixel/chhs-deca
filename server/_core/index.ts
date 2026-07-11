@@ -63,3 +63,32 @@ async function startServer() {
 }
 
 startServer().catch(console.error);
+
+// File upload endpoint
+app.post('/api/upload', express.json(), express.urlencoded({ extended: true }), async (req, res) => {
+  try {
+    const multer = require('multer');
+    const upload = multer({ storage: multer.memoryStorage() });
+    
+    upload.single('file')(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({ error: 'Upload failed' });
+      }
+
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file provided' });
+      }
+
+      try {
+        const { storagePut } = await import('../storage');
+        const fileKey = `announcements/${Date.now()}-${req.file.originalname}`;
+        const result = await storagePut(fileKey, req.file.buffer, req.file.mimetype);
+        res.json({ url: result.url });
+      } catch (error) {
+        res.status(500).json({ error: 'Storage upload failed' });
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Upload endpoint error' });
+  }
+});

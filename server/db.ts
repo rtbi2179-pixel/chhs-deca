@@ -1085,3 +1085,27 @@ export async function getUsersBySchoolCode(schoolCode: string) {
   
   return result
 }
+
+export async function updateAnnouncement(
+  announcementId: number,
+  updates: {
+    title?: string
+    content?: string
+    imageUrl?: string
+    fileUrl?: string
+    fileName?: string
+  }
+) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  const result = await db.update(announcements)
+    .set({
+      ...updates,
+      updatedAt: new Date().getTime(),
+    })
+    .where(eq(announcements.id, announcementId))
+    .returning()
+  
+  return result[0]
+}
