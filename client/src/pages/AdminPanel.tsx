@@ -134,17 +134,17 @@ export function AdminPanel() {
               ) : (
                 admins.map((admin: any, index: number) => (
                   <div
-                    key={admin.admin?.email || index}
+                    key={admin.email || index}
                     className="flex items-center justify-between p-4 bg-background border border-yellow-500/20 rounded hover:border-yellow-500/50 hover:shadow-[0_0_15px_rgba(250,204,21,0.3)] transition"
                   >
                     <div>
-                      <p className="text-yellow-300 font-semibold">{admin.admin?.email}</p>
+                      <p className="text-yellow-300 font-semibold">{admin.email}</p>
                       <p className="text-foreground/50 text-sm">
-                        Promoted on {admin.admin?.adminPromotedAt ? new Date(admin.admin.adminPromotedAt).toLocaleDateString() : 'NA'}
+                        Promoted on {admin.adminPromotedAt ? new Date(admin.adminPromotedAt).toLocaleDateString() : 'NA'}
                       </p>
                     </div>
                     <button
-                      onClick={() => handleDemoteAdmin(admin.admin?.email)}
+                      onClick={() => handleDemoteAdmin(admin.email)}
                       disabled={loading}
                       className="px-4 py-2 bg-red-500/20 hover:bg-red-500/40 text-red-400 border border-red-500/30 rounded transition disabled:opacity-50 flex items-center gap-2"
                     >
