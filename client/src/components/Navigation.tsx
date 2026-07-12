@@ -178,9 +178,11 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
             <div className="flex items-center gap-2">
               {user ? (
                 <div className="hidden md:flex items-center gap-2">
-                  <div className="text-white/50 text-xs px-3 py-1 rounded-lg bg-white/5">
-                    {user.name || user.username}
-                  </div>
+                  <Link href="/profile">
+                    <button className="text-white/50 hover:text-white text-xs px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer">
+                      {user.name || user.username}
+                    </button>
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all duration-200"
