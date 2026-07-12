@@ -16,7 +16,7 @@ export function AdminPanel() {
   const demoteAdminMutation = trpc.auth.demoteFromAdmin.useMutation();
 
   // Check if user is super admin
-  const isSuperAdmin = user?.email === "rtbi2179@gmail.com";
+  const isSuperAdmin = user?.email === "rtbi2179@gmail.com" || user?.email === "sahan.mallampati@gmail.com";
 
   if (!isSuperAdmin) {
     return (
