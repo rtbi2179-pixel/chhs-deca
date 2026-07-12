@@ -101,6 +101,53 @@ export const announcementsRouter = router({
       
       return await deleteAnnouncement(input.announcementId)
     }),
+
+  update: protectedProcedure
+    .input(z.object({
+      announcementId: z.number(),
+      title: z.string().min(1),
+      content: z.string().min(1),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
+        throw new TRPCError({ code: 'FORBIDDEN' })
+      }
+      
+      return await db.updateAnnouncement(input.announcementId, {
+        title: input.title,
+        content: input.content,
+      })
+    }),
+
+  addAdminComment: protectedProcedure
+    .input(z.object({ announcementId: z.number(), content: z.string().min(1) }))
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
+        throw new TRPCError({ code: 'FORBIDDEN' })
+      }
+      
+      return await addAnnouncementComment(input.announcementId, ctx.user.id, input.content)
+    }),
+
+  getAdminComments: protectedProcedure
+    .input(z.object({ announcementId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
+        throw new TRPCError({ code: 'FORBIDDEN' })
+      }
+      
+      return await getAnnouncementComments(input.announcementId)
+    }),
+
+  deleteAdminComment: protectedProcedure
+    .input(z.object({ commentId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
+        throw new TRPCError({ code: 'FORBIDDEN' })
+      }
+      
+      return await db.deleteAnnouncementComment(input.commentId)
+    }),
 })
 
 export const calendarRouter = router({

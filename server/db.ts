@@ -1209,3 +1209,19 @@ export async function getAllVolunteerOpportunitiesAdmin() {
   return db.select().from(volunteerOpportunities)
     .orderBy(volunteerOpportunities.date)
 }
+
+// Announcement Management (Admin)
+export async function updateAnnouncement(id: number, updates: { title?: string; content?: string }) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  return db.update(announcements)
+    .set(updates)
+    .where(eq(announcements.id, id))
+}
+
+export async function deleteAnnouncementComment(id: number) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  return db.delete(announcementComments)
+    .where(eq(announcementComments.id, id))
+}

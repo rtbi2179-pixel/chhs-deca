@@ -251,9 +251,17 @@ function AnnouncementCard({ announcement }: any) {
   const { user } = useAuth()
   const [showComments, setShowComments] = useState(false)
   const [commentText, setCommentText] = useState('')
+  const [showManagement, setShowManagement] = useState(false)
+  const [editTitle, setEditTitle] = useState(announcement.title)
+  const [editContent, setEditContent] = useState(announcement.content)
+  const [isEditing, setIsEditing] = useState(false)
 
   const likes = trpc.announcements.getLikes.useQuery({ announcementId: announcement.id })
   const comments = trpc.announcements.getComments.useQuery({ announcementId: announcement.id })
+  const adminComments = trpc.announcements.getAdminComments.useQuery(
+    { announcementId: announcement.id },
+    { enabled: user?.role === 'admin' || user?.role === 'super_admin' }
+  )
   
   const likeMutation = trpc.announcements.like.useMutation({
     onSuccess: () => {
@@ -265,6 +273,26 @@ function AnnouncementCard({ announcement }: any) {
     onSuccess: () => {
       setCommentText('')
       comments.refetch()
+    },
+  })
+
+  const updateMutation = trpc.announcements.update.useMutation({
+    onSuccess: () => {
+      setIsEditing(false)
+      toast.success('Announcement updated!')
+    },
+  })
+
+  const deleteMutation = trpc.announcements.delete.useMutation({
+    onSuccess: () => {
+      toast.success('Announcement deleted!')
+    },
+  })
+
+  const adminCommentMutation = trpc.announcements.addAdminComment.useMutation({
+    onSuccess: () => {
+      setCommentText('')
+      adminComments.refetch()
     },
   })
 
@@ -291,11 +319,21 @@ function AnnouncementCard({ announcement }: any) {
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-xl font-semibold text-white">{announcement.title}</h3>
+          <h3 className="text-xl font-semibold text-white">{isEditing ? 'Edit Announcement' : announcement.title}</h3>
           <p className="text-sm text-white/60">
             {announcement.authorName} • {date}
           </p>
         </div>
+        {(user?.role === 'admin' || user?.role === 'super_admin') && (
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowManagement(!showManagement)}
+              className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition"
+            >
+              {showManagement ? 'Close' : 'Manage'}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Content */}
