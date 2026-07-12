@@ -349,6 +349,24 @@ const Volunteer = () => {
                               Signed Up
                             </div>
                           )}
+                          {adminModeActive && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                if (confirm('Are you sure you want to delete this opportunity?')) {
+                                  deleteOppMutation.mutateAsync({ id: opp.id }).then(() => {
+                                    toast.success('Opportunity deleted')
+                                  }).catch(() => {
+                                    toast.error('Failed to delete opportunity')
+                                  })
+                                }
+                              }}
+                              className="px-3 py-1.5 rounded-lg bg-red-600/20 hover:bg-red-600/30 text-red-300 hover:text-red-200 text-xs font-semibold transition-all border border-red-500/30 hover:border-red-500/50"
+                              title="Delete opportunity"
+                            >
+                              🗑️ Delete
+                            </button>
+                          )}
                           <button
                             onClick={(e) => {
                               e.stopPropagation()
@@ -424,6 +442,110 @@ const Volunteer = () => {
           </div>
         </motion.div>
       </section>
+
+      {/* ── Add Opportunity Modal ── */}
+      <AnimatePresence>
+        {showAddModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowAddModal(false)}
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-[oklch(0.12_0.01_265)] border border-blue-500/30 rounded-2xl p-6 max-w-md w-full"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-white font-bold text-lg">Add Volunteer Opportunity</h3>
+                <button
+                  onClick={() => setShowAddModal(false)}
+                  className="text-white/40 hover:text-white transition-colors"
+                >
+                  ✕
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-white/70 text-sm font-semibold mb-2">Title</label>
+                  <input
+                    type="text"
+                    value={newOpp.title}
+                    onChange={(e) => setNewOpp({ ...newOpp, title: e.target.value })}
+                    placeholder="Opportunity title"
+                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-blue-500/50"
+                  />
+                </div>
+                <div>
+                  <label className="block text-white/70 text-sm font-semibold mb-2">Description</label>
+                  <textarea
+                    value={newOpp.description}
+                    onChange={(e) => setNewOpp({ ...newOpp, description: e.target.value })}
+                    placeholder="Opportunity description"
+                    rows={3}
+                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-blue-500/50 resize-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-white/70 text-sm font-semibold mb-2">Date</label>
+                  <input
+                    type="text"
+                    value={newOpp.date}
+                    onChange={(e) => setNewOpp({ ...newOpp, date: e.target.value })}
+                    placeholder="e.g., January 12, 2026"
+                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-blue-500/50"
+                  />
+                </div>
+                <div>
+                  <label className="block text-white/70 text-sm font-semibold mb-2">Spots Available</label>
+                  <input
+                    type="number"
+                    value={newOpp.spotsAvailable}
+                    onChange={(e) => setNewOpp({ ...newOpp, spotsAvailable: parseInt(e.target.value) })}
+                    min="1"
+                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-blue-500/50"
+                  />
+                </div>
+                <div className="flex gap-2 pt-4">
+                  <button
+                    onClick={() => {
+                      if (newOpp.title.trim() && newOpp.description.trim() && newOpp.date.trim()) {
+                        createOppMutation.mutateAsync({
+                          title: newOpp.title,
+                          description: newOpp.description,
+                          date: new Date(newOpp.date),
+                          spotsAvailable: newOpp.spotsAvailable
+                        }).then(() => {
+                          toast.success('Opportunity created')
+                        }).catch(() => {
+                          toast.error('Failed to create opportunity')
+                        })
+                      } else {
+                        toast.error('Please fill in all fields')
+                      }
+                    }}
+                    disabled={createOppMutation.isPending}
+                    className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-blue-600/50 text-white font-semibold rounded-lg transition-colors"
+                  >
+                    {createOppMutation.isPending ? 'Creating...' : 'Create'}
+                  </button>
+                  <button
+                    onClick={() => setShowAddModal(false)}
+                    className="flex-1 px-4 py-2 bg-white/5 hover:bg-white/10 text-white font-semibold rounded-lg transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── Signups Modal ── */}
       <AnimatePresence>
