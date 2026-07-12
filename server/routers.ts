@@ -381,7 +381,7 @@ export const appRouter = router({
       .mutation(async ({ input, ctx }) => {
         try {
           // Only super_admin can demote
-          if (ctx.user?.role !== "super_admin") {
+          if (ctx.user.role !== "super_admin") {
             throw new Error("Only super admins can demote users");
           }
           
