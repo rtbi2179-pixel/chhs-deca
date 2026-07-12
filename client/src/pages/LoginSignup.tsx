@@ -58,9 +58,11 @@ export default function LoginSignup() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <Card className="w-full max-w-md p-8 border border-border">
-        <div className="mb-8">
+    <>
+      <div className="sparkle-bg" />
+      <div className="relative z-10 min-h-screen bg-background flex items-center justify-center p-4">
+        <Card className="w-full max-w-md p-8 border border-border">
+          <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">CHHS DECA</h1>
           <p className="text-foreground/70">
             {isSignup ? "Create your account" : "Sign in to your account"}
@@ -172,6 +174,7 @@ export default function LoginSignup() {
           </div>
         </div>
       </Card>
-    </div>
+      </div>
+    </>
   );
 }
