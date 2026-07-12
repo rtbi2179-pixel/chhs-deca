@@ -24,6 +24,7 @@ import { SchoolCodeEntry } from "./pages/SchoolCodeEntry";
 import { AdminPanel } from "./pages/AdminPanel";
 import { Announcements } from "./pages/Announcements";
 import Profile from "./pages/Profile";
+import Footer from "./components/Footer";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useState, useEffect } from "react";
 import { Toast, useToast } from "./components/Toast";
@@ -101,6 +102,7 @@ function App() {
             <Toast toasts={toasts} onRemove={removeToast} />
             <Navigation onLoginRequired={handleLoginRequired} />
             <Router isAuthenticated={isAuthenticated} showLoginRequired={handleLoginRequired} />
+            <Footer />
             </TooltipProvider>
           </SchoolCodeProvider>
         </AdminModeProvider>
