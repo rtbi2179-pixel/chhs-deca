@@ -19,9 +19,10 @@ export function Announcements() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const imageInputRef = useRef<HTMLInputElement>(null)
 
+  const schoolCodeForQuery = selectedSchoolCode || user?.schoolCode || ''
   const announcements = trpc.announcements.getBySchool.useQuery(
-    { schoolCode: user?.schoolCode || '' },
-    { enabled: !!user?.schoolCode }
+    { schoolCode: schoolCodeForQuery },
+    { enabled: !!schoolCodeForQuery }
   )
 
   const createAnnouncement = trpc.announcements.create.useMutation({
