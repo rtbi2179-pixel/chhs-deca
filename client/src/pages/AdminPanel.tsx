@@ -24,8 +24,8 @@ export function AdminPanel() {
     },
   });
 
-  // Check if user is super admin
-  const isSuperAdmin = user?.email === "rtbi2179@gmail.com" || user?.email === "sahan.mallampati@gmail.com";
+  // Check if user is super admin based on role
+  const isSuperAdmin = user?.role === "super_admin";
 
   if (!isSuperAdmin) {
     return (
