@@ -16,7 +16,13 @@ export function AdminPanel() {
   const { selectedSchoolCode, setSelectedSchoolCode } = useSchoolCode();
   const promoteAdminMutation = trpc.auth.promoteToAdmin.useMutation();
   const demoteAdminMutation = trpc.auth.demoteFromAdmin.useMutation();
-  const updateSchoolCodeMutation = trpc.auth.updateMySchoolCode.useMutation();
+  const utils = trpc.useUtils();
+  const updateSchoolCodeMutation = trpc.auth.updateMySchoolCode.useMutation({
+    onSuccess: () => {
+      // Refresh the user's session data after updating school code
+      utils.auth.me.invalidate();
+    },
+  });
 
   // Check if user is super admin
   const isSuperAdmin = user?.email === "rtbi2179@gmail.com" || user?.email === "sahan.mallampati@gmail.com";
@@ -173,6 +179,8 @@ export function AdminPanel() {
                           toast.success(`School code updated to ${school.schoolName}`);
                         } catch (error: any) {
                           toast.error(`Failed to update school code: ${error.message}`);
+                          // Revert the context selection if the update failed
+                          setSelectedSchoolCode(selectedSchoolCode);
                         }
                       }
                     }}
