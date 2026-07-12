@@ -140,7 +140,7 @@ export function AdminPanel() {
                     <div>
                       <p className="text-yellow-300 font-semibold">{admin.admin?.email}</p>
                       <p className="text-foreground/50 text-sm">
-                        Promoted on {new Date(admin.admin?.createdAt).toLocaleDateString()}
+                        Promoted on {admin.admin?.adminPromotedAt ? new Date(admin.admin.adminPromotedAt).toLocaleDateString() : 'NA'}
                       </p>
                     </div>
                     <button

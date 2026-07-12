@@ -28,6 +28,7 @@ export const users = mysqlTable("users", {
   twoFactorExpiresAt: timestamp("twoFactorExpiresAt"),
   passwordResetToken: varchar("passwordResetToken", { length: 255 }),
   passwordResetExpiresAt: timestamp("passwordResetExpiresAt"),
+  adminPromotedAt: timestamp("adminPromotedAt"),
 });
 
 export type User = typeof users.$inferSelect;

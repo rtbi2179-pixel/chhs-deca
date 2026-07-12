@@ -911,7 +911,7 @@ export async function promoteToAdmin(email: string) {
   if (!user) throw new Error("User not found");
   
   await db.update(users)
-    .set({ role: "admin" })
+    .set({ role: "admin", adminPromotedAt: new Date() })
     .where(eq(users.id, user.id));
   
   return { success: true, user };
