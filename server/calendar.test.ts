@@ -13,8 +13,17 @@ describe('Calendar Events - School Code Filtering', () => {
   afterAll(async () => {
     // Clean up test data
     if (db) {
+      // Delete all test calendar events
       await db.delete(calendarEvents).where(eq(calendarEvents.title, 'Test Event'))
+      await db.delete(calendarEvents).where(eq(calendarEvents.title, 'School 1 Event'))
+      await db.delete(calendarEvents).where(eq(calendarEvents.title, 'School 2 Event'))
+      await db.delete(calendarEvents).where(eq(calendarEvents.title, 'School 3 Event'))
+      
+      // Delete all test users
       await db.delete(users).where(eq(users.email, 'test-calendar@example.com'))
+      await db.delete(users).where(eq(users.email, 'test-calendar-1@example.com'))
+      await db.delete(users).where(eq(users.email, 'test-calendar-2@example.com'))
+      await db.delete(users).where(eq(users.email, 'test-calendar-3@example.com'))
     }
   })
 
