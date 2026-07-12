@@ -18,6 +18,11 @@ export function Announcements() {
   const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const imageInputRef = useRef<HTMLInputElement>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editTitle, setEditTitle] = useState('')
+  const [editContent, setEditContent] = useState('')
+  const [showManagement, setShowManagement] = useState<string | null>(null)
+  const [isEditing, setIsEditing] = useState(false)
 
   const schoolCodeForQuery = selectedSchoolCode || user?.schoolCode || ''
   const announcements = trpc.announcements.getBySchool.useQuery(
@@ -38,6 +43,29 @@ export function Announcements() {
     },
     onError: (error) => {
       toast.error(error.message || 'Failed to post announcement')
+    },
+  })
+
+  const updateMutation = trpc.announcements.update.useMutation({
+    onSuccess: () => {
+      setIsEditing(false)
+      setEditingId(null)
+      announcements.refetch()
+      toast.success('Announcement updated!')
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Failed to update announcement')
+    },
+  })
+
+  const deleteMutation = trpc.announcements.delete.useMutation({
+    onSuccess: () => {
+      setShowManagement(null)
+      announcements.refetch()
+      toast.success('Announcement deleted!')
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Failed to delete announcement')
     },
   })
 
@@ -325,16 +353,84 @@ function AnnouncementCard({ announcement }: any) {
           </p>
         </div>
         {(user?.role === 'admin' || user?.role === 'super_admin') && (
-          <div className="flex gap-2">
-            <button
-              onClick={() => setShowManagement(!showManagement)}
-              className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition"
-            >
-              {showManagement ? 'Close' : 'Manage'}
-            </button>
-          </div>
+          <button
+            onClick={() => setShowManagement(showManagement === announcement.id ? null : announcement.id)}
+            className="px-3 py-1 bg-blue-600/20 border border-blue-500/50 hover:border-blue-500 text-blue-400 text-sm rounded transition"
+          >
+            {showManagement === announcement.id ? '✕ Close' : '👑 Manage'}
+          </button>
         )}
       </div>
+
+      {/* Management Mode */}
+      {showManagement === announcement.id && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          className="mb-4 p-4 bg-blue-600/10 border border-blue-500/30 rounded-lg"
+        >
+          {isEditing ? (
+            <div className="space-y-3">
+              <input
+                type="text"
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-white"
+                placeholder="Title"
+              />
+              <textarea
+                value={editContent}
+                onChange={(e) => setEditContent(e.target.value)}
+                className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-white"
+                placeholder="Content"
+                rows={3}
+              />
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    updateMutation.mutate({
+                      announcementId: announcement.id,
+                      title: editTitle,
+                      content: editContent,
+                    })
+                  }}
+                  disabled={updateMutation.isPending}
+                  className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-sm rounded transition disabled:opacity-50"
+                >
+                  {updateMutation.isPending ? 'Saving...' : 'Save'}
+                </button>
+                <button
+                  onClick={() => setIsEditing(false)}
+                  className="px-3 py-1 bg-slate-600 hover:bg-slate-700 text-white text-sm rounded transition"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <button
+                onClick={() => setIsEditing(true)}
+                className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition"
+              >
+                ✏️ Edit
+              </button>
+              <button
+                onClick={() => {
+                  if (confirm('Delete this announcement?')) {
+                    deleteMutation.mutate({ announcementId: announcement.id })
+                  }
+                }}
+                disabled={deleteMutation.isPending}
+                className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition disabled:opacity-50"
+              >
+                {deleteMutation.isPending ? 'Deleting...' : '🗑️ Delete'}
+              </button>
+            </div>
+          )}
+        </motion.div>
+      )}
 
       {/* Content */}
       <p className="text-white/80 mb-4">{announcement.content}</p>
