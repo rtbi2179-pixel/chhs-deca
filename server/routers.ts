@@ -151,9 +151,17 @@ export const announcementsRouter = router({
 })
 
 export const calendarRouter = router({
-  getAll: publicProcedure
+  getAll: protectedProcedure
     .input(z.object({ schoolCode: z.string().optional() }).optional())
-    .query(({ input }) => db.getAllCalendarEvents(input?.schoolCode)),
+    .query(({ input, ctx }) => {
+      // Super admins can view events for any school code they select
+      // Regular users can only see events for their own school code
+      const schoolCode = ctx.user.role === 'super_admin' ? input?.schoolCode : ctx.user.schoolCode
+      if (!schoolCode) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'School code is required' })
+      }
+      return db.getAllCalendarEvents(schoolCode)
+    }),
   create: protectedProcedure
     .input(z.object({
       title: z.string(),
