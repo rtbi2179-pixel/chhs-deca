@@ -9,6 +9,7 @@ import { Users, Clock, MapPin, CheckCircle, Star, ChevronDown, ChevronUp, Heart,
 import { toast } from 'sonner'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { useAdminMode } from '@/contexts/AdminModeContext'
+import { useSchoolCode } from '@/contexts/SchoolCodeContext'
 import { trpc } from '@/lib/trpc'
 import { getLoginUrl } from '@/const'
 import { Link } from 'wouter'
@@ -142,6 +143,10 @@ const categoryIcons: Record<string, any> = {
 const Volunteer = () => {
   const { user, isAuthenticated } = useAuth()
   const { adminModeActive, setAdminModeActive, neonOverlayRef, setNeonOverlayRef, deactivateAdminMode } = useAdminMode()
+  const { selectedSchoolCode } = useSchoolCode()
+  
+  // Use selected school code for super admins, user's school code for regular users
+  const effectiveSchoolCode = user?.role === 'super_admin' ? selectedSchoolCode : user?.schoolCode
   const [expandedId, setExpandedId] = useState<number | null>(null)
   const [signedUpIds, setSignedUpIds] = useState<number[]>([])
   const [showSignups, setShowSignups] = useState<number | null>(null)
@@ -152,7 +157,7 @@ const Volunteer = () => {
   // Load all signups from database
   const { data: allSignups = [] } = trpc.volunteers.getAllSignups.useQuery()
   const utils = trpc.useUtils()
-  const { data: dbOpportunities = [] } = trpc.volunteers.getAll.useQuery({ schoolCode: user?.schoolCode || undefined })
+  const { data: dbOpportunities = [] } = trpc.volunteers.getAll.useQuery({ schoolCode: effectiveSchoolCode || undefined })
   const createOppMutation = trpc.volunteers.create.useMutation({
     onSuccess: () => { utils.volunteers.getAll.invalidate(); setShowAddModal(false); setNewOpp({ title: '', description: '', date: '', spotsAvailable: 1 }) }
   })

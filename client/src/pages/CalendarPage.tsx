@@ -9,6 +9,7 @@ import { motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight, Calendar, MapPin, ExternalLink, Trophy, Clock, Star } from 'lucide-react'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { useAdminMode } from '@/contexts/AdminModeContext'
+import { useSchoolCode } from '@/contexts/SchoolCodeContext'
 import { toast } from 'sonner'
 import { Trash2, Edit2 } from 'lucide-react'
 import { trpc } from '@/lib/trpc'
@@ -98,6 +99,10 @@ function getFirstDayOfMonth(year: number, month: number) {
 export default function CalendarPage() {
   const { user } = useAuth()
   const { adminModeActive, setAdminModeActive, neonOverlayRef, setNeonOverlayRef, deactivateAdminMode } = useAdminMode()
+  const { selectedSchoolCode } = useSchoolCode()
+  
+  // Use selected school code for super admins, user's school code for regular users
+  const effectiveSchoolCode = user?.role === 'super_admin' ? selectedSchoolCode : user?.schoolCode
   const today = new Date()
   const [viewYear, setViewYear] = useState(today.getFullYear())
   const [viewMonth, setViewMonth] = useState(today.getMonth())
@@ -109,7 +114,7 @@ export default function CalendarPage() {
   
   // Fetch calendar events from API
   const utils = trpc.useUtils()
-  const { data: apiEvents = [] } = trpc.calendar.getAll.useQuery({ schoolCode: user?.schoolCode || undefined })
+  const { data: apiEvents = [] } = trpc.calendar.getAll.useQuery({ schoolCode: effectiveSchoolCode || undefined })
   const deleteEventMutation = trpc.calendar.delete.useMutation({
     onSuccess: () => utils.calendar.getAll.invalidate()
   })
