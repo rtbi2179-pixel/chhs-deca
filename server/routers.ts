@@ -151,7 +151,9 @@ export const announcementsRouter = router({
 })
 
 export const calendarRouter = router({
-  getAll: publicProcedure.query(() => db.getAllCalendarEvents()),
+  getAll: publicProcedure
+    .input(z.object({ schoolCode: z.string().optional() }).optional())
+    .query(({ input }) => db.getAllCalendarEvents(input?.schoolCode)),
   create: protectedProcedure
     .input(z.object({
       title: z.string(),
@@ -166,8 +168,10 @@ export const calendarRouter = router({
       if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
         throw new TRPCError({ code: 'FORBIDDEN', message: 'Only admins can create events' });
       }
+      const schoolCode = ctx.user.schoolCode || '';
       return db.createCalendarEvent({
         ...input,
+        schoolCode,
         createdBy: ctx.user.id,
       });
     }),
@@ -418,7 +422,8 @@ export const appRouter = router({
     getAllSignups: publicProcedure
       .query(() => db.getAllVolunteerSignups()),
     getAll: publicProcedure
-      .query(() => db.getAllVolunteerOpportunitiesAdmin()),
+      .input(z.object({ schoolCode: z.string().optional() }).optional())
+      .query(({ input }) => db.getAllVolunteerOpportunitiesAdmin(input?.schoolCode)),
     create: protectedProcedure
       .input(z.object({
         title: z.string().min(1),
@@ -430,7 +435,8 @@ export const appRouter = router({
         if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
           throw new TRPCError({ code: 'FORBIDDEN', message: 'Only admins can create opportunities' });
         }
-        return db.createVolunteerOpportunityAdmin(input.title, input.description || '', input.date, input.spotsAvailable);
+        const schoolCode = ctx.user.schoolCode || '';
+        return db.createVolunteerOpportunityAdmin(input.title, input.description || '', input.date, input.spotsAvailable, schoolCode);
       }),
     update: protectedProcedure
       .input(z.object({

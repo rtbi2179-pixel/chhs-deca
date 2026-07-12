@@ -1114,26 +1114,39 @@ export async function getUsersBySchoolCode(schoolCode: string) {
 
 
 // Calendar Events
-export async function getAllCalendarEvents() {
+export async function getAllCalendarEvents(schoolCode?: string) {
   const db = await getDb()
   if (!db) throw new Error("Database connection failed")
-  const result = await db
-    .select({
-      id: calendarEvents.id,
-      title: calendarEvents.title,
-      description: calendarEvents.description,
-      date: calendarEvents.date,
-      time: calendarEvents.time,
-      location: calendarEvents.location,
-      link: calendarEvents.link,
-      type: calendarEvents.type,
-      createdBy: calendarEvents.createdBy,
-      createdAt: calendarEvents.createdAt,
-      updatedAt: calendarEvents.updatedAt,
-    })
-    .from(calendarEvents)
-    .orderBy(asc(calendarEvents.date))
-  return result
+  
+  const selectObj = {
+    id: calendarEvents.id,
+    title: calendarEvents.title,
+    description: calendarEvents.description,
+    date: calendarEvents.date,
+    time: calendarEvents.time,
+    location: calendarEvents.location,
+    link: calendarEvents.link,
+    type: calendarEvents.type,
+    schoolCode: calendarEvents.schoolCode,
+    createdBy: calendarEvents.createdBy,
+    createdAt: calendarEvents.createdAt,
+    updatedAt: calendarEvents.updatedAt,
+  }
+  
+  if (schoolCode) {
+    const result = await db
+      .select(selectObj)
+      .from(calendarEvents)
+      .where(eq(calendarEvents.schoolCode, schoolCode))
+      .orderBy(asc(calendarEvents.date))
+    return result
+  } else {
+    const result = await db
+      .select(selectObj)
+      .from(calendarEvents)
+      .orderBy(asc(calendarEvents.date))
+    return result
+  }
 }
 
 export async function createCalendarEvent(event: InsertCalendarEvent) {
@@ -1169,7 +1182,7 @@ export async function deleteCalendarEvent(id: number) {
 
 
 // Volunteer Opportunity Management (Admin)
-export async function createVolunteerOpportunityAdmin(title: string, description: string, date: Date, spotsAvailable: number) {
+export async function createVolunteerOpportunityAdmin(title: string, description: string, date: Date, spotsAvailable: number, schoolCode: string) {
   const db = await getDb()
   if (!db) throw new Error("Database connection failed")
   
@@ -1178,6 +1191,7 @@ export async function createVolunteerOpportunityAdmin(title: string, description
     description,
     date,
     spotsAvailable,
+    schoolCode,
   })
   
   return result
@@ -1205,12 +1219,18 @@ export async function deleteVolunteerOpportunityAdmin(id: number) {
     .where(eq(volunteerOpportunities.id, id))
 }
 
-export async function getAllVolunteerOpportunitiesAdmin() {
+export async function getAllVolunteerOpportunitiesAdmin(schoolCode?: string) {
   const db = await getDb()
   if (!db) return []
   
-  return db.select().from(volunteerOpportunities)
-    .orderBy(volunteerOpportunities.date)
+  if (schoolCode) {
+    return db.select().from(volunteerOpportunities)
+      .where(eq(volunteerOpportunities.schoolCode, schoolCode))
+      .orderBy(volunteerOpportunities.date)
+  } else {
+    return db.select().from(volunteerOpportunities)
+      .orderBy(volunteerOpportunities.date)
+  }
 }
 
 // Announcement Management (Admin)

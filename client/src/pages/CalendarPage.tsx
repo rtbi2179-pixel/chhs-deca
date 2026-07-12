@@ -109,7 +109,7 @@ export default function CalendarPage() {
   
   // Fetch calendar events from API
   const utils = trpc.useUtils()
-  const { data: apiEvents = [] } = trpc.calendar.getAll.useQuery()
+  const { data: apiEvents = [] } = trpc.calendar.getAll.useQuery({ schoolCode: user?.schoolCode || undefined })
   const deleteEventMutation = trpc.calendar.delete.useMutation({
     onSuccess: () => utils.calendar.getAll.invalidate()
   })

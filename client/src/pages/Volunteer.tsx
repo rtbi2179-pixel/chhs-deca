@@ -152,7 +152,7 @@ const Volunteer = () => {
   // Load all signups from database
   const { data: allSignups = [] } = trpc.volunteers.getAllSignups.useQuery()
   const utils = trpc.useUtils()
-  const { data: dbOpportunities = [] } = trpc.volunteers.getAll.useQuery()
+  const { data: dbOpportunities = [] } = trpc.volunteers.getAll.useQuery({ schoolCode: user?.schoolCode || undefined })
   const createOppMutation = trpc.volunteers.create.useMutation({
     onSuccess: () => { utils.volunteers.getAll.invalidate(); setShowAddModal(false); setNewOpp({ title: '', description: '', date: '', spotsAvailable: 1 }) }
   })

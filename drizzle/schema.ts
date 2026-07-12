@@ -42,6 +42,7 @@ export const volunteerOpportunities = mysqlTable("volunteerOpportunities", {
   description: text("description"),
   date: timestamp("date").notNull(),
   spotsAvailable: int("spotsAvailable").default(10).notNull(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -290,6 +291,7 @@ export const calendarEvents = mysqlTable("calendarEvents", {
   location: varchar("location", { length: 255 }),
   link: varchar("link", { length: 500 }),
   type: mysqlEnum("type", ["district", "state", "icdc", "chapter", "deadline"]).notNull(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
   createdBy: int("createdBy").notNull().references(() => users.id, { onDelete: "cascade" }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
