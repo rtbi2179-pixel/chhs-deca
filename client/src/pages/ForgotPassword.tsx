@@ -31,7 +31,9 @@ export function ForgotPassword() {
 
   if (status === "success") {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <>
+        <div className="sparkle-bg" />
+        <div className="relative z-10 min-h-screen bg-background flex items-center justify-center px-4">
         <div className="max-w-md w-full">
           <div className="bg-card border border-border rounded-lg p-8 text-center">
             <CheckCircle className="w-12 h-12 mx-auto mb-4 text-green-500" />
@@ -48,11 +50,14 @@ export function ForgotPassword() {
           </div>
         </div>
       </div>
+      </>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+    <>
+      <div className="sparkle-bg" />
+      <div className="relative z-10 min-h-screen bg-background flex items-center justify-center px-4">
       <div className="max-w-md w-full">
         <div className="bg-card border border-border rounded-lg p-8">
           <h1 className="text-2xl font-bold text-foreground mb-2">Reset Password</h1>
@@ -98,6 +103,7 @@ export function ForgotPassword() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
