@@ -497,7 +497,7 @@ const Volunteer = () => {
                     type="text"
                     value={newOpp.date}
                     onChange={(e) => setNewOpp({ ...newOpp, date: e.target.value })}
-                    placeholder="e.g., January 12, 2026"
+                    placeholder="MM/DD/YYYY"
                     className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-blue-500/50"
                   />
                 </div>
