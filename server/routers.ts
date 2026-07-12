@@ -24,18 +24,21 @@ export const announcementsRouter = router({
       imageUrl: z.string().optional(),
       fileUrl: z.string().optional(),
       fileName: z.string().optional(),
+      schoolCode: z.string().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
       if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
         throw new TRPCError({ code: 'FORBIDDEN' })
       }
       
-      if (!ctx.user.schoolCode) {
+      // Super admins can specify schoolCode, regular admins use their own
+      const schoolCode = input.schoolCode || ctx.user.schoolCode
+      if (!schoolCode) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'User has no school code' })
       }
 
       const announcement = await createAnnouncement({
-        schoolCode: ctx.user.schoolCode,
+        schoolCode,
         authorId: ctx.user.id,
         title: input.title,
         content: input.content,

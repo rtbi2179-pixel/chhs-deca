@@ -2,6 +2,7 @@ import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { Loader2, Trash2, Plus, Minus } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useSchoolCode } from "@/contexts/SchoolCodeContext";
 
 export function AdminPanel() {
   const { user } = useAuth();
@@ -11,7 +12,7 @@ export function AdminPanel() {
 
   const { data: admins = [], refetch: refetchAdmins } = trpc.auth.getAllAdmins.useQuery();
   const { data: schoolCodes = [] } = trpc.auth.getSchoolCodes.useQuery();
-  const [selectedSchoolCode, setSelectedSchoolCode] = useState("")
+  const { selectedSchoolCode, setSelectedSchoolCode } = useSchoolCode();
   const promoteAdminMutation = trpc.auth.promoteToAdmin.useMutation();
   const demoteAdminMutation = trpc.auth.demoteFromAdmin.useMutation();
 

@@ -4,9 +4,11 @@ import { Heart, MessageCircle, Upload, X, Send } from 'lucide-react'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { trpc } from '@/lib/trpc'
 import { toast } from 'sonner'
+import { useSchoolCode } from '@/contexts/SchoolCodeContext'
 
 export function Announcements() {
   const { user } = useAuth()
+  const { selectedSchoolCode } = useSchoolCode()
   const [showPostForm, setShowPostForm] = useState(false)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
@@ -79,12 +81,19 @@ export function Announcements() {
       return
     }
 
+    const schoolCode = selectedSchoolCode || user?.schoolCode
+    if (!schoolCode) {
+      toast.error('No school selected')
+      return
+    }
+
     createAnnouncement.mutate({
       title,
       content,
       imageUrl,
       fileUrl,
       fileName,
+      schoolCode,
     })
   }
 

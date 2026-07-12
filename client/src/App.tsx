@@ -5,6 +5,7 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AdminModeProvider } from "./contexts/AdminModeContext";
+import { SchoolCodeProvider } from "./contexts/SchoolCodeContext";
 import Navigation from "./components/Navigation";
 import Home from "./pages/Home";
 import Events from "./pages/Events";
@@ -94,12 +95,14 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider defaultTheme="dark">
         <AdminModeProvider>
-          <TooltipProvider>
+          <SchoolCodeProvider>
+            <TooltipProvider>
             <Toaster />
             <Toast toasts={toasts} onRemove={removeToast} />
             <Navigation onLoginRequired={handleLoginRequired} />
             <Router isAuthenticated={isAuthenticated} showLoginRequired={handleLoginRequired} />
-          </TooltipProvider>
+            </TooltipProvider>
+          </SchoolCodeProvider>
         </AdminModeProvider>
       </ThemeProvider>
     </ErrorBoundary>
