@@ -374,7 +374,7 @@ export const appRouter = router({
         }
       }),
     
-    demoteFromAdmin: publicProcedure
+    demoteFromAdmin: protectedProcedure
       .input(z.object({
         email: z.string().email("Valid email is required"),
       }))

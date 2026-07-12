@@ -924,6 +924,11 @@ export async function demoteFromAdmin(email: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
+  // Prevent demotion of hardcoded super admins
+  if (ADMIN_EMAILS.includes(email)) {
+    throw new Error(`Cannot demote ${email} - they are a permanent super admin`);
+  }
+  
   const user = await getUserByEmail(email);
   if (!user) throw new Error("User not found");
   
