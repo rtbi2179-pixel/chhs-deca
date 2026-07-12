@@ -1248,3 +1248,16 @@ export async function deleteAnnouncementComment(id: number) {
   return db.delete(announcementComments)
     .where(eq(announcementComments.id, id))
 }
+
+// Update user's school code
+export async function updateUserSchoolCode(userId: number, schoolCode: string) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  const result = await db
+    .update(users)
+    .set({ schoolCode })
+    .where(eq(users.id, userId))
+  
+  return result
+}

@@ -53,6 +53,10 @@ describe('Calendar Events - School Code Filtering', () => {
   })
 
   it('should filter events by schoolCode', async () => {
+    // Clean up any existing test events first
+    await db.delete(calendarEvents).where(eq(calendarEvents.title, 'School 1 Event'))
+    await db.delete(calendarEvents).where(eq(calendarEvents.title, 'School 2 Event'))
+    
     // Create two test users with different school codes
     const user1Result = await db.insert(users).values({
       email: 'test-calendar-1@example.com',

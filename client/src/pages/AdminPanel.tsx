@@ -3,6 +3,7 @@ import { trpc } from "@/lib/trpc";
 import { Loader2, Trash2, Plus, Minus } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useSchoolCode } from "@/contexts/SchoolCodeContext";
+import { toast } from "sonner";
 
 export function AdminPanel() {
   const { user } = useAuth();
@@ -15,6 +16,7 @@ export function AdminPanel() {
   const { selectedSchoolCode, setSelectedSchoolCode } = useSchoolCode();
   const promoteAdminMutation = trpc.auth.promoteToAdmin.useMutation();
   const demoteAdminMutation = trpc.auth.demoteFromAdmin.useMutation();
+  const updateSchoolCodeMutation = trpc.auth.updateMySchoolCode.useMutation();
 
   // Check if user is super admin
   const isSuperAdmin = user?.email === "rtbi2179@gmail.com" || user?.email === "sahan.mallampati@gmail.com";
@@ -161,7 +163,19 @@ export function AdminPanel() {
                 schoolCodes.map((school) => (
                   <button
                     key={school.code}
-                    onClick={() => setSelectedSchoolCode(selectedSchoolCode === school.code ? "" : school.code)}
+                    onClick={async () => {
+                      const newCode = selectedSchoolCode === school.code ? "" : school.code;
+                      setSelectedSchoolCode(newCode);
+                      // Update the user's school code in the database
+                      if (newCode) {
+                        try {
+                          await updateSchoolCodeMutation.mutateAsync({ schoolCode: newCode });
+                          toast.success(`School code updated to ${school.schoolName}`);
+                        } catch (error: any) {
+                          toast.error(`Failed to update school code: ${error.message}`);
+                        }
+                      }
+                    }}
                     className={`p-4 rounded-lg border-2 transition text-left ${
                       selectedSchoolCode === school.code
                         ? "bg-blue-500/20 border-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.6)]"

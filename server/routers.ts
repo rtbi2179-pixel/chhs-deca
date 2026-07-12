@@ -392,6 +392,24 @@ export const appRouter = router({
         }
       }),
     
+    updateMySchoolCode: protectedProcedure
+      .input(z.object({
+        schoolCode: z.string(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        try {
+          // Only super admins can change their school code
+          if (ctx.user.role !== 'super_admin') {
+            throw new TRPCError({ code: 'FORBIDDEN', message: 'Only super admins can change school code' });
+          }
+          
+          await db.updateUserSchoolCode(ctx.user.id, input.schoolCode);
+          return { success: true, schoolCode: input.schoolCode };
+        } catch (error: any) {
+          throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: error.message });
+        }
+      }),
+    
     getAllAdmins: publicProcedure
       .query(async ({ ctx }) => {
         try {
