@@ -10,6 +10,8 @@ export function AdminPanel() {
   const [message, setMessage] = useState("");
 
   const { data: admins = [], refetch: refetchAdmins } = trpc.auth.getAllAdmins.useQuery();
+  const { data: schoolCodes = [] } = trpc.auth.getSchoolCodes.useQuery();
+  const [selectedSchoolCode, setSelectedSchoolCode] = useState("")
   const promoteAdminMutation = trpc.auth.promoteToAdmin.useMutation();
   const demoteAdminMutation = trpc.auth.demoteFromAdmin.useMutation();
 
@@ -141,6 +143,36 @@ export function AdminPanel() {
                       Demote
                     </button>
                   </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* School Codes Section */}
+          <div className="bg-card border-2 border-blue-500/30 rounded-lg p-6 shadow-[0_0_30px_rgba(59,130,246,0.2)]">
+            <h2 className="text-xl font-bold text-blue-400 mb-4 drop-shadow-[0_0_10px_rgba(59,130,246,0.6)]">
+              🏫 Active School Codes
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {schoolCodes.length === 0 ? (
+                <p className="text-foreground/60">No active school codes</p>
+              ) : (
+                schoolCodes.map((school) => (
+                  <button
+                    key={school.code}
+                    onClick={() => setSelectedSchoolCode(selectedSchoolCode === school.code ? "" : school.code)}
+                    className={`p-4 rounded-lg border-2 transition text-left ${
+                      selectedSchoolCode === school.code
+                        ? "bg-blue-500/20 border-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.6)]"
+                        : "bg-background border-blue-500/20 hover:border-blue-500/50"
+                    }`}
+                  >
+                    <p className="text-blue-300 font-semibold">{school.schoolName}</p>
+                    <p className="text-foreground/60 text-sm">Code: {school.code}</p>
+                    {selectedSchoolCode === school.code && (
+                      <p className="text-green-400 text-sm mt-2">✓ Selected</p>
+                    )}
+                  </button>
                 ))
               )}
             </div>
