@@ -17,6 +17,13 @@ export default function Footer() {
               Privacy Policy
             </a>
             <a
+              href="/CHHS_DECA_Terms_of_Service.pdf"
+              download
+              className="text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              Terms of Service
+            </a>
+            <a
               href="https://www.deca.org"
               target="_blank"
               rel="noopener noreferrer"
