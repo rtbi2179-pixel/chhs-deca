@@ -347,7 +347,7 @@ function AnnouncementCard({ announcement }: any) {
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-xl font-semibold text-white">{isEditing ? 'Edit Announcement' : announcement.title}</h3>
+          <h3 className="text-xl font-semibold text-white">{announcement.title}</h3>
           <p className="text-sm text-white/60">
             {announcement.authorName} • {date}
           </p>
