@@ -10,9 +10,8 @@ export default function Footer() {
           </div>
           <div className="flex gap-6 text-sm">
             <a
-              href="/manus-storage/CHHS_DECA_Privacy_Policy_c527c57b.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/CHHS_DECA_Privacy_Policy.pdf"
+              download
               className="text-blue-400 hover:text-blue-300 transition-colors"
             >
               Privacy Policy
