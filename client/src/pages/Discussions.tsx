@@ -24,6 +24,8 @@ export default function Discussions() {
   const { user, isAuthenticated } = useAuth()
   const { adminModeActive, setAdminModeActive, neonOverlayRef, setNeonOverlayRef, deactivateAdminMode } = useAdminMode()
   const [selectedCategory, setSelectedCategory] = useState<string>('general')
+  const [discussionType, setDiscussionType] = useState<'universal' | 'chapter'>('universal')
+  const [newDiscussionType, setNewDiscussionType] = useState<'universal' | 'chapter'>('universal')
   const [searchQuery, setSearchQuery] = useState('')
   const [showNewThread, setShowNewThread] = useState(false)
   const [selectedThreadId, setSelectedThreadId] = useState<number | null>(null)
@@ -34,6 +36,7 @@ export default function Discussions() {
   // Fetch threads
   const { data: threads = [] } = trpc.discussions.getThreads.useQuery({
     category: selectedCategory,
+    discussionType: discussionType,
   })
 
   // Fetch replies for selected thread
@@ -63,6 +66,7 @@ export default function Discussions() {
         title: newThreadTitle,
         content: newThreadContent,
         category: selectedCategory,
+        discussionType: newDiscussionType,
       })
       setNewThreadTitle('')
       setNewThreadContent('')
@@ -221,6 +225,39 @@ export default function Discussions() {
                 </button>
               )}
 
+              {/* Discussion Type Tabs */}
+              <div className="glass-card p-4 border-blue-500/20 space-y-2">
+                <h3 className="text-white font-semibold text-sm mb-3">Discussion Type</h3>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      setDiscussionType('universal')
+                      setSelectedThreadId(null)
+                    }}
+                    className={`flex-1 px-3 py-2 rounded-lg transition-all text-sm font-medium ${
+                      discussionType === 'universal'
+                        ? 'bg-blue-600/30 border border-blue-500/50 text-white'
+                        : 'text-white/60 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    🌍 Universal
+                  </button>
+                  <button
+                    onClick={() => {
+                      setDiscussionType('chapter')
+                      setSelectedThreadId(null)
+                    }}
+                    className={`flex-1 px-3 py-2 rounded-lg transition-all text-sm font-medium ${
+                      discussionType === 'chapter'
+                        ? 'bg-blue-600/30 border border-blue-500/50 text-white'
+                        : 'text-white/60 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    👥 Chapter
+                  </button>
+                </div>
+              </div>
+
               {/* Categories */}
               <div className="glass-card p-4 border-blue-500/20 space-y-2">
                 <h3 className="text-white font-semibold text-sm mb-3">Categories</h3>
@@ -274,6 +311,27 @@ export default function Discussions() {
                     onChange={e => setNewThreadTitle(e.target.value)}
                     className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 mb-3 focus:outline-none focus:border-blue-500/50"
                   />
+                  <div className="grid grid-cols-2 gap-2 mb-3">
+                    <select
+                      value={selectedCategory}
+                      onChange={e => setSelectedCategory(e.target.value)}
+                      className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500/50"
+                    >
+                      {categories.map(cat => (
+                        <option key={cat.id} value={cat.id} className="bg-slate-900">
+                          {cat.label}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      value={newDiscussionType}
+                      onChange={e => setNewDiscussionType(e.target.value as 'universal' | 'chapter')}
+                      className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500/50"
+                    >
+                      <option value="universal" className="bg-slate-900">Universal</option>
+                      <option value="chapter" className="bg-slate-900">Chapter</option>
+                    </select>
+                  </div>
                   <textarea
                     placeholder="What's on your mind? (supports markdown)"
                     value={newThreadContent}

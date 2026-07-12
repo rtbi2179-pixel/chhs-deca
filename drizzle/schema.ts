@@ -70,6 +70,8 @@ export const discussionThreads = mysqlTable("discussionThreads", {
   title: varchar("title", { length: 255 }).notNull(),
   content: text("content").notNull(),
   category: varchar("category", { length: 50 }).default("general").notNull(),
+  discussionType: mysqlEnum("discussionType", ["universal", "chapter"]).default("universal").notNull(),
+  schoolCode: varchar("schoolCode", { length: 50 }),
   views: int("views").default(0).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

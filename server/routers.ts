@@ -473,12 +473,12 @@ export const appRouter = router({
 
   discussions: router({
     getThreads: publicProcedure
-      .input(z.object({ category: z.string().optional() }).optional())
-      .query(() => db.getDiscussionThreads()),
+      .input(z.object({ category: z.string().optional(), discussionType: z.enum(["universal", "chapter"]).optional() }).optional())
+      .query(({ input, ctx }) => db.getDiscussionThreads(input?.category, input?.discussionType, ctx.user?.schoolCode || undefined)),
 
     createThread: protectedProcedure
-      .input(z.object({ title: z.string(), content: z.string(), category: z.string().default("general") }))
-      .mutation(({ input, ctx }) => db.createDiscussionThread(ctx.user.id, input.title, input.content, input.category)),
+      .input(z.object({ title: z.string(), content: z.string(), category: z.string().default("general"), discussionType: z.enum(["universal", "chapter"]).default("universal") }))
+      .mutation(({ input, ctx }) => db.createDiscussionThread(ctx.user.id, input.title, input.content, input.category, input.discussionType, ctx.user.schoolCode || undefined)),
 
     getReplies: publicProcedure
       .input(z.object({ threadId: z.number() }))

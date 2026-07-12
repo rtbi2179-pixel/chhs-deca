@@ -142,20 +142,27 @@ export async function getAllVolunteerSignups() {
 }
 
 // Discussion queries
-export async function createDiscussionThread(userId: number, title: string, content: string, category: string) {
+export async function createDiscussionThread(userId: number, title: string, content: string, category: string, discussionType: string = "universal", schoolCode?: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
+  // Import and apply content filter
+  const { filterContent } = await import("./_core/contentFilter");
+  const filteredContent = filterContent(content);
+  const filteredTitle = filterContent(title);
+  
   const result = await db.insert(discussionThreads).values({
     userId,
-    title,
-    content,
+    title: filteredTitle,
+    content: filteredContent,
     category,
+    discussionType: discussionType as "universal" | "chapter",
+    schoolCode: discussionType === "chapter" ? schoolCode : null,
   });
   return result;
 }
 
-export async function getDiscussionThreads(category?: string) {
+export async function getDiscussionThreads(category?: string, discussionType?: string, userSchoolCode?: string) {
   const db = await getDb();
   if (!db) return [];
   
@@ -165,8 +172,19 @@ export async function getDiscussionThreads(category?: string) {
   }).from(discussionThreads)
     .innerJoin(users, eq(discussionThreads.userId, users.id));
   
+  const conditions = [];
   if (category) {
-    query = query.where(eq(discussionThreads.category, category)) as any;
+    conditions.push(eq(discussionThreads.category, category));
+  }
+  if (discussionType === "universal") {
+    conditions.push(eq(discussionThreads.discussionType, "universal"));
+  } else if (discussionType === "chapter" && userSchoolCode) {
+    conditions.push(eq(discussionThreads.discussionType, "chapter"));
+    conditions.push(eq(discussionThreads.schoolCode, userSchoolCode));
+  }
+  
+  if (conditions.length > 0) {
+    query = query.where(conditions.length === 1 ? conditions[0] : conditions.reduce((acc, cond) => acc && cond)) as any;
   }
   
   return query;
@@ -176,10 +194,14 @@ export async function createDiscussionReply(threadId: number, userId: number, co
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
+  // Import and apply content filter
+  const { filterContent } = await import("./_core/contentFilter");
+  const filteredContent = filterContent(content);
+  
   const result = await db.insert(discussionReplies).values({
     threadId,
     userId,
-    content,
+    content: filteredContent,
   });
   return result;
 }
