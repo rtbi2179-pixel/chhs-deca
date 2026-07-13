@@ -1532,9 +1532,12 @@ export async function searchUsersByEmail(schoolCode: string, emailQuery: string,
   const db = await getDb()
   if (!db) throw new Error("Database connection failed")
   
+  // Allow messaging super admins from any chapter, or regular users from the same chapter
   let whereCondition = and(
-    eq(users.schoolCode, schoolCode),
-    ne(users.role, 'super_admin'),
+    or(
+      eq(users.role, 'super_admin'),
+      eq(users.schoolCode, schoolCode)
+    ),
     or(
       like(users.email, `%${emailQuery}%`),
       like(users.name, `%${emailQuery}%`),
