@@ -594,6 +594,25 @@ export const appRouter = router({
     getLeaderboardByCluster: publicProcedure
       .input(z.object({ cluster: z.string(), limit: z.number().default(50) }))
       .query(({ input }) => db.getLeaderboardByCluster(input.cluster, input.limit)),
+
+    awardBlueBucks: protectedProcedure
+      .input(z.object({ questionId: z.string() }))
+      .mutation(async ({ input, ctx }) => {
+        await db.awardBlueBucks(ctx.user.id, 5, 'correct_first_attempt', ctx.user.schoolCode || '', parseInt(input.questionId));
+        return { success: true, amount: 5 };
+      }),
+
+    getBlueBucksBalance: protectedProcedure
+      .query(async ({ ctx }) => {
+        const balance = await db.getBlueBucksBalance(ctx.user.id);
+        return { balance };
+      }),
+
+    getBlueBucksLeaderboard: publicProcedure
+      .input(z.object({ schoolCode: z.string(), limit: z.number().default(10) }))
+      .query(async ({ input }) => {
+        return await db.getBlueBucksLeaderboard(input.schoolCode, input.limit);
+      }),
   }),
 
   calendar: calendarRouter,

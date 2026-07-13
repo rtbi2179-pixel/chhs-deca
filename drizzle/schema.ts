@@ -361,3 +361,31 @@ export const directMessages = mysqlTable("directMessages", {
 
 export type DirectMessage = typeof directMessages.$inferSelect;
 export type InsertDirectMessage = typeof directMessages.$inferInsert;
+
+
+/**
+ * Blue Bucks - Point system for user engagement
+ */
+export const blueBucks = mysqlTable("blueBucks", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  amount: int("amount").notNull().default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type BlueBucks = typeof blueBucks.$inferSelect;
+export type InsertBlueBucks = typeof blueBucks.$inferInsert;
+
+export const blueBucksTransactions = mysqlTable("blueBucksTransactions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  amount: int("amount").notNull(),
+  reason: mysqlEnum("reason", ["correct_first_attempt", "discussion_post", "discussion_reply", "admin_award"]).notNull(),
+  relatedId: int("relatedId"), // ID of the question, discussion post, etc.
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type BlueBucksTransaction = typeof blueBucksTransactions.$inferSelect;
+export type InsertBlueBucksTransaction = typeof blueBucksTransactions.$inferInsert;

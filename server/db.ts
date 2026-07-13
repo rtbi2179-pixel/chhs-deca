@@ -1,7 +1,7 @@
 import { eq, and, or, inArray, desc, count, asc, ne, like } from "drizzle-orm";
 import { randomBytes } from "crypto";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments, calendarEvents, CalendarEvent, InsertCalendarEvent, portfolioItems, adminMemberNotes, directMessages} from "../drizzle/schema";
+import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments, calendarEvents, CalendarEvent, InsertCalendarEvent, portfolioItems, adminMemberNotes, directMessages, blueBucks, blueBucksTransactions} from "../drizzle/schema";
 import { ENV } from './_core/env';
 import bcrypt from 'bcryptjs';
 
@@ -1585,4 +1585,98 @@ export async function getAllSchoolCodes() {
     .where(isNotNull(users.schoolCode))
   
   return schoolCodes.map(s => s.schoolCode).filter(Boolean)
+}
+
+
+/**
+ * Blue Bucks - Point system for user engagement
+ */
+
+export async function awardBlueBucks(userId: number, amount: number, reason: 'correct_first_attempt' | 'discussion_post' | 'discussion_reply' | 'admin_award', schoolCode: string, relatedId?: number): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+
+  try {
+    // Get or create user's Blue Bucks record
+    const existing = await db.select().from(blueBucks).where(eq(blueBucks.userId, userId)).limit(1);
+    
+    if (existing.length === 0) {
+      await db.insert(blueBucks).values({
+        userId,
+        amount,
+      });
+    } else {
+      await db.update(blueBucks)
+        .set({ amount: existing[0].amount + amount })
+        .where(eq(blueBucks.userId, userId));
+    }
+
+    // Record the transaction
+    await db.insert(blueBucksTransactions).values({
+      userId,
+      amount,
+      reason,
+      relatedId,
+      schoolCode,
+    });
+  } catch (error) {
+    console.error('[Blue Bucks] Error awarding points:', error);
+  }
+}
+
+export async function getBlueBucksBalance(userId: number): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+
+  try {
+    const result = await db.select().from(blueBucks).where(eq(blueBucks.userId, userId)).limit(1);
+    return result.length > 0 ? result[0].amount : 0;
+  } catch (error) {
+    console.error('[Blue Bucks] Error getting balance:', error);
+    return 0;
+  }
+}
+
+export async function getBlueBucksLeaderboard(schoolCode: string, limit: number = 10): Promise<any[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const result = await db
+      .select({
+        userId: blueBucks.userId,
+        userName: users.name,
+        userEmail: users.email,
+        amount: blueBucks.amount,
+      })
+      .from(blueBucks)
+      .innerJoin(users, eq(blueBucks.userId, users.id))
+      .where(eq(users.schoolCode, schoolCode))
+      .orderBy(desc(blueBucks.amount))
+      .limit(limit);
+    
+    return result;
+  } catch (error) {
+    console.error('[Blue Bucks] Error getting leaderboard:', error);
+    return [];
+  }
+}
+
+export async function getBlueBucksTransactionHistory(userId: number, limit: number = 20): Promise<any[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const result = await db
+      .select()
+      .from(blueBucksTransactions)
+      .where(eq(blueBucksTransactions.userId, userId))
+      .orderBy(desc(blueBucksTransactions.createdAt))
+      .limit(limit);
+    
+    return result;
+  } catch (error) {
+    console.error('[Blue Bucks] Error getting transaction history:', error);
+    return [];
+  }
 }
