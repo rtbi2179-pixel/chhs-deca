@@ -26,7 +26,7 @@
 
 - [x] Create announcements section with admin posting capability
 - [x] Implement file/image upload for announcements
-- [ ] Add email notifications to all chapter members when announcement is posted
+- [x] Email notifications for announcements - CANCELLED per user request (not implemented)
 - [x] Build announcements feed UI (SportsU style)
 - [x] Implement like functionality on announcements
 - [x] Add comment functionality on announcements

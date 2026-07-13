@@ -7,6 +7,7 @@ import { z } from "zod";
 import * as db from "./db";
 import { getAnnouncementsBySchool, createAnnouncement, likeAnnouncement, getAnnouncementLikes, addAnnouncementComment, getAnnouncementComments, deleteAnnouncement } from "./db";
 import { notifyOwner } from "./_core/notification";
+
 import { questions } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 
@@ -47,23 +48,7 @@ export const announcementsRouter = router({
         fileName: input.fileName,
       })
 
-      // Send email notifications to all chapter members
-      // TODO: Implement email notifications when SMTP is configured
-      // try {
-      //   const chapterMembers = await db.getUsersBySchoolCode(ctx.user.schoolCode)
-      //   const emails = chapterMembers.map(m => m.email).filter((e): e is string => !!e)
-      //   
-      //   if (emails.length > 0) {
-      //     // await sendAnnouncementNotification(emails, {
-      //     //   title: input.title,
-      //     //   content: input.content,
-      //     //   authorName: ctx.user.name || 'DECA Admin',
-      //     // })
-      //   }
-      // } catch (error) {
-      //   console.error('Failed to send announcement notifications:', error)
-      //   // Don't fail the announcement creation if email fails
-      // }
+      // Email notifications disabled - feature not needed
 
       return announcement
     }),
@@ -381,8 +366,9 @@ export const appRouter = router({
       .mutation(async ({ input, ctx }) => {
         try {
           // Only super_admin can demote
+          console.log('[DEMOTE DEBUG]', { userId: ctx.user?.id, email: ctx.user?.email, role: ctx.user?.role, loginMethod: ctx.user?.loginMethod });
           if (ctx.user.role !== "super_admin") {
-            throw new Error("Only super admins can demote users");
+            throw new Error(`Only super admins can demote users. Current role: ${ctx.user?.role || 'unknown'}`);
           }
           
           const result = await db.demoteFromAdmin(input.email);
