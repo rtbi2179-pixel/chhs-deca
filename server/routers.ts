@@ -641,6 +641,20 @@ export const appRouter = router({
         const answered = await db.getUserAnsweredQuestions(ctx.user.id);
         return { answeredQuestionIds: answered };
       }),
+
+    getUserStreak: protectedProcedure
+      .query(async ({ ctx }) => {
+        const streak = await db.getUserStreak(ctx.user.id);
+        if (!streak) {
+          await db.initializeUserStreak(ctx.user.id, ctx.user.schoolCode || '');
+          return { currentStreak: 0, currentMultiplier: 1.0, longestStreak: 0 };
+        }
+        return {
+          currentStreak: streak.currentStreak || 0,
+          currentMultiplier: Number(streak.currentMultiplier) || 1.0,
+          longestStreak: streak.longestStreak || 0,
+        };
+      }),
   }),
 
   calendar: calendarRouter,
