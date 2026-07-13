@@ -1,4 +1,4 @@
-import { eq, and, or, inArray, desc, count, asc } from "drizzle-orm";
+import { eq, and, or, inArray, desc, count, asc, ne } from "drizzle-orm";
 import { randomBytes } from "crypto";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments, calendarEvents, CalendarEvent, InsertCalendarEvent, portfolioItems, adminMemberNotes, directMessages} from "../drizzle/schema";
@@ -1288,7 +1288,7 @@ export async function getMembersForChapter(schoolCode: string) {
   .from(users)
   .where(and(
     eq(users.schoolCode, schoolCode),
-    eq(users.role, 'user')
+    ne(users.role, 'super_admin')
   ))
 }
 
@@ -1301,7 +1301,7 @@ export async function getMemberProfile(userId: number, schoolCode: string) {
     .where(and(
       eq(users.id, userId),
       eq(users.schoolCode, schoolCode),
-      eq(users.role, 'user')
+      ne(users.role, 'super_admin')
     ))
     .limit(1)
   
