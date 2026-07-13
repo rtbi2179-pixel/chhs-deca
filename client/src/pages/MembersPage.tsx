@@ -18,7 +18,8 @@ export default function MembersPage() {
   // Check permission
   const isAdmin = user?.role === 'admin' || user?.role === 'super_admin';
   
-  const schoolCode = user?.schoolCode;
+  // Use selectedSchoolCode for super admins, otherwise use their own schoolCode
+  const schoolCode = user?.role === 'super_admin' ? user?.selectedSchoolCode || user?.schoolCode : user?.schoolCode;
   const { data: members = [], isLoading, error } = trpc.members.getMembers.useQuery(
     { schoolCode: schoolCode || '' },
     { enabled: !!schoolCode && isAdmin }
