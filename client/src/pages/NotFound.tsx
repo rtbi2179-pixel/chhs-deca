@@ -1,5 +1,5 @@
 /*
- * Blue Blazer 404 Page — Cinematic Dark Editorial
+ * CHHS DECA 404 Page — Cinematic Dark Editorial
  */
 
 import { Link } from 'wouter'

@@ -1,5 +1,5 @@
 /*
- * Blue Blazer Events Page — Cinematic Dark Editorial
+ * CHHS DECA Events Page — Cinematic Dark Editorial
  * Full catalog of DECA competitive events with embedded resource links
  * Filterable by career cluster and event type
  */
@@ -703,7 +703,7 @@ export default function Events() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-display text-base">D</div>
-            <span className="text-white/60 text-sm">Blue Blazer © 2025–2026</span>
+            <span className="text-white/60 text-sm">CHHS DECA © 2025–2026</span>
           </div>
           <div className="flex items-center gap-6 text-white/30 text-sm">
             <a href="https://www.deca.org" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">DECA.org</a>

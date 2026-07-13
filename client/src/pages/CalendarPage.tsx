@@ -1,5 +1,5 @@
 /*
- * Blue Blazer Calendar Page — Cinematic Dark Editorial
+ * CHHS DECA Calendar Page — Cinematic Dark Editorial
  * Competition calendar with district, state, and ICDC dates
  * Monthly view with event badges
  */
@@ -50,7 +50,7 @@ const calendarEvents: CalEvent[] = [
   { id: 13, date: '2025-12-15', title: 'Holiday Social & Awards', type: 'chapter', description: 'Chapter holiday celebration and recognition of member achievements.', time: '4:00 PM' },
 
   // January 2026
-  { id: 14, date: '2026-01-12', title: 'District Competition', type: 'district', description: 'Blue Blazer District Competition. All members compete for state qualification.', location: 'TBD — Check with advisor', time: '7:00 AM', link: 'https://www.deca.org/calendar' },
+  { id: 14, date: '2026-01-12', title: 'District Competition', type: 'district', description: 'CHHS DECA District Competition. All members compete for state qualification.', location: 'TBD — Check with advisor', time: '7:00 AM', link: 'https://www.deca.org/calendar' },
   { id: 15, date: '2026-01-19', title: 'District Results & Debrief', type: 'chapter', description: 'Review district results, celebrate wins, and plan for state competition.', time: '3:30 PM' },
   { id: 16, date: '2026-01-26', title: 'State Prep Begins', type: 'chapter', description: 'Intensive preparation for state competition begins for qualifiers.', time: '3:30 PM' },
 
@@ -73,7 +73,7 @@ const calendarEvents: CalEvent[] = [
 
   // May 2026
   { id: 28, date: '2026-05-04', title: 'ICDC Debrief & Celebration', type: 'chapter', description: 'Celebrate ICDC achievements and reflect on the season.', time: '4:00 PM' },
-  { id: 29, date: '2026-05-11', title: 'Chapter Awards Banquet', type: 'chapter', description: 'Annual Blue Blazer Awards Banquet. Celebrate the year\'s achievements!', time: '6:00 PM', location: 'TBD' },
+  { id: 29, date: '2026-05-11', title: 'Chapter Awards Banquet', type: 'chapter', description: 'Annual CHHS DECA Awards Banquet. Celebrate the year\'s achievements!', time: '6:00 PM', location: 'TBD' },
   { id: 30, date: '2026-05-18', title: 'Officer Elections', type: 'chapter', description: 'Elections for 2026-2027 chapter officers.', time: '3:30 PM' },
 ]
 
@@ -479,7 +479,7 @@ export default function CalendarPage() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-display text-base">D</div>
-            <span className="text-white/60 text-sm">Blue Blazer © 2025–2026</span>
+            <span className="text-white/60 text-sm">CHHS DECA © 2025–2026</span>
           </div>
           <div className="flex items-center gap-6 text-white/30 text-sm">
             <a href="https://www.deca.org/calendar" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">Official Calendar</a>
