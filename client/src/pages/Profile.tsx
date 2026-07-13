@@ -1,9 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { trpc } from '@/lib/trpc'
-import { ArrowLeft, Flame, BookOpen, CheckCircle, Target, TrendingUp, Medal } from 'lucide-react'
+import { ArrowLeft, Flame, BookOpen, CheckCircle, Target, TrendingUp, Medal, Plus, Trash2, Edit2, FileText } from 'lucide-react'
 import { useLocation } from 'wouter'
 import { motion } from 'framer-motion'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Card } from '@/components/ui/card'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { toast } from 'sonner'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -14,10 +19,32 @@ const fadeUp = {
   }),
 }
 
+const PORTFOLIO_CATEGORIES = [
+  'Written Event',
+  'Roleplay',
+  'Exam Preparation',
+  'Presentation',
+  'Resume',
+  'Community Service',
+  'Leadership',
+  'Awards',
+  'Other',
+]
+
 export default function Profile() {
   const { user } = useAuth()
   const [, setLocation] = useLocation()
   const [studyStreak, setStudyStreak] = useState(0)
+  const [showAddPortfolioDialog, setShowAddPortfolioDialog] = useState(false)
+  const [editingPortfolioItem, setEditingPortfolioItem] = useState<any>(null)
+  const [portfolioFormData, setPortfolioFormData] = useState({
+    title: '',
+    category: '',
+    description: '',
+    fileUrl: '',
+    externalUrl: '',
+    memberProgressNotes: '',
+  })
 
   // Fetch bookmarked questions
   const { data: savedQuestions = [] } = trpc.practice.getBookmarkedQuestions.useQuery(
@@ -31,6 +58,12 @@ export default function Profile() {
     { enabled: !!user?.id }
   )
 
+  // Fetch portfolio items
+  const { data: portfolio = [], refetch: refetchPortfolio } = trpc.members.getPortfolioItems.useQuery(
+    { userId: user?.id },
+    { enabled: !!user?.id }
+  )
+
   // Find current user in leaderboard
   const userStats = (leaderboardData as any[]).find((entry: any) => {
     if ('user' in entry) return entry.user.id === user?.id
@@ -40,6 +73,110 @@ export default function Profile() {
 
   const questionsAnswered = (userStats as any)?.questionsAnswered || (userStats as any)?.totalAnswered || 0
   const accuracy = (userStats as any)?.accuracy || 0
+
+  // Portfolio mutations
+  const createPortfolioMutation = trpc.members.createPortfolioItem.useMutation({
+    onSuccess: () => {
+      setPortfolioFormData({
+        title: '',
+        category: '',
+        description: '',
+        fileUrl: '',
+        externalUrl: '',
+        memberProgressNotes: '',
+      })
+      setShowAddPortfolioDialog(false)
+      refetchPortfolio()
+      toast.success('Portfolio item added')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+  })
+
+  const updatePortfolioMutation = trpc.members.updatePortfolioItem.useMutation({
+    onSuccess: () => {
+      setEditingPortfolioItem(null)
+      setPortfolioFormData({
+        title: '',
+        category: '',
+        description: '',
+        fileUrl: '',
+        externalUrl: '',
+        memberProgressNotes: '',
+      })
+      refetchPortfolio()
+      toast.success('Portfolio item updated')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+  })
+
+  const deletePortfolioMutation = trpc.members.deletePortfolioItem.useMutation({
+    onSuccess: () => {
+      refetchPortfolio()
+      toast.success('Portfolio item deleted')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+  })
+
+  const handleAddPortfolioItem = () => {
+    if (!portfolioFormData.title || !portfolioFormData.category || (!portfolioFormData.fileUrl && !portfolioFormData.externalUrl)) {
+      toast.error('Please fill in required fields')
+      return
+    }
+
+    createPortfolioMutation.mutate(portfolioFormData)
+  }
+
+  const handleUpdatePortfolioItem = () => {
+    if (!portfolioFormData.title || !portfolioFormData.category) {
+      toast.error('Please fill in required fields')
+      return
+    }
+
+    if (!editingPortfolioItem?.id) return
+
+    updatePortfolioMutation.mutate({
+      itemId: editingPortfolioItem.id,
+      ...portfolioFormData,
+    })
+  }
+
+  const handleDeletePortfolioItem = (id: number) => {
+    if (confirm('Are you sure you want to delete this portfolio item?')) {
+      deletePortfolioMutation.mutate({ itemId: id })
+    }
+  }
+
+  const handleEditPortfolioItem = (item: any) => {
+    setEditingPortfolioItem(item)
+    setPortfolioFormData({
+      title: item.title,
+      category: item.category,
+      description: item.description || '',
+      fileUrl: item.fileUrl || '',
+      externalUrl: item.externalUrl || '',
+      memberProgressNotes: item.memberProgressNotes || '',
+    })
+    setShowAddPortfolioDialog(true)
+  }
+
+  const handleResetPortfolioForm = () => {
+    setEditingPortfolioItem(null)
+    setPortfolioFormData({
+      title: '',
+      category: '',
+      description: '',
+      fileUrl: '',
+      externalUrl: '',
+      memberProgressNotes: '',
+    })
+    setShowAddPortfolioDialog(false)
+  }
 
   if (!user) {
     return (
@@ -175,6 +312,175 @@ export default function Profile() {
             </div>
           </motion.div>
         </div>
+
+        {/* Portfolio Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.6 }}
+          className="relative overflow-hidden rounded-2xl border border-blue-500/20 bg-gradient-to-br from-blue-600/10 via-slate-900/50 to-slate-950 p-8 backdrop-blur-sm mb-12"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-transparent to-purple-500/5 pointer-events-none" />
+          
+          <div className="relative">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-3xl font-bold text-white flex items-center gap-3 font-['Bebas_Neue'] tracking-wide">
+                <FileText className="text-blue-400" size={32} />
+                My Portfolio
+              </h2>
+              <Button
+                onClick={() => setShowAddPortfolioDialog(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                <Plus size={20} className="mr-2" />
+                Add Item
+              </Button>
+            </div>
+
+            {portfolio.length === 0 ? (
+              <div className="text-center py-12">
+                <FileText className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+                <p className="text-gray-400 mb-4">No portfolio items yet</p>
+                <Button
+                  onClick={() => setShowAddPortfolioDialog(true)}
+                  variant="outline"
+                  className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10"
+                >
+                  Add Your First Item
+                </Button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {portfolio.map((item: any) => (
+                  <Card key={item.id} className="bg-slate-800 border-slate-700 p-4">
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex-1">
+                        <h3 className="text-white font-semibold">{item.title}</h3>
+                        <p className="text-blue-400 text-sm">{item.category}</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleEditPortfolioItem(item)}
+                          className="p-1 hover:bg-slate-700 rounded"
+                        >
+                          <Edit2 size={16} className="text-gray-400" />
+                        </button>
+                        <button
+                          onClick={() => handleDeletePortfolioItem(item.id)}
+                          className="p-1 hover:bg-slate-700 rounded"
+                        >
+                          <Trash2 size={16} className="text-red-400" />
+                        </button>
+                      </div>
+                    </div>
+                    {item.description && (
+                      <p className="text-gray-400 text-sm mb-3">{item.description}</p>
+                    )}
+                    {item.fileUrl && (
+                      <a
+                        href={item.fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-400 hover:text-blue-300 text-sm"
+                      >
+                        View File →
+                      </a>
+                    )}
+                    {item.externalUrl && (
+                      <a
+                        href={item.externalUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-400 hover:text-blue-300 text-sm"
+                      >
+                        View Link →
+                      </a>
+                    )}
+                  </Card>
+                ))}
+              </div>
+            )}
+          </div>
+        </motion.div>
+
+        {/* Portfolio Dialog */}
+        <Dialog open={showAddPortfolioDialog} onOpenChange={setShowAddPortfolioDialog}>
+          <DialogContent className="bg-slate-800 border-slate-700">
+            <DialogHeader>
+              <DialogTitle className="text-white">
+                {editingPortfolioItem ? 'Edit Portfolio Item' : 'Add Portfolio Item'}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <label className="text-white text-sm mb-2 block">Title *</label>
+                <Input
+                  value={portfolioFormData.title}
+                  onChange={(e) => setPortfolioFormData({ ...portfolioFormData, title: e.target.value })}
+                  placeholder="Item title"
+                  className="bg-slate-700 border-slate-600 text-white"
+                />
+              </div>
+              <div>
+                <label className="text-white text-sm mb-2 block">Category *</label>
+                <select
+                  value={portfolioFormData.category}
+                  onChange={(e) => setPortfolioFormData({ ...portfolioFormData, category: e.target.value })}
+                  className="w-full bg-slate-700 border border-slate-600 text-white rounded px-3 py-2"
+                >
+                  <option value="">Select a category</option>
+                  {PORTFOLIO_CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="text-white text-sm mb-2 block">Description</label>
+                <textarea
+                  value={portfolioFormData.description}
+                  onChange={(e) => setPortfolioFormData({ ...portfolioFormData, description: e.target.value })}
+                  placeholder="Describe this item"
+                  className="w-full bg-slate-700 border border-slate-600 text-white rounded px-3 py-2 h-24"
+                />
+              </div>
+              <div>
+                <label className="text-white text-sm mb-2 block">File URL</label>
+                <Input
+                  value={portfolioFormData.fileUrl}
+                  onChange={(e) => setPortfolioFormData({ ...portfolioFormData, fileUrl: e.target.value })}
+                  placeholder="Link to file"
+                  className="bg-slate-700 border-slate-600 text-white"
+                />
+              </div>
+              <div>
+                <label className="text-white text-sm mb-2 block">External URL</label>
+                <Input
+                  value={portfolioFormData.externalUrl}
+                  onChange={(e) => setPortfolioFormData({ ...portfolioFormData, externalUrl: e.target.value })}
+                  placeholder="Link to external resource"
+                  className="bg-slate-700 border-slate-600 text-white"
+                />
+              </div>
+              <div className="flex gap-3 pt-4">
+                <Button
+                  onClick={editingPortfolioItem ? handleUpdatePortfolioItem : handleAddPortfolioItem}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700"
+                >
+                  {editingPortfolioItem ? 'Update' : 'Add'}
+                </Button>
+                <Button
+                  onClick={handleResetPortfolioForm}
+                  variant="outline"
+                  className="flex-1 border-slate-600 text-gray-400"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
 
         {/* Achievements Section */}
         <motion.div
