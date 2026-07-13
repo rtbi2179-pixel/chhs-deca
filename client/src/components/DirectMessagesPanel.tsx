@@ -60,7 +60,7 @@ function MessagesContent() {
 
   // Search users with school code
   const { data: searchResults, isLoading: isSearching } = trpc.members.searchUsers.useQuery(
-    { emailQuery: searchQuery },
+    { emailQuery: searchQuery, schoolCode: activeSchoolCode || '' },
     { enabled: searchQuery.length > 0 && isOpen && !!activeSchoolCode }
   );
 
