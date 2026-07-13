@@ -10,6 +10,7 @@ const navLinks = [
   { href: '/events', label: 'Events', icon: Trophy },
   { href: '/practice', label: 'Practice', icon: BookOpen },
   { href: '/calendar', label: 'Calendar', icon: Calendar },
+  { href: '/portfolio', label: 'Portfolio', icon: BookOpen },
   { href: '/volunteer', label: 'Volunteer', icon: Users },
   { href: '/discussions', label: 'Discussions', icon: MessageSquare },
   { href: '/announcements', label: 'Announcements', icon: Bell },
@@ -129,6 +130,49 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
                   </Link>
                 )
               })}
+              
+              {/* Members Link - Only show if user is admin */}
+              {user && (user.role === 'admin' || user.role === 'super_admin') && (
+                <Link href="/chapter/members">
+                  <motion.button
+                    onMouseEnter={() => setHoveredIcon('/chapter/members')}
+                    onMouseLeave={() => setHoveredIcon(null)}
+                    layout
+                    className={`relative px-2 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 whitespace-nowrap ${
+                      location === '/chapter/members'
+                        ? 'text-green-400 bg-green-500/10'
+                        : 'text-green-400/60 hover:text-green-400 hover:bg-green-500/5'
+                    }`}
+                  >
+                    <Users size={20} />
+                    
+                    {/* Expandable Label */}
+                    <motion.span
+                      initial={false}
+                      animate={{
+                        opacity: hoveredIcon === '/chapter/members' ? 1 : 0,
+                        width: hoveredIcon === '/chapter/members' ? 'auto' : 0,
+                        marginLeft: hoveredIcon === '/chapter/members' ? 4 : 0,
+                      }}
+                      transition={{
+                        duration: 0.2,
+                        ease: 'easeOut',
+                      }}
+                      className="text-xs font-medium overflow-hidden"
+                    >
+                      Members
+                    </motion.span>
+
+                    {location === '/chapter/members' && (
+                      <motion.div
+                        layoutId="nav-indicator"
+                        className="absolute bottom-1 left-2 right-2 h-0.5 bg-green-500 rounded-full"
+                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                      />
+                    )}
+                  </motion.button>
+                </Link>
+              )}
               
               {/* Admin Link - Only show if user is super admin */}
               {user && (user.email === 'rtbi2179@gmail.com' || user.email === 'sahan.mallampati@gmail.com') && (
