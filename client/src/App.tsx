@@ -12,7 +12,7 @@ import Events from "./pages/Events";
 import Practice from "./pages/Practice";
 import CalendarPage from "./pages/CalendarPage";
 import MembersPage from "./pages/MembersPage";
-import PortfolioPage from "./pages/PortfolioPage";
+
 import Volunteer from "./pages/Volunteer";
 import Discussions from "./pages/Discussions";
 import SpeechAI from "./pages/SpeechAI";
@@ -63,7 +63,7 @@ function Router({ isAuthenticated, showLoginRequired }: { isAuthenticated: boole
       <Route path="/leaderboard" component={Leaderboard} />
           <Route path="/calendar" component={CalendarPage} />
           <Route path="/chapter/members" component={MembersPage} />
-          <Route path="/portfolio" component={PortfolioPage} />
+    
       <Route path="/volunteer" component={Volunteer} />
       <Route path="/discussions" component={Discussions} />
       <Route path="/announcements" component={Announcements} />

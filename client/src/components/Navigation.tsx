@@ -10,7 +10,6 @@ const navLinks = [
   { href: '/events', label: 'Events', icon: Trophy },
   { href: '/practice', label: 'Practice', icon: BookOpen },
   { href: '/calendar', label: 'Calendar', icon: Calendar },
-  { href: '/portfolio', label: 'Portfolio', icon: BookOpen },
   { href: '/volunteer', label: 'Volunteer', icon: Users },
   { href: '/discussions', label: 'Discussions', icon: MessageSquare },
   { href: '/announcements', label: 'Announcements', icon: Bell },
