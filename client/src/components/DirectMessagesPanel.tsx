@@ -176,7 +176,10 @@ function MessagesContent() {
                           >
                             <div className="font-medium text-foreground">{user.name || 'Unknown'}</div>
                             <div className="text-sm text-foreground/60">{user.email || 'No email'}</div>
-                            {user.role === 'admin' && (
+                            {user.role === 'super_admin' && (
+                              <div className="text-xs text-yellow-400 mt-1">👑 Founder</div>
+                            )}
+                            {user.role === 'admin' && user.role !== 'super_admin' && (
                               <div className="text-xs text-blue-400 mt-1">👤 Admin</div>
                             )}
                           </button>
