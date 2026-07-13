@@ -1,7 +1,7 @@
 import { eq, and, or, inArray, desc, count, asc, ne, like } from "drizzle-orm";
 import { randomBytes } from "crypto";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments, calendarEvents, CalendarEvent, InsertCalendarEvent, portfolioItems, adminMemberNotes, directMessages, blueBucks, blueBucksTransactions, userAnswers, userStreaks, dailyPracticeStats, economicSettings, economicAuditLog} from "../drizzle/schema";
+import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments, calendarEvents, CalendarEvent, InsertCalendarEvent, portfolioItems, adminMemberNotes, directMessages, blueBucks, blueBucksTransactions, userAnswers, userStreaks, dailyPracticeStats, economicSettings, economicAuditLog, stocks, portfolioCash, marketTransactions, portfolioHoldings, marketPriceHistory, portfolioSnapshots } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import bcrypt from 'bcryptjs';
 
@@ -1736,3 +1736,304 @@ export async function hasUserAnsweredQuestion(userId: number, questionId: string
 }
 
 
+
+// ============================================
+// BLUE BLAZER MARKET FUNCTIONS
+// ============================================
+
+/**
+ * Get or create user's portfolio cash balance
+ */
+export async function getOrCreatePortfolioCash(userId: number, schoolCode: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  try {
+    const { portfolioCash } = await import("../drizzle/schema");
+    
+    // Try to get existing
+    const existing = await db.select().from(portfolioCash).where(eq(portfolioCash.userId, userId)).limit(1);
+    
+    if (existing.length > 0) {
+      return existing[0];
+    }
+
+    // Create new with 10,000 starting Blue Bucks
+    await db.insert(portfolioCash).values({
+      userId,
+      schoolCode,
+      cashBalance: "10000",
+      initialAllocation: "10000",
+    });
+
+    return {
+      id: userId,
+      userId,
+      schoolCode,
+      cashBalance: "10000",
+      initialAllocation: "10000",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+  } catch (error) {
+    console.error('[Portfolio Cash] Error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get user's current cash balance
+ */
+export async function getCashBalance(userId: number) {
+  const db = await getDb();
+  if (!db) return "0";
+
+  try {
+    const { portfolioCash } = await import("../drizzle/schema");
+    const result = await db.select({ cashBalance: portfolioCash.cashBalance }).from(portfolioCash).where(eq(portfolioCash.userId, userId)).limit(1);
+    return result.length > 0 ? result[0].cashBalance : "0";
+  } catch (error) {
+    console.error('[Portfolio Cash] Error getting balance:', error);
+    return "0";
+  }
+}
+
+/**
+ * Update user's cash balance
+ */
+export async function updateCashBalance(userId: number, newBalance: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  try {
+    const { portfolioCash } = await import("../drizzle/schema");
+    await db.update(portfolioCash).set({ cashBalance: newBalance }).where(eq(portfolioCash.userId, userId));
+  } catch (error) {
+    console.error('[Portfolio Cash] Error updating balance:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get or create a stock
+ */
+export async function getOrCreateStock(ticker: string, companyName: string, schoolCode: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  try {
+    const { stocks } = await import("../drizzle/schema");
+    
+    // Try to get existing
+    const existing = await db.select().from(stocks).where(eq(stocks.ticker, ticker)).limit(1);
+    
+    if (existing.length > 0) {
+      return existing[0];
+    }
+
+    // Create new
+    await db.insert(stocks).values({
+      ticker,
+      companyName,
+      schoolCode,
+      isActive: true,
+    });
+
+    return {
+      id: 0,
+      ticker,
+      companyName,
+      schoolCode,
+      isActive: true,
+      description: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+  } catch (error) {
+    console.error('[Stocks] Error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get all active stocks for a school
+ */
+export async function getActiveStocks(schoolCode: string) {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const { stocks } = await import("../drizzle/schema");
+    return await db.select().from(stocks).where(and(eq(stocks.schoolCode, schoolCode), eq(stocks.isActive, true)));
+  } catch (error) {
+    console.error('[Stocks] Error getting active stocks:', error);
+    return [];
+  }
+}
+
+/**
+ * Record a market transaction (buy or sell)
+ */
+export async function recordMarketTransaction(userId: number, stockId: number, type: "buy" | "sell", shares: string, pricePerShare: string, schoolCode: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  try {
+    const { marketTransactions } = await import("../drizzle/schema");
+    const totalAmount = (parseFloat(shares) * parseFloat(pricePerShare)).toString();
+
+    const result = await db.insert(marketTransactions).values({
+      userId,
+      stockId,
+      type,
+      shares,
+      pricePerShare,
+      totalAmount,
+      schoolCode,
+      status: "executed",
+      executedAt: new Date(),
+    });
+
+    return result;
+  } catch (error) {
+    console.error('[Market Transactions] Error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get user's portfolio holdings
+ */
+export async function getPortfolioHoldings(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const { portfolioHoldings, stocks } = await import("../drizzle/schema");
+    return await db.select().from(portfolioHoldings).innerJoin(stocks, eq(portfolioHoldings.stockId, stocks.id)).where(eq(portfolioHoldings.userId, userId));
+  } catch (error) {
+    console.error('[Portfolio Holdings] Error:', error);
+    return [];
+  }
+}
+
+/**
+ * Update or create a portfolio holding
+ */
+export async function updatePortfolioHolding(userId: number, stockId: number, shares: string, averageBuyPrice: string, totalInvested: string, schoolCode: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  try {
+    const { portfolioHoldings } = await import("../drizzle/schema");
+    
+    // Check if holding exists
+    const existing = await db.select().from(portfolioHoldings).where(and(eq(portfolioHoldings.userId, userId), eq(portfolioHoldings.stockId, stockId))).limit(1);
+
+    if (existing.length > 0) {
+      // Update existing
+      await db.update(portfolioHoldings).set({
+        shares,
+        averageBuyPrice,
+        totalInvested,
+      }).where(and(eq(portfolioHoldings.userId, userId), eq(portfolioHoldings.stockId, stockId)));
+    } else {
+      // Create new
+      await db.insert(portfolioHoldings).values({
+        userId,
+        stockId,
+        shares,
+        averageBuyPrice,
+        totalInvested,
+        schoolCode,
+      });
+    }
+  } catch (error) {
+    console.error('[Portfolio Holdings] Error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Store market price history
+ */
+export async function recordMarketPrice(stockId: number, price: string, priceTimestamp: Date) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  try {
+    const { marketPriceHistory } = await import("../drizzle/schema");
+    await db.insert(marketPriceHistory).values({
+      stockId,
+      price,
+      priceTimestamp,
+    });
+  } catch (error) {
+    console.error('[Market Price History] Error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get latest price for a stock
+ */
+export async function getLatestStockPrice(stockId: number) {
+  const db = await getDb();
+  if (!db) return null;
+
+  try {
+    const { marketPriceHistory } = await import("../drizzle/schema");
+    const result = await db.select().from(marketPriceHistory).where(eq(marketPriceHistory.stockId, stockId)).orderBy(desc(marketPriceHistory.priceTimestamp)).limit(1);
+    return result.length > 0 ? result[0] : null;
+  } catch (error) {
+    console.error('[Market Price History] Error:', error);
+    return null;
+  }
+}
+
+/**
+ * Create portfolio snapshot for leaderboard
+ */
+export async function createPortfolioSnapshot(userId: number, totalValue: string, cashBalance: string, totalProfit: string, percentageReturn: string, schoolCode: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  try {
+    const { portfolioSnapshots } = await import("../drizzle/schema");
+    await db.insert(portfolioSnapshots).values({
+      userId,
+      totalValue,
+      cashBalance,
+      totalProfit,
+      percentageReturn,
+      schoolCode,
+      snapshotDate: new Date(),
+    });
+  } catch (error) {
+    console.error('[Portfolio Snapshots] Error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get market leaderboard for a school
+ */
+export async function getMarketLeaderboard(schoolCode: string, limit: number = 50) {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const { portfolioSnapshots, users: usersTable } = await import("../drizzle/schema");
+    return await db.select({
+      userId: portfolioSnapshots.userId,
+      userName: usersTable.name,
+      totalValue: portfolioSnapshots.totalValue,
+      totalProfit: portfolioSnapshots.totalProfit,
+      percentageReturn: portfolioSnapshots.percentageReturn,
+      snapshotDate: portfolioSnapshots.snapshotDate,
+    }).from(portfolioSnapshots).innerJoin(usersTable, eq(portfolioSnapshots.userId, usersTable.id)).where(eq(portfolioSnapshots.schoolCode, schoolCode)).orderBy(desc(portfolioSnapshots.totalValue)).limit(limit);
+  } catch (error) {
+    console.error('[Market Leaderboard] Error:', error);
+    return [];
+  }
+}

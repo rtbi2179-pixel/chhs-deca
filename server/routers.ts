@@ -598,6 +598,68 @@ export const appRouter = router({
 
   }),
 
+  market: router({
+    getStocks: protectedProcedure
+      .query(async ({ ctx }) => {
+        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
+        return await db.getActiveStocks(schoolCode);
+      }),
+    
+    getCashBalance: protectedProcedure
+      .query(async ({ ctx }) => {
+        return await db.getCashBalance(ctx.user.id);
+      }),
+    
+    getPortfolio: protectedProcedure
+      .query(async ({ ctx }) => {
+        return await db.getPortfolioHoldings(ctx.user.id);
+      }),
+    
+    buyStock: protectedProcedure
+      .input(z.object({ stockId: z.number(), blueBucksAmount: z.string(), pricePerShare: z.string() }))
+      .mutation(async ({ input, ctx }) => {
+        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
+        
+        const shares = (parseFloat(input.blueBucksAmount) / parseFloat(input.pricePerShare)).toString();
+        const currentBalance = await db.getCashBalance(ctx.user.id);
+        
+        if (parseFloat(currentBalance) < parseFloat(input.blueBucksAmount)) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Insufficient Blue Bucks' });
+        }
+        
+        await db.recordMarketTransaction(ctx.user.id, input.stockId, 'buy', shares, input.pricePerShare, schoolCode);
+        await db.updatePortfolioHolding(ctx.user.id, input.stockId, shares, input.pricePerShare, input.blueBucksAmount, schoolCode);
+        const newBalance = (parseFloat(currentBalance) - parseFloat(input.blueBucksAmount)).toString();
+        await db.updateCashBalance(ctx.user.id, newBalance);
+        
+        return { success: true, shares, newBalance };
+      }),
+    
+    sellStock: protectedProcedure
+      .input(z.object({ stockId: z.number(), shares: z.string(), pricePerShare: z.string() }))
+      .mutation(async ({ input, ctx }) => {
+        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
+        
+        const totalAmount = (parseFloat(input.shares) * parseFloat(input.pricePerShare)).toString();
+        await db.recordMarketTransaction(ctx.user.id, input.stockId, 'sell', input.shares, input.pricePerShare, schoolCode);
+        const currentBalance = await db.getCashBalance(ctx.user.id);
+        const newBalance = (parseFloat(currentBalance) + parseFloat(totalAmount)).toString();
+        await db.updateCashBalance(ctx.user.id, newBalance);
+        
+        return { success: true, newBalance };
+      }),
+    
+    getLeaderboard: protectedProcedure
+      .query(async ({ ctx }) => {
+        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
+        return await db.getMarketLeaderboard(schoolCode, 50);
+      }),
+  }),
+
   calendar: calendarRouter,
 
   members: membersRouter,

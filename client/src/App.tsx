@@ -26,6 +26,7 @@ import { SchoolCodeEntry } from "./pages/SchoolCodeEntry";
 import { AdminPanel } from "./pages/AdminPanel";
 import { Announcements } from "./pages/Announcements";
 import Profile from "./pages/Profile";
+import BlueMarket from "./pages/BlueMarket";
 import Footer from "./components/Footer";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useState, useEffect } from "react";
@@ -67,6 +68,7 @@ function Router({ isAuthenticated, showLoginRequired }: { isAuthenticated: boole
       <Route path="/volunteer" component={Volunteer} />
       <Route path="/discussions" component={Discussions} />
       <Route path="/announcements" component={Announcements} />
+      <Route path="/blue-market" component={BlueMarket} />
       <Route path="/speech-ai" component={SpeechAI} />
       <Route path="/verify-email" component={VerifyEmail} />
       <Route path="/reset-password" component={ResetPassword} />

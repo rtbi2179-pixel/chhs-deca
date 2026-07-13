@@ -57,3 +57,37 @@
 - Direct Messaging functional
 - Super admin access working
 - Platform ready for next feature work
+
+
+## Blue Blazer Market Feature (In Progress)
+
+- [ ] Plan and setup Blue Blazer Market infrastructure
+- [ ] Create database schema for stocks, holdings, transactions, orders, and portfolio snapshots
+- [ ] Integrate free stock data API (Alpha Vantage or similar)
+- [ ] Implement backend market logic (buy/sell/portfolio calculations)
+- [ ] Build Blue Market UI page with stock listings and portfolio display
+- [ ] Integrate Blue Market navigation (money icon with stock icon in header)
+- [ ] Implement market hours tracking (US Eastern Time)
+- [ ] Add pending order system for after-hours trading
+- [ ] Create leaderboard for market performance
+- [ ] Add admin features for stock management
+- [ ] Test market functionality end-to-end
+- [ ] Deploy Blue Blazer Market
+
+
+## Blue Blazer Market Implementation
+
+- [x] Create database schema for market tables (stocks, holdings, transactions, orders, portfolio snapshots)
+- [x] Add market helper functions to db.ts (getOrCreatePortfolioCash, getCashBalance, getActiveStocks, etc.)
+- [x] Create market tRPC procedures (getStocks, getCashBalance, getPortfolio, buyStock, sellStock, getLeaderboard)
+- [x] Build Blue Market UI page with stock listings and portfolio display
+- [x] Add Blue Market navigation link with TrendingUp icon
+- [x] Implement buy/sell dialogs with Blue Bucks amount input
+- [x] Add market leaderboard display
+- [x] Integrate portfolio holdings display
+- [ ] Connect to real stock API (Alpha Vantage or similar) for live pricing
+- [ ] Implement market hours tracking (US Eastern Time)
+- [ ] Add pending order system for after-hours trading
+- [ ] Create admin features for stock management
+- [ ] Add portfolio snapshot history
+- [ ] Test market functionality end-to-end
