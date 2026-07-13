@@ -289,7 +289,7 @@ const Volunteer = () => {
       <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 gap-6">
           {opportunitiesWithRealCounts.map((opp, index) => {
-            const Icon = categoryIcons[opp.category]
+            const Icon = categoryIcons[opp.category] || Trophy
             const isSigned = signedUpIds.includes(opp.id)
             const spotsRemaining = opp.spotsTotal - opp.spotsFilled
 
