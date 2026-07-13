@@ -1,7 +1,7 @@
 import { eq, and, or, inArray, desc, count, asc, ne, like } from "drizzle-orm";
 import { randomBytes } from "crypto";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments, calendarEvents, CalendarEvent, InsertCalendarEvent, portfolioItems, adminMemberNotes, directMessages, blueBucks, blueBucksTransactions, userAnswers} from "../drizzle/schema";
+import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments, calendarEvents, CalendarEvent, InsertCalendarEvent, portfolioItems, adminMemberNotes, directMessages, blueBucks, blueBucksTransactions, userAnswers, userStreaks, dailyPracticeStats, economicSettings, economicAuditLog} from "../drizzle/schema";
 import { ENV } from './_core/env';
 import bcrypt from 'bcryptjs';
 
@@ -1733,4 +1733,178 @@ export async function hasUserAnsweredQuestion(userId: number, questionId: string
     console.error('[User Answers] Error checking if answered:', error);
     return false;
   }
+}
+
+
+/**
+ * Streak Management Functions
+ */
+
+export async function initializeUserStreak(userId: number, schoolCode: string): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const existing = await db.query.userStreaks.findFirst({
+    where: eq(userStreaks.userId, userId),
+  });
+
+  if (!existing) {
+    await db.insert(userStreaks).values({
+      userId,
+      schoolCode,
+      currentStreak: 0,
+      longestStreak: 0,
+      currentMultiplier: 1.0,
+    });
+  }
+}
+
+export async function getUserStreak(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  return db.query.userStreaks.findFirst({
+    where: eq(userStreaks.userId, userId),
+  });
+}
+
+export async function updateUserStreak(userId: number, updates: any): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.update(userStreaks)
+    .set(updates)
+    .where(eq(userStreaks.userId, userId));
+}
+
+export async function recordDailyPracticeStat(userId: number, schoolCode: string, stats: any): Promise<void> {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+
+
+
+
+  const existing = await db.query.dailyPracticeStats.findFirst({
+    where: and(
+      eq(dailyPracticeStats.userId, userId),
+      eq(dailyPracticeStats.practiceDate, today)
+    ),
+  });
+
+  if (existing) {
+    await db.update(dailyPracticeStats)
+      .set({
+        questionsCompleted: (existing.questionsCompleted || 0) + 1,
+        correctAnswers: (existing.correctAnswers || 0) + (stats.isCorrect ? 1 : 0),
+        totalAnswered: (existing.totalAnswered || 0) + 1,
+        accuracy: stats.accuracy || 0,
+        blueBucksEarned: (existing.blueBucksEarned || 0) + (stats.blueBucksEarned || 0),
+        streakQualified: stats.streakQualified || false,
+      })
+      .where(and(
+        eq(dailyPracticeStats.userId, userId),
+        eq(dailyPracticeStats.practiceDate, today)
+      ));
+  } else {
+    await db.insert(dailyPracticeStats).values({
+      userId,
+      schoolCode,
+      practiceDate: today,
+      questionsCompleted: 1,
+      correctAnswers: stats.isCorrect ? 1 : 0,
+      totalAnswered: 1,
+      accuracy: stats.accuracy || 0,
+      blueBucksEarned: stats.blueBucksEarned || 0,
+      streakQualified: stats.streakQualified || false,
+    });
+  }
+}
+
+export async function getTodaysPracticeStat(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  // Get today's date as a Date object
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  return db.query.dailyPracticeStats.findFirst({
+    where: and(
+      eq(dailyPracticeStats.userId, userId),
+      eq(dailyPracticeStats.practiceDate, today as any)
+    ),
+  });
+}
+
+export async function getEconomicSettings(schoolCode: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const settings = await db.query.economicSettings.findFirst({
+    where: eq(economicSettings.schoolCode, schoolCode),
+  });
+
+  // Return defaults if not found
+  return settings || {
+    easyQuestionReward: 5,
+    mediumQuestionReward: 10,
+    hardQuestionReward: 15,
+    dailyQuestionLimit: 100,
+    streakMinQuestionsPerDay: 10,
+    streakMinAccuracy: 70,
+    maxMultiplier: 2.0,
+    multiplierIncreaseInterval: 10,
+    multiplierIncreaseAmount: 0.1,
+    newUserStartingBalance: 1000,
+  };
+}
+
+export async function updateEconomicSettings(schoolCode: string, updates: any, superAdminId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const existing = await db.query.economicSettings.findFirst({
+    where: eq(economicSettings.schoolCode, schoolCode),
+  });
+
+  // Log the change
+  for (const [key, newValue] of Object.entries(updates)) {
+    const oldValue = existing?.[key as keyof typeof existing] || null;
+    await db.insert(economicAuditLog).values({
+      superAdminId,
+      schoolCode,
+      changeType: "ECONOMIC_SETTING_UPDATE",
+      fieldChanged: key,
+      oldValue: String(oldValue),
+      newValue: String(newValue),
+    });
+  }
+
+  if (existing) {
+    await db.update(economicSettings)
+      .set(updates)
+      .where(eq(economicSettings.schoolCode, schoolCode));
+  } else {
+    await db.insert(economicSettings).values({
+      schoolCode,
+      ...updates,
+    });
+  }
+}
+
+export async function calculateStreakMultiplier(currentStreak: number, multiplierIncreaseInterval: number, multiplierIncreaseAmount: number, maxMultiplier: number): Promise<number> {
+  if (currentStreak < multiplierIncreaseInterval) {
+    return 1.0;
+  }
+
+  const multiplierLevel = Math.floor(currentStreak / multiplierIncreaseInterval);
+  const multiplier = 1.0 + (multiplierLevel * multiplierIncreaseAmount);
+
+  return Math.min(multiplier, maxMultiplier);
+}
+
+export async function calculateRewardAmount(difficulty: string, baseRewards: any, multiplier: number): Promise<number> {
+  const baseAmount = baseRewards[`${difficulty.toLowerCase()}QuestionReward`] || 10;
+  return Math.round(baseAmount * multiplier);
 }

@@ -596,10 +596,26 @@ export const appRouter = router({
       .query(({ input }) => db.getLeaderboardByCluster(input.cluster, input.limit)),
 
     awardBlueBucks: protectedProcedure
-      .input(z.object({ questionId: z.string() }))
+      .input(z.object({ questionId: z.string(), difficulty: z.string().optional() }))
       .mutation(async ({ input, ctx }) => {
-        const success = await db.awardBlueBucks(ctx.user.id, 5, 'correct_first_attempt', ctx.user.schoolCode || '', parseInt(input.questionId));
-        return { success, amount: success ? 5 : 0 };
+        const schoolCode = ctx.user.schoolCode || '';
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'User has no school code' });
+
+        const settings = await db.getEconomicSettings(schoolCode);
+        const streak = await db.getUserStreak(ctx.user.id);
+        const multiplier = Number(streak?.currentMultiplier) || 1.0;
+
+        const difficulty = input.difficulty || 'medium';
+        const baseRewards: any = {
+          easy: settings.easyQuestionReward,
+          medium: settings.mediumQuestionReward,
+          hard: settings.hardQuestionReward,
+        };
+        const baseAmount = baseRewards[difficulty] || 10;
+        const finalAmount = Math.round(baseAmount * multiplier);
+
+        const success = await db.awardBlueBucks(ctx.user.id, finalAmount, 'correct_first_attempt', schoolCode, parseInt(input.questionId));
+        return { success, amount: success ? finalAmount : 0 };
       }),
 
 

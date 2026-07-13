@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean, decimal, date } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -405,3 +405,82 @@ export const userAnswers = mysqlTable("userAnswers", {
 
 export type UserAnswer = typeof userAnswers.$inferSelect;
 export type InsertUserAnswer = typeof userAnswers.$inferInsert;
+
+
+/**
+ * User Practice Streak Tracking - tracks daily practice streaks and multipliers
+ */
+export const userStreaks = mysqlTable("userStreaks", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  currentStreak: int("currentStreak").notNull().default(0),
+  longestStreak: int("longestStreak").notNull().default(0),
+  currentMultiplier: decimal("currentMultiplier", { precision: 3, scale: 1 }).notNull().default("1.0"),
+  maxMultiplier: decimal("maxMultiplier", { precision: 3, scale: 1 }).notNull().default("2.0"),
+  lastPracticeDate: timestamp("lastPracticeDate"),
+  streakStartDate: timestamp("streakStartDate"),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type UserStreak = typeof userStreaks.$inferSelect;
+export type InsertUserStreak = typeof userStreaks.$inferInsert;
+
+/**
+ * Daily Practice Stats - tracks daily practice activity for streak calculations
+ */
+export const dailyPracticeStats = mysqlTable("dailyPracticeStats", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  practiceDate: date("practiceDate").notNull(),
+  questionsCompleted: int("questionsCompleted").notNull().default(0),
+  correctAnswers: int("correctAnswers").notNull().default(0),
+  totalAnswered: int("totalAnswered").notNull().default(0),
+  accuracy: decimal("accuracy", { precision: 5, scale: 2 }).notNull().default("0"),
+  blueBucksEarned: int("blueBucksEarned").notNull().default(0),
+  streakQualified: boolean("streakQualified").notNull().default(false),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type DailyPracticeStat = typeof dailyPracticeStats.$inferSelect;
+export type InsertDailyPracticeStat = typeof dailyPracticeStats.$inferInsert;
+
+/**
+ * Economic Settings - super admin controlled economy parameters
+ */
+export const economicSettings = mysqlTable("economicSettings", {
+  id: int("id").autoincrement().primaryKey(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull().unique(),
+  easyQuestionReward: int("easyQuestionReward").notNull().default(5),
+  mediumQuestionReward: int("mediumQuestionReward").notNull().default(10),
+  hardQuestionReward: int("hardQuestionReward").notNull().default(15),
+  dailyQuestionLimit: int("dailyQuestionLimit").notNull().default(100),
+  streakMinQuestionsPerDay: int("streakMinQuestionsPerDay").notNull().default(10),
+  streakMinAccuracy: decimal("streakMinAccuracy", { precision: 5, scale: 2 }).notNull().default("70"),
+  maxMultiplier: decimal("maxMultiplier", { precision: 3, scale: 1 }).notNull().default("2.0"),
+  multiplierIncreaseInterval: int("multiplierIncreaseInterval").notNull().default(10),
+  multiplierIncreaseAmount: decimal("multiplierIncreaseAmount", { precision: 3, scale: 1 }).notNull().default("0.1"),
+  newUserStartingBalance: int("newUserStartingBalance").notNull().default(1000),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type EconomicSettings = typeof economicSettings.$inferSelect;
+export type InsertEconomicSettings = typeof economicSettings.$inferInsert;
+
+/**
+ * Economic Audit Log - tracks all economic changes made by super admins
+ */
+export const economicAuditLog = mysqlTable("economicAuditLog", {
+  id: int("id").autoincrement().primaryKey(),
+  superAdminId: int("superAdminId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  changeType: varchar("changeType", { length: 100 }).notNull(),
+  fieldChanged: varchar("fieldChanged", { length: 100 }).notNull(),
+  oldValue: text("oldValue"),
+  newValue: text("newValue"),
+  reason: text("reason"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type EconomicAuditLog = typeof economicAuditLog.$inferSelect;
+export type InsertEconomicAuditLog = typeof economicAuditLog.$inferInsert;
