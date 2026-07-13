@@ -66,6 +66,7 @@ export default function Practice() {
   };
 
   const updateLeaderboardMutation = trpc.practice.updateLeaderboard.useMutation();
+  const awardBlueBucksMutation = trpc.practice.awardBlueBucks.useMutation();
 
   const handleCreateStudySession = async () => {
     if (!sessionName.trim() || bookmarkedQuestions.length === 0) return;
@@ -101,8 +102,16 @@ export default function Practice() {
         totalAnswered: newTotalAnswered,
         cluster: currentQuestion.cluster,
       });
+
+      // Award Blue Bucks for correct or corrected answers
+      if (isCorrect) {
+        // Award 5 points for correct answer
+        await awardBlueBucksMutation.mutateAsync({
+          questionId: currentQuestion.id,
+        });
+      }
     } catch (error) {
-      console.error("Failed to update leaderboard", error);
+      console.error("Failed to update leaderboard or award Blue Bucks", error);
     }
   };
 

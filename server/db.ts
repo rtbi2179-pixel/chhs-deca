@@ -1592,37 +1592,6 @@ export async function getAllSchoolCodes() {
  * Blue Bucks - Point system for user engagement
  */
 
-export async function awardBlueBucks(userId: number, amount: number, reason: 'correct_first_attempt' | 'discussion_post' | 'discussion_reply' | 'admin_award', schoolCode: string, relatedId?: number): Promise<void> {
-  const db = await getDb();
-  if (!db) return;
-
-  try {
-    // Get or create user's Blue Bucks record
-    const existing = await db.select().from(blueBucks).where(eq(blueBucks.userId, userId)).limit(1);
-    
-    if (existing.length === 0) {
-      await db.insert(blueBucks).values({
-        userId,
-        amount,
-      });
-    } else {
-      await db.update(blueBucks)
-        .set({ amount: existing[0].amount + amount })
-        .where(eq(blueBucks.userId, userId));
-    }
-
-    // Record the transaction
-    await db.insert(blueBucksTransactions).values({
-      userId,
-      amount,
-      reason,
-      relatedId,
-      schoolCode,
-    });
-  } catch (error) {
-    console.error('[Blue Bucks] Error awarding points:', error);
-  }
-}
 
 export async function getBlueBucksBalance(userId: number): Promise<number> {
   const db = await getDb();
@@ -1662,21 +1631,54 @@ export async function getBlueBucksLeaderboard(schoolCode: string, limit: number 
   }
 }
 
-export async function getBlueBucksTransactionHistory(userId: number, limit: number = 20): Promise<any[]> {
+export async function awardBlueBucks(userId: number, amount: number, reason: 'correct_first_attempt' | 'discussion_post' | 'discussion_reply' | 'admin_award', schoolCode: string, relatedId?: number): Promise<boolean> {
   const db = await getDb();
-  if (!db) return [];
+  if (!db) return false;
 
   try {
-    const result = await db
-      .select()
-      .from(blueBucksTransactions)
-      .where(eq(blueBucksTransactions.userId, userId))
-      .orderBy(desc(blueBucksTransactions.createdAt))
-      .limit(limit);
+    // Check if user already earned points for this question (for correct_first_attempt)
+    if (reason === 'correct_first_attempt' && relatedId) {
+      const existing = await db.select().from(blueBucksTransactions).where(
+        and(
+          eq(blueBucksTransactions.userId, userId),
+          eq(blueBucksTransactions.relatedId, relatedId),
+          eq(blueBucksTransactions.reason, 'correct_first_attempt')
+        )
+      ).limit(1);
+      
+      if (existing.length > 0) {
+        console.log('[Blue Bucks] User already earned points for this question');
+        return false; // Already earned points for this question
+      }
+    }
+
+    // Get or create user's Blue Bucks record
+    const existing = await db.select().from(blueBucks).where(eq(blueBucks.userId, userId)).limit(1);
     
-    return result;
+    if (existing.length === 0) {
+      await db.insert(blueBucks).values({
+        userId,
+        amount,
+      });
+    } else {
+      await db.update(blueBucks)
+        .set({ amount: existing[0].amount + amount })
+        .where(eq(blueBucks.userId, userId));
+    }
+
+    // Record the transaction
+    await db.insert(blueBucksTransactions).values({
+      userId,
+      amount,
+      reason,
+      relatedId,
+      schoolCode,
+    });
+    
+    return true;
   } catch (error) {
-    console.error('[Blue Bucks] Error getting transaction history:', error);
-    return [];
+    console.error('[Blue Bucks] Error awarding points:', error);
+    return false;
   }
 }
+
