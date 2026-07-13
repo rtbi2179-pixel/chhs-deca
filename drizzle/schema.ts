@@ -484,3 +484,122 @@ export const economicAuditLog = mysqlTable("economicAuditLog", {
 });
 export type EconomicAuditLog = typeof economicAuditLog.$inferSelect;
 export type InsertEconomicAuditLog = typeof economicAuditLog.$inferInsert;
+
+
+/**
+ * Blue Blazer Market - Stock simulation using Blue Bucks
+ */
+
+/**
+ * Available stocks in the market
+ */
+export const stocks = mysqlTable("stocks", {
+  id: int("id").autoincrement().primaryKey(),
+  ticker: varchar("ticker", { length: 10 }).notNull().unique(),
+  companyName: varchar("companyName", { length: 255 }).notNull(),
+  description: text("description"),
+  isActive: boolean("isActive").default(true).notNull(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(), // Stock available for specific school
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type Stock = typeof stocks.$inferSelect;
+export type InsertStock = typeof stocks.$inferInsert;
+
+/**
+ * Market price history - stores delayed stock prices
+ */
+export const marketPriceHistory = mysqlTable("marketPriceHistory", {
+  id: int("id").autoincrement().primaryKey(),
+  stockId: int("stockId").notNull().references(() => stocks.id, { onDelete: "cascade" }),
+  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  priceTimestamp: timestamp("priceTimestamp").notNull(), // When the price was recorded (15-min delayed)
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type MarketPriceHistory = typeof marketPriceHistory.$inferSelect;
+export type InsertMarketPriceHistory = typeof marketPriceHistory.$inferInsert;
+
+/**
+ * User portfolio holdings
+ */
+export const portfolioHoldings = mysqlTable("portfolioHoldings", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  stockId: int("stockId").notNull().references(() => stocks.id, { onDelete: "cascade" }),
+  shares: decimal("shares", { precision: 15, scale: 6 }).notNull(), // Support fractional shares
+  averageBuyPrice: decimal("averageBuyPrice", { precision: 10, scale: 2 }).notNull(),
+  totalInvested: decimal("totalInvested", { precision: 15, scale: 2 }).notNull(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type PortfolioHolding = typeof portfolioHoldings.$inferSelect;
+export type InsertPortfolioHolding = typeof portfolioHoldings.$inferInsert;
+
+/**
+ * Buy/sell transactions
+ */
+export const marketTransactions = mysqlTable("marketTransactions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  stockId: int("stockId").notNull().references(() => stocks.id, { onDelete: "cascade" }),
+  type: mysqlEnum("type", ["buy", "sell"]).notNull(),
+  shares: decimal("shares", { precision: 15, scale: 6 }).notNull(),
+  pricePerShare: decimal("pricePerShare", { precision: 10, scale: 2 }).notNull(),
+  totalAmount: decimal("totalAmount", { precision: 15, scale: 2 }).notNull(),
+  status: mysqlEnum("status", ["pending", "executed", "cancelled"]).default("executed").notNull(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  executedAt: timestamp("executedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type MarketTransaction = typeof marketTransactions.$inferSelect;
+export type InsertMarketTransaction = typeof marketTransactions.$inferInsert;
+
+/**
+ * Pending orders for when market is closed
+ */
+export const pendingOrders = mysqlTable("pendingOrders", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  stockId: int("stockId").notNull().references(() => stocks.id, { onDelete: "cascade" }),
+  type: mysqlEnum("type", ["buy", "sell"]).notNull(),
+  blueBucksAmount: decimal("blueBucksAmount", { precision: 15, scale: 2 }).notNull(), // For buy orders
+  shares: decimal("shares", { precision: 15, scale: 6 }), // For sell orders
+  status: mysqlEnum("status", ["pending", "executed", "cancelled"]).default("pending").notNull(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  executedAt: timestamp("executedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type PendingOrder = typeof pendingOrders.$inferSelect;
+export type InsertPendingOrder = typeof pendingOrders.$inferInsert;
+
+/**
+ * User portfolio cash balance
+ */
+export const portfolioCash = mysqlTable("portfolioCash", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }).unique(),
+  cashBalance: decimal("cashBalance", { precision: 15, scale: 2 }).notNull().default("0"),
+  initialAllocation: decimal("initialAllocation", { precision: 15, scale: 2 }).notNull().default("10000"), // Starting Blue Bucks for market
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type PortfolioCash = typeof portfolioCash.$inferSelect;
+export type InsertPortfolioCash = typeof portfolioCash.$inferInsert;
+
+/**
+ * Portfolio snapshots for leaderboard history
+ */
+export const portfolioSnapshots = mysqlTable("portfolioSnapshots", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  totalValue: decimal("totalValue", { precision: 15, scale: 2 }).notNull(),
+  cashBalance: decimal("cashBalance", { precision: 15, scale: 2 }).notNull(),
+  totalProfit: decimal("totalProfit", { precision: 15, scale: 2 }).notNull(),
+  percentageReturn: decimal("percentageReturn", { precision: 8, scale: 2 }).notNull(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  snapshotDate: timestamp("snapshotDate").defaultNow().notNull(),
+});
+export type PortfolioSnapshot = typeof portfolioSnapshots.$inferSelect;
+export type InsertPortfolioSnapshot = typeof portfolioSnapshots.$inferInsert;
