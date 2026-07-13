@@ -231,7 +231,7 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
                   <div className="relative">
                     <button
                       onClick={() => setShowBlueBucks(!showBlueBucks)}
-                      className="p-2 text-yellow-400 hover:text-yellow-300 hover:bg-yellow-500/10 rounded-lg transition-all duration-200"
+                      className="p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 rounded-lg transition-all duration-200"
                       title="Blue Bucks Balance"
                     >
                       <DollarSign size={20} />
@@ -244,7 +244,7 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
                         className="absolute right-0 mt-2 bg-slate-900 border border-yellow-500/30 rounded-lg px-4 py-2 text-sm text-white whitespace-nowrap z-50"
                       >
                         <div className="flex items-center gap-2">
-                          <DollarSign size={16} className="text-yellow-400" />
+                          <DollarSign size={16} className="text-blue-400" />
                           <span className="font-semibold">{blueBucksData?.balance || 0} Blue Bucks</span>
                         </div>
                       </motion.div>
