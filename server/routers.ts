@@ -200,6 +200,32 @@ export const calendarRouter = router({
 export const appRouter = router({
   announcements: announcementsRouter,
   system: systemRouter,
+  superAdmin: router({
+    selectSchool: protectedProcedure
+      .input(z.object({ schoolCode: z.string() }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== 'super_admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only super admins can select schools' })
+        }
+        return await db.updateUserSelectedSchool(ctx.user.id, input.schoolCode)
+      }),
+    
+    getSelectedSchool: protectedProcedure
+      .query(async ({ ctx }) => {
+        if (ctx.user.role !== 'super_admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only super admins can access this' })
+        }
+        return { selectedSchoolCode: ctx.user.selectedSchoolCode }
+      }),
+    
+    getAllSchools: protectedProcedure
+      .query(async ({ ctx }) => {
+        if (ctx.user.role !== 'super_admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only super admins can access this' })
+        }
+        return await db.getAllSchoolCodes()
+      }),
+  }),
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {

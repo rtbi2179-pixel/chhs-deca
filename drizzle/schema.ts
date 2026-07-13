@@ -29,10 +29,12 @@ export const users = mysqlTable("users", {
   passwordResetToken: varchar("passwordResetToken", { length: 255 }),
   passwordResetExpiresAt: timestamp("passwordResetExpiresAt"),
   adminPromotedAt: timestamp("adminPromotedAt"),
+  selectedSchoolCode: varchar("selectedSchoolCode", { length: 50 }), // For super admins to select which school they're managing
 });
 
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
+
 
 /**
  * Volunteer opportunities and sign-ups

@@ -1562,3 +1562,27 @@ export async function searchUsersByEmail(schoolCode: string, emailQuery: string,
   .where(whereCondition)
   .limit(10)
 }
+
+
+export async function updateUserSelectedSchool(userId: number, schoolCode: string) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  const result = await db.update(users)
+    .set({ selectedSchoolCode: schoolCode })
+    .where(eq(users.id, userId))
+  
+  return { success: true, selectedSchoolCode: schoolCode }
+}
+
+export async function getAllSchoolCodes() {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  const { isNotNull } = await import('drizzle-orm')
+  const schoolCodes = await db.selectDistinct({ schoolCode: users.schoolCode })
+    .from(users)
+    .where(isNotNull(users.schoolCode))
+  
+  return schoolCodes.map(s => s.schoolCode).filter(Boolean)
+}

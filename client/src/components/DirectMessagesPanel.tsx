@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2, Send, Search, X, MessageCircle } from 'lucide-react';
+import { Loader2, Send, Search, X, MessageCircle, ChevronLeft } from 'lucide-react';
 import { useAuth } from '@/_core/hooks/useAuth';
 
 interface User {
@@ -33,12 +33,35 @@ function MessagesContent() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [messageText, setMessageText] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
+  const [showSchoolSelector, setShowSchoolSelector] = useState(false);
+  const [selectedSchool, setSelectedSchool] = useState<string | null>(null);
+  const [messagesText, setMessagesText] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Search users
+  // Get super admin's selected school
+  const { data: selectedSchoolData } = trpc.superAdmin.getSelectedSchool.useQuery(
+    undefined,
+    { enabled: currentUser?.role === 'super_admin' }
+  );
+
+  // Get all schools for super admin
+  const { data: allSchools, isLoading: isLoadingSchools } = trpc.superAdmin.getAllSchools.useQuery(
+    undefined,
+    { enabled: currentUser?.role === 'super_admin' && showSchoolSelector }
+  );
+
+  // Select school mutation
+  const selectSchoolMutation = trpc.superAdmin.selectSchool.useMutation();
+
+  // Use selected school or user's school code
+  const activeSchoolCode = currentUser?.role === 'super_admin' 
+    ? (selectedSchool || selectedSchoolData?.selectedSchoolCode)
+    : currentUser?.schoolCode;
+
+  // Search users with school code
   const { data: searchResults, isLoading: isSearching } = trpc.members.searchUsers.useQuery(
     { emailQuery: searchQuery },
-    { enabled: searchQuery.length > 0 && isOpen }
+    { enabled: searchQuery.length > 0 && isOpen && !!activeSchoolCode }
   );
 
   // Get messages with selected user
@@ -52,8 +75,8 @@ function MessagesContent() {
 
   // Get conversations
   const { data: conversations } = trpc.members.getConversations.useQuery(
-    {},
-    { enabled: isOpen }
+    { schoolCode: activeSchoolCode || '' },
+    { enabled: isOpen && !!activeSchoolCode }
   );
 
   // Update messages when conversation changes
@@ -103,11 +126,22 @@ function MessagesContent() {
     setSearchQuery('');
   };
 
+  const handleSelectSchool = async (schoolCode: string) => {
+    try {
+      await selectSchoolMutation.mutateAsync({ schoolCode });
+      setSelectedSchool(schoolCode);
+      setShowSchoolSelector(false);
+    } catch (error) {
+      console.error('Failed to select school:', error);
+    }
+  };
+
   const handleClose = () => {
     setIsOpen(false);
     setSelectedUser(null);
     setSearchQuery('');
     setMessages([]);
+    setShowSchoolSelector(false);
   };
 
   return (
@@ -129,9 +163,14 @@ function MessagesContent() {
         <div className="fixed bottom-0 right-0 w-96 max-w-full h-screen bg-background border-l border-border shadow-2xl flex flex-col z-50">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-border bg-background/95 backdrop-blur">
-            <h2 className="text-lg font-bold text-foreground truncate">
-              {selectedUser ? selectedUser.name : 'Direct Messages'}
-            </h2>
+            <div className="flex-1">
+              <h2 className="text-lg font-bold text-foreground truncate">
+                {selectedUser ? selectedUser.name : 'Direct Messages'}
+              </h2>
+              {currentUser?.role === 'super_admin' && activeSchoolCode && !selectedUser && (
+                <p className="text-xs text-foreground/60">School: {activeSchoolCode}</p>
+              )}
+            </div>
             <button
               onClick={handleClose}
               className="text-foreground/60 hover:text-foreground transition-colors p-1"
@@ -143,6 +182,53 @@ function MessagesContent() {
 
           {!selectedUser ? (
             <>
+              {/* Super Admin School Selector */}
+              {currentUser?.role === 'super_admin' && (
+                <div className="p-4 border-b border-border">
+                  {!showSchoolSelector ? (
+                    <Button
+                      onClick={() => setShowSchoolSelector(true)}
+                      variant="outline"
+                      className="w-full text-sm"
+                      size="sm"
+                    >
+                      {activeSchoolCode ? `📍 ${activeSchoolCode}` : 'Select School'}
+                    </Button>
+                  ) : (
+                    <div className="space-y-2">
+                      <button
+                        onClick={() => setShowSchoolSelector(false)}
+                        className="flex items-center gap-2 text-sm text-foreground/60 hover:text-foreground mb-2"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                        Back
+                      </button>
+                      {isLoadingSchools ? (
+                        <div className="flex justify-center py-4">
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        </div>
+                      ) : (
+                        <div className="space-y-1 max-h-48 overflow-y-auto">
+                          {allSchools?.filter((s): s is string => s !== null).map((school: string) => (
+                            <button
+                              key={school}
+                              onClick={() => handleSelectSchool(school)}
+                              className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                                activeSchoolCode === school
+                                  ? 'bg-blue-600 text-white'
+                                  : 'hover:bg-background/80 text-foreground'
+                              }`}
+                            >
+                              {school}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Search Bar */}
               <div className="p-4 border-b border-border">
                 <div className="relative">
@@ -154,8 +240,12 @@ function MessagesContent() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-10"
                     autoFocus
+                    disabled={!activeSchoolCode}
                   />
                 </div>
+                {!activeSchoolCode && currentUser?.role === 'super_admin' && (
+                  <p className="text-xs text-yellow-600 mt-2">Select a school first</p>
+                )}
               </div>
 
               {/* Search Results or Conversations */}
