@@ -265,7 +265,7 @@ export async function deleteDiscussionReply(replyId: number, userId: number, use
 }
 
 // Bookmark queries
-export async function addBookmark(userId: number, questionId: number) {
+export async function addBookmark(userId: number, questionId: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
@@ -276,7 +276,7 @@ export async function addBookmark(userId: number, questionId: number) {
   return result;
 }
 
-export async function removeBookmark(userId: number, questionId: number) {
+export async function removeBookmark(userId: number, questionId: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
@@ -292,7 +292,7 @@ export async function getUserBookmarks(userId: number) {
   return db.select().from(bookmarks).where(eq(bookmarks.userId, userId));
 }
 
-export async function isQuestionBookmarked(userId: number, questionId: number) {
+export async function isQuestionBookmarked(userId: number, questionId: string) {
   const db = await getDb();
   if (!db) return false;
   
@@ -370,7 +370,7 @@ export async function getBookmarkedQuestionsWithDetails(userId: number) {
   return questionsData;
 }
 
-export async function createStudySession(userId: number, name: string, questionIds: number[]) {
+export async function createStudySession(userId: number, name: string, questionIds: string[]) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   

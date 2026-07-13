@@ -11,6 +11,7 @@ import { motion } from 'framer-motion'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { Trophy, BookOpen, Calendar, Users, ArrowRight, Star, Target, Zap, Globe, ChevronRight } from 'lucide-react'
 import { useToast } from '@/components/Toast'
+import { InteractiveBackground } from '@/components/InteractiveBackground'
 
 const HERO_BG = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/deca-hero-bg-3D56BJM7ugEtwwxPTqT3y7.webp'
 
@@ -106,9 +107,8 @@ export default function Home() {
           backgroundPosition: 'center right',
         }}
       >
-        {/* Dark overlay - removed for transparency */}
-
-        {/* Animated grid lines - removed for transparency */}
+        {/* Interactive background with particles and network */}
+        <InteractiveBackground />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-16">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-4rem)]">

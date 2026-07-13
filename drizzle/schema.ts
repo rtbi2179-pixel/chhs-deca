@@ -95,21 +95,26 @@ export const discussionReplies = mysqlTable("discussionReplies", {
 export type DiscussionReply = typeof discussionReplies.$inferSelect;
 export type InsertDiscussionReply = typeof discussionReplies.$inferInsert;
 
-/**
- * DECA Practice Questions
- */
 export const questions = mysqlTable("questions", {
-  id: int("id").autoincrement().primaryKey(),
+  id: varchar("id", { length: 50 }).primaryKey(),
   cluster: varchar("cluster", { length: 255 }).notNull(),
   instructionalArea: varchar("instructional_area", { length: 255 }).notNull(),
-  questionText: text("question_text").notNull(),
+  performanceIndicatorFocus: varchar("performance_indicator_focus", { length: 500 }),
+  cognitiveLevel: varchar("cognitive_level", { length: 100 }),
+  difficulty: varchar("difficulty", { length: 50 }).notNull(),
+  stem: text("stem").notNull(),
   optionA: text("option_a").notNull(),
   optionB: text("option_b").notNull(),
   optionC: text("option_c").notNull(),
   optionD: text("option_d").notNull(),
-  correctAnswer: varchar("correct_answer", { length: 1 }).notNull(), // A, B, C, or D
-  explanation: text("explanation"),
-  difficulty: varchar("difficulty", { length: 50 }).notNull(), // Easy, Medium, Hard
+  correctAnswer: varchar("correct_answer", { length: 1 }).notNull(),
+  rationale: text("rationale"),
+  distractorRationaleA: text("distractor_rationale_a"),
+  distractorRationaleB: text("distractor_rationale_b"),
+  distractorRationaleC: text("distractor_rationale_c"),
+  distractorRationaleD: text("distractor_rationale_d"),
+  conceptTag: varchar("concept_tag", { length: 255 }),
+  sourceStatus: text("source_status"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -122,7 +127,7 @@ export type InsertQuestion = typeof questions.$inferInsert;
 export const bookmarks = mysqlTable("bookmarks", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull(),
-  questionId: int("questionId").notNull(),
+  questionId: varchar("questionId", { length: 50 }).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
@@ -155,7 +160,7 @@ export type InsertStudySession = typeof studySessions.$inferInsert;
 export const sessionQuestions = mysqlTable("sessionQuestions", {
   id: int("id").autoincrement().primaryKey(),
   sessionId: int("sessionId").notNull(),
-  questionId: int("questionId").notNull(),
+  questionId: varchar("questionId", { length: 50 }).notNull(),
   userAnswer: varchar("userAnswer", { length: 1 }),
   isCorrect: int("isCorrect").default(0).notNull(), // 0 or 1 (boolean)
   createdAt: timestamp("createdAt").defaultNow().notNull(),

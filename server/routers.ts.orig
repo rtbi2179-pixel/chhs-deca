@@ -478,45 +478,22 @@ export const appRouter = router({
 
   practice: router({
     getQuestions: publicProcedure
-      .input(z.object({
-        cluster: z.string().optional(),
-        difficulty: z.string().optional(),
-        page: z.number().int().positive().default(1),
-        pageSize: z.number().int().positive().max(100).default(20),
-      }))
+      .input(z.object({ cluster: z.string().optional(), difficulty: z.string().optional() }))
       .query(async ({ input }) => {
         const db_instance = await db.getDb();
-        if (!db_instance) return { questions: [], total: 0, page: input.page, pageSize: input.pageSize, totalPages: 0 };
+        if (!db_instance) return [];
 
         let baseQuery = db_instance.select().from(questions);
-        let countQuery = db_instance.select({ count: sql`COUNT(*)` }).from(questions);
 
         if (input.cluster && input.cluster !== "all") {
           baseQuery = baseQuery.where(eq(questions.cluster, input.cluster)) as any;
-          countQuery = countQuery.where(eq(questions.cluster, input.cluster)) as any;
         }
 
         if (input.difficulty && input.difficulty !== "all") {
           baseQuery = baseQuery.where(eq(questions.difficulty, input.difficulty)) as any;
-          countQuery = countQuery.where(eq(questions.difficulty, input.difficulty)) as any;
         }
 
-        // Get total count
-        const countResult = await countQuery;
-        const total = (countResult[0]?.count as number) || 0;
-
-        // Apply pagination
-        const offset = (input.page - 1) * input.pageSize;
-        const paginatedQuery = baseQuery.limit(input.pageSize).offset(offset);
-        const questionsList = await paginatedQuery;
-
-        return {
-          questions: questionsList,
-          total,
-          page: input.page,
-          pageSize: input.pageSize,
-          totalPages: Math.ceil(total / input.pageSize),
-        };
+        return await baseQuery;
       }),
 
     addBookmark: protectedProcedure
