@@ -3,9 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Loader2, Send, Search, X } from 'lucide-react';
+import { Loader2, Send, Search, X, MessageCircle } from 'lucide-react';
 import { useAuth } from '@/_core/hooks/useAuth';
 
 interface User {
@@ -27,7 +26,7 @@ interface Message {
 }
 
 export function DirectMessagesPanel() {
-  const { user: currentUser } = useAuth();
+  const { user: currentUser, isAuthenticated } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -53,8 +52,13 @@ export function DirectMessagesPanel() {
   // Get conversations
   const { data: conversations } = trpc.members.getConversations.useQuery(
     {},
-    { enabled: isOpen }
+    { enabled: isOpen && isAuthenticated }
   );
+
+  // Only render if authenticated
+  if (!isAuthenticated || !currentUser) {
+    return null;
+  }
 
   // Update messages when conversation changes
   useEffect(() => {
@@ -66,32 +70,33 @@ export function DirectMessagesPanel() {
 
   // Scroll to bottom when new messages arrive
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 0);
   };
 
   const handleSendMessage = async () => {
     if (!messageText.trim() || !selectedUser || !currentUser) return;
 
     try {
-      await sendMessageMutation.mutateAsync({
+      const result = await sendMessageMutation.mutateAsync({
         recipientId: selectedUser.id,
         body: messageText,
       });
+      
+      // Add message to local state immediately
+      setMessages([
+        ...messages,
+        {
+          id: Date.now(),
+          senderId: currentUser.id,
+          recipientId: selectedUser.id,
+          body: messageText,
+          createdAt: new Date(),
+        },
+      ]);
       setMessageText('');
-      // Refetch messages
-      if (conversationMessages) {
-        setMessages([
-          ...messages,
-          {
-            id: Date.now(),
-            senderId: currentUser.id,
-            recipientId: selectedUser.id,
-            body: messageText,
-            createdAt: new Date(),
-          },
-        ]);
-        scrollToBottom();
-      }
+      scrollToBottom();
     } catch (error) {
       console.error('Failed to send message:', error);
     }
@@ -109,34 +114,32 @@ export function DirectMessagesPanel() {
     setMessages([]);
   };
 
-  if (!currentUser) return null;
-
   return (
     <>
       {/* Toggle Button */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg transition-all"
+          className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg transition-all hover:scale-110 z-40"
           title="Direct Messages"
+          aria-label="Open Direct Messages"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
+          <MessageCircle className="w-6 h-6" />
         </button>
       )}
 
       {/* Messages Panel */}
       {isOpen && (
-        <div className="fixed bottom-0 right-0 w-96 h-screen bg-background border-l border-border shadow-2xl flex flex-col z-50">
+        <div className="fixed bottom-0 right-0 w-96 max-w-full h-screen bg-background border-l border-border shadow-2xl flex flex-col z-50">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-border">
-            <h2 className="text-lg font-bold text-foreground">
+          <div className="flex items-center justify-between p-4 border-b border-border bg-background/95 backdrop-blur">
+            <h2 className="text-lg font-bold text-foreground truncate">
               {selectedUser ? selectedUser.name : 'Direct Messages'}
             </h2>
             <button
               onClick={handleClose}
-              className="text-foreground/60 hover:text-foreground"
+              className="text-foreground/60 hover:text-foreground transition-colors p-1"
+              aria-label="Close messages"
             >
               <X className="w-5 h-5" />
             </button>
@@ -154,6 +157,7 @@ export function DirectMessagesPanel() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-10"
+                    autoFocus
                   />
                 </div>
               </div>
@@ -177,7 +181,7 @@ export function DirectMessagesPanel() {
                             <div className="font-medium text-foreground">{user.name || 'Unknown'}</div>
                             <div className="text-sm text-foreground/60">{user.email || 'No email'}</div>
                             {user.role === 'admin' && (
-                              <div className="text-xs text-blue-400 mt-1">Admin</div>
+                              <div className="text-xs text-blue-400 mt-1">👤 Admin</div>
                             )}
                           </button>
                         ))}
@@ -192,15 +196,15 @@ export function DirectMessagesPanel() {
                   <div className="space-y-2 p-4">
                     {conversations.map((conv: any) => {
                       const otherUserId = conv.senderId === currentUser.id ? conv.recipientId : conv.senderId;
+                      const otherUserName = conv.senderId === currentUser.id ? conv.recipientName : conv.senderName;
                       return (
                         <button
                           key={otherUserId}
                           onClick={() => {
-                            // Find user details from conversation
                             const user: User = {
                               id: otherUserId,
-                              name: (conv.senderName || conv.recipientName || 'Unknown') as string,
-                              email: (conv.senderEmail || conv.recipientEmail || '') as string,
+                              name: (otherUserName || 'Unknown') as string,
+                              email: '',
                               role: 'user',
                             };
                             handleSelectUser(user);
@@ -208,7 +212,7 @@ export function DirectMessagesPanel() {
                           className="w-full text-left p-3 rounded-lg hover:bg-background/80 border border-border transition-colors"
                         >
                           <div className="font-medium text-foreground truncate">
-                            {conv.senderId === currentUser.id ? conv.recipientName : conv.senderName}
+                            {otherUserName || 'Unknown User'}
                           </div>
                           <div className="text-sm text-foreground/60 truncate">
                             {conv.body}
@@ -230,7 +234,7 @@ export function DirectMessagesPanel() {
           ) : (
             <>
               {/* Messages Display */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-background/50">
                 {messages.length === 0 ? (
                   <div className="text-center text-foreground/60 mt-8">
                     Start a conversation with {selectedUser.firstName || selectedUser.name}
@@ -248,7 +252,7 @@ export function DirectMessagesPanel() {
                             : 'bg-background/80 border border-border text-foreground'
                         }`}
                       >
-                        <p className="break-words">{msg.body}</p>
+                        <p className="break-words text-sm">{msg.body}</p>
                         <p className="text-xs mt-1 opacity-70">
                           {new Date(msg.createdAt).toLocaleTimeString([], {
                             hour: '2-digit',
@@ -263,7 +267,7 @@ export function DirectMessagesPanel() {
               </div>
 
               {/* Message Input */}
-              <div className="p-4 border-t border-border">
+              <div className="p-4 border-t border-border bg-background/95 backdrop-blur">
                 <div className="flex gap-2">
                   <Input
                     type="text"
@@ -282,6 +286,7 @@ export function DirectMessagesPanel() {
                     onClick={handleSendMessage}
                     disabled={!messageText.trim() || sendMessageMutation.isPending}
                     className="bg-blue-600 hover:bg-blue-700"
+                    size="sm"
                   >
                     {sendMessageMutation.isPending ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -298,6 +303,7 @@ export function DirectMessagesPanel() {
                   onClick={() => setSelectedUser(null)}
                   variant="outline"
                   className="w-full"
+                  size="sm"
                 >
                   Back to Conversations
                 </Button>
