@@ -22,6 +22,17 @@ export default function Practice() {
   const [leaderboardCluster, setLeaderboardCluster] = useState<string>("overall");
   const [showStudySessions, setShowStudySessions] = useState(false);
   const [sessionName, setSessionName] = useState("");
+  const [answeredQuestionIds, setAnsweredQuestionIds] = useState<Set<string>>(new Set());
+
+  // Fetch answered questions
+  const { data: answeredData } = trpc.practice.getAnsweredQuestions.useQuery();
+
+  // Update answered questions when data changes
+  useMemo(() => {
+    if (answeredData?.answeredQuestionIds) {
+      setAnsweredQuestionIds(new Set(answeredData.answeredQuestionIds));
+    }
+  }, [answeredData]);
 
   // Fetch bookmarked questions
   const { data: bookmarkedQuestions = [] } = trpc.practice.getBookmarkedQuestions.useQuery(undefined, {
@@ -105,8 +116,8 @@ export default function Practice() {
       });
 
       // Award Blue Bucks for correct or corrected answers
-      if (isCorrect) {
-        // Award 5 points for correct answer
+      if (isCorrect && !answeredQuestionIds.has(currentQuestion.id)) {
+        // Award 5 points for correct answer (only if not already answered)
         const result = await awardBlueBucksMutation.mutateAsync({
           questionId: currentQuestion.id,
         });
@@ -114,9 +125,15 @@ export default function Practice() {
           toast.success(`+${result.amount} Blue Bucks! 💰`, {
             duration: 2000,
           });
+          // Add to answered questions
+          setAnsweredQuestionIds(prev => new Set(Array.from(prev).concat(currentQuestion.id)));
           // Refetch Blue Bucks balance
           trpc.useUtils().practice.getBlueBucksBalance.invalidate();
         }
+      } else if (isCorrect && answeredQuestionIds.has(currentQuestion.id)) {
+        toast.info("You already earned Blue Bucks for this question!", {
+          duration: 2000,
+        });
       }
     } catch (error) {
       console.error("Failed to update leaderboard or award Blue Bucks", error);

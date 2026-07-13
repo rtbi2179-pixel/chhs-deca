@@ -389,3 +389,19 @@ export const blueBucksTransactions = mysqlTable("blueBucksTransactions", {
 
 export type BlueBucksTransaction = typeof blueBucksTransactions.$inferSelect;
 export type InsertBlueBucksTransaction = typeof blueBucksTransactions.$inferInsert;
+
+/**
+ * User practice question answers - tracks which questions users have answered
+ */
+export const userAnswers = mysqlTable("userAnswers", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  questionId: varchar("questionId", { length: 50 }).notNull(),
+  selectedAnswer: varchar("selectedAnswer", { length: 1 }).notNull(),
+  isCorrect: boolean("isCorrect").notNull(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type UserAnswer = typeof userAnswers.$inferSelect;
+export type InsertUserAnswer = typeof userAnswers.$inferInsert;

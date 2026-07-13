@@ -1,7 +1,7 @@
 import { eq, and, or, inArray, desc, count, asc, ne, like } from "drizzle-orm";
 import { randomBytes } from "crypto";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments, calendarEvents, CalendarEvent, InsertCalendarEvent, portfolioItems, adminMemberNotes, directMessages, blueBucks, blueBucksTransactions} from "../drizzle/schema";
+import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments, calendarEvents, CalendarEvent, InsertCalendarEvent, portfolioItems, adminMemberNotes, directMessages, blueBucks, blueBucksTransactions, userAnswers} from "../drizzle/schema";
 import { ENV } from './_core/env';
 import bcrypt from 'bcryptjs';
 
@@ -1682,3 +1682,55 @@ export async function awardBlueBucks(userId: number, amount: number, reason: 'co
   }
 }
 
+
+
+// Track user answers to questions
+export async function recordUserAnswer(userId: number, questionId: string, selectedAnswer: string, isCorrect: boolean, schoolCode: string): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+
+  try {
+    await db.insert(userAnswers).values({
+      userId,
+      questionId,
+      selectedAnswer,
+      isCorrect,
+      schoolCode,
+    }).onDuplicateKeyUpdate({
+      set: {
+        selectedAnswer,
+        isCorrect,
+      },
+    });
+  } catch (error) {
+    console.error('[User Answers] Error recording answer:', error);
+  }
+}
+
+// Get all questions answered by a user
+export async function getUserAnsweredQuestions(userId: number): Promise<string[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const result = await db.select({ questionId: userAnswers.questionId }).from(userAnswers).where(eq(userAnswers.userId, userId));
+    return result.map(r => r.questionId);
+  } catch (error) {
+    console.error('[User Answers] Error getting answered questions:', error);
+    return [];
+  }
+}
+
+// Check if user has answered a specific question
+export async function hasUserAnsweredQuestion(userId: number, questionId: string): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+
+  try {
+    const result = await db.select().from(userAnswers).where(and(eq(userAnswers.userId, userId), eq(userAnswers.questionId, questionId))).limit(1);
+    return result.length > 0;
+  } catch (error) {
+    console.error('[User Answers] Error checking if answered:', error);
+    return false;
+  }
+}

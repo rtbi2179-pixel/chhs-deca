@@ -619,6 +619,12 @@ export const appRouter = router({
       .query(async ({ input }) => {
         return await db.getBlueBucksLeaderboard(input.schoolCode, input.limit);
       }),
+
+    getAnsweredQuestions: protectedProcedure
+      .query(async ({ ctx }) => {
+        const answered = await db.getUserAnsweredQuestions(ctx.user.id);
+        return { answeredQuestionIds: answered };
+      }),
   }),
 
   calendar: calendarRouter,
