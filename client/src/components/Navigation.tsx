@@ -72,7 +72,7 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
                   />
                 </div>
                 <div className="hidden sm:block">
-                  <span className="font-display text-lg text-white tracking-wider">CHHS DECA</span>
+                  <span className="font-display text-lg text-white tracking-wider">Blue Blazer</span>
                   <div className="text-[8px] text-blue-400/70 font-mono-data tracking-[0.2em] uppercase -mt-0.5">
                     Road to ICDC
                   </div>

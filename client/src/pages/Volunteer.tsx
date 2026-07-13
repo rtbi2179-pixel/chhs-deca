@@ -1,5 +1,5 @@
 /*
- * CHHS DECA Volunteer Sign-Up Page — Cinematic Dark Editorial
+ * Blue Blazer Volunteer Sign-Up Page — Cinematic Dark Editorial
  * Volunteer opportunities with sign-up forms and hour tracking
  */
 
@@ -248,7 +248,7 @@ const Volunteer = () => {
               )}
             </div>
             <p className="text-white/60 text-lg max-w-2xl mx-auto">
-              Build your leadership portfolio, earn community service hours, and help make CHHS DECA events amazing.
+              Build your leadership portfolio, earn community service hours, and help make Blue Blazer events amazing.
             </p>
           </motion.div>
         </div>

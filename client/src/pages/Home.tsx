@@ -1,9 +1,10 @@
 /*
- * CHHS DECA Home Page — Cinematic Dark Editorial
- * Hero: Full-viewport split layout with 3D Spline glass trophy on right
- * Sections: Stats, Feature cards, Quick links, Resources
- * Colors: Deep black bg, electric blue accents, white text
+ * Blue Blazer Home Page — Cinematic Dark Editorial with Premium Animations
+ * Hero: Full-viewport split layout with animated particles and network nodes
+ * Sections: Stats, Feature cards, Quick links, Resources with Blue Blazer branding
+ * Colors: Deep black bg, electric blue accents, white text, silver highlights
  * Fonts: Bebas Neue (display), Outfit (body), Space Mono (data)
+ * Animations: Parallax stars, breathing glow, pulsing nodes, staggered fade-ups
  */
 
 import { Link } from 'wouter'
@@ -11,6 +12,7 @@ import { motion } from 'framer-motion'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { Trophy, BookOpen, Calendar, Users, ArrowRight, Star, Target, Zap, Globe, ChevronRight } from 'lucide-react'
 import { useToast } from '@/components/Toast'
+import BlueBlazierAnimatedBackground from '@/components/BlueBlazierAnimatedBackground'
 
 const HERO_BG = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/deca-hero-bg-3D56BJM7ugEtwwxPTqT3y7.webp'
 
@@ -98,17 +100,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[oklch(0.07_0.01_265)]">
       {/* ── Hero Section ── */}
-      <section
-        className="relative min-h-screen flex items-center overflow-hidden"
-        style={{
-          backgroundImage: `url(${HERO_BG})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center right',
-        }}
-      >
-        {/* Dark overlay - removed for transparency */}
-
-        {/* Animated grid lines - removed for transparency */}
+      <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-b from-slate-900 to-slate-800">
+        {/* Animated background */}
+        <BlueBlazierAnimatedBackground />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-16">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-4rem)]">
@@ -121,7 +115,7 @@ export default function Home() {
               >
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono-data tracking-widest uppercase mb-6">
                   <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-                  CHHS DECA Chapter
+                  Blue Blazer Chapter
                 </div>
 
                 <h1 className="font-display text-6xl sm:text-7xl lg:text-8xl text-white leading-none mb-4">
@@ -214,7 +208,7 @@ export default function Home() {
               EVERYTHING YOU NEED
             </h2>
             <p className="text-white/50 text-lg max-w-2xl mx-auto">
-              From first-year principles to ICDC-level written events — CHHS DECA has you covered.
+              From first-year principles to ICDC-level written events — Blue Blazer has you covered.
             </p>
           </motion.div>
         </motion.div>
@@ -399,7 +393,7 @@ export default function Home() {
           <div className="glass-card p-8 border-blue-500/20 text-center">
             <div className="mb-6">
               <Users size={40} className="mx-auto text-blue-400 mb-4" />
-              <p className="text-white/60 text-lg mb-6">Join the CHHS DECA community discussion board to ask questions about events, share study tips, and connect with teammates.</p>
+              <p className="text-white/60 text-lg mb-6">Join the Blue Blazer community discussion board to ask questions about events, share study tips, and connect with teammates.</p>
             </div>
             <Link href="/discussions">
               <button className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-all hover:shadow-[0_0_30px_oklch(0.55_0.22_260/0.4)]">
@@ -422,7 +416,7 @@ export default function Home() {
                 className="w-10 h-10"
               />
               <div>
-                <div className="font-display text-xl text-white tracking-wider">CHHS DECA</div>
+                <div className="font-display text-xl text-white tracking-wider">Blue Blazer</div>
                 <div className="text-blue-400/60 text-xs font-mono-data tracking-widest">ROAD TO ICDC</div>
               </div>
             </div>
@@ -435,7 +429,7 @@ export default function Home() {
           </div>
           <div className="section-divider mb-6" />
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-white/20 text-xs font-mono-data">
-            <span>© 2025–2026 CHHS DECA Chapter. All rights reserved.</span>
+            <span>© 2025–2026 Blue Blazer Chapter. All rights reserved.</span>
             <span>Built by Sahan Mallampati & Ricardo Burciaga</span>
           </div>
         </div>

@@ -41,3 +41,16 @@
 - [x] Implement calendar CRUD API endpoints
 - [x] Add admin delete functionality for calendar events
 - [x] Add admin edit button UI (backend ready for implementation)
+
+
+## Blue Blazer Rebranding & Enhancement
+
+- [ ] Update all branding from "CHHS DECA" to "Blue Blazer"
+- [ ] Implement particle and star animations with parallax effects
+- [ ] Add Blue Blazer branding elements (lapels, stitching, badges, crests)
+- [ ] Create "Earn Your Blue Blazer" progress milestone section
+- [ ] Enhance buttons with lift, glow, and press animations
+- [ ] Add viewport-triggered fade-up animations to sections
+- [ ] Implement Blue Blazer achievement labels (Chapter Leader, State Qualifier, ICDC Bound, etc.)
+- [ ] Optimize animations for performance and mobile
+- [ ] Test accessibility with prefers-reduced-motion

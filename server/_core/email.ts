@@ -19,9 +19,9 @@ export async function sendVerificationEmail(email: string, token: string) {
     await transporter.sendMail({
       from: process.env.EMAIL_FROM || 'noreply@chhs-deca.com',
       to: email,
-      subject: 'Verify your CHHS DECA account',
+      subject: 'Verify your Blue Blazer account',
       html: `
-        <h2>Welcome to CHHS DECA!</h2>
+        <h2>Welcome to Blue Blazer!</h2>
         <p>Please verify your email address to complete your account setup.</p>
         <p><a href="${verificationUrl}" style="background-color: #0066cc; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Verify Email</a></p>
         <p>Or copy this link: ${verificationUrl}</p>
@@ -40,7 +40,7 @@ export async function sendTwoFactorEmail(email: string, code: string) {
     await transporter.sendMail({
       from: process.env.EMAIL_FROM || 'noreply@chhs-deca.com',
       to: email,
-      subject: 'Your CHHS DECA verification code',
+      subject: 'Your Blue Blazer verification code',
       html: `
         <h2>Two-Factor Authentication</h2>
         <p>Your verification code is:</p>
@@ -63,7 +63,7 @@ export async function sendPasswordResetEmail(email: string, token: string) {
     await transporter.sendMail({
       from: process.env.EMAIL_FROM || 'noreply@chhs-deca.com',
       to: email,
-      subject: 'Reset your CHHS DECA password',
+      subject: 'Reset your Blue Blazer password',
       html: `
         <h2>Password Reset Request</h2>
         <p>We received a request to reset your password. Click the link below to proceed:</p>
@@ -99,7 +99,7 @@ export async function sendAnnouncementNotification(
       subject: `New Announcement: ${announcement.title}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #0066cc;">New Announcement from CHHS DECA</h2>
+          <h2 style="color: #0066cc;">New Announcement from Blue Blazer</h2>
           <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <h3 style="margin-top: 0; color: #333;">${announcement.title}</h3>
             ${announcement.authorName ? `<p style="color: #666; font-size: 14px;">Posted by ${announcement.authorName}</p>` : ''}
@@ -112,7 +112,7 @@ export async function sendAnnouncementNotification(
           </p>
           <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
           <p style="color: #999; font-size: 12px;">
-            You received this email because you are a member of the CHHS DECA chapter.
+            You received this email because you are a member of the Blue Blazer chapter.
           </p>
         </div>
       `,

@@ -1,5 +1,5 @@
 /*
- * CHHS DECA Discussions Page — Active Community Forum
+ * Blue Blazer Discussions Page — Active Community Forum
  * Real-time discussion threads with user participation
  */
 
