@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'wouter'
-import { Menu, X, Trophy, BookOpen, Calendar, Users, Home, LogOut, MessageSquare, Mic, Crown, Bell } from 'lucide-react'
+import { Menu, X, Trophy, BookOpen, Calendar, Users, Home, LogOut, MessageSquare, Mic, Crown, Bell, DollarSign } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { trpc } from '@/lib/trpc'
@@ -27,8 +27,10 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null)
+  const [showBlueBucks, setShowBlueBucks] = useState(false)
   const { user } = useAuth()
   const logoutMutation = trpc.auth.logout.useMutation()
+  const { data: blueBucksData } = trpc.practice.getBlueBucksBalance.useQuery(undefined, { enabled: !!user })
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20)
@@ -226,6 +228,28 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
                       {user.name || user.username}
                     </button>
                   </Link>
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowBlueBucks(!showBlueBucks)}
+                      className="p-2 text-yellow-400 hover:text-yellow-300 hover:bg-yellow-500/10 rounded-lg transition-all duration-200"
+                      title="Blue Bucks Balance"
+                    >
+                      <DollarSign size={20} />
+                    </button>
+                    {showBlueBucks && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="absolute right-0 mt-2 bg-slate-900 border border-yellow-500/30 rounded-lg px-4 py-2 text-sm text-white whitespace-nowrap z-50"
+                      >
+                        <div className="flex items-center gap-2">
+                          <DollarSign size={16} className="text-yellow-400" />
+                          <span className="font-semibold">{blueBucksData?.balance || 0} Blue Bucks</span>
+                        </div>
+                      </motion.div>
+                    )}
+                  </div>
                   <button
                     onClick={handleLogout}
                     className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all duration-200"
