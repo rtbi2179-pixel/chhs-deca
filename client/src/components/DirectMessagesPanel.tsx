@@ -25,8 +25,9 @@ interface Message {
   createdAt: Date;
 }
 
-export function DirectMessagesPanel() {
-  const { user: currentUser, isAuthenticated } = useAuth();
+// Inner component that handles messaging logic
+function MessagesContent() {
+  const { user: currentUser } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -52,13 +53,8 @@ export function DirectMessagesPanel() {
   // Get conversations
   const { data: conversations } = trpc.members.getConversations.useQuery(
     {},
-    { enabled: isOpen && isAuthenticated }
+    { enabled: isOpen }
   );
-
-  // Only render if authenticated
-  if (!isAuthenticated || !currentUser) {
-    return null;
-  }
 
   // Update messages when conversation changes
   useEffect(() => {
@@ -79,11 +75,11 @@ export function DirectMessagesPanel() {
     if (!messageText.trim() || !selectedUser || !currentUser) return;
 
     try {
-      const result = await sendMessageMutation.mutateAsync({
+      await sendMessageMutation.mutateAsync({
         recipientId: selectedUser.id,
         body: messageText,
       });
-      
+
       // Add message to local state immediately
       setMessages([
         ...messages,
@@ -195,8 +191,8 @@ export function DirectMessagesPanel() {
                 ) : conversations && conversations.length > 0 ? (
                   <div className="space-y-2 p-4">
                     {conversations.map((conv: any) => {
-                      const otherUserId = conv.senderId === currentUser.id ? conv.recipientId : conv.senderId;
-                      const otherUserName = conv.senderId === currentUser.id ? conv.recipientName : conv.senderName;
+                      const otherUserId = conv.senderId === currentUser?.id ? conv.recipientId : conv.senderId;
+                      const otherUserName = conv.senderId === currentUser?.id ? conv.recipientName : conv.senderName;
                       return (
                         <button
                           key={otherUserId}
@@ -243,11 +239,11 @@ export function DirectMessagesPanel() {
                   messages.map((msg) => (
                     <div
                       key={msg.id}
-                      className={`flex ${msg.senderId === currentUser.id ? 'justify-end' : 'justify-start'}`}
+                      className={`flex ${msg.senderId === currentUser?.id ? 'justify-end' : 'justify-start'}`}
                     >
                       <div
                         className={`max-w-xs px-4 py-2 rounded-lg ${
-                          msg.senderId === currentUser.id
+                          msg.senderId === currentUser?.id
                             ? 'bg-blue-600 text-white'
                             : 'bg-background/80 border border-border text-foreground'
                         }`}
@@ -314,4 +310,15 @@ export function DirectMessagesPanel() {
       )}
     </>
   );
+}
+
+// Outer component that handles auth check
+export function DirectMessagesPanel() {
+  const { isAuthenticated } = useAuth();
+
+  if (!isAuthenticated) {
+    return null;
+  }
+
+  return <MessagesContent />;
 }
