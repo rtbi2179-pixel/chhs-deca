@@ -33,7 +33,7 @@ import { Toast, useToast } from "./components/Toast";
 import { useLocation } from "wouter";
 import { DirectMessagesPanel } from "./components/DirectMessagesPanel";
 
-function ProtectedRoute({ component: Component, requiresSchoolCode = true, ...rest }: any) {
+function ProtectedRoute({ component: Component, ...rest }: any) {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -48,11 +48,6 @@ function ProtectedRoute({ component: Component, requiresSchoolCode = true, ...re
     return <Home />;
   }
 
-  // Check if school code is required and user doesn't have one
-  if (requiresSchoolCode && !user.schoolCode) {
-    return <Home />;
-  }
-
   return <Component {...rest} />;
 }
 
@@ -63,23 +58,23 @@ function Router({ isAuthenticated, showLoginRequired }: { isAuthenticated: boole
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/login" component={LoginSignup} />
-      <Route path="/events" component={(props) => <ProtectedRoute component={Events} {...props} />} />
-      <Route path="/practice" component={(props) => <ProtectedRoute component={Practice} {...props} />} />
-      <Route path="/leaderboard" component={(props) => <ProtectedRoute component={Leaderboard} {...props} />} />
-      <Route path="/calendar" component={(props) => <ProtectedRoute component={CalendarPage} {...props} />} />
-      <Route path="/chapter/members" component={(props) => <ProtectedRoute component={MembersPage} {...props} />} />
-      <Route path="/portfolio" component={(props) => <ProtectedRoute component={PortfolioPage} {...props} />} />
-      <Route path="/volunteer" component={(props) => <ProtectedRoute component={Volunteer} {...props} />} />
-      <Route path="/discussions" component={(props) => <ProtectedRoute component={Discussions} {...props} />} />
-      <Route path="/announcements" component={(props) => <ProtectedRoute component={Announcements} {...props} />} />
-      <Route path="/speech-ai" component={(props) => <ProtectedRoute component={SpeechAI} {...props} />} />
+      <Route path="/events" component={Events} />
+      <Route path="/practice" component={Practice} />
+      <Route path="/leaderboard" component={Leaderboard} />
+          <Route path="/calendar" component={CalendarPage} />
+          <Route path="/chapter/members" component={MembersPage} />
+          <Route path="/portfolio" component={PortfolioPage} />
+      <Route path="/volunteer" component={Volunteer} />
+      <Route path="/discussions" component={Discussions} />
+      <Route path="/announcements" component={Announcements} />
+      <Route path="/speech-ai" component={SpeechAI} />
       <Route path="/verify-email" component={VerifyEmail} />
       <Route path="/reset-password" component={ResetPassword} />
       <Route path="/forgot-password" component={ForgotPassword} />
       <Route path="/2fa" component={TwoFactorAuth} />
       <Route path="/school-code" component={SchoolCodeEntry} />
-      <Route path="/admin" component={(props) => <ProtectedRoute component={AdminPanel} {...props} />} />
-      <Route path="/profile" component={(props) => <ProtectedRoute component={Profile} {...props} />} />
+      <Route path="/admin" component={AdminPanel} />
+      <Route path="/profile" component={Profile} />
 
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
