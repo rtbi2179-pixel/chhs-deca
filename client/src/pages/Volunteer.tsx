@@ -159,7 +159,15 @@ const Volunteer = () => {
   const utils = trpc.useUtils()
   const { data: dbOpportunities = [] } = trpc.volunteers.getAll.useQuery({ schoolCode: effectiveSchoolCode || undefined })
   const createOppMutation = trpc.volunteers.create.useMutation({
-    onSuccess: () => { utils.volunteers.getAll.invalidate(); setShowAddModal(false); setNewOpp({ title: '', description: '', date: '', spotsAvailable: 1 }) }
+    onSuccess: () => { 
+      utils.volunteers.getAll.invalidate()
+      setShowAddModal(false)
+      setNewOpp({ title: '', description: '', date: '', spotsAvailable: 1 })
+      toast.success('Opportunity created successfully!')
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || 'Failed to create opportunity')
+    }
   })
   const updateOppMutation = trpc.volunteers.update.useMutation({
     onSuccess: () => { utils.volunteers.getAll.invalidate(); setEditingOpp(null) }
@@ -176,14 +184,15 @@ const Volunteer = () => {
 
   // Calculate spotsFilled for each opportunity based on real signups
   const opportunitiesWithRealCounts = useMemo(() => {
-    return opportunities.map(opp => {
+    const oppsToUse = dbOpportunities.length > 0 ? dbOpportunities : opportunities
+    return oppsToUse.map((opp: any) => {
       const signupCount = allSignups.filter((s: any) => s.signup?.opportunityId === opp.id).length
       return {
         ...opp,
         spotsFilled: signupCount
       }
     })
-  }, [allSignups])
+  }, [dbOpportunities, allSignups])
 
   const handleSignUp = async (opportunityId: number) => {
     if (!isAuthenticated) {
@@ -407,7 +416,7 @@ const Volunteer = () => {
                         <div>
                           <h4 className="text-white font-semibold text-sm mb-3">Tasks:</h4>
                           <ul className="space-y-2">
-                            {opp.tasks.map((task, i) => (
+                            {opp.tasks?.map((task: string, i: number) => (
                               <li key={i} className="flex items-start gap-2 text-white/60 text-sm">
                                 <span className="text-blue-400 mt-1">•</span>
                                 <span>{task}</span>
