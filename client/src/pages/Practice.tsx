@@ -353,6 +353,13 @@ export default function Practice() {
         {/* Question Card */}
         {currentQuestion && (
           <Card className="p-8 border border-border mb-8">
+            {/* Already Answered Notice */}
+            {answeredQuestionIds.has(currentQuestion.id) && (
+              <div className="mb-6 p-3 bg-yellow-600/20 border border-yellow-500/30 rounded-md">
+                <p className="text-sm text-yellow-400">⚠️ Question already answered; no Blue Bucks will be awarded on submission</p>
+              </div>
+            )}
+
             {/* Question Text */}
             <div className="mb-8">
               <div className="flex items-start justify-between mb-4">
