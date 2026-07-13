@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Loader2, ChevronDown } from "lucide-react";
 import { useState, useMemo } from "react";
+import { toast } from "sonner";
 
 export default function Practice() {
   const [selectedCluster, setSelectedCluster] = useState<string>("all");
@@ -106,9 +107,16 @@ export default function Practice() {
       // Award Blue Bucks for correct or corrected answers
       if (isCorrect) {
         // Award 5 points for correct answer
-        await awardBlueBucksMutation.mutateAsync({
+        const result = await awardBlueBucksMutation.mutateAsync({
           questionId: currentQuestion.id,
         });
+        if (result.success) {
+          toast.success(`+${result.amount} Blue Bucks! 💰`, {
+            duration: 2000,
+          });
+          // Refetch Blue Bucks balance
+          trpc.useUtils().practice.getBlueBucksBalance.invalidate();
+        }
       }
     } catch (error) {
       console.error("Failed to update leaderboard or award Blue Bucks", error);

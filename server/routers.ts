@@ -598,9 +598,15 @@ export const appRouter = router({
     awardBlueBucks: protectedProcedure
       .input(z.object({ questionId: z.string() }))
       .mutation(async ({ input, ctx }) => {
-        await db.awardBlueBucks(ctx.user.id, 5, 'correct_first_attempt', ctx.user.schoolCode || '', parseInt(input.questionId));
-        return { success: true, amount: 5 };
+        const success = await db.awardBlueBucks(ctx.user.id, 5, 'correct_first_attempt', ctx.user.schoolCode || '', parseInt(input.questionId));
+        return { success, amount: success ? 5 : 0 };
       }),
+
+
+
+
+
+
 
     getBlueBucksBalance: protectedProcedure
       .query(async ({ ctx }) => {
