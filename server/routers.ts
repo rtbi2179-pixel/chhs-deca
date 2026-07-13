@@ -10,7 +10,7 @@ import { getAnnouncementsBySchool, createAnnouncement, likeAnnouncement, getAnno
 import { notifyOwner } from "./_core/notification";
 
 import { questions } from "../drizzle/schema";
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, and } from "drizzle-orm";
 
 export const announcementsRouter = router({
   getBySchool: publicProcedure
@@ -514,17 +514,26 @@ export const appRouter = router({
         const db_instance = await db.getDb();
         if (!db_instance) return { questions: [], total: 0, page: input.page, pageSize: input.pageSize, totalPages: 0 };
 
+        // Build where conditions
+        const whereConditions: any[] = [];
+        
+        if (input.cluster && input.cluster !== "all") {
+          whereConditions.push(eq(questions.cluster, input.cluster));
+        }
+        
+        if (input.difficulty && input.difficulty !== "all") {
+          whereConditions.push(eq(questions.difficulty, input.difficulty));
+        }
+        
+        // Combine conditions with AND
+        const whereClause = whereConditions.length > 0 ? and(...whereConditions) : undefined;
+        
         let baseQuery = db_instance.select().from(questions);
         let countQuery = db_instance.select({ count: sql`COUNT(*)` }).from(questions);
-
-        if (input.cluster && input.cluster !== "all") {
-          baseQuery = baseQuery.where(eq(questions.cluster, input.cluster)) as any;
-          countQuery = countQuery.where(eq(questions.cluster, input.cluster)) as any;
-        }
-
-        if (input.difficulty && input.difficulty !== "all") {
-          baseQuery = baseQuery.where(eq(questions.difficulty, input.difficulty)) as any;
-          countQuery = countQuery.where(eq(questions.difficulty, input.difficulty)) as any;
+        
+        if (whereClause) {
+          baseQuery = baseQuery.where(whereClause) as any;
+          countQuery = countQuery.where(whereClause) as any;
         }
 
         // Get total count
