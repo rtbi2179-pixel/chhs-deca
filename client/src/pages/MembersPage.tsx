@@ -15,23 +15,13 @@ export default function MembersPage() {
   const [selectedMember, setSelectedMember] = useState<any>(null);
   const [showDetailPanel, setShowDetailPanel] = useState(false);
 
-  // Redirect if not admin
-  if (user?.role !== 'admin' && user?.role !== 'super_admin') {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
-          <p className="text-gray-600 mb-6">Only chapter admins can access this page.</p>
-          <Button onClick={() => navigate('/')}>Go Home</Button>
-        </div>
-      </div>
-    );
-  }
-
+  // Check permission
+  const isAdmin = user?.role === 'admin' || user?.role === 'super_admin';
+  
   const schoolCode = user?.schoolCode;
   const { data: members = [], isLoading, error } = trpc.members.getMembers.useQuery(
     { schoolCode: schoolCode || '' },
-    { enabled: !!schoolCode }
+    { enabled: !!schoolCode && isAdmin }
   );
 
   // Filter and search members
@@ -55,6 +45,19 @@ export default function MembersPage() {
     setSelectedMember(member);
     setShowDetailPanel(true);
   };
+
+  // Redirect if not admin
+  if (!isAdmin) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
+          <p className="text-gray-600 mb-6">Only chapter admins can access this page.</p>
+          <Button onClick={() => navigate('/')}>Go Home</Button>
+        </div>
+      </div>
+    );
+  }
 
   if (error) {
     return (
