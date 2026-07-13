@@ -1,4 +1,4 @@
-import { eq, and, or, inArray, desc, count, asc, ne } from "drizzle-orm";
+import { eq, and, or, inArray, desc, count, asc, ne, like } from "drizzle-orm";
 import { randomBytes } from "crypto";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments, calendarEvents, CalendarEvent, InsertCalendarEvent, portfolioItems, adminMemberNotes, directMessages} from "../drizzle/schema";
@@ -1526,4 +1526,36 @@ export async function getConversationList(userId: number, schoolCode: string) {
   }
   
   return Array.from(conversations.values())
+}
+
+export async function searchUsersByEmail(schoolCode: string, emailQuery: string, excludeUserId?: number) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  let whereCondition = and(
+    eq(users.schoolCode, schoolCode),
+    ne(users.role, 'super_admin'),
+    or(
+      like(users.email, `%${emailQuery}%`),
+      like(users.name, `%${emailQuery}%`),
+      like(users.firstName, `%${emailQuery}%`),
+      like(users.lastName, `%${emailQuery}%`)
+    )
+  )
+  
+  if (excludeUserId) {
+    whereCondition = and(whereCondition, ne(users.id, excludeUserId))
+  }
+  
+  return db.select({
+    id: users.id,
+    name: users.name,
+    email: users.email,
+    firstName: users.firstName,
+    lastName: users.lastName,
+    role: users.role,
+  })
+  .from(users)
+  .where(whereCondition)
+  .limit(10)
 }

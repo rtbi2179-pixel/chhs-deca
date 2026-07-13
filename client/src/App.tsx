@@ -31,6 +31,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { useState, useEffect } from "react";
 import { Toast, useToast } from "./components/Toast";
 import { useLocation } from "wouter";
+import { DirectMessagesPanel } from "./components/DirectMessagesPanel";
 
 function ProtectedRoute({ component: Component, ...rest }: any) {
   const { user, loading } = useAuth();
@@ -106,6 +107,7 @@ function App() {
             <Toast toasts={toasts} onRemove={removeToast} />
             <Navigation onLoginRequired={handleLoginRequired} />
             <Router isAuthenticated={isAuthenticated} showLoginRequired={handleLoginRequired} />
+            <DirectMessagesPanel />
             <Footer />
             </TooltipProvider>
           </SchoolCodeProvider>

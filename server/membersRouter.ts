@@ -234,6 +234,16 @@ export const membersRouter = router({
       if (!schoolCode) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'School code is required' })
       }
-      return db.getConversationList(ctx.user.id, schoolCode)
+            return db.getConversationList(ctx.user.id, schoolCode)
+    }),
+
+  searchUsers: protectedProcedure
+    .input(z.object({ emailQuery: z.string().min(1), schoolCode: z.string().optional() }))
+    .query(async ({ input, ctx }) => {
+      const schoolCode = ctx.user.role === 'super_admin' ? input.schoolCode : ctx.user.schoolCode
+      if (!schoolCode) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'School code is required' })
+      }
+      return db.searchUsersByEmail(schoolCode, input.emailQuery, ctx.user.id)
     }),
 });
