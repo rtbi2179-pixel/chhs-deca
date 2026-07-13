@@ -25,17 +25,15 @@ export default function Practice() {
   const [answeredQuestionIds, setAnsweredQuestionIds] = useState<Set<string>>(new Set());
 
   // Fetch answered questions
-  const { data: answeredData } = trpc.practice.getAnsweredQuestions.useQuery();
-
-  // Fetch user streak
-  const { data: streakData } = trpc.practice.getUserStreak.useQuery();
+  // const { data: answeredData } = trpc.practice.getAnsweredQuestions.useQuery();
+  // const { data: streakData } = trpc.practice.getUserStreak.useQuery();
 
   // Update answered questions when data changes
-  useMemo(() => {
-    if (answeredData?.answeredQuestionIds) {
-      setAnsweredQuestionIds(new Set(answeredData.answeredQuestionIds));
-    }
-  }, [answeredData]);
+  // useMemo(() => {
+  //   if (answeredData?.answeredQuestionIds) {
+  //     setAnsweredQuestionIds(new Set(answeredData.answeredQuestionIds));
+  //   }
+  // }, [answeredData]);
 
   // Fetch bookmarked questions
   const { data: bookmarkedQuestions = [] } = trpc.practice.getBookmarkedQuestions.useQuery(undefined, {
@@ -81,7 +79,7 @@ export default function Practice() {
   };
 
   const updateLeaderboardMutation = trpc.practice.updateLeaderboard.useMutation();
-  const awardBlueBucksMutation = trpc.practice.awardBlueBucks.useMutation();
+  // const awardBlueBucksMutation = trpc.practice.awardBlueBucks.useMutation();
 
   const handleCreateStudySession = async () => {
     if (!sessionName.trim() || bookmarkedQuestions.length === 0) return;
@@ -118,26 +116,12 @@ export default function Practice() {
         cluster: currentQuestion.cluster,
       });
 
-      // Award Blue Bucks for correct or corrected answers
-      if (isCorrect && !answeredQuestionIds.has(currentQuestion.id)) {
-        // Award 5 points for correct answer (only if not already answered)
-        const result = await awardBlueBucksMutation.mutateAsync({
-          questionId: currentQuestion.id,
-        });
-        if (result.success) {
-          toast.success(`+${result.amount} Blue Bucks! 💰`, {
-            duration: 2000,
-          });
-          // Add to answered questions
-          setAnsweredQuestionIds(prev => new Set(Array.from(prev).concat(currentQuestion.id)));
-          // Refetch Blue Bucks balance
-          trpc.useUtils().practice.getBlueBucksBalance.invalidate();
-        }
-      } else if (isCorrect && answeredQuestionIds.has(currentQuestion.id)) {
-        toast.info("You already earned Blue Bucks for this question!", {
-          duration: 2000,
-        });
-      }
+      // Blue Bucks disabled temporarily
+      // if (isCorrect && !answeredQuestionIds.has(currentQuestion.id)) {
+      //   const result = await awardBlueBucksMutation.mutateAsync({
+      //     questionId: currentQuestion.id,
+      //   });
+      // }
     } catch (error) {
       console.error("Failed to update leaderboard or award Blue Bucks", error);
     }
@@ -215,19 +199,7 @@ export default function Practice() {
             <p className="text-foreground/70">
               {totalQuestions.toLocaleString()} questions available • Page {currentPage} of {totalPages}
             </p>
-            {streakData && (
-              <div className="flex items-center gap-4 bg-blue-500/10 border border-blue-500/30 rounded-lg px-4 py-2">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-400">{streakData.currentStreak || 0}</div>
-                  <div className="text-xs text-foreground/60">Day Streak</div>
-                </div>
-                <div className="w-px h-8 bg-blue-500/30"></div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-yellow-400">{streakData.currentMultiplier?.toFixed(1)}x</div>
-                  <div className="text-xs text-foreground/60">Multiplier</div>
-                </div>
-              </div>
-            )}
+            {/* Streak display disabled */}
           </div>
         </div>
 

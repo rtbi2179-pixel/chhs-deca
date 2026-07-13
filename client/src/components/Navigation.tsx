@@ -30,7 +30,7 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
   const [showBlueBucks, setShowBlueBucks] = useState(false)
   const { user } = useAuth()
   const logoutMutation = trpc.auth.logout.useMutation()
-  const { data: blueBucksData } = trpc.practice.getBlueBucksBalance.useQuery(undefined, { enabled: !!user })
+  // const { data: blueBucksData } = trpc.practice.getBlueBucksBalance.useQuery(undefined, { enabled: !!user })
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20)
@@ -243,10 +243,11 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
                         exit={{ opacity: 0, y: -10 }}
                         className="absolute right-0 mt-2 bg-slate-900 border border-yellow-500/30 rounded-lg px-4 py-2 text-sm text-white whitespace-nowrap z-50"
                       >
-                        <div className="flex items-center gap-2">
+                        {/* Blue Bucks display disabled */}
+                        {/* <div className="flex items-center gap-2">
                           <DollarSign size={16} className="text-blue-400" />
                           <span className="font-semibold">{blueBucksData?.balance || 0} Blue Bucks</span>
-                        </div>
+                        </div> */}
                       </motion.div>
                     )}
                   </div>

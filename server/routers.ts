@@ -595,66 +595,7 @@ export const appRouter = router({
       .input(z.object({ cluster: z.string(), limit: z.number().default(50) }))
       .query(({ input }) => db.getLeaderboardByCluster(input.cluster, input.limit)),
 
-    awardBlueBucks: protectedProcedure
-      .input(z.object({ questionId: z.string(), difficulty: z.string().optional() }))
-      .mutation(async ({ input, ctx }) => {
-        const schoolCode = ctx.user.schoolCode || '';
-        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'User has no school code' });
 
-        const settings = await db.getEconomicSettings(schoolCode);
-        const streak = await db.getUserStreak(ctx.user.id);
-        const multiplier = Number(streak?.currentMultiplier) || 1.0;
-
-        const difficulty = input.difficulty || 'medium';
-        const baseRewards: any = {
-          easy: settings.easyQuestionReward,
-          medium: settings.mediumQuestionReward,
-          hard: settings.hardQuestionReward,
-        };
-        const baseAmount = baseRewards[difficulty] || 10;
-        const finalAmount = Math.round(baseAmount * multiplier);
-
-        const success = await db.awardBlueBucks(ctx.user.id, finalAmount, 'correct_first_attempt', schoolCode, parseInt(input.questionId));
-        return { success, amount: success ? finalAmount : 0 };
-      }),
-
-
-
-
-
-
-
-    getBlueBucksBalance: protectedProcedure
-      .query(async ({ ctx }) => {
-        const balance = await db.getBlueBucksBalance(ctx.user.id);
-        return { balance };
-      }),
-
-    getBlueBucksLeaderboard: publicProcedure
-      .input(z.object({ schoolCode: z.string(), limit: z.number().default(10) }))
-      .query(async ({ input }) => {
-        return await db.getBlueBucksLeaderboard(input.schoolCode, input.limit);
-      }),
-
-    getAnsweredQuestions: protectedProcedure
-      .query(async ({ ctx }) => {
-        const answered = await db.getUserAnsweredQuestions(ctx.user.id);
-        return { answeredQuestionIds: answered };
-      }),
-
-    getUserStreak: protectedProcedure
-      .query(async ({ ctx }) => {
-        const streak = await db.getUserStreak(ctx.user.id);
-        if (!streak) {
-          await db.initializeUserStreak(ctx.user.id, ctx.user.schoolCode || '');
-          return { currentStreak: 0, currentMultiplier: 1.0, longestStreak: 0 };
-        }
-        return {
-          currentStreak: streak.currentStreak || 0,
-          currentMultiplier: Number(streak.currentMultiplier) || 1.0,
-          longestStreak: streak.longestStreak || 0,
-        };
-      }),
   }),
 
   calendar: calendarRouter,
