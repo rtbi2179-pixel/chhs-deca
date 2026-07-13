@@ -2,6 +2,7 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import { membersRouter } from "./membersRouter";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import * as db from "./db";
@@ -538,6 +539,8 @@ export const appRouter = router({
   }),
 
   calendar: calendarRouter,
+
+  members: membersRouter,
 
   discussions: router({
     getThreads: publicProcedure

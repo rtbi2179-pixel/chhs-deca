@@ -300,3 +300,57 @@ export const calendarEvents = mysqlTable("calendarEvents", {
 
 export type CalendarEvent = typeof calendarEvents.$inferSelect;
 export type InsertCalendarEvent = typeof calendarEvents.$inferInsert;
+
+/**
+ * Portfolio items for member portfolios
+ */
+export const portfolioItems = mysqlTable("portfolioItems", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  category: varchar("category", { length: 100 }).notNull(), // Written Event, Roleplay, Exam Preparation, etc.
+  description: text("description"),
+  fileUrl: varchar("fileUrl", { length: 1024 }),
+  externalUrl: varchar("externalUrl", { length: 1024 }),
+  status: mysqlEnum("status", ["not_started", "in_progress", "ready_for_review", "needs_revision", "completed"]).default("not_started").notNull(),
+  memberProgressNotes: text("memberProgressNotes"),
+  adminFeedback: text("adminFeedback"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PortfolioItem = typeof portfolioItems.$inferSelect;
+export type InsertPortfolioItem = typeof portfolioItems.$inferInsert;
+
+/**
+ * Private admin notes about members
+ */
+export const adminMemberNotes = mysqlTable("adminMemberNotes", {
+  id: int("id").autoincrement().primaryKey(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  memberId: int("memberId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  adminId: int("adminId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  note: text("note").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AdminMemberNote = typeof adminMemberNotes.$inferSelect;
+export type InsertAdminMemberNote = typeof adminMemberNotes.$inferInsert;
+
+/**
+ * Direct messages between admins and members
+ */
+export const directMessages = mysqlTable("directMessages", {
+  id: int("id").autoincrement().primaryKey(),
+  senderId: int("senderId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  recipientId: int("recipientId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  body: text("body").notNull(),
+  readAt: timestamp("readAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type DirectMessage = typeof directMessages.$inferSelect;
+export type InsertDirectMessage = typeof directMessages.$inferInsert;

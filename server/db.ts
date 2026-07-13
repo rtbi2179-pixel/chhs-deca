@@ -1,7 +1,7 @@
-import { eq, and, inArray, desc, count, asc } from "drizzle-orm";
+import { eq, and, or, inArray, desc, count, asc } from "drizzle-orm";
 import { randomBytes } from "crypto";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments, calendarEvents, CalendarEvent, InsertCalendarEvent} from "../drizzle/schema";
+import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments, calendarEvents, CalendarEvent, InsertCalendarEvent, portfolioItems, adminMemberNotes, directMessages} from "../drizzle/schema";
 import { ENV } from './_core/env';
 import bcrypt from 'bcryptjs';
 
@@ -1265,4 +1265,265 @@ export async function updateUserSchoolCode(userId: number, schoolCode: string) {
     .where(eq(users.id, userId))
   
   return result
+}
+
+
+// ============ MEMBER MANAGEMENT ============
+
+export async function getMembersForChapter(schoolCode: string) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  return db.select({
+    id: users.id,
+    name: users.name,
+    email: users.email,
+    firstName: users.firstName,
+    lastName: users.lastName,
+    schoolCode: users.schoolCode,
+    role: users.role,
+    createdAt: users.createdAt,
+    lastSignedIn: users.lastSignedIn,
+  })
+  .from(users)
+  .where(and(
+    eq(users.schoolCode, schoolCode),
+    eq(users.role, 'user')
+  ))
+}
+
+export async function getMemberProfile(userId: number, schoolCode: string) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  const member = await db.select()
+    .from(users)
+    .where(and(
+      eq(users.id, userId),
+      eq(users.schoolCode, schoolCode),
+      eq(users.role, 'user')
+    ))
+    .limit(1)
+  
+  return member[0] || null
+}
+
+// ============ PORTFOLIO MANAGEMENT ============
+
+export async function createPortfolioItem(data: {
+  userId: number
+  schoolCode: string
+  title: string
+  category: string
+  description?: string
+  fileUrl?: string
+  externalUrl?: string
+  memberProgressNotes?: string
+}) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  const result = await db.insert(portfolioItems).values(data)
+  return result
+}
+
+export async function getPortfolioItems(userId: number, schoolCode: string) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  return db.select()
+    .from(portfolioItems)
+    .where(and(
+      eq(portfolioItems.userId, userId),
+      eq(portfolioItems.schoolCode, schoolCode)
+    ))
+    .orderBy(desc(portfolioItems.createdAt))
+}
+
+export async function updatePortfolioItem(itemId: number, userId: number, updates: any) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  return db.update(portfolioItems)
+    .set(updates)
+    .where(and(
+      eq(portfolioItems.id, itemId),
+      eq(portfolioItems.userId, userId)
+    ))
+}
+
+export async function deletePortfolioItem(itemId: number, userId: number) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  return db.delete(portfolioItems)
+    .where(and(
+      eq(portfolioItems.id, itemId),
+      eq(portfolioItems.userId, userId)
+    ))
+}
+
+export async function updatePortfolioItemStatus(itemId: number, adminId: number, schoolCode: string, status: string, feedback?: string) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  // Verify admin is from same chapter
+  const admin = await db.select()
+    .from(users)
+    .where(and(
+      eq(users.id, adminId),
+      eq(users.schoolCode, schoolCode),
+      or(eq(users.role, 'admin'), eq(users.role, 'super_admin'))
+    ))
+    .limit(1)
+  
+  if (!admin[0]) throw new Error("Unauthorized")
+  
+  const updates: any = { status }
+  if (feedback) updates.adminFeedback = feedback
+  
+  return db.update(portfolioItems)
+    .set(updates)
+    .where(eq(portfolioItems.id, itemId))
+}
+
+// ============ ADMIN NOTES ============
+
+export async function createAdminNote(data: {
+  schoolCode: string
+  memberId: number
+  adminId: number
+  note: string
+}) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  return db.insert(adminMemberNotes).values(data)
+}
+
+export async function getAdminNotes(memberId: number, schoolCode: string, adminId: number) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  // Verify admin is from same chapter
+  const admin = await db.select()
+    .from(users)
+    .where(and(
+      eq(users.id, adminId),
+      eq(users.schoolCode, schoolCode),
+      or(eq(users.role, 'admin'), eq(users.role, 'super_admin'))
+    ))
+    .limit(1)
+  
+  if (!admin[0]) throw new Error("Unauthorized")
+  
+  return db.select()
+    .from(adminMemberNotes)
+    .where(and(
+      eq(adminMemberNotes.memberId, memberId),
+      eq(adminMemberNotes.schoolCode, schoolCode)
+    ))
+    .orderBy(desc(adminMemberNotes.createdAt))
+}
+
+export async function updateAdminNote(noteId: number, adminId: number, schoolCode: string, note: string) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  return db.update(adminMemberNotes)
+    .set({ note, updatedAt: new Date() })
+    .where(and(
+      eq(adminMemberNotes.id, noteId),
+      eq(adminMemberNotes.adminId, adminId),
+      eq(adminMemberNotes.schoolCode, schoolCode)
+    ))
+}
+
+export async function deleteAdminNote(noteId: number, adminId: number, schoolCode: string) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  return db.delete(adminMemberNotes)
+    .where(and(
+      eq(adminMemberNotes.id, noteId),
+      eq(adminMemberNotes.adminId, adminId),
+      eq(adminMemberNotes.schoolCode, schoolCode)
+    ))
+}
+
+// ============ DIRECT MESSAGING ============
+
+export async function sendDirectMessage(data: {
+  senderId: number
+  recipientId: number
+  schoolCode: string
+  body: string
+}) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  return db.insert(directMessages).values(data)
+}
+
+export async function getDirectMessages(userId: number, otherUserId: number, schoolCode: string) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  return db.select()
+    .from(directMessages)
+    .where(and(
+      eq(directMessages.schoolCode, schoolCode),
+      or(
+        and(eq(directMessages.senderId, userId), eq(directMessages.recipientId, otherUserId)),
+        and(eq(directMessages.senderId, otherUserId), eq(directMessages.recipientId, userId))
+      )
+    ))
+    .orderBy(asc(directMessages.createdAt))
+}
+
+export async function markMessageAsRead(messageId: number, userId: number) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  return db.update(directMessages)
+    .set({ readAt: new Date() })
+    .where(and(
+      eq(directMessages.id, messageId),
+      eq(directMessages.recipientId, userId)
+    ))
+}
+
+export async function getConversationList(userId: number, schoolCode: string) {
+  const db = await getDb()
+  if (!db) throw new Error("Database connection failed")
+  
+  // Get unique conversations with latest message
+  const messages = await db.select({
+    id: directMessages.id,
+    senderId: directMessages.senderId,
+    recipientId: directMessages.recipientId,
+    body: directMessages.body,
+    readAt: directMessages.readAt,
+    createdAt: directMessages.createdAt,
+  })
+  .from(directMessages)
+  .where(and(
+    eq(directMessages.schoolCode, schoolCode),
+    or(
+      eq(directMessages.senderId, userId),
+      eq(directMessages.recipientId, userId)
+    )
+  ))
+  .orderBy(desc(directMessages.createdAt))
+  
+  // Group by conversation partner
+  const conversations = new Map()
+  for (const msg of messages) {
+    const partnerId = msg.senderId === userId ? msg.recipientId : msg.senderId
+    if (!conversations.has(partnerId)) {
+      conversations.set(partnerId, msg)
+    }
+  }
+  
+  return Array.from(conversations.values())
 }
