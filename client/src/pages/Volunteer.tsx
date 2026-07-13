@@ -320,7 +320,7 @@ const Volunteer = () => {
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
                         <div className="flex items-center gap-2 text-white/60 text-sm">
                           <Clock size={14} />
-                          <span>{opp.date}</span>
+                          <span>{typeof opp.date === 'string' ? opp.date : new Date(opp.date).toLocaleDateString()}</span>
                         </div>
                         <div className="flex items-center gap-2 text-white/60 text-sm">
                           <MapPin size={14} />
