@@ -8,12 +8,19 @@ export const membersRouter = router({
   getMembers: protectedProcedure
     .input(z.object({ schoolCode: z.string().optional() }))
     .query(async ({ input, ctx }) => {
-      const schoolCode = ctx.user.role === 'super_admin' ? input?.schoolCode : ctx.user.schoolCode
-      if (!schoolCode) {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'School code is required' })
-      }
+      // Check role first
       if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
         throw new TRPCError({ code: 'FORBIDDEN', message: 'Only admins can view members' })
+      }
+      
+      // Determine school code: super admins can use input, regular admins use their own
+      let schoolCode = ctx.user.schoolCode;
+      if (ctx.user.role === 'super_admin' && input?.schoolCode) {
+        schoolCode = input.schoolCode;
+      }
+      
+      if (!schoolCode) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'School code is required' })
       }
       return db.getMembersForChapter(schoolCode)
     }),
@@ -22,12 +29,19 @@ export const membersRouter = router({
   getMember: protectedProcedure
     .input(z.object({ memberId: z.number(), schoolCode: z.string().optional() }))
     .query(async ({ input, ctx }) => {
-      const schoolCode = ctx.user.role === 'super_admin' ? input.schoolCode : ctx.user.schoolCode
-      if (!schoolCode) {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'School code is required' })
-      }
+      // Check role first
       if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
         throw new TRPCError({ code: 'FORBIDDEN' })
+      }
+      
+      // Determine school code: super admins can use input, regular admins use their own
+      let schoolCode = ctx.user.schoolCode;
+      if (ctx.user.role === 'super_admin' && input?.schoolCode) {
+        schoolCode = input.schoolCode;
+      }
+      
+      if (!schoolCode) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'School code is required' })
       }
       return db.getMemberProfile(input.memberId, schoolCode)
     }),
@@ -43,7 +57,8 @@ export const membersRouter = router({
       memberProgressNotes: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.schoolCode) {
+      const schoolCode = ctx.user.schoolCode;
+      if (!schoolCode) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'User has no school code' })
       }
       if (!input.fileUrl && !input.externalUrl) {
@@ -51,7 +66,7 @@ export const membersRouter = router({
       }
       return db.createPortfolioItem({
         userId: ctx.user.id,
-        schoolCode: ctx.user.schoolCode,
+        schoolCode: schoolCode,
         ...input,
       })
     }),
