@@ -27,22 +27,35 @@ export default function BlueMarket() {
   const sellStockMutation = trpc.market.sellStock.useMutation();
   const initializeStocksMutation = trpc.market.initializeDefaultStocks.useMutation();
 
+  // Mock stock prices - replace with real API when tRPC query parsing is fixed
+  const mockPrices: Record<string, { price: number; change: number }> = {
+    'AAPL': { price: 150.25, change: 2.5 },
+    'MSFT': { price: 380.50, change: 1.8 },
+    'GOOGL': { price: 140.75, change: -0.5 },
+    'AMZN': { price: 185.30, change: 3.2 },
+    'TSLA': { price: 245.60, change: -1.2 },
+    'META': { price: 320.40, change: 2.1 },
+    'NVDA': { price: 875.20, change: 4.5 },
+    'JPM': { price: 195.80, change: 0.8 },
+    'V': { price: 280.15, change: 1.3 },
+    'WMT': { price: 92.50, change: -0.3 },
+  };
+
   // Fetch stock prices when stocks load
   const fetchStockPrices = useCallback(async () => {
     if (stocks.length === 0) return;
 
     for (const stock of stocks) {
       try {
-        // Use tRPC client to fetch stock price - use fetch directly for async
-        const response = await fetch(`/api/trpc/market.getStockPriceData?input=${encodeURIComponent(JSON.stringify({ ticker: stock.ticker }))}`, {
-          credentials: 'include',
-        });
-        if (response.ok) {
-          const json = await response.json();
-          if (json.result) {
-            setStockPrices(prev => ({ ...prev, [stock.ticker]: json.result }));
-          }
-        }
+        // Use mock prices for now - real API integration coming soon
+        const mockData = mockPrices[stock.ticker] || { price: 100, change: 0 };
+        setStockPrices(prev => ({
+          ...prev,
+          [stock.ticker]: {
+            price: mockData.price,
+            changePercent: mockData.change,
+          },
+        }));
       } catch (error) {
         console.error(`Failed to fetch price for ${stock.ticker}:`, error);
       }
@@ -68,7 +81,7 @@ export default function BlueMarket() {
 
     try {
       const stockPrice = stockPrices[selectedStock.ticker];
-      const pricePerShare = (typeof stockPrice === 'object' ? stockPrice?.price : stockPrice) || "100";
+      const pricePerShare = (typeof stockPrice === 'object' ? stockPrice?.price?.toString() : stockPrice) || "100";
       await buyStockMutation.mutateAsync({
         stockId: selectedStock.id,
         blueBucksAmount: buyAmount,
@@ -95,7 +108,7 @@ export default function BlueMarket() {
 
     try {
       const stockPrice = stockPrices[selectedStock.ticker];
-      const pricePerShare = (typeof stockPrice === 'object' ? stockPrice?.price : stockPrice) || "100";
+      const pricePerShare = (typeof stockPrice === 'object' ? stockPrice?.price?.toString() : stockPrice) || "100";
       await sellStockMutation.mutateAsync({
         stockId: selectedStock.id,
         shares: sellShares,
