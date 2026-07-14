@@ -48,6 +48,10 @@
 - [x] Implement Streak multiplier system - ROLLED BACK
 - [x] Fix TypeScript errors from incomplete Blue Bucks/Streak implementation
 - [x] Stabilize platform after rollback
+- [x] Re-implement Blue Bucks system with submitAnswer procedure
+- [x] Award 100 Blue Bucks for correct answers
+- [x] Prevent duplicate rewards for same question
+- [x] Integrate Blue Bucks into Practice page with toast notifications
 
 ## Status: STABLE
 - All tests passing (13 passed, 12 skipped)
@@ -85,7 +89,9 @@
 - [x] Implement buy/sell dialogs with Blue Bucks amount input
 - [x] Add market leaderboard display
 - [x] Integrate portfolio holdings display
-- [ ] Connect to real stock API (Alpha Vantage or similar) for live pricing
+- [x] Connect to real stock API (Alpha Vantage) for live pricing
+- [x] Implement database tables for market (stocks, holdings, transactions, etc.)
+- [x] Fix stock price fetching with proper tRPC URL encoding
 - [ ] Implement market hours tracking (US Eastern Time)
 - [ ] Add pending order system for after-hours trading
 - [ ] Create admin features for stock management

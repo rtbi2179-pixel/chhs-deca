@@ -10,8 +10,8 @@ import { getAnnouncementsBySchool, createAnnouncement, likeAnnouncement, getAnno
 import { notifyOwner } from "./_core/notification";
 import { getStockPrice } from "./stockPriceService";
 
-import { questions } from "../drizzle/schema";
-import { eq, sql, and } from "drizzle-orm";
+import { questions, userAnswers, blueBucks, blueBucksTransactions, leaderboard } from "../drizzle/schema";
+import { and, eq, sql, inArray, desc } from "drizzle-orm";
 
 export const announcementsRouter = router({
   getBySchool: publicProcedure
@@ -596,6 +596,42 @@ export const appRouter = router({
       .input(z.object({ cluster: z.string(), limit: z.number().default(50) }))
       .query(({ input }) => db.getLeaderboardByCluster(input.cluster, input.limit)),
 
+    submitAnswer: protectedProcedure
+      .input(z.object({
+        questionId: z.string(),
+        selectedAnswer: z.string().length(1),
+        correctAnswer: z.string().length(1),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
+
+        const isCorrect = input.selectedAnswer === input.correctAnswer;
+        
+        // Record the answer
+        await db.recordUserAnswer(ctx.user.id, input.questionId, input.selectedAnswer, isCorrect, schoolCode);
+        
+        // Award Blue Bucks if correct (100 points for correct answer)
+        // Use a hash of the question ID as the relatedId for tracking duplicate rewards
+        let blueBucksAwarded = 0;
+        if (isCorrect) {
+          const questionHash = Math.abs(input.questionId.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % 1000000;
+          const awarded = await db.awardBlueBucks(ctx.user.id, 100, 'correct_first_attempt', schoolCode, questionHash);
+          if (awarded) {
+            blueBucksAwarded = 100;
+          }
+        }
+        
+        // Get updated balance
+        const balance = await db.getBlueBucksBalance(ctx.user.id);
+        
+        return {
+          isCorrect,
+          blueBucksAwarded,
+          newBalance: balance,
+          message: isCorrect ? `Correct! You earned ${blueBucksAwarded} Blue Bucks! (Total: ${balance})` : 'Incorrect answer.',
+        };
+      }),
 
   }),
 

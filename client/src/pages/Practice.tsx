@@ -79,7 +79,7 @@ export default function Practice() {
   };
 
   const updateLeaderboardMutation = trpc.practice.updateLeaderboard.useMutation();
-  // const awardBlueBucksMutation = trpc.practice.awardBlueBucks.useMutation();
+  const submitAnswerMutation = trpc.practice.submitAnswer.useMutation();
 
   const handleCreateStudySession = async () => {
     if (!sessionName.trim() || bookmarkedQuestions.length === 0) return;
@@ -110,24 +110,40 @@ export default function Practice() {
     setTotalAnswered(newTotalAnswered);
 
     try {
+      // Submit answer and award Blue Bucks
+      const result = await submitAnswerMutation.mutateAsync({
+        questionId: currentQuestion.id,
+        selectedAnswer,
+        correctAnswer: currentQuestion.correctAnswer,
+      });
+
+      // Show Blue Bucks award notification
+      if (result.blueBucksAwarded > 0) {
+        toast.success(`${result.message}`);
+      }
+
+      // Update leaderboard
       await updateLeaderboardMutation.mutateAsync({
         correctAnswers: newScore,
         totalAnswered: newTotalAnswered,
         cluster: currentQuestion.cluster,
       });
-
-      // Blue Bucks disabled temporarily
-      // if (isCorrect && !answeredQuestionIds.has(currentQuestion.id)) {
-      //   const result = await awardBlueBucksMutation.mutateAsync({
-      //     questionId: currentQuestion.id,
-      //   });
-      // }
     } catch (error) {
-      console.error("Failed to update leaderboard or award Blue Bucks", error);
+      console.error("Failed to submit answer or update leaderboard", error);
+      toast.error("Failed to process your answer");
     }
   };
 
   const handleNextQuestion = () => {
+    // Mark question as answered
+    if (currentQuestion) {
+      setAnsweredQuestionIds(prev => {
+        const newSet = new Set(prev);
+        newSet.add(currentQuestion.id);
+        return newSet;
+      });
+    }
+
     if (currentQuestionIndex < allQuestions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else if (currentPage < totalPages) {
@@ -141,6 +157,15 @@ export default function Practice() {
   };
 
   const handlePreviousQuestion = () => {
+    // Mark question as answered
+    if (currentQuestion) {
+      setAnsweredQuestionIds(prev => {
+        const newSet = new Set(prev);
+        newSet.add(currentQuestion.id);
+        return newSet;
+      });
+    }
+
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
     } else if (currentPage > 1) {

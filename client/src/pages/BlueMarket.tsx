@@ -4,7 +4,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Loader2, TrendingUp, TrendingDown, DollarSign } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { toast } from "sonner";
 
 export default function BlueMarket() {
@@ -28,27 +28,43 @@ export default function BlueMarket() {
   const initializeStocksMutation = trpc.market.initializeDefaultStocks.useMutation();
 
   // Fetch stock prices when stocks load
-  useEffect(() => {
+  const fetchStockPrices = useCallback(async () => {
     if (stocks.length === 0) return;
 
-    const fetchStockPrices = async () => {
-      for (const stock of stocks) {
-        try {
-          const response = await fetch(`/api/trpc/market.getStockPriceData?input=${JSON.stringify({ ticker: stock.ticker })}`);
-          if (response.ok) {
-            const data = await response.json();
-            if (data.result?.data) {
-              setStockPrices(prev => ({ ...prev, [stock.ticker]: data.result.data }));
-            }
+    for (const stock of stocks) {
+      try {
+        // Use tRPC client to fetch stock price via HTTP
+        // tRPC expects input as a URL parameter in the format: input={json}
+        const inputParam = JSON.stringify({ ticker: stock.ticker });
+        const response = await fetch(`/api/trpc/market.getStockPriceData?input=${encodeURIComponent(inputParam)}`, {
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
           }
-        } catch (error) {
-          console.error(`Failed to fetch price for ${stock.ticker}`);
+        });
+        if (response.ok) {
+          const data = await response.json();
+          // tRPC returns data in result.data for queries
+          if (data.result?.data) {
+            setStockPrices(prev => ({ ...prev, [stock.ticker]: data.result.data }));
+          } else if (data.result) {
+            // Handle case where result is the data directly
+            setStockPrices(prev => ({ ...prev, [stock.ticker]: data.result }));
+          }
+        } else {
+          console.error(`Failed to fetch price for ${stock.ticker}: ${response.status}`);
         }
+      } catch (error) {
+        console.error(`Failed to fetch price for ${stock.ticker}:`, error);
       }
-    };
-
-    fetchStockPrices();
+    }
   }, [stocks]);
+
+  useEffect(() => {
+    if (stocks.length > 0) {
+      fetchStockPrices();
+    }
+  }, [stocks, fetchStockPrices]);
 
   const handleBuyStock = async () => {
     if (!selectedStock || !buyAmount) {
@@ -68,6 +84,10 @@ export default function BlueMarket() {
       setBuyAmount("");
       setShowBuyDialog(false);
       setSelectedStock(null);
+      // Refetch portfolio and cash balance
+      const utils = trpc.useUtils();
+      utils.market.getPortfolio.invalidate();
+      utils.market.getCashBalance.invalidate();
     } catch (error) {
       toast.error("Failed to buy stock");
     }
@@ -91,6 +111,10 @@ export default function BlueMarket() {
       setSellShares("");
       setShowSellDialog(false);
       setSelectedStock(null);
+      // Refetch portfolio and cash balance
+      const utils = trpc.useUtils();
+      utils.market.getPortfolio.invalidate();
+      utils.market.getCashBalance.invalidate();
     } catch (error) {
       toast.error("Failed to sell stock");
     }
@@ -98,9 +122,10 @@ export default function BlueMarket() {
 
   const handleInitializeStocks = async () => {
     try {
-      await initializeStocksMutation.mutateAsync();
-      toast.success("Default stocks initialized!");
+      const result = await initializeStocksMutation.mutateAsync();
+      toast.success(`Initialized ${result.count} stocks!`);
     } catch (error) {
+      console.error('Initialize stocks error:', error);
       toast.error("Failed to initialize stocks");
     }
   };
@@ -201,12 +226,14 @@ export default function BlueMarket() {
                           <div className="text-right">
                             {priceData ? (
                               <>
-                                <p className="text-lg font-bold text-foreground">${priceData.price?.toFixed(2)}</p>
-                                <p className={`text-xs flex items-center gap-1 ${
-                                  priceData.changePercent >= 0 ? 'text-green-500' : 'text-red-500'
-                                }`}>
-                                  <TrendingUp className="w-3 h-3" /> {priceData.changePercent?.toFixed(2)}%
-                                </p>
+                                <p className="text-lg font-bold text-foreground">${typeof priceData === 'object' && priceData.price ? priceData.price.toFixed(2) : priceData}</p>
+                                {typeof priceData === 'object' && priceData.changePercent !== undefined && (
+                                  <p className={`text-xs flex items-center gap-1 ${
+                                    priceData.changePercent >= 0 ? 'text-green-500' : 'text-red-500'
+                                  }`}>
+                                    <TrendingUp className="w-3 h-3" /> {priceData.changePercent.toFixed(2)}%
+                                  </p>
+                                )}
                               </>
                             ) : (
                               <>
@@ -267,8 +294,8 @@ export default function BlueMarket() {
                           Sell
                         </Button>
                       </div>
-                      <p className="text-sm text-foreground/70">
-                        Value: {(parseFloat(holding.shares) * (stockPrices[holding.stocks?.ticker]?.price || 100)).toLocaleString()} BB
+                                <p className="text-sm text-foreground/70">
+                        Value: {(parseFloat(holding.shares) * (typeof stockPrices[holding.stocks?.ticker] === 'object' ? stockPrices[holding.stocks?.ticker]?.price || 100 : 100)).toLocaleString()} BB
                       </p>
                     </div>
                   ))}
