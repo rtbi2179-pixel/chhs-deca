@@ -74,7 +74,7 @@ export default function BlueMarket() {
 
     try {
       const stockPrice = stockPrices[selectedStock.ticker];
-      const pricePerShare = stockPrice?.price?.toString() || "100";
+      const pricePerShare = (stockPrice?.price || stockPrice || "100").toString();
       await buyStockMutation.mutateAsync({
         stockId: selectedStock.id,
         blueBucksAmount: buyAmount,
@@ -101,7 +101,7 @@ export default function BlueMarket() {
 
     try {
       const stockPrice = stockPrices[selectedStock.ticker];
-      const pricePerShare = stockPrice?.price?.toString() || "100";
+      const pricePerShare = (stockPrice?.price || stockPrice || "100").toString();
       await sellStockMutation.mutateAsync({
         stockId: selectedStock.id,
         shares: sellShares,
