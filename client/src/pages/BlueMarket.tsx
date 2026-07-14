@@ -27,19 +27,8 @@ export default function BlueMarket() {
   const sellStockMutation = trpc.market.sellStock.useMutation();
   const initializeStocksMutation = trpc.market.initializeDefaultStocks.useMutation();
 
-  // Mock stock prices - replace with real API when tRPC query parsing is fixed
-  const mockPrices: Record<string, { price: number; change: number }> = {
-    'AAPL': { price: 150.25, change: 2.5 },
-    'MSFT': { price: 380.50, change: 1.8 },
-    'GOOGL': { price: 140.75, change: -0.5 },
-    'AMZN': { price: 185.30, change: 3.2 },
-    'TSLA': { price: 245.60, change: -1.2 },
-    'META': { price: 320.40, change: 2.1 },
-    'NVDA': { price: 875.20, change: 4.5 },
-    'JPM': { price: 195.80, change: 0.8 },
-    'V': { price: 280.15, change: 1.3 },
-    'WMT': { price: 92.50, change: -0.3 },
-  };
+  // Empty object - only use real API prices now
+  const mockPrices: Record<string, { price: number; change: number }> = {};
 
   // Fetch stock prices when stocks load
   const fetchStockPrices = useCallback(async () => {
@@ -115,6 +104,7 @@ export default function BlueMarket() {
         stockId: selectedStock.id,
         blueBucksAmount: buyAmount,
         pricePerShare,
+        ticker: selectedStock.ticker,
       });
       toast.success(`Bought ${selectedStock.ticker}!`);
       setBuyAmount("");
@@ -142,6 +132,7 @@ export default function BlueMarket() {
         stockId: selectedStock.id,
         shares: sellShares,
         pricePerShare,
+        ticker: selectedStock.ticker,
       });
       toast.success(`Sold ${selectedStock.ticker}!`);
       setSellShares("");
