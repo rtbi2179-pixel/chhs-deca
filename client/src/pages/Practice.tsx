@@ -122,12 +122,16 @@ export default function Practice() {
         toast.success(`${result.message}`);
       }
 
-      // Update leaderboard
+      // Update leaderboard and invalidate Blue Bucks balance
       await updateLeaderboardMutation.mutateAsync({
         correctAnswers: newScore,
         totalAnswered: newTotalAnswered,
         cluster: currentQuestion.cluster,
       });
+      
+      // Invalidate Blue Bucks balance to refresh the display
+      const utils = trpc.useUtils();
+      utils.practice.getBlueBucksBalance.invalidate();
     } catch (error) {
       console.error("Failed to submit answer or update leaderboard", error);
       toast.error("Failed to process your answer");

@@ -504,6 +504,12 @@ export const appRouter = router({
   }),
 
   practice: router({
+    getBlueBucksBalance: protectedProcedure
+      .query(async ({ ctx }) => {
+        const balance = await db.getBlueBucksBalance(ctx.user.id);
+        return { balance };
+      }),
+
     getQuestions: publicProcedure
       .input(z.object({
         cluster: z.string().optional(),
