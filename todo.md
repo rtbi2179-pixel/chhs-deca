@@ -112,3 +112,13 @@
 - [ ] Portfolio snapshot history
 - [ ] Historical performance charts
 - [ ] End-to-end market testing
+
+
+## Transaction History Feature
+
+- [x] Create transaction history query in market router
+- [x] Build transaction history UI page
+- [x] Add transaction history link to navigation
+- [x] Display execution prices and timestamps
+- [ ] Add filters by stock ticker and date range
+- [x] Show transaction type (buy/sell) with color coding

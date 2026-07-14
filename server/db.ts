@@ -2078,3 +2078,39 @@ export async function deletePortfolio(portfolioId: number): Promise<void> {
 
   await db.delete(portfolioUploads).where(eq(portfolioUploads.id, portfolioId));
 }
+
+
+/**
+ * Get user's transaction history with stock details
+ */
+export async function getTransactionHistory(userId: number, limit: number = 100, offset: number = 0) {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const { marketTransactions, stocks } = await import("../drizzle/schema");
+    const { eq, desc } = await import("drizzle-orm");
+    
+    return await db
+      .select({
+        id: marketTransactions.id,
+        type: marketTransactions.type,
+        ticker: stocks.ticker,
+        stockName: stocks.companyName,
+        shares: marketTransactions.shares,
+        pricePerShare: marketTransactions.pricePerShare,
+        totalAmount: marketTransactions.totalAmount,
+        executedAt: marketTransactions.executedAt,
+        createdAt: marketTransactions.createdAt,
+      })
+      .from(marketTransactions)
+      .innerJoin(stocks, eq(marketTransactions.stockId, stocks.id))
+      .where(eq(marketTransactions.userId, userId))
+      .orderBy(desc(marketTransactions.executedAt))
+      .limit(limit)
+      .offset(offset);
+  } catch (error) {
+    console.error('[Transaction History] Error:', error);
+    return [];
+  }
+}

@@ -660,7 +660,7 @@ export const appRouter = router({
       }),
     
     buyStock: protectedProcedure
-      .input(z.object({ stockId: z.number(), blueBucksAmount: z.string(), pricePerShare: z.string() }))
+      .input(z.object({ stockId: z.number(), blueBucksAmount: z.string(), pricePerShare: z.string(), ticker: z.string() }))
       .mutation(async ({ input, ctx }) => {
         const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
         if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
@@ -681,7 +681,7 @@ export const appRouter = router({
       }),
     
     sellStock: protectedProcedure
-      .input(z.object({ stockId: z.number(), shares: z.string(), pricePerShare: z.string() }))
+      .input(z.object({ stockId: z.number(), shares: z.string(), pricePerShare: z.string(), ticker: z.string() }))
       .mutation(async ({ input, ctx }) => {
         const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
         if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
@@ -700,6 +700,12 @@ export const appRouter = router({
         const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
         if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
         return await db.getMarketLeaderboard(schoolCode, 50);
+      }),
+    
+    getTransactionHistory: protectedProcedure
+      .input(z.object({ limit: z.number().default(100), offset: z.number().default(0) }))
+      .query(async ({ ctx, input }) => {
+        return await db.getTransactionHistory(ctx.user.id, input.limit, input.offset);
       }),
     
     getStockPriceData: publicProcedure
