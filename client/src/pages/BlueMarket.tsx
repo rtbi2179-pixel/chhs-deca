@@ -94,10 +94,11 @@ export default function BlueMarket() {
     if (stocks.length > 0) {
       fetchStockPrices();
     }
-    // Refresh prices every 60 seconds to respect API rate limits
+    // Refresh prices every 5 minutes (server caches for 5 minutes)
+    // This respects Alpha Vantage rate limits (5 requests/minute)
     const interval = setInterval(() => {
       fetchStockPrices();
-    }, 60000);
+    }, 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, [stocks, fetchStockPrices, mockPrices]);
 
@@ -183,6 +184,7 @@ export default function BlueMarket() {
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-foreground mb-2">Blue Blazer Market</h1>
           <p className="text-foreground/70">Invest your Blue Bucks in real stocks. Educational simulation with 15-minute delayed data from Alpha Vantage.</p>
+          <p className="text-sm text-foreground/50 mt-2">💡 Prices are cached for 5 minutes to respect API rate limits. Refresh after 5 minutes for updated prices.</p>
         </div>
 
         {/* Portfolio Summary */}
