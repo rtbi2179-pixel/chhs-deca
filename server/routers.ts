@@ -8,6 +8,7 @@ import { z } from "zod";
 import * as db from "./db";
 import { getAnnouncementsBySchool, createAnnouncement, likeAnnouncement, getAnnouncementLikes, addAnnouncementComment, getAnnouncementComments, deleteAnnouncement } from "./db";
 import { notifyOwner } from "./_core/notification";
+import { getStockPrice } from "./stockPriceService";
 
 import { questions } from "../drizzle/schema";
 import { eq, sql, and } from "drizzle-orm";
@@ -657,6 +658,41 @@ export const appRouter = router({
         const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
         if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
         return await db.getMarketLeaderboard(schoolCode, 50);
+      }),
+    
+    getStockPriceData: protectedProcedure
+      .input(z.object({ ticker: z.string() }))
+      .query(async ({ input }) => {
+        return await getStockPrice(input.ticker);
+      }),
+    
+    initializeDefaultStocks: protectedProcedure
+      .mutation(async ({ ctx }) => {
+        if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only admins can initialize stocks' });
+        }
+        
+        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
+        
+        const defaultStocks = [
+          { ticker: 'AAPL', name: 'Apple Inc.' },
+          { ticker: 'MSFT', name: 'Microsoft Corporation' },
+          { ticker: 'GOOGL', name: 'Alphabet Inc.' },
+          { ticker: 'AMZN', name: 'Amazon.com Inc.' },
+          { ticker: 'TSLA', name: 'Tesla Inc.' },
+          { ticker: 'META', name: 'Meta Platforms Inc.' },
+          { ticker: 'NVDA', name: 'NVIDIA Corporation' },
+          { ticker: 'JPM', name: 'JPMorgan Chase & Co.' },
+          { ticker: 'V', name: 'Visa Inc.' },
+          { ticker: 'WMT', name: 'Walmart Inc.' },
+        ];
+        
+        for (const stock of defaultStocks) {
+          await db.getOrCreateStock(stock.ticker, stock.name, schoolCode);
+        }
+        
+        return { success: true, count: defaultStocks.length };
       }),
   }),
 

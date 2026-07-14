@@ -4,7 +4,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Loader2, TrendingUp, TrendingDown, DollarSign } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 export default function BlueMarket() {
@@ -14,6 +14,7 @@ export default function BlueMarket() {
   const [showBuyDialog, setShowBuyDialog] = useState(false);
   const [showSellDialog, setShowSellDialog] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [stockPrices, setStockPrices] = useState<Record<string, any>>({});
 
   // Fetch data
   const { data: stocks = [], isLoading: stocksLoading } = trpc.market.getStocks.useQuery();
@@ -24,6 +25,30 @@ export default function BlueMarket() {
   // Mutations
   const buyStockMutation = trpc.market.buyStock.useMutation();
   const sellStockMutation = trpc.market.sellStock.useMutation();
+  const initializeStocksMutation = trpc.market.initializeDefaultStocks.useMutation();
+
+  // Fetch stock prices when stocks load
+  useEffect(() => {
+    if (stocks.length === 0) return;
+
+    const fetchStockPrices = async () => {
+      for (const stock of stocks) {
+        try {
+          const response = await fetch(`/api/trpc/market.getStockPriceData?input=${JSON.stringify({ ticker: stock.ticker })}`);
+          if (response.ok) {
+            const data = await response.json();
+            if (data.result?.data) {
+              setStockPrices(prev => ({ ...prev, [stock.ticker]: data.result.data }));
+            }
+          }
+        } catch (error) {
+          console.error(`Failed to fetch price for ${stock.ticker}`);
+        }
+      }
+    };
+
+    fetchStockPrices();
+  }, [stocks]);
 
   const handleBuyStock = async () => {
     if (!selectedStock || !buyAmount) {
@@ -32,7 +57,8 @@ export default function BlueMarket() {
     }
 
     try {
-      const pricePerShare = "100"; // Placeholder - would come from real API
+      const stockPrice = stockPrices[selectedStock.ticker];
+      const pricePerShare = stockPrice?.price?.toString() || "100";
       await buyStockMutation.mutateAsync({
         stockId: selectedStock.id,
         blueBucksAmount: buyAmount,
@@ -54,7 +80,8 @@ export default function BlueMarket() {
     }
 
     try {
-      const pricePerShare = "100"; // Placeholder - would come from real API
+      const stockPrice = stockPrices[selectedStock.ticker];
+      const pricePerShare = stockPrice?.price?.toString() || "100";
       await sellStockMutation.mutateAsync({
         stockId: selectedStock.id,
         shares: sellShares,
@@ -66,6 +93,15 @@ export default function BlueMarket() {
       setSelectedStock(null);
     } catch (error) {
       toast.error("Failed to sell stock");
+    }
+  };
+
+  const handleInitializeStocks = async () => {
+    try {
+      await initializeStocksMutation.mutateAsync();
+      toast.success("Default stocks initialized!");
+    } catch (error) {
+      toast.error("Failed to initialize stocks");
     }
   };
 
@@ -86,7 +122,7 @@ export default function BlueMarket() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-foreground mb-2">Blue Blazer Market</h1>
-          <p className="text-foreground/70">Invest your Blue Bucks in real stocks. Educational simulation with 15-minute delayed data.</p>
+          <p className="text-foreground/70">Invest your Blue Bucks in real stocks. Educational simulation with 15-minute delayed data from Alpha Vantage.</p>
         </div>
 
         {/* Portfolio Summary */}
@@ -124,47 +160,79 @@ export default function BlueMarket() {
             <Card className="p-6 border border-border">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold text-foreground">Available Stocks</h2>
-                <Button
-                  onClick={() => setShowLeaderboard(!showLeaderboard)}
-                  variant="outline"
-                >
-                  {showLeaderboard ? "Hide" : "Show"} Leaderboard
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={handleInitializeStocks}
+                    variant="outline"
+                    size="sm"
+                    disabled={initializeStocksMutation.isPending}
+                  >
+                    {initializeStocksMutation.isPending ? "Initializing..." : "Initialize Stocks"}
+                  </Button>
+                  <Button
+                    onClick={() => setShowLeaderboard(!showLeaderboard)}
+                    variant="outline"
+                  >
+                    {showLeaderboard ? "Hide" : "Show"} Leaderboard
+                  </Button>
+                </div>
               </div>
 
-              <div className="space-y-3">
-                {stocks.map((stock: any) => (
-                  <div
-                    key={stock.id}
-                    className="flex items-center justify-between p-4 bg-background/50 rounded-lg border border-border/50 hover:border-border cursor-pointer transition-all"
-                    onClick={() => setSelectedStock(stock)}
-                  >
-                    <div>
-                      <p className="font-semibold text-foreground">{stock.ticker}</p>
-                      <p className="text-sm text-foreground/60">{stock.companyName}</p>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="text-right">
-                        <p className="text-lg font-bold text-foreground">$100</p>
-                        <p className="text-xs text-green-500 flex items-center gap-1">
-                          <TrendingUp className="w-3 h-3" /> +2.5%
-                        </p>
-                      </div>
-                      <Button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedStock(stock);
-                          setShowBuyDialog(true);
-                        }}
-                        size="sm"
-                        className="bg-blue-600 hover:bg-blue-700"
+              {stocks.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-foreground/60">No stocks available</p>
+                  <p className="text-sm text-foreground/50 mt-2">Click "Initialize Stocks" to add default stocks</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {stocks.map((stock: any) => {
+                    const priceData = stockPrices[stock.ticker];
+                    return (
+                      <div
+                        key={stock.id}
+                        className="flex items-center justify-between p-4 bg-background/50 rounded-lg border border-border/50 hover:border-border cursor-pointer transition-all"
+                        onClick={() => setSelectedStock(stock)}
                       >
-                        Buy
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                        <div>
+                          <p className="font-semibold text-foreground">{stock.ticker}</p>
+                          <p className="text-sm text-foreground/60">{stock.companyName}</p>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <div className="text-right">
+                            {priceData ? (
+                              <>
+                                <p className="text-lg font-bold text-foreground">${priceData.price?.toFixed(2)}</p>
+                                <p className={`text-xs flex items-center gap-1 ${
+                                  priceData.changePercent >= 0 ? 'text-green-500' : 'text-red-500'
+                                }`}>
+                                  <TrendingUp className="w-3 h-3" /> {priceData.changePercent?.toFixed(2)}%
+                                </p>
+                              </>
+                            ) : (
+                              <>
+                                <p className="text-lg font-bold text-foreground/50">Loading...</p>
+                                <p className="text-xs text-foreground/30">Fetching price</p>
+                              </>
+                            )}
+                          </div>
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedStock(stock);
+                      setShowBuyDialog(true);
+                    }}
+                    size="sm"
+                    className="bg-blue-600 hover:bg-blue-700"
+                    disabled={!priceData}
+                  >
+                    Buy
+                  </Button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </Card>
           </div>
 
@@ -200,7 +268,7 @@ export default function BlueMarket() {
                         </Button>
                       </div>
                       <p className="text-sm text-foreground/70">
-                        Value: {(parseFloat(holding.shares) * 100).toLocaleString()} BB
+                        Value: {(parseFloat(holding.shares) * (stockPrices[holding.stocks?.ticker]?.price || 100)).toLocaleString()} BB
                       </p>
                     </div>
                   ))}
@@ -248,7 +316,10 @@ export default function BlueMarket() {
                   />
                 </div>
                 <div className="text-sm text-foreground/70">
-                  Estimated shares: {buyAmount ? (parseFloat(buyAmount) / 100).toFixed(2) : "0"}
+                  Current Price: ${stockPrices[selectedStock.ticker]?.price?.toFixed(2) || "Loading..."}
+                </div>
+                <div className="text-sm text-foreground/70">
+                  Estimated shares: {buyAmount ? (parseFloat(buyAmount) / (stockPrices[selectedStock.ticker]?.price || 100)).toFixed(2) : "0"}
                 </div>
                 <div className="flex gap-2">
                   <Button
@@ -291,7 +362,10 @@ export default function BlueMarket() {
                   />
                 </div>
                 <div className="text-sm text-foreground/70">
-                  Estimated proceeds: {sellShares ? (parseFloat(sellShares) * 100).toFixed(2) : "0"} BB
+                  Current Price: ${stockPrices[selectedStock.ticker]?.price?.toFixed(2) || "Loading..."}
+                </div>
+                <div className="text-sm text-foreground/70">
+                  Estimated proceeds: {sellShares ? (parseFloat(sellShares) * (stockPrices[selectedStock.ticker]?.price || 100)).toFixed(2) : "0"} BB
                 </div>
                 <div className="flex gap-2">
                   <Button
