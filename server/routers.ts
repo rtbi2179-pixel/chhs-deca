@@ -702,7 +702,7 @@ export const appRouter = router({
         return await db.getMarketLeaderboard(schoolCode, 50);
       }),
     
-    getStockPriceData: protectedProcedure
+    getStockPriceData: publicProcedure
       .input(z.object({ ticker: z.string() }))
       .query(async ({ input }) => {
         return await getStockPrice(input.ticker);

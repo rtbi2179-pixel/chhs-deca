@@ -47,7 +47,37 @@ export default function BlueMarket() {
 
     for (const stock of stocks) {
       try {
-        // Use mock prices for now - real API integration coming soon
+        // Try to fetch real prices from the public endpoint
+        const response = await fetch(`/api/trpc/market.getStockPriceData?input=${encodeURIComponent(JSON.stringify({ ticker: stock.ticker }))}`, {
+          credentials: 'include',
+        });
+        
+        if (response.ok) {
+          const json = await response.json();
+          if (json.result) {
+            const priceData = json.result;
+            setStockPrices(prev => ({
+              ...prev,
+              [stock.ticker]: {
+                price: typeof priceData === 'object' ? priceData.price : priceData,
+                changePercent: typeof priceData === 'object' ? priceData.changePercent : 0,
+              },
+            }));
+          }
+        } else {
+          // Fall back to mock prices if API fails
+          const mockData = mockPrices[stock.ticker] || { price: 100, change: 0 };
+          setStockPrices(prev => ({
+            ...prev,
+            [stock.ticker]: {
+              price: mockData.price,
+              changePercent: mockData.change,
+            },
+          }));
+        }
+      } catch (error) {
+        console.error(`Failed to fetch price for ${stock.ticker}:`, error);
+        // Fall back to mock prices on error
         const mockData = mockPrices[stock.ticker] || { price: 100, change: 0 };
         setStockPrices(prev => ({
           ...prev,
@@ -56,22 +86,20 @@ export default function BlueMarket() {
             changePercent: mockData.change,
           },
         }));
-      } catch (error) {
-        console.error(`Failed to fetch price for ${stock.ticker}:`, error);
       }
     }
-  }, [stocks]);
+  }, [stocks, mockPrices]);
 
   useEffect(() => {
     if (stocks.length > 0) {
       fetchStockPrices();
     }
-    // Refresh prices every 30 seconds
+    // Refresh prices every 60 seconds to respect API rate limits
     const interval = setInterval(() => {
       fetchStockPrices();
-    }, 30000);
+    }, 60000);
     return () => clearInterval(interval);
-  }, [stocks, fetchStockPrices]);
+  }, [stocks, fetchStockPrices, mockPrices]);
 
   const handleBuyStock = async () => {
     if (!selectedStock || !buyAmount) {
