@@ -767,6 +767,57 @@ export const appRouter = router({
       .input(z.object({ replyId: z.number() }))
       .mutation(({ input, ctx }) => db.deleteDiscussionReply(input.replyId, ctx.user.id, ctx.user.role)),
   }),
+  
+  portfolios: router({
+    uploadPortfolio: protectedProcedure
+      .input(z.object({
+        fileName: z.string(),
+        fileUrl: z.string(),
+        fileKey: z.string(),
+        fileSize: z.number(),
+        mimeType: z.string(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
+        
+        await db.uploadPortfolio(
+          ctx.user.id,
+          input.fileName,
+          input.fileUrl,
+          input.fileKey,
+          input.fileSize,
+          input.mimeType,
+          schoolCode
+        );
+        return { success: true };
+      }),
+    
+    getUserPortfolios: protectedProcedure
+      .query(async ({ ctx }) => {
+        return await db.getUserPortfolios(ctx.user.id);
+      }),
+    
+    getSchoolPortfolios: protectedProcedure
+      .query(async ({ ctx }) => {
+        if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only admins can view all portfolios' });
+        }
+        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
+        return await db.getSchoolPortfolios(schoolCode);
+      }),
+    
+    deletePortfolio: protectedProcedure
+      .input(z.object({ portfolioId: z.number() }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only admins can delete portfolios' });
+        }
+        await db.deletePortfolio(input.portfolioId);
+        return { success: true };
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

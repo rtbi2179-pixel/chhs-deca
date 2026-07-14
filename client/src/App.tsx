@@ -27,6 +27,8 @@ import { AdminPanel } from "./pages/AdminPanel";
 import { Announcements } from "./pages/Announcements";
 import Profile from "./pages/Profile";
 import BlueMarket from "./pages/BlueMarket";
+import PortfolioUpload from "./pages/PortfolioUpload";
+import AdminPortfolios from "./pages/AdminPortfolios";
 import Footer from "./components/Footer";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useState, useEffect } from "react";
@@ -70,6 +72,8 @@ function Router({ isAuthenticated, showLoginRequired }: { isAuthenticated: boole
       <Route path="/announcements" component={Announcements} />
       <Route path="/blue-market" component={BlueMarket} />
       <Route path="/speech-ai" component={SpeechAI} />
+      <Route path="/portfolio-upload" component={PortfolioUpload} />
+      <Route path="/admin-portfolios" component={AdminPortfolios} />
       <Route path="/verify-email" component={VerifyEmail} />
       <Route path="/reset-password" component={ResetPassword} />
       <Route path="/forgot-password" component={ForgotPassword} />

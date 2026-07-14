@@ -1,7 +1,7 @@
 import { eq, and, or, inArray, desc, count, asc, ne, like } from "drizzle-orm";
 import { randomBytes } from "crypto";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments, calendarEvents, CalendarEvent, InsertCalendarEvent, portfolioItems, adminMemberNotes, directMessages, blueBucks, blueBucksTransactions, userAnswers, userStreaks, dailyPracticeStats, economicSettings, economicAuditLog, stocks, portfolioCash, marketTransactions, portfolioHoldings, marketPriceHistory, portfolioSnapshots } from "../drizzle/schema";
+import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments, calendarEvents, CalendarEvent, InsertCalendarEvent, portfolioItems, adminMemberNotes, directMessages, blueBucks, blueBucksTransactions, userAnswers, userStreaks, dailyPracticeStats, economicSettings, economicAuditLog, stocks, portfolioCash, marketTransactions, portfolioHoldings, marketPriceHistory, portfolioSnapshots, portfolioUploads } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import bcrypt from 'bcryptjs';
 
@@ -2036,4 +2036,45 @@ export async function getMarketLeaderboard(schoolCode: string, limit: number = 5
     console.error('[Market Leaderboard] Error:', error);
     return [];
   }
+}
+
+
+// Portfolio uploads
+export async function uploadPortfolio(userId: number, fileName: string, fileUrl: string, fileKey: string, fileSize: number, mimeType: string, schoolCode: string): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  await db.insert(portfolioUploads).values({
+    userId,
+    fileName,
+    fileUrl,
+    fileKey,
+    fileSize,
+    mimeType,
+    schoolCode,
+  });
+}
+
+export async function getUserPortfolios(userId: number): Promise<any[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  return await db.select().from(portfolioUploads).where(eq(portfolioUploads.userId, userId));
+}
+
+export async function getSchoolPortfolios(schoolCode: string): Promise<any[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  return await db.select()
+    .from(portfolioUploads)
+    .where(eq(portfolioUploads.schoolCode, schoolCode))
+    .orderBy(desc(portfolioUploads.uploadedAt));
+}
+
+export async function deletePortfolio(portfolioId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  await db.delete(portfolioUploads).where(eq(portfolioUploads.id, portfolioId));
 }

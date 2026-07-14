@@ -603,3 +603,23 @@ export const portfolioSnapshots = mysqlTable("portfolioSnapshots", {
 });
 export type PortfolioSnapshot = typeof portfolioSnapshots.$inferSelect;
 export type InsertPortfolioSnapshot = typeof portfolioSnapshots.$inferInsert;
+
+
+/**
+ * User portfolio uploads - for DECA competition portfolios
+ */
+export const portfolioUploads = mysqlTable("portfolioUploads", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  fileName: varchar("fileName", { length: 255 }).notNull(),
+  fileUrl: text("fileUrl").notNull(), // S3 URL
+  fileKey: text("fileKey").notNull(), // S3 key for deletion
+  fileSize: int("fileSize").notNull(), // in bytes
+  mimeType: varchar("mimeType", { length: 100 }).notNull(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  uploadedAt: timestamp("uploadedAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PortfolioUpload = typeof portfolioUploads.$inferSelect;
+export type InsertPortfolioUpload = typeof portfolioUploads.$inferInsert;
