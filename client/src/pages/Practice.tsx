@@ -2,8 +2,7 @@
 
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Loader2, ChevronDown, CheckCircle2 } from "lucide-react";
+import { Loader2, ChevronDown, CheckCircle2, Bookmark } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -18,11 +17,27 @@ export default function Practice() {
   const [showExplanation, setShowExplanation] = useState(false);
   const [score, setScore] = useState(0);
   const [totalAnswered, setTotalAnswered] = useState(0);
-  const [showLeaderboard, setShowLeaderboard] = useState(false);
-  const [leaderboardCluster, setLeaderboardCluster] = useState<string>("overall");
-  const [showStudySessions, setShowStudySessions] = useState(false);
-  const [sessionName, setSessionName] = useState("");
   const [answeredQuestionIds, setAnsweredQuestionIds] = useState<Set<string>>(new Set());
+  const [markedForReview, setMarkedForReview] = useState<Set<string>>(new Set());
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  // Timer effect
+  useEffect(() => {
+    if (isPaused) return;
+    const interval = setInterval(() => {
+      setElapsedSeconds(prev => prev + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isPaused]);
+
+  // Format time as HH:MM:SS
+  const formatTime = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  };
 
   // Fetch answered questions
   const { data: answeredData } = trpc.practice.getAnsweredQuestions.useQuery();
@@ -33,14 +48,6 @@ export default function Practice() {
       setAnsweredQuestionIds(new Set(answeredData.answeredQuestionIds));
     }
   }, [answeredData]);
-
-  // Fetch bookmarked questions
-  const { data: bookmarkedQuestions = [] } = trpc.practice.getBookmarkedQuestions.useQuery(undefined, {
-    enabled: showStudySessions,
-  });
-
-  // Create study session mutation
-  const createSessionMutation = trpc.practice.createStudySession.useMutation();
 
   // Fetch paginated questions from the database
   const { data: questionsData, isLoading } = trpc.practice.getQuestions.useQuery({
@@ -57,6 +64,7 @@ export default function Practice() {
 
   const currentQuestion = allQuestions[currentQuestionIndex];
   const isCurrentQuestionAnswered = currentQuestion ? answeredQuestionIds.has(currentQuestion.id) : false;
+  const isCurrentQuestionMarked = currentQuestion ? markedForReview.has(currentQuestion.id) : false;
 
   const clusters = [
     { value: "all", label: "All Clusters" },
@@ -81,20 +89,6 @@ export default function Practice() {
   const updateLeaderboardMutation = trpc.practice.updateLeaderboard.useMutation();
   const submitAnswerMutation = trpc.practice.submitAnswer.useMutation();
 
-  const handleCreateStudySession = async () => {
-    if (!sessionName.trim() || bookmarkedQuestions.length === 0) return;
-
-    try {
-      await createSessionMutation.mutateAsync({
-        name: sessionName,
-        questionIds: bookmarkedQuestions.map((q: any) => q.id),
-      });
-      setSessionName('');
-    } catch (error) {
-      console.error('Failed to create study session', error);
-    }
-  };
-
   const handleSubmitAnswer = async () => {
     if (!currentQuestion || !selectedAnswer) return;
 
@@ -110,26 +104,22 @@ export default function Practice() {
     setTotalAnswered(newTotalAnswered);
 
     try {
-      // Submit answer and award Blue Bucks
       const result = await submitAnswerMutation.mutateAsync({
         questionId: currentQuestion.id,
         selectedAnswer,
         correctAnswer: currentQuestion.correctAnswer,
       });
 
-      // Show Blue Bucks award notification
       if (result.blueBucksAwarded > 0) {
         toast.success(`${result.message}`);
       }
 
-      // Update leaderboard and invalidate Blue Bucks balance
       await updateLeaderboardMutation.mutateAsync({
         correctAnswers: newScore,
         totalAnswered: newTotalAnswered,
         cluster: currentQuestion.cluster,
       });
       
-      // Invalidate Blue Bucks balance to refresh the display
       const utils = trpc.useUtils();
       utils.practice.getBlueBucksBalance.invalidate();
     } catch (error) {
@@ -139,7 +129,6 @@ export default function Practice() {
   };
 
   const handleNextQuestion = () => {
-    // Mark question as answered
     if (currentQuestion) {
       setAnsweredQuestionIds(prev => {
         const newSet = new Set(prev);
@@ -150,75 +139,45 @@ export default function Practice() {
 
     if (currentQuestionIndex < allQuestions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setSelectedAnswer(null);
+      setShowResult(false);
+      setShowExplanation(false);
     } else if (currentPage < totalPages) {
-      // Load next page
       setCurrentPage(currentPage + 1);
       setCurrentQuestionIndex(0);
+      setSelectedAnswer(null);
+      setShowResult(false);
+      setShowExplanation(false);
     }
-    setSelectedAnswer(null);
-    setShowResult(false);
-    setShowExplanation(false);
   };
 
   const handlePreviousQuestion = () => {
-    // Mark question as answered
-    if (currentQuestion) {
-      setAnsweredQuestionIds(prev => {
-        const newSet = new Set(prev);
-        newSet.add(currentQuestion.id);
-        return newSet;
-      });
-    }
-
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
+      setSelectedAnswer(null);
+      setShowResult(false);
+      setShowExplanation(false);
     } else if (currentPage > 1) {
-      // Load previous page
       setCurrentPage(currentPage - 1);
       setCurrentQuestionIndex(pageSize - 1);
+      setSelectedAnswer(null);
+      setShowResult(false);
+      setShowExplanation(false);
     }
-    setSelectedAnswer(null);
-    setShowResult(false);
-    setShowExplanation(false);
   };
 
-  const handleResetFilters = () => {
-    setSelectedCluster("all");
-    setSelectedDifficulty("all");
-    setCurrentPage(1);
-    setCurrentQuestionIndex(0);
-    setSelectedAnswer(null);
-    setShowResult(false);
-    setShowExplanation(false);
-    setScore(0);
-    setTotalAnswered(0);
-  };
-
-  const handleShowLeaderboard = () => {
-    setShowLeaderboard(!showLeaderboard);
-  };
-
-  const handleShowStudySessions = () => {
-    setShowStudySessions(!showStudySessions);
-  };
-
-  const handleJumpToNextUnanswered = () => {
-    for (let i = 0; i < allQuestions.length; i++) {
-      if (!answeredQuestionIds.has(allQuestions[i].id)) {
-        setCurrentQuestionIndex(i);
-        setSelectedAnswer(null);
-        setShowResult(false);
-        setShowExplanation(false);
-        return;
+  const toggleMarkForReview = () => {
+    if (!currentQuestion) return;
+    setMarkedForReview(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(currentQuestion.id)) {
+        newSet.delete(currentQuestion.id);
+      } else {
+        newSet.add(currentQuestion.id);
       }
-    }
-    toast.info('All questions on this page have been answered!');
+      return newSet;
+    });
   };
-
-  const { data: leaderboardData } = trpc.practice.getLeaderboard.useQuery(
-    { limit: 50 },
-    { enabled: showLeaderboard }
-  );
 
   if (isLoading) {
     return (
@@ -231,189 +190,99 @@ export default function Practice() {
     );
   }
 
+  const currentQuestionNumber = (currentPage - 1) * pageSize + currentQuestionIndex + 1;
+
   return (
-    <div className="min-h-screen bg-background py-8">
-      <div className="container max-w-4xl mx-auto px-4">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2">Practice Questions</h1>
-          <div className="flex items-center justify-between">
-            <p className="text-foreground/70">
-              {totalQuestions.toLocaleString()} questions available • Page {currentPage} of {totalPages}
-            </p>
-            {/* Streak display disabled */}
-          </div>
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Top Header */}
+      <div className="bg-background border-b border-border px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="sm" onClick={() => window.history.back()} className="text-foreground/70">
+            ← Go back
+          </Button>
+          <select
+            value={selectedCluster}
+            onChange={(e) => {
+              setSelectedCluster(e.target.value);
+              setCurrentPage(1);
+              setCurrentQuestionIndex(0);
+            }}
+            className="px-3 py-2 bg-background border border-border rounded-md text-foreground text-sm"
+          >
+            {clusters.map((cluster) => (
+              <option key={cluster.value} value={cluster.value}>
+                {cluster.label}
+              </option>
+            ))}
+          </select>
         </div>
 
-        {/* Filter Controls */}
-        <Card className="p-6 mb-8 border border-border">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Cluster Filter */}
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Cluster</label>
-              <select
-                value={selectedCluster}
-                onChange={(e) => {
-                  setSelectedCluster(e.target.value);
-                  setCurrentPage(1);
-                  setCurrentQuestionIndex(0);
-                }}
-                className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {clusters.map((cluster) => (
-                  <option key={cluster.value} value={cluster.value}>
-                    {cluster.label}
-                  </option>
-                ))}
-              </select>
+        <div className="flex items-center gap-6">
+          <p className="text-xl font-bold text-foreground">{formatTime(elapsedSeconds)}</p>
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={() => setIsPaused(!isPaused)}
+            className="text-foreground/70"
+          >
+            {isPaused ? '▶' : '⏸'} {isPaused ? 'Resume' : 'Pause'}
+          </Button>
+          <Button variant="ghost" size="sm" className="text-cyan-400">
+            ✏️ Highlight
+          </Button>
+          <Button variant="ghost" size="sm" className="text-foreground/70">
+            🧮 Calculator
+          </Button>
+          <Button variant="ghost" size="sm" className="text-foreground/70">
+            📖 Reference
+          </Button>
+          <Button variant="ghost" size="sm" className="text-foreground/70">
+            ⋯ More
+          </Button>
+          <div className="flex items-center gap-4">
+            <div className="text-center">
+              <p className="text-xs text-red-500">0</p>
             </div>
-
-            {/* Difficulty Filter */}
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Difficulty</label>
-              <select
-                value={selectedDifficulty}
-                onChange={(e) => {
-                  setSelectedDifficulty(e.target.value);
-                  setCurrentPage(1);
-                  setCurrentQuestionIndex(0);
-                }}
-                className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {difficulties.map((difficulty) => (
-                  <option key={difficulty.value} value={difficulty.value}>
-                    {difficulty.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex items-end gap-2 flex-col">
-              <div className="flex gap-2 w-full">
-                <Button
-                  onClick={handleResetFilters}
-                  variant="outline"
-                  className="flex-1"
-                >
-                  Reset
-                </Button>
-                <Button
-                  onClick={handleShowLeaderboard}
-                  variant="outline"
-                  className="flex-1"
-                >
-                  Leaderboard
-                </Button>
-              </div>
-              <Button
-                onClick={handleJumpToNextUnanswered}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                Jump to Next Unanswered
-              </Button>
+            <div className="text-center">
+              <p className="text-xs text-blue-500">20</p>
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* Stats */}
-          <div className="mt-4 grid grid-cols-3 gap-4">
-            <div className="text-center">
-              <p className="text-sm text-foreground/70">Score</p>
-              <p className="text-2xl font-bold text-blue-500">{score}/{totalAnswered}</p>
-            </div>
-            <div className="text-center">
-              <p className="text-sm text-foreground/70">Accuracy</p>
-              <p className="text-2xl font-bold text-green-500">
-                {totalAnswered > 0 ? Math.round((score / totalAnswered) * 100) : 0}%
-              </p>
-            </div>
-            <div className="text-center">
-              <p className="text-sm text-foreground/70">Progress</p>
-              <p className="text-2xl font-bold text-purple-500">
-                {((currentPage - 1) * pageSize + currentQuestionIndex + 1).toLocaleString()} / {totalQuestions.toLocaleString()}
-              </p>
-            </div>
-          </div>
-        </Card>
-
-        {/* Leaderboard */}
-        {showLeaderboard && (
-          <Card className="p-6 mb-8 border border-border">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-foreground">Leaderboard</h2>
-              <select
-                value={leaderboardCluster}
-                onChange={(e) => setLeaderboardCluster(e.target.value)}
-                className="px-3 py-2 bg-background border border-border rounded-md text-foreground"
-              >
-                <option value="overall">Overall</option>
-                {clusters.slice(1).map((cluster) => (
-                  <option key={cluster.value} value={cluster.value}>
-                    {cluster.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="space-y-2">
-              {leaderboardData?.slice(0, 10).map((entry: any, index: number) => (
-                <div key={index} className="flex justify-between items-center p-3 bg-background/50 rounded-md">
-                  <div className="flex items-center gap-3">
-                    <span className="text-lg font-bold text-blue-500">#{index + 1}</span>
-                    <span className="text-foreground">{entry.user.name}</span>
-                  </div>
-                  <span className="text-sm text-foreground/70">{Math.round(entry.leaderboard.accuracyPercentage)}%</span>
+      {/* Main Content */}
+      <div className="flex-1 overflow-auto px-6 py-8">
+        {currentQuestion ? (
+          <div className="max-w-4xl mx-auto">
+            {/* Question Header */}
+            <div className="flex items-start justify-between mb-6">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-foreground text-background rounded-lg flex items-center justify-center font-bold text-lg">
+                  {currentQuestionNumber}
                 </div>
-              ))}
-            </div>
-          </Card>
-        )}
-
-        {/* Study Sessions */}
-        {showStudySessions && (
-          <Card className="p-6 mb-8 border border-border">
-            <h2 className="text-2xl font-bold text-foreground mb-4">Create Study Session</h2>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                placeholder="Session name..."
-                value={sessionName}
-                onChange={(e) => setSessionName(e.target.value)}
-                className="flex-1 px-3 py-2 bg-background border border-border rounded-md text-foreground placeholder-foreground/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <Button
-                onClick={handleCreateStudySession}
-                disabled={!sessionName.trim() || bookmarkedQuestions.length === 0}
-              >
-                Create ({bookmarkedQuestions.length})
-              </Button>
-            </div>
-          </Card>
-        )}
-
-        {/* Question Card */}
-        {currentQuestion && (
-          <Card className="p-8 border border-border mb-8">
-            {/* Already Answered Notice */}
-            {answeredQuestionIds.has(currentQuestion.id) && (
-              <div className="mb-6 p-3 bg-yellow-600/20 border border-yellow-500/30 rounded-md">
-                <p className="text-sm text-yellow-400">⚠️ Question already answered; no Blue Bucks will be awarded on submission</p>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    checked={isCurrentQuestionMarked}
+                    onChange={toggleMarkForReview}
+                    className="w-5 h-5 cursor-pointer"
+                  />
+                  <span className="text-foreground text-sm">Mark for Review</span>
+                </div>
               </div>
-            )}
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" size="sm">
+                  📋
+                </Button>
+                <Button variant="ghost" size="sm" className="text-foreground/70">
+                  Report
+                </Button>
+              </div>
+            </div>
 
             {/* Question Text */}
             <div className="mb-8">
-              <div className="flex items-start justify-between mb-4">
-                <h2 className="text-2xl font-bold text-foreground flex-1">{currentQuestion.stem}</h2>
-                <BookmarkButton questionId={currentQuestion.id} />
-              </div>
-              <div className="flex gap-4 text-sm">
-                <span className="px-3 py-1 bg-blue-600/20 text-blue-400 rounded-full">
-                  {currentQuestion.cluster}
-                </span>
-                <span className="px-3 py-1 bg-purple-600/20 text-purple-400 rounded-full">
-                  {currentQuestion.difficulty}
-                </span>
-              </div>
+              <p className="text-lg text-foreground leading-relaxed">{currentQuestion.stem}</p>
             </div>
 
             {/* Answer Options */}
@@ -423,29 +292,38 @@ export default function Practice() {
                 const optionText = currentQuestion[optionKey];
                 const isSelected = selectedAnswer === option;
                 const isCorrect = option === currentQuestion.correctAnswer;
-                const showCorrect = showResult && isCorrect;
-                const showIncorrect = showResult && isSelected && !isCorrect;
+                const showAsCorrect = showResult && isCorrect;
+                const showAsIncorrect = showResult && isSelected && !isCorrect;
 
                 return (
-                  <button
+                  <div
                     key={option}
                     onClick={() => handleAnswerSelect(option)}
-                    disabled={showResult}
-                    className={`w-full p-4 text-left rounded-lg border-2 transition-all ${
-                      showCorrect
-                        ? 'border-green-500 bg-green-500/10'
-                        : showIncorrect
-                        ? 'border-red-500 bg-red-500/10'
+                    className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                      showAsCorrect
+                        ? 'bg-green-500/10 border-green-500'
+                        : showAsIncorrect
+                        ? 'bg-red-500/10 border-red-500'
                         : isSelected
-                        ? 'border-blue-500 bg-blue-500/10'
-                        : 'border-border hover:border-blue-400'
-                    } ${showResult ? 'cursor-default' : 'cursor-pointer'}`}
+                        ? 'bg-blue-500/10 border-blue-500'
+                        : 'bg-background/50 border-border hover:border-blue-500/50'
+                    }`}
                   >
                     <div className="flex items-start gap-3">
-                      <span className="font-bold text-lg w-6">{option}.</span>
-                      <span className="text-foreground flex-1">{String(optionText)}</span>
+                      <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 font-bold ${
+                        showAsCorrect
+                          ? 'bg-green-500 border-green-500 text-white'
+                          : showAsIncorrect
+                          ? 'bg-red-500 border-red-500 text-white'
+                          : isSelected
+                          ? 'bg-blue-500 border-blue-500 text-white'
+                          : 'border-foreground/30 text-foreground'
+                      }`}>
+                        {option}
+                      </div>
+                      <p className="text-foreground flex-1 pt-1">{String(optionText)}</p>
                     </div>
-                  </button>
+                  </div>
                 );
               })}
             </div>
@@ -468,12 +346,8 @@ export default function Practice() {
                   <ChevronDown className={`w-4 h-4 transition-transform ${showExplanation ? 'rotate-180' : ''}`} />
                 </button>
                 {showExplanation && (
-                  <div className={`px-4 pb-4 border-t ${
-                    selectedAnswer === currentQuestion.correctAnswer
-                      ? "border-green-600"
-                      : "border-red-600"
-                  }`}>
-                    <p className="text-foreground/90 mt-4">{currentQuestion.rationale}</p>
+                  <div className="mt-4 pt-4 border-t border-foreground/20">
+                    <p className="text-foreground/90">{currentQuestion.rationale}</p>
                   </div>
                 )}
               </div>
@@ -486,80 +360,76 @@ export default function Practice() {
                 <span className="text-green-400 font-semibold">Question Completed</span>
               </div>
             )}
-
-            {/* Submit/Next Buttons */}
-            <div className="flex gap-4 justify-between">
-              <Button
-                onClick={handlePreviousQuestion}
-                disabled={currentPage === 1 && currentQuestionIndex === 0}
-                className="bg-gray-600 hover:bg-gray-700 disabled:opacity-50"
-              >
-                Previous
-              </Button>
-
-              {!showResult ? (
-                <Button
-                  onClick={handleSubmitAnswer}
-                  disabled={!selectedAnswer}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700"
-                >
-                  Submit Answer
-                </Button>
-              ) : (
-                <Button
-                  onClick={handleNextQuestion}
-                  disabled={currentPage === totalPages && currentQuestionIndex === allQuestions.length - 1}
-                  className="flex-1 bg-green-600 hover:bg-green-700"
-                >
-                  {currentPage === totalPages && currentQuestionIndex === allQuestions.length - 1
-                    ? 'Quiz Complete'
-                    : 'Next Question'}
-                </Button>
-              )}
-            </div>
-          </Card>
-        )}
-
-        {/* Empty State */}
-        {!isLoading && allQuestions.length === 0 && (
-          <Card className="p-12 text-center border border-border">
-            <p className="text-xl text-foreground/70">No questions found with the selected filters.</p>
-            <Button onClick={handleResetFilters} className="mt-4">
-              Reset Filters
-            </Button>
-          </Card>
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-xl text-foreground/70">No questions found.</p>
+          </div>
         )}
       </div>
+
+      {/* Bottom Navigation Bar */}
+      <div className="bg-background border-t border-border px-6 py-4 flex items-center justify-between">
+        <Button variant="outline" size="sm" className="bg-foreground text-background">
+          {currentQuestionNumber} of {totalQuestions}
+          <ChevronDown className="w-4 h-4 ml-2" />
+        </Button>
+
+        <div className="flex items-center gap-3">
+          <Button 
+            variant="ghost" 
+            size="sm"
+            className="text-foreground/70"
+          >
+            ℹ
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="sm"
+            className="bg-purple-600 hover:bg-purple-700 text-white"
+          >
+            💬 Ask Preppy
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="sm"
+            className="bg-purple-600 hover:bg-purple-700 text-white"
+          >
+            🎓 Masterclass
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="sm"
+            className="text-pink-400 hover:text-pink-300"
+          >
+            🎵 Remix
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={() => setShowExplanation(!showExplanation)}
+            className="text-foreground/70"
+          >
+            Explanation
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={handlePreviousQuestion}
+            disabled={currentPage === 1 && currentQuestionIndex === 0}
+            className="text-foreground/70"
+          >
+            Previous
+          </Button>
+          <Button 
+            onClick={!showResult ? handleSubmitAnswer : handleNextQuestion}
+            disabled={!showResult && !selectedAnswer}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
+            {!showResult ? 'Submit' : 'Next'}
+          </Button>
+        </div>
+      </div>
     </div>
-  );
-}
-
-// Bookmark Button Component
-function BookmarkButton({ questionId }: { questionId: string }) {
-  const { data: isBookmarked } = trpc.practice.isBookmarked.useQuery({ questionId });
-  const addBookmarkMutation = trpc.practice.addBookmark.useMutation();
-  const removeBookmarkMutation = trpc.practice.removeBookmark.useMutation();
-
-  const handleToggleBookmark = async () => {
-    try {
-      if (isBookmarked) {
-        await removeBookmarkMutation.mutateAsync({ questionId });
-      } else {
-        await addBookmarkMutation.mutateAsync({ questionId });
-      }
-    } catch (error) {
-      console.error("Failed to toggle bookmark", error);
-    }
-  };
-
-  return (
-    <Button
-      onClick={handleToggleBookmark}
-      variant="outline"
-      size="sm"
-      className={isBookmarked ? 'bg-blue-500/20 border-blue-500' : ''}
-    >
-      {isBookmarked ? '★' : '☆'} Bookmark
-    </Button>
   );
 }

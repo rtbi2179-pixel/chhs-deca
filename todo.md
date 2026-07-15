@@ -228,3 +228,25 @@
 - Database: userAnswers table has unique constraint on (userId, questionId) to prevent duplicates
 - UI: Green badge with checkmark shows "Question Completed" status for answered questions
 - Persistence: Answers are stored in database and retrieved on every session load
+
+## Practice Page Layout Redesign
+
+- [x] Redesign Practice page layout to match exam interface screenshot
+  - [x] Add top header with timer display (HH:MM:SS format)
+  - [x] Add pause/hide button in header
+  - [x] Add action buttons (Highlight, Calculator, Reference, More)
+  - [x] Add question counter badge (e.g., "8")
+  - [x] Add "Mark for Review" checkbox
+  - [x] Reorganize question display area
+  - [x] Move navigation to bottom bar
+  - [x] Add question counter dropdown at bottom left (e.g., "8 of 159")
+  - [x] Add bottom action buttons (Previous, Next, Explanation, etc.)
+  - [x] Maintain dark theme and existing color scheme
+  - [x] Keep all existing features (answered question tracking, Blue Bucks)
+
+**Implementation Details:**
+- Top header: Timer with pause/resume, action buttons, score display
+- Question display: Large number badge, Mark for Review checkbox, full question text
+- Answer options: A-B-C-D with visual feedback (green for correct, red for incorrect, blue for selected)
+- Bottom bar: Question counter, navigation buttons, explanation toggle
+- Features preserved: Answered question tracking, Blue Bucks rewards, leaderboard integration
