@@ -832,6 +832,20 @@ export const appRouter = router({
       const details = await getCreditScoreDetails(ctx.user.id, schoolCode);
       return { score, details };
     }),
+
+    getBankAccount: protectedProcedure.query(async ({ ctx }) => {
+      const { userBankAccounts } = await import("../drizzle/schema");
+      const { getDb } = await import("./db");
+      const schoolCode = ctx.user.schoolCode || "";
+      const database = await getDb();
+      if (!database) return { checkingBalance: "0", savingsBalance: "0", investmentBalance: "0", totalDebt: "0" };
+      const account = await database
+        .select()
+        .from(userBankAccounts)
+        .where(and(eq(userBankAccounts.userId, ctx.user.id), eq(userBankAccounts.schoolCode, schoolCode)))
+        .limit(1);
+      return account[0] || { checkingBalance: "0", savingsBalance: "0", investmentBalance: "0", totalDebt: "0" };
+    }),
   }),
 });
 
