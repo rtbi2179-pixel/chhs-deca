@@ -833,6 +833,28 @@ export const appRouter = router({
       return { score, details };
     }),
 
+    transferFunds: protectedProcedure
+      .input(z.object({ fromAccount: z.enum(['checking', 'savings', 'investment']), toAccount: z.enum(['checking', 'savings', 'investment']), amount: z.number().positive() }))
+      .mutation(async ({ ctx, input }) => {
+        const { userBankAccounts } = await import('../drizzle/schema');
+        const { getDb } = await import('./db');
+        const schoolCode = ctx.user.schoolCode || '';
+        const database = await getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database unavailable' });
+        const account = await database.select().from(userBankAccounts).where(and(eq(userBankAccounts.userId, ctx.user.id), eq(userBankAccounts.schoolCode, schoolCode))).limit(1);
+        if (!account[0]) throw new TRPCError({ code: 'NOT_FOUND', message: 'Bank account not found' });
+        const fromKey = (input.fromAccount + 'Balance') as keyof typeof account[0];
+        const toKey = (input.toAccount + 'Balance') as keyof typeof account[0];
+        const fromBalance = parseFloat(account[0][fromKey] as unknown as string);
+        const toBalance = parseFloat(account[0][toKey] as unknown as string);
+        if (fromBalance < input.amount) throw new TRPCError({ code: 'FORBIDDEN', message: 'Insufficient funds' });
+        const updates: Record<string, string> = {};
+        updates[input.fromAccount + 'Balance'] = (fromBalance - input.amount).toString();
+        updates[input.toAccount + 'Balance'] = (toBalance + input.amount).toString();
+        await database.update(userBankAccounts).set(updates).where(and(eq(userBankAccounts.userId, ctx.user.id), eq(userBankAccounts.schoolCode, schoolCode)));
+        return { success: true };
+      }),
+
     applyCreditCard: protectedProcedure
       .input(z.object({ creditCardId: z.number() }))
       .mutation(async ({ ctx, input }) => {
