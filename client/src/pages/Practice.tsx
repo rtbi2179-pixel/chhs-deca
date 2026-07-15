@@ -193,9 +193,9 @@ export default function Practice() {
   const currentQuestionNumber = (currentPage - 1) * pageSize + currentQuestionIndex + 1;
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col mt-16">
       {/* Top Header - Two Row Layout */}
-      <div className="bg-background border-b border-border px-6 py-3 sticky top-0 z-40">
+      <div className="bg-background border-b border-border px-6 py-3 sticky top-0 z-50 shadow-md">
         {/* Row 1: Left and Center */}
         <div className="flex items-center justify-between gap-6 mb-3">
           {/* Left Section */}
@@ -379,7 +379,7 @@ export default function Practice() {
       </div>
 
       {/* Bottom Navigation Bar */}
-      <div className="bg-background border-t border-border px-6 py-4 flex items-center justify-between">
+      <div className="bg-background border-t border-border px-6 py-4 flex items-center justify-between sticky bottom-0 z-40 shadow-md">
         <Button variant="outline" size="sm" className="bg-foreground text-background">
           {currentQuestionNumber} of {totalQuestions}
           <ChevronDown className="w-4 h-4 ml-2" />
