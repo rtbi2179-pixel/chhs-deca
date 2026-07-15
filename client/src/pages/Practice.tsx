@@ -195,7 +195,7 @@ export default function Practice() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Top Header */}
-      <div className="bg-background border-b border-border px-6 py-4 flex items-center justify-between">
+      <div className="bg-background border-b border-border px-6 py-6 flex items-center justify-between sticky top-0 z-40">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="sm" onClick={() => window.history.back()} className="text-foreground/70">
             ← Go back
@@ -251,7 +251,7 @@ export default function Practice() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto px-6 py-8">
+      <div className="flex-1 overflow-auto px-6 py-12 mt-4">
         {currentQuestion ? (
           <div className="max-w-4xl mx-auto">
             {/* Question Header */}
