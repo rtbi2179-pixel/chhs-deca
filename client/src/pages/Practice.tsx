@@ -9,6 +9,7 @@ import { toast } from "sonner";
 export default function Practice() {
   const [selectedCluster, setSelectedCluster] = useState<string | null>(null);
   const [showClusterModal, setShowClusterModal] = useState(true);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(20);
@@ -22,6 +23,7 @@ export default function Practice() {
   const [markedForReview, setMarkedForReview] = useState<Set<string>>(new Set());
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [clusterProgress, setClusterProgress] = useState<Record<string, number>>({});
 
   // Timer effect
   useEffect(() => {
@@ -115,8 +117,22 @@ export default function Practice() {
   };
 
   const handleSelectCluster = (cluster: string) => {
-    setSelectedCluster(cluster);
-    setShowClusterModal(false);
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setSelectedCluster(cluster);
+      setShowClusterModal(false);
+      setIsTransitioning(false);
+    }, 300);
+  };
+
+  const getClusterProgress = (clusterValue: string) => {
+    const totalQuestions = parseInt(clusters.find(c => c.value === clusterValue)?.questions.replace(/,/g, '') || '0');
+    const answeredCount = Array.from(answeredQuestionIds).filter(id => id.includes(clusterValue)).length;
+    return totalQuestions > 0 ? Math.round((answeredCount / totalQuestions) * 100) : 0;
+  };
+
+  const getTotalAnsweredByCluster = (clusterValue: string) => {
+    return Array.from(answeredQuestionIds).filter(id => id.includes(clusterValue)).length;
   };
 
   const difficulties = [
@@ -251,24 +267,42 @@ export default function Practice() {
           <p className="text-slate-300 text-lg mb-8">Select a cluster to practice:</p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {clusters.map((cluster: any) => (
-              <button
-                key={cluster.value}
-                onClick={() => handleSelectCluster(cluster.value)}
-                className={`bg-gradient-to-br ${cluster.color} rounded-2xl p-8 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 relative overflow-hidden group`}
-              >
-                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="relative z-10 text-left">
-                  <div className="mb-3 text-white">{renderClusterIcon(cluster.icon)}</div>
-                  <h2 className="text-3xl font-bold mb-2">{cluster.label}</h2>
-                  <p className="text-white/90 mb-6 text-lg">{cluster.questions} questions</p>
-                  <div className="inline-flex items-center gap-2 bg-white text-slate-900 px-6 py-2 rounded-full font-semibold hover:bg-slate-100 transition">
-                    Open
-                    <span>→</span>
+            {clusters.map((cluster: any) => {
+              const progress = getClusterProgress(cluster.value);
+              const answered = getTotalAnsweredByCluster(cluster.value);
+              return (
+                <button
+                  key={cluster.value}
+                  onClick={() => handleSelectCluster(cluster.value)}
+                  className={`bg-gradient-to-br ${cluster.color} rounded-2xl p-8 text-white shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 relative overflow-hidden group border-2 border-white/0 hover:border-white/30`}
+                >
+                  <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="relative z-10 text-left">
+                    <div className="mb-3 text-white transform transition-transform duration-300 group-hover:scale-110">{renderClusterIcon(cluster.icon)}</div>
+                    <h2 className="text-3xl font-bold mb-2">{cluster.label}</h2>
+                    <p className="text-white/90 mb-3 text-lg">{cluster.questions} questions</p>
+                    
+                    <div className="mb-4">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-xs text-white/80">Progress</span>
+                        <span className="text-xs font-semibold text-white/90">{answered} completed</span>
+                      </div>
+                      <div className="w-full bg-white/20 rounded-full h-2 overflow-hidden">
+                        <div 
+                          className="bg-white h-full rounded-full transition-all duration-500 ease-out"
+                          style={{ width: `${progress}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                    
+                    <div className="inline-flex items-center gap-2 bg-white text-slate-900 px-6 py-2 rounded-full font-semibold hover:bg-slate-100 transition">
+                      Open
+                      <span>→</span>
+                    </div>
                   </div>
-                </div>
-              </button>
-            ))}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
