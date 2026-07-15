@@ -7,7 +7,8 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 export default function Practice() {
-  const [selectedCluster, setSelectedCluster] = useState<string>("all");
+  const [selectedCluster, setSelectedCluster] = useState<string | null>(null);
+  const [showClusterModal, setShowClusterModal] = useState(true);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(20);
@@ -51,11 +52,11 @@ export default function Practice() {
 
   // Fetch paginated questions from the database
   const { data: questionsData, isLoading } = trpc.practice.getQuestions.useQuery({
-    cluster: selectedCluster === "all" ? undefined : selectedCluster,
+    cluster: selectedCluster === "all" || !selectedCluster ? undefined : selectedCluster,
     difficulty: selectedDifficulty === "all" ? undefined : selectedDifficulty,
     page: currentPage,
     pageSize,
-  });
+  }, { enabled: !!selectedCluster && !showClusterModal });
 
   // Extract questions from paginated response
   const allQuestions = questionsData?.questions || [];
@@ -67,12 +68,16 @@ export default function Practice() {
   const isCurrentQuestionMarked = currentQuestion ? markedForReview.has(currentQuestion.id) : false;
 
   const clusters = [
-    { value: "all", label: "All Clusters" },
     { value: "Marketing", label: "Marketing" },
     { value: "Business Management & Administration", label: "Business Management" },
     { value: "Finance", label: "Finance" },
     { value: "Hospitality & Tourism", label: "Hospitality & Tourism" },
   ];
+
+  const handleSelectCluster = (cluster: string) => {
+    setSelectedCluster(cluster);
+    setShowClusterModal(false);
+  };
 
   const difficulties = [
     { value: "all", label: "All Levels" },
@@ -192,6 +197,28 @@ export default function Practice() {
 
   const currentQuestionNumber = (currentPage - 1) * pageSize + currentQuestionIndex + 1;
 
+  if (showClusterModal) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center mt-16">
+        <div className="bg-card border border-border rounded-lg shadow-lg p-8 max-w-md w-full mx-4">
+          <h1 className="text-3xl font-bold text-foreground mb-2">Select a Cluster</h1>
+          <p className="text-foreground/70 mb-6">Choose which cluster you'd like to practice:</p>
+          <div className="space-y-3">
+            {clusters.map((cluster) => (
+              <button
+                key={cluster.value}
+                onClick={() => handleSelectCluster(cluster.value)}
+                className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-200 text-left"
+              >
+                {cluster.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background flex flex-col mt-16">
       {/* Top Header - Two Row Layout */}
@@ -204,7 +231,7 @@ export default function Practice() {
               ← Go back
             </Button>
             <select
-              value={selectedCluster}
+              value={selectedCluster || ""}
               onChange={(e) => {
                 setSelectedCluster(e.target.value);
                 setCurrentPage(1);
