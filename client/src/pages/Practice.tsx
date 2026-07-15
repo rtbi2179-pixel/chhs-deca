@@ -227,6 +227,31 @@ export default function Practice() {
     }
   };
 
+  const handleJumpToNextUnanswered = () => {
+    // Find the next unanswered question starting from current index + 1
+    for (let i = currentQuestionIndex + 1; i < allQuestions.length; i++) {
+      if (!answeredQuestionIds.has(allQuestions[i].id)) {
+        setCurrentQuestionIndex(i);
+        setSelectedAnswer(null);
+        setShowResult(false);
+        setShowExplanation(false);
+        return;
+      }
+    }
+    // If no unanswered found after current, search from beginning
+    for (let i = 0; i < currentQuestionIndex; i++) {
+      if (!answeredQuestionIds.has(allQuestions[i].id)) {
+        setCurrentQuestionIndex(i);
+        setSelectedAnswer(null);
+        setShowResult(false);
+        setShowExplanation(false);
+        return;
+      }
+    }
+    // All questions answered
+    toast.success('All questions answered!');
+  };
+
   const toggleMarkForReview = () => {
     if (!currentQuestion) return;
     setMarkedForReview(prev => {
@@ -527,6 +552,12 @@ export default function Practice() {
             className="text-foreground/70"
           >
             Previous
+          </Button>
+          <Button 
+            onClick={handleJumpToNextUnanswered}
+            className="bg-purple-600 hover:bg-purple-700 text-white"
+          >
+            Skip to Unanswered
           </Button>
           <Button 
             onClick={!showResult ? handleSubmitAnswer : handleNextQuestion}
