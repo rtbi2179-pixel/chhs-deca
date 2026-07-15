@@ -515,7 +515,7 @@ export const appRouter = router({
         cluster: z.string().optional(),
         difficulty: z.string().optional(),
         page: z.number().int().positive().default(1),
-        pageSize: z.number().int().positive().max(100).default(20),
+        pageSize: z.number().int().positive().max(10000).default(10000),
       }))
       .query(async ({ input }) => {
         const db_instance = await db.getDb();
@@ -547,17 +547,15 @@ export const appRouter = router({
         const countResult = await countQuery;
         const total = (countResult[0]?.count as number) || 0;
 
-        // Apply pagination
-        const offset = (input.page - 1) * input.pageSize;
-        const paginatedQuery = baseQuery.limit(input.pageSize).offset(offset);
-        const questionsList = await paginatedQuery;
+        // Fetch all questions without pagination limit
+        const questionsList = await baseQuery.limit(input.pageSize);
 
         return {
           questions: questionsList,
           total,
-          page: input.page,
-          pageSize: input.pageSize,
-          totalPages: Math.ceil(total / input.pageSize),
+          page: 1,
+          pageSize: questionsList.length,
+          totalPages: 1,
         };
       }),
 

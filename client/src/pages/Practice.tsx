@@ -12,7 +12,7 @@ export default function Practice() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize] = useState(20);
+  const [pageSize] = useState(10000);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
@@ -56,8 +56,8 @@ export default function Practice() {
   const { data: questionsData, isLoading } = trpc.practice.getQuestions.useQuery({
     cluster: selectedCluster === "all" || !selectedCluster ? undefined : selectedCluster,
     difficulty: selectedDifficulty === "all" ? undefined : selectedDifficulty,
-    page: currentPage,
-    pageSize,
+    page: 1,
+    pageSize: 10000,
   }, { enabled: !!selectedCluster && !showClusterModal });
 
   // Extract questions from paginated response
