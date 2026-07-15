@@ -194,9 +194,10 @@ export default function Practice() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Top Header */}
-      <div className="bg-background border-b border-border px-6 py-4 sticky top-0 z-40">
-        <div className="flex items-center justify-between gap-8 flex-wrap">
+      {/* Top Header - Two Row Layout */}
+      <div className="bg-background border-b border-border px-6 py-3 sticky top-0 z-40">
+        {/* Row 1: Left and Center */}
+        <div className="flex items-center justify-between gap-6 mb-3">
           {/* Left Section */}
           <div className="flex items-center gap-3 flex-shrink-0">
             <Button variant="ghost" size="sm" onClick={() => window.history.back()} className="text-foreground/70">
@@ -232,27 +233,28 @@ export default function Practice() {
             </Button>
           </div>
 
-          {/* Right Section - Action Buttons */}
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <Button variant="ghost" size="sm" className="text-cyan-400 whitespace-nowrap">
-              ✏️ Highlight
-            </Button>
-            <Button variant="ghost" size="sm" className="text-foreground/70 whitespace-nowrap">
-              🧮 Calculator
-            </Button>
-            <Button variant="ghost" size="sm" className="text-foreground/70 whitespace-nowrap">
-              📖 Reference
-            </Button>
-            <Button variant="ghost" size="sm" className="text-foreground/70">
-              ⋯
-            </Button>
-            <div className="flex items-center gap-3 ml-4 pl-4 border-l border-border">
-              <div className="text-center">
-                <span className="text-sm text-red-500 font-bold">0</span>
-              </div>
-              <div className="text-center">
-                <span className="text-sm text-blue-500 font-bold">20</span>
-              </div>
+        </div>
+
+        {/* Row 2: Action Buttons */}
+        <div className="flex items-center gap-2 justify-end">
+          <Button variant="ghost" size="sm" className="text-cyan-400 whitespace-nowrap">
+            ✏️ Highlight
+          </Button>
+          <Button variant="ghost" size="sm" className="text-foreground/70 whitespace-nowrap">
+            🧮 Calculator
+          </Button>
+          <Button variant="ghost" size="sm" className="text-foreground/70 whitespace-nowrap">
+            📖 Reference
+          </Button>
+          <Button variant="ghost" size="sm" className="text-foreground/70">
+            ⋯
+          </Button>
+          <div className="flex items-center gap-3 ml-4 pl-4 border-l border-border">
+            <div className="text-center">
+              <span className="text-sm text-red-500 font-bold">0</span>
+            </div>
+            <div className="text-center">
+              <span className="text-sm text-blue-500 font-bold">20</span>
             </div>
           </div>
         </div>
