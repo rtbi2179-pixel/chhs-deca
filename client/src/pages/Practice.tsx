@@ -68,10 +68,10 @@ export default function Practice() {
   const isCurrentQuestionMarked = currentQuestion ? markedForReview.has(currentQuestion.id) : false;
 
   const clusters = [
-    { value: "Marketing", label: "Marketing" },
-    { value: "Business Management & Administration", label: "Business Management" },
-    { value: "Finance", label: "Finance" },
-    { value: "Hospitality & Tourism", label: "Hospitality & Tourism" },
+    { value: "Marketing", label: "Marketing", color: "from-blue-600 to-blue-500", icon: "📊", questions: "2400+" },
+    { value: "Business Management & Administration", label: "Business Management", color: "from-cyan-500 to-blue-400", icon: "💼", questions: "2100+" },
+    { value: "Finance", label: "Finance", color: "from-indigo-600 to-blue-500", icon: "💰", questions: "2300+" },
+    { value: "Hospitality & Tourism", label: "Hospitality & Tourism", color: "from-slate-600 to-slate-500", icon: "🏨", questions: "2200+" },
   ];
 
   const handleSelectCluster = (cluster: string) => {
@@ -199,18 +199,34 @@ export default function Practice() {
 
   if (showClusterModal) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center mt-16">
-        <div className="bg-card border border-border rounded-lg shadow-lg p-8 max-w-md w-full mx-4">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Select a Cluster</h1>
-          <p className="text-foreground/70 mb-6">Choose which cluster you'd like to practice:</p>
-          <div className="space-y-3">
-            {clusters.map((cluster) => (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex flex-col items-center justify-center mt-16 px-4 py-8">
+        <div className="max-w-6xl w-full">
+          <div className="flex items-center gap-3 mb-12">
+            <div className="w-12 h-12 rounded-lg bg-blue-600 flex items-center justify-center">
+              <span className="text-white text-xl">📚</span>
+            </div>
+            <h1 className="text-4xl font-bold text-white">Question Bank</h1>
+          </div>
+
+          <p className="text-slate-300 text-lg mb-8">Select a cluster to practice:</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {clusters.map((cluster: any) => (
               <button
                 key={cluster.value}
                 onClick={() => handleSelectCluster(cluster.value)}
-                className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-200 text-left"
+                className={`bg-gradient-to-br ${cluster.color} rounded-2xl p-8 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 relative overflow-hidden group`}
               >
-                {cluster.label}
+                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative z-10 text-left">
+                  <div className="text-5xl mb-3">{cluster.icon}</div>
+                  <h2 className="text-3xl font-bold mb-2">{cluster.label}</h2>
+                  <p className="text-white/90 mb-6 text-lg">{cluster.questions} questions</p>
+                  <div className="inline-flex items-center gap-2 bg-white text-slate-900 px-6 py-2 rounded-full font-semibold hover:bg-slate-100 transition">
+                    Open
+                    <span>→</span>
+                  </div>
+                </div>
               </button>
             ))}
           </div>
