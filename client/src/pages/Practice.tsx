@@ -510,27 +510,7 @@ export default function Practice() {
           >
             ℹ
           </Button>
-          <Button 
-            variant="ghost" 
-            size="sm"
-            className="bg-purple-600 hover:bg-purple-700 text-white"
-          >
-            💬 Ask Preppy
-          </Button>
-          <Button 
-            variant="ghost" 
-            size="sm"
-            className="bg-purple-600 hover:bg-purple-700 text-white"
-          >
-            🎓 Masterclass
-          </Button>
-          <Button 
-            variant="ghost" 
-            size="sm"
-            className="text-pink-400 hover:text-pink-300"
-          >
-            🎵 Remix
-          </Button>
+
           <Button 
             variant="ghost" 
             size="sm"
