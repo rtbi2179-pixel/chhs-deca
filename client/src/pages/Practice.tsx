@@ -2,7 +2,7 @@
 
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
-import { Loader2, ChevronDown, CheckCircle2, Bookmark } from "lucide-react";
+import { Loader2, ChevronDown, CheckCircle2, Bookmark, Grid3x3, Save } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -24,6 +24,8 @@ export default function Practice() {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [clusterProgress, setClusterProgress] = useState<Record<string, number>>({});
+  const [showGridNavigator, setShowGridNavigator] = useState(false);
+  const [sessionSaved, setSessionSaved] = useState(false);
 
   // Timer effect
   useEffect(() => {
@@ -68,6 +70,51 @@ export default function Practice() {
   const currentQuestion = allQuestions[currentQuestionIndex];
   const isCurrentQuestionAnswered = currentQuestion ? answeredQuestionIds.has(currentQuestion.id) : false;
   const isCurrentQuestionMarked = currentQuestion ? markedForReview.has(currentQuestion.id) : false;
+
+
+  // Save session to localStorage
+  const saveSession = () => {
+    const sessionData = {
+      selectedCluster,
+      currentQuestionIndex,
+      answeredQuestionIds: Array.from(answeredQuestionIds),
+      markedForReview: Array.from(markedForReview),
+      elapsedSeconds,
+      selectedAnswer,
+      showResult,
+    };
+    localStorage.setItem(`practice_session_${selectedCluster}`, JSON.stringify(sessionData));
+    setSessionSaved(true);
+    toast.success('Session saved! You can resume later.');
+    setTimeout(() => setSessionSaved(false), 3000);
+  };
+
+  // Load session from localStorage
+  const loadSession = () => {
+    if (!selectedCluster) return;
+    const sessionData = localStorage.getItem(`practice_session_${selectedCluster}`);
+    if (sessionData) {
+      try {
+        const data = JSON.parse(sessionData);
+        setCurrentQuestionIndex(data.currentQuestionIndex || 0);
+        setAnsweredQuestionIds(new Set(data.answeredQuestionIds || []));
+        setMarkedForReview(new Set(data.markedForReview || []));
+        setElapsedSeconds(data.elapsedSeconds || 0);
+        setSelectedAnswer(data.selectedAnswer || null);
+        setShowResult(data.showResult || false);
+        toast.success('Session resumed!');
+      } catch (e) {
+        console.error('Failed to load session:', e);
+      }
+    }
+  };
+
+  // Load session when cluster is selected
+  useEffect(() => {
+    if (selectedCluster && !showClusterModal) {
+      loadSession();
+    }
+  }, [selectedCluster, showClusterModal]);
 
   const clusters = [
     { value: "Marketing", label: "Marketing", color: "from-blue-600 to-blue-500", icon: "chart", questions: "9,200+" },
@@ -367,6 +414,24 @@ export default function Practice() {
               className="text-foreground/70 whitespace-nowrap"
             >
               {isPaused ? '▶' : '⏸'} {isPaused ? 'Resume' : 'Pause'}
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => setShowGridNavigator(!showGridNavigator)}
+              className="text-foreground/70 whitespace-nowrap"
+              title="Show question grid"
+            >
+              <Grid3x3 className="w-4 h-4" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={saveSession}
+              className={`whitespace-nowrap ${sessionSaved ? 'text-green-500' : 'text-foreground/70'}`}
+              title="Save your progress"
+            >
+              <Save className="w-4 h-4" />
+            </Button>
             </Button>
           </div>
 
@@ -398,6 +463,76 @@ export default function Practice() {
       </div>
 
       {/* Main Content */}
+
+      {/* Grid Navigator Modal */}
+      {showGridNavigator && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-background border border-border rounded-lg p-6 max-w-4xl w-full max-h-96 overflow-auto">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-foreground">Question Navigator</h2>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => setShowGridNavigator(false)}
+                className="text-foreground/70"
+              >
+                ✕
+              </Button>
+            </div>
+            
+            {/* Legend */}
+            <div className="flex gap-6 mb-6 text-sm">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 bg-green-500 rounded"></div>
+                <span className="text-foreground/80">Answered</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 bg-slate-500 rounded"></div>
+                <span className="text-foreground/80">Unanswered</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 bg-yellow-500 rounded"></div>
+                <span className="text-foreground/80">Marked for Review</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 bg-blue-500 rounded"></div>
+                <span className="text-foreground/80">Current</span>
+              </div>
+            </div>
+
+            {/* Question Grid */}
+            <div className="grid grid-cols-10 gap-2">
+              {allQuestions.map((q, idx) => {
+                const isAnswered = answeredQuestionIds.has(q.id);
+                const isMarked = markedForReview.has(q.id);
+                const isCurrent = idx === currentQuestionIndex;
+                
+                let bgColor = 'bg-slate-500';
+                if (isCurrent) bgColor = 'bg-blue-500';
+                else if (isMarked) bgColor = 'bg-yellow-500';
+                else if (isAnswered) bgColor = 'bg-green-500';
+                
+                return (
+                  <button
+                    key={q.id}
+                    onClick={() => {
+                      setCurrentQuestionIndex(idx);
+                      setShowGridNavigator(false);
+                      setSelectedAnswer(null);
+                      setShowResult(false);
+                    }}
+                    className={`w-8 h-8 rounded text-xs font-semibold text-white ${bgColor} hover:opacity-80 transition-opacity`}
+                    title={`Q${idx + 1} - ${isAnswered ? 'Answered' : 'Unanswered'}${isMarked ? ' (Marked)' : ''}`}
+                  >
+                    {idx + 1}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex-1 overflow-auto px-6 py-12">
         {currentQuestion ? (
           <div className="max-w-4xl mx-auto">
