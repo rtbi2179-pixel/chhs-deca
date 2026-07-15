@@ -11,7 +11,7 @@ import { notifyOwner } from "./_core/notification";
 import { getStockPrice } from "./stockPriceService";
 
 import { questions, userAnswers, blueBucks, blueBucksTransactions, leaderboard } from "../drizzle/schema";
-import { and, eq, sql, inArray, desc } from "drizzle-orm";
+import { and, eq, sql, inArray, desc, lte } from "drizzle-orm";
 
 export const announcementsRouter = router({
   getBySchool: publicProcedure
@@ -833,6 +833,28 @@ export const appRouter = router({
       return { score, details };
     }),
 
+    applyCreditCard: protectedProcedure
+      .input(z.object({ creditCardId: z.number() }))
+      .mutation(async ({ ctx, input }) => {
+        const { userCreditCards, creditCards } = await import('../drizzle/schema');
+        const { getDb } = await import('./db');
+        const { getUserCreditScore } = await import('./creditScoreEngine');
+        const schoolCode = ctx.user.schoolCode || '';
+        const database = await getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database unavailable' });
+        const existing = await database.select().from(userCreditCards).where(and(eq(userCreditCards.userId, ctx.user.id), eq(userCreditCards.creditCardId, input.creditCardId))).limit(1);
+        if (existing.length > 0) throw new TRPCError({ code: 'CONFLICT', message: 'You already have this card' });
+        const card = await database.select().from(creditCards).where(eq(creditCards.id, input.creditCardId)).limit(1);
+        if (card.length === 0) throw new TRPCError({ code: 'NOT_FOUND', message: 'Card not found' });
+        const creditScore = await getUserCreditScore(ctx.user.id, schoolCode);
+        if (creditScore < card[0].creditScoreRequired) throw new TRPCError({ code: 'FORBIDDEN', message: 'Credit score too low' });
+        let creditLimit = 1000;
+        if (card[0].tier === 'rewards') creditLimit = 5000;
+        if (card[0].tier === 'elite') creditLimit = 10000;
+        await database.insert(userCreditCards).values({ userId: ctx.user.id, creditCardId: input.creditCardId, creditLimit: creditLimit.toString(), availableCredit: creditLimit.toString(), schoolCode: schoolCode });
+        return { success: true, creditLimit };
+      }),
+
     getBankAccount: protectedProcedure.query(async ({ ctx }) => {
       const { userBankAccounts } = await import("../drizzle/schema");
       const { getDb } = await import("./db");
@@ -845,6 +867,28 @@ export const appRouter = router({
         .where(and(eq(userBankAccounts.userId, ctx.user.id), eq(userBankAccounts.schoolCode, schoolCode)))
         .limit(1);
       return account[0] || { checkingBalance: "0", savingsBalance: "0", investmentBalance: "0", totalDebt: "0" };
+    }),
+
+    getAvailableCards: protectedProcedure.query(async ({ ctx }) => {
+      const { getUserCreditScore } = await import('./creditScoreEngine');
+      const { creditCards } = await import('../drizzle/schema');
+      const { getDb } = await import('./db');
+      const schoolCode = ctx.user.schoolCode || '';
+      const creditScore = await getUserCreditScore(ctx.user.id, schoolCode);
+      const database = await getDb();
+      if (!database) return [];
+      const cards = await database.select().from(creditCards).where(and(eq(creditCards.schoolCode, schoolCode), lte(creditCards.creditScoreRequired, creditScore)));
+      return cards;
+    }),
+
+    getUserCards: protectedProcedure.query(async ({ ctx }) => {
+      const { userCreditCards } = await import('../drizzle/schema');
+      const { getDb } = await import('./db');
+      const schoolCode = ctx.user.schoolCode || '';
+      const database = await getDb();
+      if (!database) return [];
+      const userCards = await database.select().from(userCreditCards).where(and(eq(userCreditCards.userId, ctx.user.id), eq(userCreditCards.schoolCode, schoolCode)));
+      return userCards;
     }),
   }),
 });
