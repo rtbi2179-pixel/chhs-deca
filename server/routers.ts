@@ -824,6 +824,15 @@ export const appRouter = router({
         return { success: true };
       }),
   }),
+  banking: router({
+    getCreditScore: protectedProcedure.query(async ({ ctx }) => {
+      const { getUserCreditScore, getCreditScoreDetails } = await import("./creditScoreEngine");
+      const schoolCode = ctx.user.schoolCode || '';
+      const score = await getUserCreditScore(ctx.user.id, schoolCode);
+      const details = await getCreditScoreDetails(ctx.user.id, schoolCode);
+      return { score, details };
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
