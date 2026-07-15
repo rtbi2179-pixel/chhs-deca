@@ -243,10 +243,10 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
                     <AnimatePresence>
                       {showFinancialMenu && (
                         <motion.div
-                          initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                          transition={{ duration: 0.15 }}
+                          initial={{ opacity: 0, x: 20, scale: 0.9 }}
+                          animate={{ opacity: 1, x: 0, scale: 1 }}
+                          exit={{ opacity: 0, x: 20, scale: 0.9 }}
+                          transition={{ duration: 0.25, ease: 'easeOut' }}
                           className="absolute right-0 mt-2 bg-slate-900 border border-blue-500/30 rounded-lg shadow-xl z-[70] overflow-hidden"
                         >
                           <div className="flex flex-col gap-0 min-w-max">

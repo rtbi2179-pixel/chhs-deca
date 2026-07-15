@@ -2,9 +2,10 @@
 
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
-import { Loader2, ChevronDown, CheckCircle2, Bookmark, Grid3x3, Save } from "lucide-react";
+import { Loader2, ChevronDown, CheckCircle2, Bookmark, Grid3x3, Save, Award, Clock, DollarSign } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 export default function Practice() {
   const [selectedCluster, setSelectedCluster] = useState<string | null>(null);
@@ -26,6 +27,8 @@ export default function Practice() {
   const [clusterProgress, setClusterProgress] = useState<Record<string, number>>({});
   const [showGridNavigator, setShowGridNavigator] = useState(false);
   const [sessionSaved, setSessionSaved] = useState(false);
+  const [showSessionSummary, setShowSessionSummary] = useState(false);
+  const [sessionBlueBucks, setSessionBlueBucks] = useState(0);
 
   // Timer effect
   useEffect(() => {
@@ -376,6 +379,29 @@ export default function Practice() {
     );
   }
 
+  const handleFinishSession = () => {
+    // Calculate accuracy percentage
+    const accuracy = totalAnswered > 0 ? Math.round((score / totalAnswered) * 100) : 0;
+    
+    // Estimate blue bucks earned (1 point per correct answer)
+    const estimatedBlueBucks = score * 10; // 10 blue bucks per correct answer
+    setSessionBlueBucks(estimatedBlueBucks);
+    
+    setShowSessionSummary(true);
+  };
+
+  const handleExitSession = () => {
+    setShowSessionSummary(false);
+    setShowClusterModal(true);
+    setSelectedCluster(null);
+    setCurrentQuestionIndex(0);
+    setSelectedAnswer(null);
+    setShowResult(false);
+    setScore(0);
+    setTotalAnswered(0);
+    setElapsedSeconds(0);
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col mt-16">
       {/* Top Header - Two Row Layout */}
@@ -414,6 +440,7 @@ export default function Practice() {
               className="text-foreground/70 whitespace-nowrap"
             >
               {isPaused ? '▶' : '⏸'} {isPaused ? 'Resume' : 'Pause'}
+            </Button>
             <Button 
               variant="ghost" 
               size="sm"
@@ -431,7 +458,6 @@ export default function Practice() {
               title="Save your progress"
             >
               <Save className="w-4 h-4" />
-            </Button>
             </Button>
           </div>
 
@@ -701,8 +727,103 @@ export default function Practice() {
           >
             {!showResult ? 'Submit' : 'Next'}
           </Button>
+          <Button 
+            onClick={handleFinishSession}
+            className="bg-green-600 hover:bg-green-700 text-white"
+          >
+            Finish Session
+          </Button>
         </div>
       </div>
+
+      {/* Session Summary Modal */}
+      {showSessionSummary && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          transition={{ duration: 0.3 }}
+          className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4"
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="bg-background border border-border rounded-lg p-8 max-w-md w-full shadow-2xl"
+          >
+            <div className="text-center">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="mb-6 flex justify-center"
+              >
+                <Award className="w-16 h-16 text-yellow-500" />
+              </motion.div>
+              
+              <h2 className="text-3xl font-bold text-foreground mb-2">Session Complete!</h2>
+              <p className="text-foreground/70 mb-8">Great job practicing today!</p>
+              
+              <div className="space-y-4 mb-8">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.3 }}
+                  className="flex items-center justify-between p-4 bg-blue-500/10 rounded-lg border border-blue-500/20"
+                >
+                  <div className="flex items-center gap-3">
+                    <Award className="w-5 h-5 text-blue-400" />
+                    <span className="text-foreground/80">Correct Answers</span>
+                  </div>
+                  <span className="text-xl font-bold text-blue-400">{score}/{totalAnswered}</span>
+                </motion.div>
+                
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.4 }}
+                  className="flex items-center justify-between p-4 bg-purple-500/10 rounded-lg border border-purple-500/20"
+                >
+                  <div className="flex items-center gap-3">
+                    <Clock className="w-5 h-5 text-purple-400" />
+                    <span className="text-foreground/80">Time Taken</span>
+                  </div>
+                  <span className="text-xl font-bold text-purple-400">{formatTime(elapsedSeconds)}</span>
+                </motion.div>
+                
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.5 }}
+                  className="flex items-center justify-between p-4 bg-green-500/10 rounded-lg border border-green-500/20"
+                >
+                  <div className="flex items-center gap-3">
+                    <DollarSign className="w-5 h-5 text-green-400" />
+                    <span className="text-foreground/80">Blue Bucks Earned</span>
+                  </div>
+                  <span className="text-xl font-bold text-green-400">+{sessionBlueBucks}</span>
+                </motion.div>
+              </div>
+              
+              <div className="flex gap-3">
+                <Button
+                  onClick={() => setShowSessionSummary(false)}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  Continue Practicing
+                </Button>
+                <Button
+                  onClick={handleExitSession}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700"
+                >
+                  Return to Clusters
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 }
