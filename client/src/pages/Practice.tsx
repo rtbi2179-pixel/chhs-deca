@@ -257,12 +257,7 @@ export default function Practice() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex flex-col items-center justify-center mt-16 px-4 py-8">
         <div className="max-w-6xl w-full">
-          <div className="flex items-center gap-3 mb-12">
-            <div className="w-12 h-12 rounded-lg bg-blue-600 flex items-center justify-center">
-              <span className="text-white text-xl">📚</span>
-            </div>
-            <h1 className="text-4xl font-bold text-white">Question Bank</h1>
-          </div>
+          <h1 className="text-4xl font-bold text-white mb-12">Question Bank</h1>
 
           <p className="text-slate-300 text-lg mb-8">Select a cluster to practice:</p>
 
@@ -383,18 +378,23 @@ export default function Practice() {
           <div className="max-w-4xl mx-auto">
             {/* Question Header */}
             <div className="flex items-start justify-between mb-6">
-              <div className="flex items-start gap-4">
+            <div className="flex items-start gap-4">
                 <div className="w-12 h-12 bg-foreground text-background rounded-lg flex items-center justify-center font-bold text-lg">
                   {currentQuestionNumber}
                 </div>
-                <div className="flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    checked={isCurrentQuestionMarked}
-                    onChange={toggleMarkForReview}
-                    className="w-5 h-5 cursor-pointer"
-                  />
-                  <span className="text-foreground text-sm">Mark for Review</span>
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      checked={isCurrentQuestionMarked}
+                      onChange={toggleMarkForReview}
+                      className="w-5 h-5 cursor-pointer"
+                    />
+                    <span className="text-foreground text-sm">Mark for Review</span>
+                  </div>
+                  <div className="text-xs text-foreground/60">
+                    Question {currentQuestionNumber} of {allQuestions.length}
+                  </div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
