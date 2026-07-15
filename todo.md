@@ -133,3 +133,72 @@
 - [x] Implement in-flight request deduplication per ticker (concurrent requests share same pending promise)
 - [x] Add tests proving concurrent requests result in exactly one upstream API call
 - [ ] Add cache status endpoint for monitoring
+
+
+## Blue Blazer Banking System
+
+### Database Schema
+- [ ] Create banks table (name, focus, strategy)
+- [ ] Create credit_cards table (bank_id, tier, name, requirements, rewards, interest_rate, annual_fee)
+- [ ] Create user_bank_accounts table (user_id, checking_balance, savings_balance)
+- [ ] Create credit_scores table (user_id, score, last_calculated_date)
+- [ ] Create credit_history table (user_id, date, factors, score_change)
+- [ ] Create payments table (user_id, card_id, amount, date, status)
+- [ ] Create rewards table (user_id, amount, source, date)
+- [ ] Create financial_profiles table (user_id, net_worth, debt, account_open_date)
+
+### Credit Score Engine
+- [ ] Implement credit score calculation (300-850 range)
+- [ ] Create payment reliability factor (25% weight)
+- [ ] Create account history factor (25% weight)
+- [ ] Create practice consistency factor (20% weight)
+- [ ] Create net worth factor (20% weight)
+- [ ] Create spending behavior factor (10% weight)
+- [ ] Implement monthly credit score updates
+- [ ] Create practice reliability score calculation
+- [ ] Prevent rapid credit score changes
+
+### Banking System
+- [ ] Create 3 virtual banks (Blue Horizon, Summit Financial, Apex Bank)
+- [ ] Create 3 credit card tiers per bank (Starter, Rewards, Elite)
+- [ ] Implement credit card approval logic
+- [ ] Create checking account system
+- [ ] Create savings account with interest
+- [ ] Create investment account integration with Blue Market
+
+### User Banking Dashboard
+- [ ] Create banking dashboard page
+- [ ] Display checking balance
+- [ ] Display savings balance
+- [ ] Display credit score
+- [ ] Display available credit cards
+- [ ] Show credit card applications
+- [ ] Display payment history
+- [ ] Show rewards earned
+
+### Credit Card Features
+- [ ] Implement credit card usage tracking
+- [ ] Calculate cashback rewards
+- [ ] Track credit utilization rate
+- [ ] Implement payment system
+- [ ] Create card statements
+- [ ] Track spending patterns
+
+### Super Admin Dashboard
+- [ ] Create economic management dashboard (super admin only)
+- [ ] Allow credit score formula adjustment
+- [ ] Allow factor weight adjustment
+- [ ] Allow card tier modification
+- [ ] Allow interest rate adjustment
+- [ ] Allow rewards percentage adjustment
+- [ ] Log all economic changes
+- [ ] Display credit score analytics
+- [ ] Monitor system inflation
+
+### Testing
+- [ ] Test credit score calculations
+- [ ] Test card approval logic
+- [ ] Test payment processing
+- [ ] Test reward calculations
+- [ ] Test admin dashboard permissions
+- [ ] End-to-end banking system tests

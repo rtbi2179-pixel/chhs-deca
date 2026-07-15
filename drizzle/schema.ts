@@ -623,3 +623,203 @@ export const portfolioUploads = mysqlTable("portfolioUploads", {
 
 export type PortfolioUpload = typeof portfolioUploads.$inferSelect;
 export type InsertPortfolioUpload = typeof portfolioUploads.$inferInsert;
+
+
+/**
+ * Virtual Banks
+ */
+export const banks = mysqlTable("banks", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  focus: varchar("focus", { length: 100 }).notNull(), // "Beginner friendly", "Rewards and growth", "Premium users"
+  description: text("description"),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type Bank = typeof banks.$inferSelect;
+export type InsertBank = typeof banks.$inferInsert;
+
+/**
+ * Credit Card Tiers
+ */
+export const creditCards = mysqlTable("creditCards", {
+  id: int("id").autoincrement().primaryKey(),
+  bankId: int("bankId").notNull().references(() => banks.id, { onDelete: "cascade" }),
+  tier: mysqlEnum("tier", ["starter", "rewards", "elite"]).notNull(),
+  name: varchar("name", { length: 100 }).notNull(),
+  creditScoreRequired: int("creditScoreRequired").notNull(), // e.g., 500, 650, 750
+  rewardsPercentage: decimal("rewardsPercentage", { precision: 5, scale: 2 }).notNull(), // e.g., 1.00, 3.00, 5.00
+  interestRate: decimal("interestRate", { precision: 5, scale: 2 }).notNull(), // e.g., 8.00, 6.00, 4.00
+  annualFee: decimal("annualFee", { precision: 10, scale: 2 }).default("0"), // Optional annual fee
+  benefits: text("benefits"), // JSON or text description of benefits
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type CreditCard = typeof creditCards.$inferSelect;
+export type InsertCreditCard = typeof creditCards.$inferInsert;
+
+/**
+ * User Bank Accounts
+ */
+export const userBankAccounts = mysqlTable("userBankAccounts", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }).unique(),
+  checkingBalance: decimal("checkingBalance", { precision: 15, scale: 2 }).notNull().default("0"),
+  savingsBalance: decimal("savingsBalance", { precision: 15, scale: 2 }).notNull().default("0"),
+  investmentBalance: decimal("investmentBalance", { precision: 15, scale: 2 }).notNull().default("0"), // Connected to Blue Market
+  totalDebt: decimal("totalDebt", { precision: 15, scale: 2 }).notNull().default("0"),
+  accountOpenDate: timestamp("accountOpenDate").defaultNow().notNull(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type UserBankAccount = typeof userBankAccounts.$inferSelect;
+export type InsertUserBankAccount = typeof userBankAccounts.$inferInsert;
+
+/**
+ * User Credit Scores
+ */
+export const creditScores = mysqlTable("creditScores", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }).unique(),
+  score: int("score").notNull().default(500), // Range: 300-850
+  lastCalculatedDate: timestamp("lastCalculatedDate").defaultNow().notNull(),
+  paymentReliabilityScore: decimal("paymentReliabilityScore", { precision: 5, scale: 2 }).default("0"), // 0-100
+  accountHistoryScore: decimal("accountHistoryScore", { precision: 5, scale: 2 }).default("0"), // 0-100
+  practiceConsistencyScore: decimal("practiceConsistencyScore", { precision: 5, scale: 2 }).default("0"), // 0-100
+  netWorthScore: decimal("netWorthScore", { precision: 5, scale: 2 }).default("0"), // 0-100
+  spendingBehaviorScore: decimal("spendingBehaviorScore", { precision: 5, scale: 2 }).default("0"), // 0-100
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type CreditScore = typeof creditScores.$inferSelect;
+export type InsertCreditScore = typeof creditScores.$inferInsert;
+
+/**
+ * Credit History - Monthly credit score changes
+ */
+export const creditHistory = mysqlTable("creditHistory", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  previousScore: int("previousScore").notNull(),
+  newScore: int("newScore").notNull(),
+  scoreChange: int("scoreChange").notNull(), // Can be negative
+  factors: text("factors"), // JSON with factor breakdown
+  reason: varchar("reason", { length: 255 }), // e.g., "Monthly update", "Payment made", "Missed payment"
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  calculatedAt: timestamp("calculatedAt").defaultNow().notNull(),
+});
+export type CreditHistory = typeof creditHistory.$inferSelect;
+export type InsertCreditHistory = typeof creditHistory.$inferInsert;
+
+/**
+ * User Credit Card Holdings
+ */
+export const userCreditCards = mysqlTable("userCreditCards", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  creditCardId: int("creditCardId").notNull().references(() => creditCards.id, { onDelete: "cascade" }),
+  creditLimit: decimal("creditLimit", { precision: 15, scale: 2 }).notNull(),
+  currentBalance: decimal("currentBalance", { precision: 15, scale: 2 }).notNull().default("0"),
+  availableCredit: decimal("availableCredit", { precision: 15, scale: 2 }).notNull(),
+  utilizationRate: decimal("utilizationRate", { precision: 5, scale: 2 }).notNull().default("0"), // 0-100%
+  approvedDate: timestamp("approvedDate").defaultNow().notNull(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type UserCreditCard = typeof userCreditCards.$inferSelect;
+export type InsertUserCreditCard = typeof userCreditCards.$inferInsert;
+
+/**
+ * Credit Card Payments
+ */
+export const creditCardPayments = mysqlTable("creditCardPayments", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  userCreditCardId: int("userCreditCardId").notNull().references(() => userCreditCards.id, { onDelete: "cascade" }),
+  amount: decimal("amount", { precision: 15, scale: 2 }).notNull(),
+  status: mysqlEnum("status", ["pending", "completed", "missed", "late"]).notNull(),
+  dueDate: timestamp("dueDate").notNull(),
+  paidDate: timestamp("paidDate"),
+  daysLate: int("daysLate").default(0), // 0 if on time
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type CreditCardPayment = typeof creditCardPayments.$inferSelect;
+export type InsertCreditCardPayment = typeof creditCardPayments.$inferInsert;
+
+/**
+ * Rewards Earned
+ */
+export const rewards = mysqlTable("rewards", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  userCreditCardId: int("userCreditCardId").notNull().references(() => userCreditCards.id, { onDelete: "cascade" }),
+  amount: decimal("amount", { precision: 15, scale: 2 }).notNull(), // Blue Bucks earned
+  source: varchar("source", { length: 100 }).notNull(), // "Cashback", "Bonus", "Store discount"
+  transactionAmount: decimal("transactionAmount", { precision: 15, scale: 2 }).notNull(), // Amount spent to earn reward
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  earnedAt: timestamp("earnedAt").defaultNow().notNull(),
+});
+export type Reward = typeof rewards.$inferSelect;
+export type InsertReward = typeof rewards.$inferInsert;
+
+/**
+ * Financial Profiles - Aggregated user financial data
+ */
+export const financialProfiles = mysqlTable("financialProfiles", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }).unique(),
+  netWorth: decimal("netWorth", { precision: 15, scale: 2 }).notNull().default("0"), // Assets - Debt
+  totalAssets: decimal("totalAssets", { precision: 15, scale: 2 }).notNull().default("0"), // Cash + Savings + Investments
+  totalDebt: decimal("totalDebt", { precision: 15, scale: 2 }).notNull().default("0"),
+  totalRewardsEarned: decimal("totalRewardsEarned", { precision: 15, scale: 2 }).notNull().default("0"),
+  totalPurchases: decimal("totalPurchases", { precision: 15, scale: 2 }).notNull().default("0"),
+  missedPayments: int("missedPayments").notNull().default(0),
+  latePayments: int("latePayments").notNull().default(0),
+  onTimePayments: int("onTimePayments").notNull().default(0),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type FinancialProfile = typeof financialProfiles.$inferSelect;
+export type InsertFinancialProfile = typeof financialProfiles.$inferInsert;
+
+/**
+ * Economic Configuration - Super admin settings
+ */
+export const economicConfig = mysqlTable("economicConfig", {
+  id: int("id").autoincrement().primaryKey(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull().unique(),
+  paymentReliabilityWeight: decimal("paymentReliabilityWeight", { precision: 5, scale: 2 }).notNull().default("25"), // 25%
+  accountHistoryWeight: decimal("accountHistoryWeight", { precision: 5, scale: 2 }).notNull().default("25"), // 25%
+  practiceConsistencyWeight: decimal("practiceConsistencyWeight", { precision: 5, scale: 2 }).notNull().default("20"), // 20%
+  netWorthWeight: decimal("netWorthWeight", { precision: 5, scale: 2 }).notNull().default("20"), // 20%
+  spendingBehaviorWeight: decimal("spendingBehaviorWeight", { precision: 5, scale: 2 }).notNull().default("10"), // 10%
+  onTimePaymentPoints: int("onTimePaymentPoints").notNull().default(2), // +1 to +3 points
+  missedPaymentPenalty: int("missedPaymentPenalty").notNull().default(15), // -10 to -20 points
+  savingsInterestRate: decimal("savingsInterestRate", { precision: 5, scale: 2 }).notNull().default("0.5"), // Annual %
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type EconomicConfig = typeof economicConfig.$inferSelect;
+export type InsertEconomicConfig = typeof economicConfig.$inferInsert;
+
+/**
+ * Economic Changes Log - Audit trail for admin changes
+ */
+export const economicChangesLog = mysqlTable("economicChangesLog", {
+  id: int("id").autoincrement().primaryKey(),
+  adminId: int("adminId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  changeType: varchar("changeType", { length: 100 }).notNull(), // "Credit score formula", "Card tier", "Interest rate", etc.
+  oldValue: text("oldValue"), // JSON
+  newValue: text("newValue"), // JSON
+  reason: text("reason"),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  changedAt: timestamp("changedAt").defaultNow().notNull(),
+});
+export type EconomicChangesLog = typeof economicChangesLog.$inferSelect;
+export type InsertEconomicChangesLog = typeof economicChangesLog.$inferInsert;
