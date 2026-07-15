@@ -55,7 +55,7 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${
           scrolled
             ? 'bg-[oklch(0.07_0.01_265/0.92)] backdrop-blur-xl border-b border-white/5 shadow-[0_4px_30px_oklch(0_0_0/0.5)]'
             : 'bg-transparent'
@@ -247,7 +247,7 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
                           animate={{ opacity: 1, y: 0, scale: 1 }}
                           exit={{ opacity: 0, y: -10, scale: 0.95 }}
                           transition={{ duration: 0.15 }}
-                          className="absolute right-0 mt-2 bg-slate-900 border border-blue-500/30 rounded-lg shadow-xl z-50 overflow-hidden"
+                          className="absolute right-0 mt-2 bg-slate-900 border border-blue-500/30 rounded-lg shadow-xl z-[70] overflow-hidden"
                         >
                           <div className="flex flex-col gap-0 min-w-max">
                             {/* Blue Bucks Display */}
