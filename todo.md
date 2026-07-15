@@ -122,3 +122,14 @@
 - [x] Display execution prices and timestamps
 - [ ] Add filters by stock ticker and date range
 - [x] Show transaction type (buy/sell) with color coding
+
+
+## Centralized Stock Price Caching
+
+- [x] Implement server-side stock price cache that all users share (in-memory cache in stockPriceService.ts)
+- [x] Create background job to refresh stock prices periodically (stockPriceRefresher.ts)
+- [x] Store prices in in-memory cache with 5-minute TTL
+- [x] Ensure single API call per stock regardless of user count (request queue throttling + in-flight deduplication)
+- [x] Implement in-flight request deduplication per ticker (concurrent requests share same pending promise)
+- [x] Add tests proving concurrent requests result in exactly one upstream API call
+- [ ] Add cache status endpoint for monitoring

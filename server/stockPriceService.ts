@@ -6,6 +6,9 @@ const ALPHA_VANTAGE_BASE_URL = 'https://www.alphavantage.co/query';
 const priceCache = new Map<string, { data: StockQuote | null; timestamp: number }>();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
+// In-flight requests to deduplicate concurrent requests for the same ticker
+const inFlightRequests = new Map<string, Promise<StockQuote | null>>();
+
 // Request queue to throttle API calls
 let requestQueue: Promise<void> = Promise.resolve();
 const REQUEST_DELAY = 300; // 300ms between requests to respect rate limits
@@ -32,7 +35,7 @@ function getCachedPrice(ticker: string): StockQuote | null | undefined {
 /**
  * Fetch current stock price from Alpha Vantage API
  * Uses 15-minute delayed data (free tier)
- * Implements caching and request throttling
+ * Implements caching, request throttling, and in-flight deduplication
  */
 export async function getStockPrice(ticker: string): Promise<StockQuote | null> {
   // Check cache first
@@ -40,9 +43,17 @@ export async function getStockPrice(ticker: string): Promise<StockQuote | null> 
   if (cached !== undefined) {
     return cached;
   }
+  
+  // Check if this request is already in-flight (deduplication)
+  const inFlight = inFlightRequests.get(ticker);
+  if (inFlight) {
+    console.log(`[Stock Price Service] Reusing in-flight request for ${ticker}`);
+    return inFlight;
+  }
+  
   try {
-    // Queue the request to throttle API calls
-    const result = await new Promise<StockQuote | null>(resolve => {
+    // Create the promise for this request
+    const promise = new Promise<StockQuote | null>(resolve => {
       requestQueue = requestQueue.then(async () => {
         const apiKey = ENV.ALPHA_VANTAGE_API_KEY;
         if (!apiKey) {
@@ -108,10 +119,18 @@ export async function getStockPrice(ticker: string): Promise<StockQuote | null> 
         }
       });
     });
-
+    
+    // Store the in-flight request
+    inFlightRequests.set(ticker, promise);
+    
+    // Wait for the result and clean up
+    const result = await promise;
+    inFlightRequests.delete(ticker);
+    
     return result;
   } catch (error) {
     console.error('[Stock Price Service] Error fetching stock price:', error);
+    inFlightRequests.delete(ticker);
     return null;
   }
 }
