@@ -57,6 +57,7 @@ export default function Practice() {
   const totalPages = questionsData?.totalPages || 1;
 
   const currentQuestion = allQuestions[currentQuestionIndex];
+  const isCurrentQuestionAnswered = currentQuestion ? answeredQuestionIds.has(currentQuestion.id) : false;
 
   const clusters = [
     { value: "all", label: "All Clusters" },
@@ -202,6 +203,19 @@ export default function Practice() {
     setShowStudySessions(!showStudySessions);
   };
 
+  const handleJumpToNextUnanswered = () => {
+    for (let i = 0; i < allQuestions.length; i++) {
+      if (!answeredQuestionIds.has(allQuestions[i].id)) {
+        setCurrentQuestionIndex(i);
+        setSelectedAnswer(null);
+        setShowResult(false);
+        setShowExplanation(false);
+        return;
+      }
+    }
+    toast.info('All questions on this page have been answered!');
+  };
+
   const { data: leaderboardData } = trpc.practice.getLeaderboard.useQuery(
     { limit: 50 },
     { enabled: showLeaderboard }
@@ -276,20 +290,28 @@ export default function Practice() {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex items-end gap-2">
+            <div className="flex items-end gap-2 flex-col">
+              <div className="flex gap-2 w-full">
+                <Button
+                  onClick={handleResetFilters}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  Reset
+                </Button>
+                <Button
+                  onClick={handleShowLeaderboard}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  Leaderboard
+                </Button>
+              </div>
               <Button
-                onClick={handleResetFilters}
-                variant="outline"
-                className="flex-1"
+                onClick={handleJumpToNextUnanswered}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
               >
-                Reset
-              </Button>
-              <Button
-                onClick={handleShowLeaderboard}
-                variant="outline"
-                className="flex-1"
-              >
-                Leaderboard
+                Jump to Next Unanswered
               </Button>
             </div>
           </div>
@@ -455,6 +477,13 @@ export default function Practice() {
                     <p className="text-foreground/90 mt-4">{currentQuestion.rationale}</p>
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* Completion Status */}
+            {isCurrentQuestionAnswered && (
+              <div className="mb-4 p-3 bg-green-600/20 border border-green-500/30 rounded-md flex items-center gap-2">
+                <span className="text-green-400 font-semibold">✓ Question Completed</span>
               </div>
             )}
 
