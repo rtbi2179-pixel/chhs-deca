@@ -68,11 +68,51 @@ export default function Practice() {
   const isCurrentQuestionMarked = currentQuestion ? markedForReview.has(currentQuestion.id) : false;
 
   const clusters = [
-    { value: "Marketing", label: "Marketing", color: "from-blue-600 to-blue-500", icon: "📊", questions: "2400+" },
-    { value: "Business Management & Administration", label: "Business Management", color: "from-cyan-500 to-blue-400", icon: "💼", questions: "2100+" },
-    { value: "Finance", label: "Finance", color: "from-indigo-600 to-blue-500", icon: "💰", questions: "2300+" },
-    { value: "Hospitality & Tourism", label: "Hospitality & Tourism", color: "from-slate-600 to-slate-500", icon: "🏨", questions: "2200+" },
+    { value: "Marketing", label: "Marketing", color: "from-blue-600 to-blue-500", icon: "chart", questions: "9,200+" },
+    { value: "Business Management & Administration", label: "Business Management", color: "from-cyan-500 to-blue-400", icon: "briefcase", questions: "9,500+" },
+    { value: "Finance", label: "Finance", color: "from-indigo-600 to-blue-500", icon: "dollar", questions: "9,100+" },
+    { value: "Hospitality & Tourism", label: "Hospitality & Tourism", color: "from-slate-600 to-slate-500", icon: "building", questions: "9,300+" },
   ];
+
+  const renderClusterIcon = (iconType: string) => {
+    switch (iconType) {
+      case "chart":
+        return (
+          <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="2" x2="12" y2="22" />
+            <path d="M17 5h-5v14h5V5z" />
+            <path d="M7 9h-2v10h2V9z" />
+          </svg>
+        );
+      case "briefcase":
+        return (
+          <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+            <line x1="2" y1="11" x2="22" y2="11" />
+          </svg>
+        );
+      case "dollar":
+        return (
+          <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg>
+        );
+      case "building":
+        return (
+          <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+            <line x1="9" y1="5" x2="9" y2="9" />
+            <line x1="15" y1="5" x2="15" y2="9" />
+          </svg>
+        );
+      default:
+        return null;
+    }
+  };
 
   const handleSelectCluster = (cluster: string) => {
     setSelectedCluster(cluster);
@@ -219,7 +259,7 @@ export default function Practice() {
               >
                 <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div className="relative z-10 text-left">
-                  <div className="text-5xl mb-3">{cluster.icon}</div>
+                  <div className="mb-3 text-white">{renderClusterIcon(cluster.icon)}</div>
                   <h2 className="text-3xl font-bold mb-2">{cluster.label}</h2>
                   <p className="text-white/90 mb-6 text-lg">{cluster.questions} questions</p>
                   <div className="inline-flex items-center gap-2 bg-white text-slate-900 px-6 py-2 rounded-full font-semibold hover:bg-slate-100 transition">
