@@ -51,6 +51,12 @@ async function startServer() {
     serveStatic(app);
   }
 
+  // Global error handler middleware
+  app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.error('[Express Error Handler]', err);
+    res.status(500).json({ error: 'Internal server error' });
+  });
+
   const preferredPort = parseInt(process.env.PORT || "3000");
   const port = await findAvailablePort(preferredPort);
 

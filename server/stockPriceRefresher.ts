@@ -48,17 +48,7 @@ export async function refreshStockPrices(): Promise<void> {
  * Call this once when the server starts
  */
 export function initializeStockPriceRefresher(): void {
-  console.log('[Stock Price Refresher] Initializing...');
-  
-  // Refresh immediately on startup
-  refreshStockPrices().catch(error => {
-    console.error('[Stock Price Refresher] Initial refresh failed:', error);
-  });
-  
-  // Then refresh every 5 minutes
-  setInterval(() => {
-    refreshStockPrices().catch(error => {
-      console.error('[Stock Price Refresher] Scheduled refresh failed:', error);
-    });
-  }, REFRESH_INTERVAL);
+  console.log('[Stock Price Refresher] Disabled - using cached prices only');
+  // Background refresh disabled to prevent rate limiting
+  // Stock prices will be fetched on-demand and cached
 }
