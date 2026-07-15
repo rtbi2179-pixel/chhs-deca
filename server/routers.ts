@@ -910,13 +910,22 @@ export const appRouter = router({
     }),
 
     getUserCards: protectedProcedure.query(async ({ ctx }) => {
-      const { userCreditCards } = await import('../drizzle/schema');
+      const { userCreditCards, creditCards } = await import('../drizzle/schema');
       const { getDb } = await import('./db');
       const schoolCode = ctx.user.schoolCode || '';
       const database = await getDb();
       if (!database) return [];
       const userCards = await database.select().from(userCreditCards).where(and(eq(userCreditCards.userId, ctx.user.id), eq(userCreditCards.schoolCode, schoolCode)));
-      return userCards;
+      const cardsWithDetails = await Promise.all(
+        userCards.map(async (userCard: any) => {
+          const cardDetail = await database.select().from(creditCards).where(eq(creditCards.id, userCard.creditCardId)).limit(1);
+          return {
+            ...userCard,
+            cardDetails: cardDetail[0] || null,
+          };
+        })
+      );
+      return cardsWithDetails;
     }),
   }),
 });

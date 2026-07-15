@@ -11,6 +11,9 @@ export function BankingDashboard() {
   const creditScoreQuery = trpc.banking.getCreditScore.useQuery();
   const bankAccountQuery = trpc.banking.getBankAccount.useQuery();
   const transferMutation = trpc.banking.transferFunds.useMutation();
+  const availableCardsQuery = trpc.banking.getAvailableCards.useQuery();
+  const userCardsQuery = trpc.banking.getUserCards.useQuery();
+  const applyCreditCardMutation = trpc.banking.applyCreditCard.useMutation();
   
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [transferData, setTransferData] = useState({
@@ -82,8 +85,18 @@ export function BankingDashboard() {
     }
   };
 
+  const handleApplyCard = async (cardId: number) => {
+    try {
+      await applyCreditCardMutation.mutateAsync({ creditCardId: cardId });
+      userCardsQuery.refetch();
+      availableCardsQuery.refetch();
+    } catch (error) {
+      alert("Failed to apply for card: " + (error as any).message);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-6 mt-16">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold text-white mb-8">Banking Dashboard</h1>
 
@@ -167,6 +180,73 @@ export function BankingDashboard() {
               <p className="text-slate-400">Loading account data...</p>
             )}
           </Card>
+        </div>
+
+        {/* Credit Cards Section */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-white mb-6">Credit Cards</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* User's Current Cards */}
+            <Card className="bg-slate-800 border-slate-700 p-6">
+              <h3 className="text-lg font-semibold text-white mb-4">Your Cards</h3>
+              {userCardsQuery.isLoading ? (
+                <p className="text-slate-400">Loading cards...</p>
+              ) : userCardsQuery.data && userCardsQuery.data.length > 0 ? (
+                <div className="space-y-3">
+                  {userCardsQuery.data.map((card: any) => (
+                    <div key={card.id} className="p-3 bg-slate-700 rounded-lg border border-blue-500/30">
+                      <p className="text-white font-semibold">{card.cardDetails?.name || 'Credit Card'}</p>
+                      <p className="text-slate-300 text-xs capitalize mb-2">{card.cardDetails?.tier} Tier</p>
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        <div>
+                          <p className="text-slate-400 text-xs">Limit</p>
+                          <p className="text-blue-400 font-semibold">${parseFloat(card.creditLimit).toFixed(2)}</p>
+                        </div>
+                        <div>
+                          <p className="text-slate-400 text-xs">Available</p>
+                          <p className="text-green-400 font-semibold">${parseFloat(card.availableCredit).toFixed(2)}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-slate-400">No credit cards yet. Apply for one below!</p>
+              )}
+            </Card>
+
+            {/* Available Cards to Apply */}
+            <Card className="bg-slate-800 border-slate-700 p-6">
+              <h3 className="text-lg font-semibold text-white mb-4">Available Cards</h3>
+              {availableCardsQuery.isLoading ? (
+                <p className="text-slate-400">Loading available cards...</p>
+              ) : availableCardsQuery.data && availableCardsQuery.data.length > 0 ? (
+                <div className="space-y-3">
+                  {availableCardsQuery.data.map((card: any) => (
+                    <div key={card.id} className="p-3 bg-slate-700 rounded-lg border border-slate-600">
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <p className="text-white font-semibold">{card.name}</p>
+                          <p className="text-slate-300 text-sm capitalize">{card.tier} Tier</p>
+                        </div>
+                        <p className="text-blue-400 font-semibold">{parseFloat(card.rewardsPercentage)}% Rewards</p>
+                      </div>
+                      <Button
+                        onClick={() => handleApplyCard(card.id)}
+                        disabled={applyCreditCardMutation.isPending}
+                        size="sm"
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs mt-2"
+                      >
+                        {applyCreditCardMutation.isPending ? "Applying..." : "Apply"}
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-slate-400">No additional cards available for your credit score.</p>
+              )}
+            </Card>
+          </div>
         </div>
 
         {/* Account Details and Transfer */}
