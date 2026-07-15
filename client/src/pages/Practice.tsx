@@ -176,9 +176,11 @@ export default function Practice() {
   };
 
   const getClusterProgress = (clusterValue: string) => {
-    const totalQuestions = parseInt(clusters.find(c => c.value === clusterValue)?.questions.replace(/,/g, '') || '0');
+    // Get total answered questions for this cluster
     const answeredCount = Array.from(answeredQuestionIds).filter(id => id.includes(clusterValue)).length;
-    return totalQuestions > 0 ? Math.round((answeredCount / totalQuestions) * 100) : 0;
+    // Assume ~100 questions per session for progress bar (0-100%)
+    // This shows relative progress rather than absolute
+    return Math.min(Math.round((answeredCount / 10) * 100), 100);
   };
 
   const getTotalAnsweredByCluster = (clusterValue: string) => {
@@ -353,14 +355,14 @@ export default function Practice() {
                     <p className="text-white/90 mb-3 text-lg">{cluster.questions} questions</p>
                     
                     <div className="mb-4">
-                      <div className="flex justify-between items-center mb-1">
+                      <div className="flex justify-between items-center mb-2">
                         <span className="text-xs text-white/80">Progress</span>
                         <span className="text-xs font-semibold text-white/90">{answered} completed</span>
                       </div>
-                      <div className="w-full bg-white/20 rounded-full h-2 overflow-hidden">
+                      <div className="w-full bg-white/20 rounded-full h-3 overflow-hidden">
                         <div 
-                          className="bg-white h-full rounded-full transition-all duration-500 ease-out"
-                          style={{ width: `${progress}%` }}
+                          className="bg-gradient-to-r from-white to-white/80 h-full rounded-full transition-all duration-500 ease-out"
+                          style={{ width: `${progress}%`, minWidth: progress > 0 ? '4px' : '0px' }}
                         ></div>
                       </div>
                     </div>
