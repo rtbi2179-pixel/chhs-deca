@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'wouter'
-import { Menu, X, Trophy, BookOpen, Calendar, Users, Home, LogOut, MessageSquare, Mic, Crown, Bell, DollarSign, TrendingUp, History } from 'lucide-react'
+import { Menu, X, Trophy, BookOpen, Calendar, Users, Home, LogOut, MessageSquare, Mic, Crown, Bell, DollarSign, TrendingUp, History, Building2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { trpc } from '@/lib/trpc'
@@ -29,7 +29,7 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null)
-  const [showBlueBucks, setShowBlueBucks] = useState(false)
+  const [showFinancialMenu, setShowFinancialMenu] = useState(false)
   const { user } = useAuth()
   const logoutMutation = trpc.auth.logout.useMutation()
   const { data: blueBucksData } = trpc.practice.getBlueBucksBalance.useQuery(undefined, { enabled: !!user })
@@ -230,28 +230,60 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
                       {user.name || user.username}
                     </button>
                   </Link>
+                  
+                  {/* Financial Systems Menu */}
                   <div className="relative">
                     <button
-                      onClick={() => setShowBlueBucks(!showBlueBucks)}
+                      onClick={() => setShowFinancialMenu(!showFinancialMenu)}
                       className="p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 rounded-lg transition-all duration-200"
-                      title="Blue Bucks Balance"
+                      title="Financial Systems"
                     >
                       <DollarSign size={20} />
                     </button>
-                    {showBlueBucks && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="absolute right-0 mt-2 bg-slate-900 border border-yellow-500/30 rounded-lg px-4 py-2 text-sm text-white whitespace-nowrap z-50"
-                      >
-                        <div className="flex items-center gap-2">
-                          <DollarSign size={16} className="text-blue-400" />
-                          <span className="font-semibold">{blueBucksData?.balance || 0} Blue Bucks</span>
-                        </div>
-                      </motion.div>
-                    )}
+                    
+                    <AnimatePresence>
+                      {showFinancialMenu && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                          transition={{ duration: 0.15 }}
+                          className="absolute right-0 mt-2 bg-slate-900 border border-blue-500/30 rounded-lg shadow-xl z-50 overflow-hidden"
+                        >
+                          <div className="flex flex-col gap-0 min-w-max">
+                            {/* Blue Bucks Display */}
+                            <div className="px-4 py-3 border-b border-blue-500/20 flex items-center gap-2">
+                              <DollarSign size={16} className="text-blue-400" />
+                              <span className="text-sm font-semibold text-white">{blueBucksData?.balance || 0} Blue Bucks</span>
+                            </div>
+                            
+                            {/* Banking Option */}
+                            <Link href="/banking">
+                              <button
+                                onClick={() => setShowFinancialMenu(false)}
+                                className="w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-blue-500/10 transition-colors text-sm text-white/80 hover:text-white border-b border-blue-500/20"
+                              >
+                                <Building2 size={18} className="text-green-400" />
+                                <span className="font-medium">Banking</span>
+                              </button>
+                            </Link>
+                            
+                            {/* Stock Market Option */}
+                            <Link href="/blue-market">
+                              <button
+                                onClick={() => setShowFinancialMenu(false)}
+                                className="w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-blue-500/10 transition-colors text-sm text-white/80 hover:text-white"
+                              >
+                                <TrendingUp size={18} className="text-purple-400" />
+                                <span className="font-medium">Stock Market</span>
+                              </button>
+                            </Link>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
+                  
                   <button
                     onClick={handleLogout}
                     className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all duration-200"

@@ -202,3 +202,12 @@
 - [ ] Test reward calculations
 - [ ] Test admin dashboard permissions
 - [ ] End-to-end banking system tests
+
+## Navigation Enhancement - Money Icon Submenu
+
+- [x] Update money symbol (DollarSign) to show submenu with Bank and Stock Market icons on click
+  - [x] Replace single Blue Bucks display with a dropdown menu showing Bank and Stock Market options
+  - [x] Add Bank icon that links to banking dashboard
+  - [x] Add Stock Market icon that links to blue market
+  - [x] Add route for banking dashboard if not already routed
+  - [x] Style the submenu to match the existing design
