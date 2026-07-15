@@ -3,8 +3,8 @@
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Loader2, ChevronDown } from "lucide-react";
-import { useState, useMemo } from "react";
+import { Loader2, ChevronDown, CheckCircle2 } from "lucide-react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 export default function Practice() {
@@ -25,15 +25,14 @@ export default function Practice() {
   const [answeredQuestionIds, setAnsweredQuestionIds] = useState<Set<string>>(new Set());
 
   // Fetch answered questions
-  // const { data: answeredData } = trpc.practice.getAnsweredQuestions.useQuery();
-  // const { data: streakData } = trpc.practice.getUserStreak.useQuery();
+  const { data: answeredData } = trpc.practice.getAnsweredQuestions.useQuery();
 
   // Update answered questions when data changes
-  // useMemo(() => {
-  //   if (answeredData?.answeredQuestionIds) {
-  //     setAnsweredQuestionIds(new Set(answeredData.answeredQuestionIds));
-  //   }
-  // }, [answeredData]);
+  useEffect(() => {
+    if (answeredData?.answeredQuestionIds) {
+      setAnsweredQuestionIds(new Set(answeredData.answeredQuestionIds));
+    }
+  }, [answeredData]);
 
   // Fetch bookmarked questions
   const { data: bookmarkedQuestions = [] } = trpc.practice.getBookmarkedQuestions.useQuery(undefined, {
@@ -483,7 +482,8 @@ export default function Practice() {
             {/* Completion Status */}
             {isCurrentQuestionAnswered && (
               <div className="mb-4 p-3 bg-green-600/20 border border-green-500/30 rounded-md flex items-center gap-2">
-                <span className="text-green-400 font-semibold">✓ Question Completed</span>
+                <CheckCircle2 className="w-5 h-5 text-green-400" />
+                <span className="text-green-400 font-semibold">Question Completed</span>
               </div>
             )}
 

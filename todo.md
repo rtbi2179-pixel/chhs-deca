@@ -211,3 +211,20 @@
   - [x] Add Stock Market icon that links to blue market
   - [x] Add route for banking dashboard if not already routed
   - [x] Style the submenu to match the existing design
+
+## Track Answered Questions Feature
+
+- [x] Add unique constraint on userAnswers table (userId, questionId) to prevent duplicates
+- [x] Create tRPC procedure to fetch user's answered questions (practice.getAnsweredQuestions)
+- [x] Update Practice page to load answered questions on mount using useEffect
+- [x] Display visual indicator for answered questions (CheckCircle2 icon with green badge)
+- [x] Persist answered question state across page refreshes
+- [x] Test that answered questions are remembered across sessions
+- [x] Add vitest test suite for answered question persistence
+
+**Implementation Details:**
+- Backend: `getAnsweredQuestions` procedure returns list of answered question IDs for authenticated user
+- Frontend: Practice page hydrates answered questions on mount and displays visual indicators
+- Database: userAnswers table has unique constraint on (userId, questionId) to prevent duplicates
+- UI: Green badge with checkmark shows "Question Completed" status for answered questions
+- Persistence: Answers are stored in database and retrieved on every session load

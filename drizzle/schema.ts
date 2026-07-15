@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean, decimal, date } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean, decimal, date, unique } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -401,7 +401,9 @@ export const userAnswers = mysqlTable("userAnswers", {
   isCorrect: boolean("isCorrect").notNull(),
   schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
+}, (table) => ({
+  userQuestionUnique: unique().on(table.userId, table.questionId),
+}));
 
 export type UserAnswer = typeof userAnswers.$inferSelect;
 export type InsertUserAnswer = typeof userAnswers.$inferInsert;

@@ -602,6 +602,12 @@ export const appRouter = router({
       .input(z.object({ cluster: z.string(), limit: z.number().default(50) }))
       .query(({ input }) => db.getLeaderboardByCluster(input.cluster, input.limit)),
 
+    getAnsweredQuestions: protectedProcedure
+      .query(async ({ ctx }) => {
+        const answeredQuestionIds = await db.getUserAnsweredQuestions(ctx.user.id);
+        return { answeredQuestionIds };
+      }),
+
     submitAnswer: protectedProcedure
       .input(z.object({
         questionId: z.string(),
