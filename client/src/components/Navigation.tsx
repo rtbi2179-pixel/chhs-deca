@@ -15,7 +15,6 @@ const navLinks = [
   { href: '/announcements', label: 'Announcements', icon: Bell },
   { href: '/blue-market', label: 'Blue Market', icon: TrendingUp },
   { href: '/transaction-history', label: 'Transactions', icon: History },
-  { href: '/gacha', label: 'Gacha', icon: Sparkles },
   { href: '/speech-ai', label: 'AI Tools', icon: Zap },
 ]
 
