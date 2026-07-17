@@ -270,9 +270,9 @@
 ### Gacha UI Page
 - [x] Create GachaShop page component
 - [x] Design gacha pull animation
-- [ ] Show pull history
-- [ ] Display cosmetics inventory
-- [ ] Implement equip/unequip UI
+- [x] Show pull history
+- [x] Display cosmetics inventory
+- [x] Implement equip/unequip UI
 
 ### Profile Integration
 - [ ] Display equipped profile frame on profile
@@ -284,3 +284,11 @@
 - [ ] Rare (25% chance) - 250 points
 - [ ] Epic (10% chance) - 500 points
 - [ ] Legendary (5% chance) - 1000 points
+
+## Branding & Logo Updates
+
+- [x] Replace all CHHS references with Blue Blazer
+- [x] Update all logos to new transparent PNG version
+- [x] Update Navigation component with new logo
+- [x] Update Home page with new logo
+- [x] Verify logo displays correctly across all pages

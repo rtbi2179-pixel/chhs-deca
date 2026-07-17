@@ -1,16 +1,18 @@
-import { useState } from 'react';
 import { trpc } from '@/lib/trpc';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Sparkles, Zap } from 'lucide-react';
+import { Sparkles, Zap, History, Package } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 
 export default function GachaShop() {
   const { user } = useAuth();
   const [selectedRarity, setSelectedRarity] = useState<'all' | 'common' | 'rare' | 'epic' | 'legendary'>('all');
   const [pullCount, setPullCount] = useState(1);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [showPullHistory, setShowPullHistory] = useState(false);
+  const [showInventory, setShowInventory] = useState(false);
 
   // Fetch cosmetics
   const { data: cosmetics = [], isLoading: cosmeticsLoading } = trpc.gacha.getCosmetics.useQuery(
@@ -20,6 +22,12 @@ export default function GachaShop() {
 
   // Fetch user cosmetics
   const { data: userCosmetics = [] } = trpc.gacha.getUserCosmetics.useQuery();
+
+  // Fetch pull history
+  const { data: pullHistory = [] } = trpc.gacha.getPullHistory.useQuery(
+    undefined,
+    { enabled: !!user?.id }
+  );
 
   // Pull gacha mutation
   const pullMutation = trpc.gacha.pullGacha.useMutation({
@@ -127,6 +135,120 @@ export default function GachaShop() {
             </div>
           </div>
         </Card>
+
+        {/* Pull History & Inventory Tabs */}
+        <div className="mb-8 flex gap-4">
+          <Button
+            onClick={() => {
+              setShowPullHistory(!showPullHistory);
+              setShowInventory(false);
+            }}
+            variant={showPullHistory ? 'default' : 'outline'}
+            className="flex items-center gap-2"
+          >
+            <History className="w-4 h-4" />
+            Pull History
+          </Button>
+          <Button
+            onClick={() => {
+              setShowInventory(!showInventory);
+              setShowPullHistory(false);
+            }}
+            variant={showInventory ? 'default' : 'outline'}
+            className="flex items-center gap-2"
+          >
+            <Package className="w-4 h-4" />
+            My Inventory
+          </Button>
+        </div>
+
+        {/* Pull History Section */}
+        {showPullHistory && (
+          <Card className="bg-slate-800 border-blue-500/30 mb-8 p-6">
+            <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+              <History className="w-6 h-6" />
+              Pull History
+            </h2>
+            {pullHistory.length === 0 ? (
+              <p className="text-gray-400">No pulls yet. Start pulling to see your history!</p>
+            ) : (
+              <div className="space-y-3 max-h-96 overflow-y-auto">
+                {[...pullHistory].reverse().map((pull: any, idx: number) => (
+                  <div key={idx} className="bg-slate-700 rounded p-4 flex items-center justify-between">
+                    <div>
+                      <p className="text-white font-semibold">{pull.cosmetics?.name || 'Unknown'}</p>
+                      <p className="text-gray-400 text-sm">
+                        {new Date(pull.gachaPulls.pulledAt).toLocaleDateString()} {new Date(pull.gachaPulls.pulledAt).toLocaleTimeString()}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className={`px-3 py-1 rounded text-white text-sm font-bold ${
+                        pull.gachaPulls.rarityObtained === 'legendary' ? 'bg-yellow-600' :
+                        pull.gachaPulls.rarityObtained === 'epic' ? 'bg-purple-600' :
+                        pull.gachaPulls.rarityObtained === 'rare' ? 'bg-blue-600' :
+                        'bg-gray-600'
+                      }`}>
+                        {pull.gachaPulls.rarityObtained.toUpperCase()}
+                      </span>
+                      <span className="text-yellow-400 font-bold flex items-center gap-1">
+                        <Zap className="w-4 h-4" />
+                        {pull.gachaPulls.pointsSpent}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
+        )}
+
+        {/* Inventory Section */}
+        {showInventory && (
+          <Card className="bg-slate-800 border-blue-500/30 mb-8 p-6">
+            <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+              <Package className="w-6 h-6" />
+              My Cosmetics Inventory
+            </h2>
+            {userCosmetics.length === 0 ? (
+              <p className="text-gray-400">You don't have any cosmetics yet. Start pulling!</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {userCosmetics.map((userCosmetic: any, idx: number) => (
+                  <motion.div
+                    key={idx}
+                    whileHover={{ scale: 1.05 }}
+                    className="bg-slate-700 border-2 border-blue-500/50 rounded-lg p-4"
+                  >
+                    {userCosmetic.cosmetics?.imageUrl && (
+                      <div className="w-full h-32 bg-slate-600 rounded mb-3 flex items-center justify-center overflow-hidden">
+                        <img
+                          src={userCosmetic.cosmetics.imageUrl}
+                          alt={userCosmetic.cosmetics.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <h3 className="font-bold text-white mb-2">{userCosmetic.cosmetics?.name}</h3>
+                    <p className="text-gray-400 text-xs mb-3">{userCosmetic.cosmetics?.description}</p>
+                    <div className="flex items-center justify-between">
+                      <span className={`text-xs font-bold px-2 py-1 rounded text-white ${
+                        userCosmetic.cosmetics?.rarity === 'legendary' ? 'bg-yellow-600' :
+                        userCosmetic.cosmetics?.rarity === 'epic' ? 'bg-purple-600' :
+                        userCosmetic.cosmetics?.rarity === 'rare' ? 'bg-blue-600' :
+                        'bg-gray-600'
+                      }`}>
+                        {userCosmetic.cosmetics?.rarity.toUpperCase()}
+                      </span>
+                      {userCosmetic.isEquipped && (
+                        <span className="text-green-400 text-xs font-bold">✓ Equipped</span>
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </Card>
+        )}
 
         {/* Cosmetics Catalog */}
         <div className="mb-8">

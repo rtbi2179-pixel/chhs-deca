@@ -353,6 +353,22 @@ export const gachaRouter = router({
 
       return { success: true };
     }),
+
+  // Get pull history
+  getPullHistory: protectedProcedure
+    .query(async ({ ctx }) => {
+      const database = await db.getDb();
+      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+      
+      const history = await database
+        .select()
+        .from(gachaPulls)
+        .innerJoin(cosmetics, eq(gachaPulls.cosmeticId, cosmetics.id))
+        .where(eq(gachaPulls.userId, ctx.user.id))
+        .orderBy(desc(gachaPulls.pulledAt));
+      
+      return history;
+    }),
 });
 
 export const appRouter = router({
