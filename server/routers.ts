@@ -10,7 +10,7 @@ import { getAnnouncementsBySchool, createAnnouncement, likeAnnouncement, getAnno
 import { notifyOwner } from "./_core/notification";
 import { getStockPrice } from "./stockPriceService";
 
-import { questions, userAnswers, blueBucks, blueBucksTransactions, leaderboard } from "../drizzle/schema";
+import { questions, userAnswers, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls } from "../drizzle/schema";
 import { and, eq, sql, inArray, desc, lte } from "drizzle-orm";
 
 export const announcementsRouter = router({
@@ -198,9 +198,168 @@ export const calendarRouter = router({
     }),
 });
 
+// ===== GACHA ROUTER =====
+export const gachaRouter = router({
+  // Get all cosmetics
+  getCosmetics: publicProcedure
+    .input(z.object({ schoolCode: z.string() }))
+    .query(async ({ input }) => {
+      const database = await db.getDb();
+      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+      const allCosmetics = await database
+        .select()
+        .from(cosmetics)
+        .where(eq(cosmetics.schoolCode, input.schoolCode));
+      return allCosmetics;
+    }),
+
+  // Get user's cosmetics inventory
+  getUserCosmetics: protectedProcedure
+    .query(async ({ ctx }) => {
+      const database = await db.getDb();
+      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+      const userCosmeticsList = await database
+        .select()
+        .from(userCosmetics)
+        .innerJoin(cosmetics, eq(userCosmetics.cosmeticId, cosmetics.id))
+        .where(eq(userCosmetics.userId, ctx.user.id));
+      return userCosmeticsList;
+    }),
+
+  // Pull from gacha
+  pullGacha: protectedProcedure
+    .input(z.object({ pulls: z.number().min(1).max(10) }))
+    .mutation(async ({ ctx, input }) => {
+      const database = await db.getDb();
+      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+      
+      const schoolCode = ctx.user.schoolCode;
+      if (!schoolCode) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'User has no school code' });
+      }
+
+      // Get all cosmetics for this school
+      const allCosmetics = await database
+        .select()
+        .from(cosmetics)
+        .where(eq(cosmetics.schoolCode, schoolCode));
+
+      if (allCosmetics.length === 0) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'No cosmetics available' });
+      }
+
+      // Rarity weights
+      const rarityWeights = {
+        common: 0.60,
+        rare: 0.25,
+        epic: 0.10,
+        legendary: 0.05,
+      };
+
+      // Rarity costs
+      const rarityCosts = {
+        common: 100,
+        rare: 250,
+        epic: 500,
+        legendary: 1000,
+      };
+
+      const pulls: any[] = [];
+      let totalCost = 0;
+
+      for (let i = 0; i < input.pulls; i++) {
+        // Determine rarity
+        const rand = Math.random();
+        let rarity: 'common' | 'rare' | 'epic' | 'legendary';
+        if (rand < rarityWeights.common) rarity = 'common';
+        else if (rand < rarityWeights.common + rarityWeights.rare) rarity = 'rare';
+        else if (rand < rarityWeights.common + rarityWeights.rare + rarityWeights.epic) rarity = 'epic';
+        else rarity = 'legendary';
+
+        // Get cosmetics of this rarity
+        const cosmeticsOfRarity = allCosmetics.filter(c => c.rarity === rarity);
+        if (cosmeticsOfRarity.length === 0) continue;
+
+        // Pick random cosmetic
+        const cosmetic = cosmeticsOfRarity[Math.floor(Math.random() * cosmeticsOfRarity.length)];
+        const cost = rarityCosts[rarity];
+        totalCost += cost;
+
+        pulls.push({
+          cosmetic,
+          rarity,
+          cost,
+        });
+      }
+
+      // Check if user has enough blue bucks
+      const userBlueBucksList = await database
+        .select()
+        .from(blueBucks)
+        .where(eq(blueBucks.userId, ctx.user.id));
+
+      const currentBucks = userBlueBucksList[0]?.amount || 0;
+      if (currentBucks < totalCost) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Not enough Blue Bucks' });
+      }
+
+      // Deduct blue bucks
+      await database
+        .update(blueBucks)
+        .set({ amount: currentBucks - totalCost })
+        .where(eq(blueBucks.userId, ctx.user.id));
+
+      // Add cosmetics to user inventory and record pulls
+      for (const pull of pulls) {
+        // Add to inventory
+        await database
+          .insert(userCosmetics)
+          .values({
+            userId: ctx.user.id,
+            cosmeticId: pull.cosmetic.id,
+            schoolCode,
+          });
+
+        // Record pull
+        await database
+          .insert(gachaPulls)
+          .values({
+            userId: ctx.user.id,
+            cosmeticId: pull.cosmetic.id,
+            rarityObtained: pull.rarity,
+            pointsSpent: pull.cost,
+            schoolCode,
+          });
+      }
+
+      return {
+        pulls,
+        totalCost,
+        remainingBucks: currentBucks - totalCost,
+      };
+    }),
+
+  // Equip cosmetic
+  equipCosmetic: protectedProcedure
+    .input(z.object({ userCosmeticId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const database = await db.getDb();
+      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+      
+      // Equip the selected cosmetic
+      await database
+        .update(userCosmetics)
+        .set({ isEquipped: true })
+        .where(eq(userCosmetics.id, input.userCosmeticId));
+
+      return { success: true };
+    }),
+});
+
 export const appRouter = router({
   announcements: announcementsRouter,
   system: systemRouter,
+  gacha: gachaRouter,
   superAdmin: router({
     selectSchool: protectedProcedure
       .input(z.object({ schoolCode: z.string() }))

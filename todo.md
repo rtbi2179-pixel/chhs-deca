@@ -250,3 +250,37 @@
 - Answer options: A-B-C-D with visual feedback (green for correct, red for incorrect, blue for selected)
 - Bottom bar: Question counter, navigation buttons, explanation toggle
 - Features preserved: Answered question tracking, Blue Bucks rewards, leaderboard integration
+
+## Gacha System with Cosmetics
+
+### Database Schema
+- [ ] Create cosmetics table (id, name, type, rarity, cost, image_url)
+- [ ] Create gacha_pulls table (user_id, cosmetic_id, pull_date, rarity_obtained)
+- [ ] Create user_cosmetics table (user_id, cosmetic_id, acquired_date, is_equipped)
+- [ ] Create cosmetic_types enum (profile_frame, banner, avatar_effect, title)
+- [ ] Create rarity_tiers enum (common, rare, epic, legendary)
+
+### Gacha System Backend
+- [ ] Implement gacha pull procedure with rarity weighting
+- [ ] Create cosmetics listing procedure
+- [ ] Create user cosmetics inventory procedure
+- [ ] Implement equip/unequip cosmetic procedure
+- [ ] Add cosmetic cost deduction from points
+
+### Gacha UI Page
+- [ ] Create GachaShop page component
+- [ ] Design gacha pull animation
+- [ ] Show pull history
+- [ ] Display cosmetics inventory
+- [ ] Implement equip/unequip UI
+
+### Profile Integration
+- [ ] Display equipped profile frame on profile
+- [ ] Display equipped banner on profile
+- [ ] Show cosmetic effects on profile
+
+### Rarity System
+- [ ] Common (60% chance) - 100 points
+- [ ] Rare (25% chance) - 250 points
+- [ ] Epic (10% chance) - 500 points
+- [ ] Legendary (5% chance) - 1000 points

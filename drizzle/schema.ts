@@ -825,3 +825,49 @@ export const economicChangesLog = mysqlTable("economicChangesLog", {
 });
 export type EconomicChangesLog = typeof economicChangesLog.$inferSelect;
 export type InsertEconomicChangesLog = typeof economicChangesLog.$inferInsert;
+
+/**
+ * Cosmetics - Gacha system cosmetics
+ */
+export const cosmetics = mysqlTable("cosmetics", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  type: mysqlEnum("type", ["profile_frame", "banner", "avatar_effect", "title"]).notNull(),
+  rarity: mysqlEnum("rarity", ["common", "rare", "epic", "legendary"]).notNull(),
+  cost: int("cost").notNull(), // Cost in points
+  imageUrl: text("imageUrl"), // URL to cosmetic image
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type Cosmetic = typeof cosmetics.$inferSelect;
+export type InsertCosmetic = typeof cosmetics.$inferInsert;
+
+/**
+ * User Cosmetics - User's cosmetic inventory
+ */
+export const userCosmetics = mysqlTable("userCosmetics", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  cosmeticId: int("cosmeticId").notNull().references(() => cosmetics.id, { onDelete: "cascade" }),
+  acquiredAt: timestamp("acquiredAt").defaultNow().notNull(),
+  isEquipped: boolean("isEquipped").default(false).notNull(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+});
+export type UserCosmetic = typeof userCosmetics.$inferSelect;
+export type InsertUserCosmetic = typeof userCosmetics.$inferInsert;
+
+/**
+ * Gacha Pulls - History of gacha pulls
+ */
+export const gachaPulls = mysqlTable("gachaPulls", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  cosmeticId: int("cosmeticId").notNull().references(() => cosmetics.id, { onDelete: "cascade" }),
+  rarityObtained: mysqlEnum("rarityObtained", ["common", "rare", "epic", "legendary"]).notNull(),
+  pointsSpent: int("pointsSpent").notNull(),
+  pulledAt: timestamp("pulledAt").defaultNow().notNull(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+});
+export type GachaPull = typeof gachaPulls.$inferSelect;
+export type InsertGachaPull = typeof gachaPulls.$inferInsert;
