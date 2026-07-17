@@ -92,10 +92,10 @@
 - [x] Connect to real stock API (Alpha Vantage) for live pricing
 - [x] Implement database tables for market (stocks, holdings, transactions, etc.)
 - [x] Fix stock price fetching with proper tRPC URL encoding
-- [ ] Implement market hours tracking (US Eastern Time)
+- [x] Implement market hours tracking (US Eastern Time)
 - [ ] Add pending order system for after-hours trading
 - [ ] Create admin features for stock management
-- [ ] Add portfolio snapshot history
+- [x] Add portfolio snapshot history (placeholder for background job)
 - [ ] Test market functionality end-to-end
 
 ## Blue Blazer Market - Real Stock Integration Complete

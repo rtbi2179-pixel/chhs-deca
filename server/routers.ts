@@ -920,6 +920,54 @@ export const appRouter = router({
         
         return { success: true, count: defaultStocks.length };
       }),
+
+    // Check if market is currently open (US Eastern Time 9:30 AM - 4:00 PM, Mon-Fri)
+    isMarketOpen: publicProcedure
+      .query(() => {
+        const now = new Date();
+        // Convert to US Eastern Time
+        const estTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+        
+        const dayOfWeek = estTime.getDay();
+        const hour = estTime.getHours();
+        const minute = estTime.getMinutes();
+        
+        // Market is closed on weekends (0 = Sunday, 6 = Saturday)
+        if (dayOfWeek === 0 || dayOfWeek === 6) {
+          return { isOpen: false, reason: 'Market closed on weekends' };
+        }
+        
+        // Market hours: 9:30 AM - 4:00 PM EST
+        const openHour = 9;
+        const openMinute = 30;
+        const closeHour = 16;
+        const closeMinute = 0;
+        
+        const currentMinutes = hour * 60 + minute;
+        const openMinutes = openHour * 60 + openMinute;
+        const closeMinutes = closeHour * 60 + closeMinute;
+        
+        const isOpen = currentMinutes >= openMinutes && currentMinutes < closeMinutes;
+        
+        return {
+          isOpen,
+          currentTime: estTime.toLocaleTimeString('en-US', { timeZone: 'America/New_York' }),
+          marketOpenTime: '9:30 AM EST',
+          marketCloseTime: '4:00 PM EST',
+        };
+      }),
+
+    // Get portfolio snapshot history
+    getPortfolioSnapshots: protectedProcedure
+      .input(z.object({ limit: z.number().default(30) }))
+      .query(async ({ ctx, input }) => {
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+        
+        // For now, return empty array as snapshots need to be created by a background job
+        // This is a placeholder for future implementation
+        return [];
+      }),
   }),
 
   calendar: calendarRouter,
