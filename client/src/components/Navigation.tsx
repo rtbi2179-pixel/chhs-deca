@@ -69,8 +69,8 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
               <div className="flex items-center gap-2 group">
                 <div className="relative">
                   <img
-                    src="https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/ch-paw-raw_b4eafc24.png"
-                    alt="CH Paw Logo"
+                    src="/manus-storage/blue-blazer-logo_004e02d8.png"
+                    alt="Blue Blazer Logo"
                     className="w-8 h-8 group-hover:drop-shadow-[0_0_12px_oklch(0.55_0.22_260/0.6)] transition-all duration-300"
                   />
                 </div>
