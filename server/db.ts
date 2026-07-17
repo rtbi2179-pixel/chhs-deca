@@ -313,7 +313,7 @@ export async function getLeaderboard(limit: number = 100) {
     user: users,
   }).from(leaderboard)
     .innerJoin(users, eq(leaderboard.userId, users.id))
-    .orderBy((t) => t.leaderboard.accuracyPercentage)
+    .orderBy((t) => desc(t.leaderboard.accuracyPercentage))
     .limit(limit);
 }
 
@@ -321,9 +321,32 @@ export async function getLeaderboardByCluster(cluster: string, limit: number = 1
   const db = await getDb();
   if (!db) return [];
   
-  return db.select().from(leaderboard)
+  // Map cluster name to score field
+  const clusterScoreMap: Record<string, any> = {
+    'Marketing': leaderboard.marketingScore,
+    'Business Management & Administration': leaderboard.businessManagementScore,
+    'Finance': leaderboard.financeScore,
+    'Hospitality & Tourism': leaderboard.hospitalityScore,
+  };
+  
+  const scoreField = clusterScoreMap[cluster];
+  if (!scoreField) {
+    // If cluster not found, return overall leaderboard
+    return db.select({
+      leaderboard: leaderboard,
+      user: users,
+    }).from(leaderboard)
+      .innerJoin(users, eq(leaderboard.userId, users.id))
+      .orderBy((t) => desc(t.leaderboard.accuracyPercentage))
+      .limit(limit);
+  }
+  
+  return db.select({
+    leaderboard: leaderboard,
+    user: users,
+  }).from(leaderboard)
     .innerJoin(users, eq(leaderboard.userId, users.id))
-    .orderBy((t) => t.leaderboard.accuracyPercentage)
+    .orderBy((t) => desc(scoreField))
     .limit(limit);
 }
 

@@ -114,7 +114,7 @@ export default function Leaderboard() {
               {/* Comparison to Top */}
               <div className="flex flex-col items-center justify-center p-4 rounded-lg bg-background/50 border border-border">
                 {topPerformer && (() => {
-                  const topUserObj = 'user' in topPerformer ? topPerformer.user : topPerformer.users;
+                  const topUserObj = 'user' in topPerformer ? topPerformer.user : (topPerformer as any).users;
                   return topUserObj?.id !== user?.id;
                 })() ? (
                   <>
