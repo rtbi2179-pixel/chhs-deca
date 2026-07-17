@@ -202,14 +202,13 @@ export const calendarRouter = router({
 export const gachaRouter = router({
   // Get all cosmetics
   getCosmetics: publicProcedure
-    .input(z.object({ schoolCode: z.string() }))
+    .input(z.object({ schoolCode: z.string().optional() }))
     .query(async ({ input }) => {
       const database = await db.getDb();
       if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
       const allCosmetics = await database
         .select()
-        .from(cosmetics)
-        .where(eq(cosmetics.schoolCode, input.schoolCode));
+        .from(cosmetics);
       return allCosmetics;
     }),
 
