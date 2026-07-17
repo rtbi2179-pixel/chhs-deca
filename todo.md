@@ -254,18 +254,18 @@
 ## Gacha System with Cosmetics
 
 ### Database Schema
-- [ ] Create cosmetics table (id, name, type, rarity, cost, image_url)
-- [ ] Create gacha_pulls table (user_id, cosmetic_id, pull_date, rarity_obtained)
-- [ ] Create user_cosmetics table (user_id, cosmetic_id, acquired_date, is_equipped)
-- [ ] Create cosmetic_types enum (profile_frame, banner, avatar_effect, title)
-- [ ] Create rarity_tiers enum (common, rare, epic, legendary)
+- [x] Create cosmetics table (id, name, type, rarity, cost, image_url)
+- [x] Create gacha_pulls table (user_id, cosmetic_id, pull_date, rarity_obtained)
+- [x] Create user_cosmetics table (user_id, cosmetic_id, acquired_date, is_equipped)
+- [x] Create cosmetic_types enum (profile_frame, banner, avatar_effect, title)
+- [x] Create rarity_tiers enum (common, rare, epic, legendary)
 
 ### Gacha System Backend
-- [ ] Implement gacha pull procedure with rarity weighting
-- [ ] Create cosmetics listing procedure
-- [ ] Create user cosmetics inventory procedure
-- [ ] Implement equip/unequip cosmetic procedure
-- [ ] Add cosmetic cost deduction from points
+- [x] Implement gacha pull procedure with rarity weighting
+- [x] Create cosmetics listing procedure
+- [x] Create user cosmetics inventory procedure
+- [x] Implement equip/unequip cosmetic procedure
+- [x] Add cosmetic cost deduction from points
 
 ### Gacha UI Page
 - [ ] Create GachaShop page component
