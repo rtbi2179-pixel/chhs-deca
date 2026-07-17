@@ -14,7 +14,7 @@ export default function GachaShop() {
 
   // Fetch cosmetics
   const { data: cosmetics = [], isLoading: cosmeticsLoading } = trpc.gacha.getCosmetics.useQuery(
-    { schoolCode: user?.schoolCode || 'CHHS' },
+    { schoolCode: user?.schoolCode || 'Blue Blazer' },
     { enabled: !!user?.schoolCode }
   );
 

@@ -1,5 +1,5 @@
 /*
- * CHHS DECA Home Page — Cinematic Dark Editorial
+ * Blue Blazer Home Page — Cinematic Dark Editorial
  * Hero: Full-viewport split layout with 3D Spline glass trophy on right
  * Sections: Stats, Feature cards, Quick links, Resources
  * Colors: Deep black bg, electric blue accents, white text
@@ -121,7 +121,7 @@ export default function Home() {
               >
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono-data tracking-widest uppercase mb-6">
                   <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-                  CHHS DECA Chapter
+                  Blue Blazer Chapter
                 </div>
 
                 <h1 className="font-display text-6xl sm:text-7xl lg:text-8xl text-white leading-none mb-4">
@@ -214,7 +214,7 @@ export default function Home() {
               EVERYTHING YOU NEED
             </h2>
             <p className="text-white/50 text-lg max-w-2xl mx-auto">
-              From first-year principles to ICDC-level written events — CHHS DECA has you covered.
+              From first-year principles to ICDC-level written events — Blue Blazer has you covered.
             </p>
           </motion.div>
         </motion.div>
@@ -399,7 +399,7 @@ export default function Home() {
           <div className="glass-card p-8 border-blue-500/20 text-center">
             <div className="mb-6">
               <Users size={40} className="mx-auto text-blue-400 mb-4" />
-              <p className="text-white/60 text-lg mb-6">Join the CHHS DECA community discussion board to ask questions about events, share study tips, and connect with teammates.</p>
+              <p className="text-white/60 text-lg mb-6">Join the Blue Blazer community discussion board to ask questions about events, share study tips, and connect with teammates.</p>
             </div>
             <Link href="/discussions">
               <button className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-all hover:shadow-[0_0_30px_oklch(0.55_0.22_260/0.4)]">
@@ -422,7 +422,7 @@ export default function Home() {
                 className="w-10 h-10"
               />
               <div>
-                <div className="font-display text-xl text-white tracking-wider">CHHS DECA</div>
+                <div className="font-display text-xl text-white tracking-wider">Blue Blazer</div>
                 <div className="text-blue-400/60 text-xs font-mono-data tracking-widest">ROAD TO ICDC</div>
               </div>
             </div>
@@ -435,7 +435,7 @@ export default function Home() {
           </div>
           <div className="section-divider mb-6" />
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-white/20 text-xs font-mono-data">
-            <span>© 2025–2026 CHHS DECA Chapter. All rights reserved.</span>
+            <span>© 2025–2026 Blue Blazer Chapter. All rights reserved.</span>
             <span>Built by Sahan Mallampati & Ricardo Burciaga</span>
           </div>
         </div>

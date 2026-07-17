@@ -1,5 +1,5 @@
 /*
- * CHHS DECA Calendar Page — Cinematic Dark Editorial
+ * Blue Blazer Calendar Page — Cinematic Dark Editorial
  * Competition calendar with district, state, and ICDC dates
  * Monthly view with event badges
  */
@@ -40,7 +40,7 @@ const calendarEvents: CalEvent[] = [
   { id: 7, date: '2025-10-27', title: 'DECA Week Kickoff', type: 'chapter', description: 'National DECA Week activities and community engagement events.', time: 'All Week' },
 
   // November 2025
-  { id: 8, date: '2025-11-03', title: 'Mock Competition', type: 'chapter', description: 'Full mock competition with external judges. Dress professionally!', time: '8:00 AM', location: 'CHHS Cafeteria' },
+  { id: 8, date: '2025-11-03', title: 'Mock Competition', type: 'chapter', description: 'Full mock competition with external judges. Dress professionally!', time: '8:00 AM', location: 'Blue Blazer Cafeteria' },
   { id: 9, date: '2025-11-10', title: 'Written Event Draft Due', type: 'deadline', description: 'First draft of all written events due for advisor review.' },
   { id: 10, date: '2025-11-17', title: 'Practice Exam Session #3', type: 'chapter', description: 'Final practice exam before district competition.', time: '3:30 PM' },
 
@@ -50,13 +50,13 @@ const calendarEvents: CalEvent[] = [
   { id: 13, date: '2025-12-15', title: 'Holiday Social & Awards', type: 'chapter', description: 'Chapter holiday celebration and recognition of member achievements.', time: '4:00 PM' },
 
   // January 2026
-  { id: 14, date: '2026-01-12', title: 'District Competition', type: 'district', description: 'CHHS DECA District Competition. All members compete for state qualification.', location: 'TBD — Check with advisor', time: '7:00 AM', link: 'https://www.deca.org/calendar' },
+  { id: 14, date: '2026-01-12', title: 'District Competition', type: 'district', description: 'Blue Blazer District Competition. All members compete for state qualification.', location: 'TBD — Check with advisor', time: '7:00 AM', link: 'https://www.deca.org/calendar' },
   { id: 15, date: '2026-01-19', title: 'District Results & Debrief', type: 'chapter', description: 'Review district results, celebrate wins, and plan for state competition.', time: '3:30 PM' },
   { id: 16, date: '2026-01-26', title: 'State Prep Begins', type: 'chapter', description: 'Intensive preparation for state competition begins for qualifiers.', time: '3:30 PM' },
 
   // February 2026
   { id: 17, date: '2026-02-02', title: 'State Registration Deadline', type: 'deadline', description: 'Deadline to register for state competition. Confirm with advisor.', link: 'https://www.deca.org/calendar' },
-  { id: 18, date: '2026-02-09', title: 'State Mock Competition', type: 'chapter', description: 'Full mock competition simulating state-level conditions.', time: '8:00 AM', location: 'CHHS Cafeteria' },
+  { id: 18, date: '2026-02-09', title: 'State Mock Competition', type: 'chapter', description: 'Full mock competition simulating state-level conditions.', time: '8:00 AM', location: 'Blue Blazer Cafeteria' },
   { id: 19, date: '2026-02-16', title: 'Written Event State Submission', type: 'deadline', description: 'Final written event submissions due for state competition.' },
   { id: 20, date: '2026-02-23', title: 'State Competition Prep Day', type: 'chapter', description: 'Final preparation before state competition. Travel logistics review.', time: '3:30 PM' },
 
@@ -67,13 +67,13 @@ const calendarEvents: CalEvent[] = [
   { id: 24, date: '2026-03-30', title: 'ICDC Registration Deadline', type: 'deadline', description: 'Final deadline to register for ICDC.', link: 'https://www.deca.org/conferences/icdc' },
 
   // April 2026
-  { id: 25, date: '2026-04-06', title: 'ICDC Mock Competition', type: 'chapter', description: 'Final mock competition for ICDC qualifiers with external judges.', time: '8:00 AM', location: 'CHHS Cafeteria' },
+  { id: 25, date: '2026-04-06', title: 'ICDC Mock Competition', type: 'chapter', description: 'Final mock competition for ICDC qualifiers with external judges.', time: '8:00 AM', location: 'Blue Blazer Cafeteria' },
   { id: 26, date: '2026-04-13', title: 'ICDC Final Prep Week', type: 'chapter', description: 'Final week of preparation. Polish presentations and role-plays.', time: '3:30 PM' },
   { id: 27, date: '2026-04-25', title: 'ICDC 2026 — International Career Development Conference', type: 'icdc', description: 'The pinnacle of DECA competition! Compete against the best from around the world.', location: 'Orlando, FL', time: 'April 25-28, 2026', link: 'https://www.deca.org/conferences/icdc' },
 
   // May 2026
   { id: 28, date: '2026-05-04', title: 'ICDC Debrief & Celebration', type: 'chapter', description: 'Celebrate ICDC achievements and reflect on the season.', time: '4:00 PM' },
-  { id: 29, date: '2026-05-11', title: 'Chapter Awards Banquet', type: 'chapter', description: 'Annual CHHS DECA Awards Banquet. Celebrate the year\'s achievements!', time: '6:00 PM', location: 'TBD' },
+  { id: 29, date: '2026-05-11', title: 'Chapter Awards Banquet', type: 'chapter', description: 'Annual Blue Blazer Awards Banquet. Celebrate the year\'s achievements!', time: '6:00 PM', location: 'TBD' },
   { id: 30, date: '2026-05-18', title: 'Officer Elections', type: 'chapter', description: 'Elections for 2026-2027 chapter officers.', time: '3:30 PM' },
 ]
 
@@ -479,7 +479,7 @@ export default function CalendarPage() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-display text-base">D</div>
-            <span className="text-white/60 text-sm">CHHS DECA © 2025–2026</span>
+            <span className="text-white/60 text-sm">Blue Blazer © 2025–2026</span>
           </div>
           <div className="flex items-center gap-6 text-white/30 text-sm">
             <a href="https://www.deca.org/calendar" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">Official Calendar</a>

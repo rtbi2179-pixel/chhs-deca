@@ -6,18 +6,18 @@ export default function Footer() {
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="text-slate-400 text-sm">
-            © 2025 CHHS DECA. All rights reserved.
+            © 2025 Blue Blazer. All rights reserved.
           </div>
           <div className="flex gap-6 text-sm">
             <a
-              href="/CHHS_DECA_Privacy_Policy.pdf"
+              href="/Blue Blazer_DECA_Privacy_Policy.pdf"
               download
               className="text-blue-400 hover:text-blue-300 transition-colors"
             >
               Privacy Policy
             </a>
             <a
-              href="/CHHS_DECA_Terms_of_Service.pdf"
+              href="/Blue Blazer_DECA_Terms_of_Service.pdf"
               download
               className="text-blue-400 hover:text-blue-300 transition-colors"
             >

@@ -1,5 +1,5 @@
 /*
- * CHHS DECA Volunteer Sign-Up Page — Cinematic Dark Editorial
+ * Blue Blazer Volunteer Sign-Up Page — Cinematic Dark Editorial
  * Volunteer opportunities with sign-up forms and hour tracking
  */
 
@@ -33,7 +33,7 @@ const opportunities: VolunteerOpportunity[] = [
     title: 'District Competition Judge Assistant',
     date: 'January 12, 2026',
     time: '7:00 AM – 4:00 PM',
-    location: 'CHHS Main Campus',
+    location: 'Blue Blazer Main Campus',
     hours: 8,
     spotsTotal: 15,
     category: 'competition',
@@ -45,7 +45,7 @@ const opportunities: VolunteerOpportunity[] = [
     title: 'Financial Literacy Workshop Volunteer',
     date: 'November 18, 2025',
     time: '9:00 AM – 12:00 PM',
-    location: 'CHHS Library',
+    location: 'Blue Blazer Library',
     hours: 3,
     spotsTotal: 8,
     category: 'community',
@@ -69,7 +69,7 @@ const opportunities: VolunteerOpportunity[] = [
     title: 'Chapter Fundraiser — Car Wash',
     date: 'October 11, 2025',
     time: '10:00 AM – 3:00 PM',
-    location: 'CHHS Parking Lot',
+    location: 'Blue Blazer Parking Lot',
     hours: 5,
     spotsTotal: 25,
     category: 'fundraiser',
@@ -81,7 +81,7 @@ const opportunities: VolunteerOpportunity[] = [
     title: 'Mock Competition Judge',
     date: 'November 3, 2025',
     time: '8:00 AM – 12:00 PM',
-    location: 'CHHS Cafeteria',
+    location: 'Blue Blazer Cafeteria',
     hours: 4,
     spotsTotal: 10,
     category: 'chapter',
@@ -109,15 +109,15 @@ const opportunities: VolunteerOpportunity[] = [
     hours: 20,
     spotsTotal: 5,
     category: 'competition',
-    description: 'Represent CHHS at the International Career Development Conference in Orlando. Help with logistics and support our competitors.',
-    tasks: ['Assist with team logistics', 'Help with event management', 'Support competitors', 'Represent CHHS professionally'],
+    description: 'Represent Blue Blazer at the International Career Development Conference in Orlando. Help with logistics and support our competitors.',
+    tasks: ['Assist with team logistics', 'Help with event management', 'Support competitors', 'Represent Blue Blazer professionally'],
   },
   {
     id: 8,
     title: 'Mentorship Program Mentor',
     date: 'Ongoing',
     time: 'Flexible',
-    location: 'CHHS Campus',
+    location: 'Blue Blazer Campus',
     hours: 5,
     spotsTotal: 12,
     category: 'chapter',
@@ -257,7 +257,7 @@ const Volunteer = () => {
               )}
             </div>
             <p className="text-white/60 text-lg max-w-2xl mx-auto">
-              Build your leadership portfolio, earn community service hours, and help make CHHS DECA events amazing.
+              Build your leadership portfolio, earn community service hours, and help make Blue Blazer events amazing.
             </p>
           </motion.div>
         </div>

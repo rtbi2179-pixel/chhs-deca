@@ -71,7 +71,7 @@ export async function getStockPrice(ticker: string): Promise<StockQuote | null> 
 
           const response = await fetch(url.toString(), {
             headers: {
-              'User-Agent': 'CHHS-DECA-BlueMarket/1.0',
+              'User-Agent': 'Blue Blazer-DECA-BlueMarket/1.0',
             },
           });
 
