@@ -292,3 +292,17 @@
 - [x] Update Navigation component with new logo
 - [x] Update Home page with new logo
 - [x] Verify logo displays correctly across all pages
+
+## Practice Question Info & Explanation Features
+
+- [x] Add info icon to display question metadata (ID, cluster, instructional area, cognitive level, difficulty)
+- [x] Create question info modal showing all metadata fields
+- [x] Update explanation to display rationale
+- [x] Update explanation to display distractor rationale for all options
+- [x] Create comprehensive Vitest tests for question metadata retrieval
+- [x] Verify all question fields are properly populated from database
+
+**Implementation Details:**
+- Info Icon: Displays modal with ID (MKT-0001), Cluster, Instructional Area, Performance Indicator Focus, Cognitive Level, and Difficulty
+- Explanation: Shows rationale for correct answer and distractor rationale for all incorrect options
+- Tests: 9 passing tests verifying metadata, clusters, difficulty levels, and rationale fields

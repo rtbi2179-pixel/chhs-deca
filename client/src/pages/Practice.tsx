@@ -2,7 +2,7 @@
 
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
-import { Loader2, ChevronDown, CheckCircle2, Bookmark, Grid3x3, Save, Award, Clock, DollarSign } from "lucide-react";
+import { Loader2, ChevronDown, CheckCircle2, Bookmark, Grid3x3, Save, Award, Clock, DollarSign, Info } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
@@ -29,6 +29,7 @@ export default function Practice() {
   const [sessionSaved, setSessionSaved] = useState(false);
   const [showSessionSummary, setShowSessionSummary] = useState(false);
   const [sessionBlueBucks, setSessionBlueBucks] = useState(0);
+  const [showQuestionInfo, setShowQuestionInfo] = useState(false);
 
   // Timer effect
   useEffect(() => {
@@ -661,8 +662,30 @@ export default function Practice() {
                   <ChevronDown className={`w-4 h-4 transition-transform ${showExplanation ? 'rotate-180' : ''}`} />
                 </button>
                 {showExplanation && (
-                  <div className="mt-4 pt-4 border-t border-foreground/20">
-                    <p className="text-foreground/90">{currentQuestion.rationale}</p>
+                  <div className="mt-4 pt-4 border-t border-foreground/20 space-y-4">
+                    <div>
+                      <h4 className="font-semibold text-foreground mb-2">Rationale:</h4>
+                      <p className="text-foreground/90">{currentQuestion.rationale}</p>
+                    </div>
+                    {(currentQuestion.distractorRationaleA || currentQuestion.distractorRationaleB || currentQuestion.distractorRationaleC || currentQuestion.distractorRationaleD) && (
+                      <div>
+                        <h4 className="font-semibold text-foreground mb-2">Distractor Rationale:</h4>
+                        <div className="space-y-2 text-sm">
+                          {currentQuestion.distractorRationaleA && (
+                            <p className="text-foreground/80"><span className="font-medium">A:</span> {currentQuestion.distractorRationaleA}</p>
+                          )}
+                          {currentQuestion.distractorRationaleB && (
+                            <p className="text-foreground/80"><span className="font-medium">B:</span> {currentQuestion.distractorRationaleB}</p>
+                          )}
+                          {currentQuestion.distractorRationaleC && (
+                            <p className="text-foreground/80"><span className="font-medium">C:</span> {currentQuestion.distractorRationaleC}</p>
+                          )}
+                          {currentQuestion.distractorRationaleD && (
+                            <p className="text-foreground/80"><span className="font-medium">D:</span> {currentQuestion.distractorRationaleD}</p>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -694,9 +717,11 @@ export default function Practice() {
           <Button 
             variant="ghost" 
             size="sm"
+            onClick={() => setShowQuestionInfo(!showQuestionInfo)}
             className="text-foreground/70"
+            title="Question Information"
           >
-            ℹ
+            <Info className="w-4 h-4" />
           </Button>
 
           <Button 
@@ -739,6 +764,51 @@ export default function Practice() {
       </div>
 
       {/* Session Summary Modal */}
+
+      {/* Question Info Modal */}
+      {showQuestionInfo && currentQuestion && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-background border border-border rounded-lg p-6 max-w-2xl w-full max-h-96 overflow-auto">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-foreground">Question Information</h2>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => setShowQuestionInfo(false)}
+                className="text-foreground/70"
+              >
+                ✕
+              </Button>
+            </div>
+            <div className="space-y-3 text-sm">
+              <div className="border-b border-border pb-3">
+                <p className="text-foreground/70 font-medium">ID:</p>
+                <p className="text-foreground">{currentQuestion.id}</p>
+              </div>
+              <div className="border-b border-border pb-3">
+                <p className="text-foreground/70 font-medium">Cluster:</p>
+                <p className="text-foreground">{currentQuestion.cluster}</p>
+              </div>
+              <div className="border-b border-border pb-3">
+                <p className="text-foreground/70 font-medium">Instructional Area:</p>
+                <p className="text-foreground">{currentQuestion.instructionalArea}</p>
+              </div>
+              <div className="border-b border-border pb-3">
+                <p className="text-foreground/70 font-medium">Performance Indicator Focus:</p>
+                <p className="text-foreground">{currentQuestion.performanceIndicatorFocus}</p>
+              </div>
+              <div className="border-b border-border pb-3">
+                <p className="text-foreground/70 font-medium">Cognitive Level:</p>
+                <p className="text-foreground">{currentQuestion.cognitiveLevel}</p>
+              </div>
+              <div>
+                <p className="text-foreground/70 font-medium">Difficulty:</p>
+                <p className="text-foreground">{currentQuestion.difficulty}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {showSessionSummary && (
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
