@@ -13,8 +13,6 @@ const navLinks = [
   { href: '/volunteer', label: 'Volunteer', icon: Users },
   { href: '/discussions', label: 'Discussions', icon: MessageSquare },
   { href: '/announcements', label: 'Announcements', icon: Bell },
-  { href: '/blue-market', label: 'Blue Market', icon: TrendingUp },
-  { href: '/transaction-history', label: 'Transactions', icon: History },
   { href: '/speech-ai', label: 'AI Tools', icon: Zap },
 ]
 
@@ -272,10 +270,21 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
                             <Link href="/blue-market">
                               <button
                                 onClick={() => setShowFinancialMenu(false)}
-                                className="w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-blue-500/10 transition-colors text-sm text-white/80 hover:text-white"
+                                className="w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-blue-500/10 transition-colors text-sm text-white/80 hover:text-white border-b border-blue-500/20"
                               >
                                 <TrendingUp size={18} className="text-purple-400" />
                                 <span className="font-medium">Stock Market</span>
+                              </button>
+                            </Link>
+                            
+                            {/* Transaction History Option */}
+                            <Link href="/transaction-history">
+                              <button
+                                onClick={() => setShowFinancialMenu(false)}
+                                className="w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-blue-500/10 transition-colors text-sm text-white/80 hover:text-white"
+                              >
+                                <History size={18} className="text-yellow-400" />
+                                <span className="font-medium">Transactions</span>
                               </button>
                             </Link>
                           </div>
