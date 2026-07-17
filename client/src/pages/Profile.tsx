@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { trpc } from '@/lib/trpc'
-import { ArrowLeft, Flame, BookOpen, CheckCircle, Target, TrendingUp, Medal, Plus, Trash2, Edit2, FileText } from 'lucide-react'
+import { ArrowLeft, Flame, BookOpen, CheckCircle, Target, TrendingUp, Medal, Plus, Trash2, Edit2, FileText, Sparkles } from 'lucide-react'
 import { useLocation } from 'wouter'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
@@ -481,6 +481,43 @@ export default function Profile() {
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Cosmetics Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+          className="relative overflow-hidden rounded-2xl border border-blue-500/20 bg-gradient-to-br from-blue-600/10 via-slate-900/50 to-slate-950 p-8 backdrop-blur-sm mb-12"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-transparent to-purple-500/5 pointer-events-none" />
+          
+          <div className="relative">
+            <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3 font-['Bebas_Neue'] tracking-wide">
+              <Sparkles className="text-yellow-400" size={32} />
+              Cosmetics
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700">
+                <h3 className="text-white font-semibold mb-3 font-['Outfit']">Profile Frame</h3>
+                <div className="w-full h-24 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg mb-3 flex items-center justify-center">
+                  <span className="text-white text-sm">No frame equipped</span>
+                </div>
+                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-sm" onClick={() => setLocation('/gacha')}>
+                  Customize
+                </Button>
+              </div>
+              <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700">
+                <h3 className="text-white font-semibold mb-3 font-['Outfit']">Banner</h3>
+                <div className="w-full h-24 bg-gradient-to-r from-slate-700 to-slate-600 rounded-lg mb-3 flex items-center justify-center">
+                  <span className="text-white text-sm">No banner equipped</span>
+                </div>
+                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-sm" onClick={() => setLocation('/gacha')}>
+                  Customize
+                </Button>
+              </div>
+            </div>
+          </div>
+        </motion.div>
 
         {/* Achievements Section */}
         <motion.div

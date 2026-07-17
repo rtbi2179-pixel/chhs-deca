@@ -268,8 +268,8 @@
 - [x] Add cosmetic cost deduction from points
 
 ### Gacha UI Page
-- [ ] Create GachaShop page component
-- [ ] Design gacha pull animation
+- [x] Create GachaShop page component
+- [x] Design gacha pull animation
 - [ ] Show pull history
 - [ ] Display cosmetics inventory
 - [ ] Implement equip/unequip UI
