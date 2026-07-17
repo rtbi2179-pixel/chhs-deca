@@ -27,7 +27,7 @@ interface StockQuote {
 function getCachedPrice(ticker: string): StockQuote | null | undefined {
   const cached = priceCache.get(ticker);
   if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-    return cached.data;
+    return cached.data || null;
   }
   return undefined;
 }
@@ -44,11 +44,16 @@ export async function getStockPrice(ticker: string): Promise<StockQuote | null> 
     return cached;
   }
   
+  // API is paused - return null to use cached data only
+  console.log(`[Stock Price Service] API paused - returning null for ${ticker}`);
+  return null;
+  
   // Check if this request is already in-flight (deduplication)
   const inFlight = inFlightRequests.get(ticker);
   if (inFlight) {
     console.log(`[Stock Price Service] Reusing in-flight request for ${ticker}`);
-    return inFlight;
+    const result = await inFlight;
+    return result || null;
   }
   
   try {
