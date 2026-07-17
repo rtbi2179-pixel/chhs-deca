@@ -4,8 +4,10 @@ import { Card } from "@/components/ui/card";
 import { Loader2, TrendingUp, TrendingDown, DollarSign } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
+import { useLocation } from "wouter";
 
 export default function BlueMarket() {
+  const [, setLocation] = useLocation();
   const [selectedStock, setSelectedStock] = useState<any>(null);
   const [buyAmount, setBuyAmount] = useState("");
   const [sellShares, setSellShares] = useState("");
@@ -182,7 +184,7 @@ export default function BlueMarket() {
           <Button onClick={handleInitializeStocks} variant="default">
             Initialize Stocks
           </Button>
-          <Button onClick={() => setShowLeaderboard(!showLeaderboard)} variant="outline">
+          <Button onClick={() => setLocation('/leaderboard')} variant="outline">
             Show Leaderboard
           </Button>
           {loadingPrices && (
