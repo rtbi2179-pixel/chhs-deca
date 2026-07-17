@@ -173,8 +173,8 @@
 - [x] Display credit score
 - [x] Display available credit cards
 - [x] Show credit card applications
-- [ ] Display payment history
-- [ ] Show rewards earned
+- [x] Display payment history
+- [x] Show rewards earned
 
 ### Credit Card Features
 - [ ] Implement credit card usage tracking

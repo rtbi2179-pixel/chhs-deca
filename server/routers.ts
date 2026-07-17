@@ -1147,6 +1147,75 @@ export const appRouter = router({
       );
       return cardsWithDetails;
     }),
+
+    // Get payment history for user
+    getPaymentHistory: protectedProcedure
+      .input(z.object({ limit: z.number().default(50), offset: z.number().default(0) }))
+      .query(async ({ ctx, input }) => {
+        const { getDb } = await import('./db');
+        const database = await getDb();
+        if (!database) return [];
+        
+        const userPayments = await database
+          .select()
+          .from(blueBucksTransactions)
+          .where(eq(blueBucksTransactions.userId, ctx.user.id))
+          .orderBy(desc(blueBucksTransactions.createdAt))
+          .limit(input.limit)
+          .offset(input.offset);
+        
+        return userPayments;
+      }),
+
+    // Get rewards earned by user
+    getRewardsEarned: protectedProcedure
+      .query(async ({ ctx }) => {
+        const { rewards } = await import('../drizzle/schema');
+        const { getDb } = await import('./db');
+        const database = await getDb();
+        if (!database) return { totalRewards: '0', rewardsList: [] };
+        
+        const userRewards = await database
+          .select()
+          .from(rewards)
+          .where(eq(rewards.userId, ctx.user.id))
+          .orderBy(desc(rewards.earnedAt));
+        
+        const totalRewards = userRewards.reduce((sum, r) => sum + parseFloat(r.amount), 0);
+        
+        return {
+          totalRewards: totalRewards.toString(),
+          rewardsList: userRewards,
+        };
+      }),
+
+    // Get savings account interest earned
+    getSavingsInterest: protectedProcedure
+      .query(async ({ ctx }) => {
+        const { userBankAccounts } = await import('../drizzle/schema');
+        const { getDb } = await import('./db');
+        const schoolCode = ctx.user.schoolCode || '';
+        const database = await getDb();
+        if (!database) return { savingsBalance: '0', interestEarned: '0', apy: '0.5' };
+        
+        const account = await database
+          .select()
+          .from(userBankAccounts)
+          .where(and(eq(userBankAccounts.userId, ctx.user.id), eq(userBankAccounts.schoolCode, schoolCode)))
+          .limit(1);
+        
+        if (!account[0]) return { savingsBalance: '0', interestEarned: '0', apy: '0.5' };
+        
+        const savingsBalance = parseFloat(account[0].savingsBalance);
+        const apy = 0.005; // 0.5% APY
+        const interestEarned = (savingsBalance * apy) / 12; // Monthly interest
+        
+        return {
+          savingsBalance: account[0].savingsBalance,
+          interestEarned: interestEarned.toString(),
+          apy: (apy * 100).toString(),
+        };
+      }),
   }),
 });
 
