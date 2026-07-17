@@ -417,7 +417,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-8">
             <div className="flex items-center gap-3">
               <img
-                src="/manus-storage/blue-blazer-logo_004e02d8.png"
+                src="/manus-storage/Untitleddesign_c1fb0d88.png"
                 alt="Blue Blazer Logo"
                 className="w-10 h-10"
               />
