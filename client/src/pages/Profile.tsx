@@ -64,6 +64,12 @@ export default function Profile() {
     { enabled: !!user?.id }
   )
 
+  // Fetch user cosmetics
+  const { data: userCosmetics = [] } = trpc.gacha.getUserCosmetics.useQuery(
+    undefined,
+    { enabled: !!user?.id }
+  )
+
   // Find current user in leaderboard
   const userStats = (leaderboardData as any[]).find((entry: any) => {
     if ('user' in entry) return entry.user.id === user?.id
@@ -490,7 +496,6 @@ export default function Profile() {
           className="relative overflow-hidden rounded-2xl border border-blue-500/20 bg-gradient-to-br from-blue-600/10 via-slate-900/50 to-slate-950 p-8 backdrop-blur-sm mb-12"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-transparent to-purple-500/5 pointer-events-none" />
-          
           <div className="relative">
             <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3 font-['Bebas_Neue'] tracking-wide">
               <Sparkles className="text-yellow-400" size={32} />

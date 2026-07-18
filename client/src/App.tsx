@@ -35,6 +35,7 @@ import TransactionHistory from "./pages/TransactionHistory";
 import { BankingDashboard } from "./pages/BankingDashboard";
 import GachaShop from "./pages/GachaShop";
 import PracticeDebug from "./pages/PracticeDebug";
+import SpendingPatterns from "./pages/SpendingPatterns";
 import Footer from "./components/Footer";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useState, useEffect } from "react";
@@ -85,6 +86,7 @@ function Router({ isAuthenticated, showLoginRequired }: { isAuthenticated: boole
       <Route path="/transaction-history" component={TransactionHistory} />
       <Route path="/banking" component={BankingDashboard} />
       <Route path="/gacha" component={GachaShop} />
+      <Route path="/spending-patterns" component={SpendingPatterns} />
       <Route path="/debug/practice" component={PracticeDebug} />
       <Route path="/verify-email" component={VerifyEmail} />
       <Route path="/reset-password" component={ResetPassword} />

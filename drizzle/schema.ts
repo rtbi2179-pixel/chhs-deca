@@ -871,3 +871,73 @@ export const gachaPulls = mysqlTable("gachaPulls", {
 });
 export type GachaPull = typeof gachaPulls.$inferSelect;
 export type InsertGachaPull = typeof gachaPulls.$inferInsert;
+
+
+/**
+ * Credit Card Usage Tracking - Track purchases by card
+ */
+export const cardUsageTracking = mysqlTable("cardUsageTracking", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  cardId: int("cardId").notNull().references(() => creditCards.id, { onDelete: "cascade" }),
+  transactionAmount: decimal("transactionAmount", { precision: 10, scale: 2 }).notNull(),
+  merchantCategory: varchar("merchantCategory", { length: 50 }).notNull(), // e.g., "grocery", "gas", "dining"
+  transactionDate: timestamp("transactionDate").notNull(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type CardUsageTracking = typeof cardUsageTracking.$inferSelect;
+export type InsertCardUsageTracking = typeof cardUsageTracking.$inferInsert;
+
+/**
+ * Cashback Rewards - Track earned cashback
+ */
+export const cashbackRewards = mysqlTable("cashbackRewards", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  cardId: int("cardId").notNull().references(() => creditCards.id, { onDelete: "cascade" }),
+  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  source: varchar("source", { length: 100 }).notNull(), // e.g., "purchase_cashback", "bonus_cashback"
+  earnedDate: timestamp("earnedDate").notNull(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type CashbackReward = typeof cashbackRewards.$inferSelect;
+export type InsertCashbackReward = typeof cashbackRewards.$inferInsert;
+
+/**
+ * Card Statements - Monthly card statements
+ */
+export const cardStatements = mysqlTable("cardStatements", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  cardId: int("cardId").notNull().references(() => creditCards.id, { onDelete: "cascade" }),
+  statementPeriodStart: timestamp("statementPeriodStart").notNull(),
+  statementPeriodEnd: timestamp("statementPeriodEnd").notNull(),
+  totalCharges: decimal("totalCharges", { precision: 10, scale: 2 }).notNull(),
+  totalPayments: decimal("totalPayments", { precision: 10, scale: 2 }).notNull(),
+  totalCashback: decimal("totalCashback", { precision: 10, scale: 2 }).notNull(),
+  minimumPaymentDue: decimal("minimumPaymentDue", { precision: 10, scale: 2 }).notNull(),
+  dueDate: timestamp("dueDate").notNull(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type CardStatement = typeof cardStatements.$inferSelect;
+export type InsertCardStatement = typeof cardStatements.$inferInsert;
+
+/**
+ * Spending Patterns - Monthly spending analysis by category
+ */
+export const spendingPatterns = mysqlTable("spendingPatterns", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  merchantCategory: varchar("merchantCategory", { length: 50 }).notNull(),
+  monthlySpending: decimal("monthlySpending", { precision: 10, scale: 2 }).notNull(),
+  averageTransactionAmount: decimal("averageTransactionAmount", { precision: 10, scale: 2 }).notNull(),
+  transactionCount: int("transactionCount").notNull(),
+  month: int("month").notNull(), // YYYYMM format
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type SpendingPattern = typeof spendingPatterns.$inferSelect;
+export type InsertSpendingPattern = typeof spendingPatterns.$inferInsert;

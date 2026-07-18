@@ -306,3 +306,25 @@
 - Info Icon: Displays modal with ID (MKT-0001), Cluster, Instructional Area, Performance Indicator Focus, Cognitive Level, and Difficulty
 - Explanation: Shows rationale for correct answer and distractor rationale for all incorrect options
 - Tests: 9 passing tests verifying metadata, clusters, difficulty levels, and rationale fields
+
+## Blue Bucks Display & Transaction Breakdown
+
+- [x] Display blue bucks change animation in Practice page header
+- [x] Show floating "+X Blue Bucks" text when answer is submitted
+- [x] Add smooth fade-out and upward motion animation
+- [x] Show breakdown of gains and losses in Transaction History
+- [x] Add "Show/Hide Blue Bucks Breakdown" button
+- [x] Color-code transactions (green for gains, red for losses)
+- [x] Add trending icons for visual clarity
+- [x] Display example transactions (Practice gains, Stock profits/losses)
+
+## Embedded AI Systems with Microphone Access
+
+- [x] Create RoleplayAI embedded page with iframe
+- [x] Create WrittenEventAI embedded page with iframe
+- [x] Add Permissions-Policy header for microphone delegation
+- [x] Configure iframe allow attributes for microphone access
+- [x] Implement error handling for microphone permission issues
+- [x] Add routes for embedded AI pages (/ai/roleplay, /ai/written)
+- [x] Update SpeechAI page to link to embedded pages
+- [x] Create comprehensive tests for embedded AI functionality

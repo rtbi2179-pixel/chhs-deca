@@ -1216,6 +1216,63 @@ export const appRouter = router({
           apy: (apy * 100).toString(),
         };
       }),
+
+    // Get card usage tracking for a specific card
+    getCardUsageTracking: protectedProcedure
+      .input(z.object({ cardId: z.number() }))
+      .query(async ({ ctx, input }) => {
+        const { cardUsageTracking } = await import("../drizzle/schema");
+        const { getDb } = await import("./db");
+        const database = await getDb();
+        if (!database) return [];
+        const usage = await database
+          .select()
+          .from(cardUsageTracking)
+          .where(and(eq(cardUsageTracking.userId, ctx.user.id), eq(cardUsageTracking.cardId, input.cardId)))
+          .orderBy(desc(cardUsageTracking.transactionDate));
+        return usage;
+      }),
+
+    // Get cashback rewards for a user
+    getCashbackRewards: protectedProcedure
+      .input(z.object({ cardId: z.number().optional() }))
+      .query(async ({ ctx, input }) => {
+        const { cashbackRewards } = await import("../drizzle/schema");
+        const { getDb } = await import("./db");
+        const database = await getDb();
+        if (!database) return [];
+        const conditions = [eq(cashbackRewards.userId, ctx.user.id)];
+        if (input.cardId) {
+          conditions.push(eq(cashbackRewards.cardId, input.cardId));
+        }
+        const rewards = await database
+          .select()
+          .from(cashbackRewards)
+          .where(and(...conditions))
+          .orderBy(desc(cashbackRewards.earnedDate));
+        return rewards;
+      }),
+
+    // Get spending patterns by category
+    getSpendingPatterns: protectedProcedure
+      .input(z.object({ month: z.number().optional() }))
+      .query(async ({ ctx, input }) => {
+        const { spendingPatterns } = await import("../drizzle/schema");
+        const { getDb } = await import("./db");
+        const database = await getDb();
+        if (!database) return [];
+        const conditions = [eq(spendingPatterns.userId, ctx.user.id)];
+        if (input.month) {
+          conditions.push(eq(spendingPatterns.month, input.month));
+        }
+        const patterns = await database
+          .select()
+          .from(spendingPatterns)
+          .where(and(...conditions))
+          .orderBy(desc(spendingPatterns.monthlySpending));
+        return patterns;
+      }),
+
   }),
 });
 

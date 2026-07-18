@@ -9,6 +9,7 @@ const navLinks = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/events', label: 'Events', icon: Trophy },
   { href: '/practice', label: 'Practice', icon: BookOpen },
+  { href: '/leaderboard', label: 'Leaderboard', icon: TrendingUp },
   { href: '/calendar', label: 'Calendar', icon: Calendar },
   { href: '/volunteer', label: 'Volunteer', icon: Users },
   { href: '/discussions', label: 'Discussions', icon: MessageSquare },
