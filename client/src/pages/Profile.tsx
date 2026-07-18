@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { toast } from 'sonner'
+import { ProfileCosmeticsDisplay } from '@/components/ProfileCosmeticsDisplay'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -501,26 +502,7 @@ export default function Profile() {
               <Sparkles className="text-yellow-400" size={32} />
               Cosmetics
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700">
-                <h3 className="text-white font-semibold mb-3 font-['Outfit']">Profile Frame</h3>
-                <div className="w-full h-24 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg mb-3 flex items-center justify-center">
-                  <span className="text-white text-sm">No frame equipped</span>
-                </div>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-sm" onClick={() => setLocation('/gacha')}>
-                  Customize
-                </Button>
-              </div>
-              <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700">
-                <h3 className="text-white font-semibold mb-3 font-['Outfit']">Banner</h3>
-                <div className="w-full h-24 bg-gradient-to-r from-slate-700 to-slate-600 rounded-lg mb-3 flex items-center justify-center">
-                  <span className="text-white text-sm">No banner equipped</span>
-                </div>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-sm" onClick={() => setLocation('/gacha')}>
-                  Customize
-                </Button>
-              </div>
-            </div>
+            <ProfileCosmeticsDisplay userCosmetics={userCosmetics} />
           </div>
         </motion.div>
 

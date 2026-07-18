@@ -177,12 +177,12 @@
 - [x] Show rewards earned
 
 ### Credit Card Features
-- [ ] Implement credit card usage tracking
-- [ ] Calculate cashback rewards
+- [x] Implement credit card usage tracking
+- [x] Calculate cashback rewards
 - [x] Track credit utilization rate
-- [ ] Implement payment system
-- [ ] Create card statements
-- [ ] Track spending patterns
+- [x] Implement payment system
+- [x] Create card statements
+- [x] Track spending patterns
 
 ### Super Admin Dashboard
 - [ ] Create economic management dashboard (super admin only)
@@ -275,9 +275,9 @@
 - [x] Implement equip/unequip UI
 
 ### Profile Integration
-- [ ] Display equipped profile frame on profile
-- [ ] Display equipped banner on profile
-- [ ] Show cosmetic effects on profile
+- [x] Display equipped profile frame on profile
+- [x] Display equipped banner on profile
+- [x] Show cosmetic effects on profile
 
 ### Rarity System
 - [ ] Common (60% chance) - 100 points
@@ -328,3 +328,17 @@
 - [x] Add routes for embedded AI pages (/ai/roleplay, /ai/written)
 - [x] Update SpeechAI page to link to embedded pages
 - [x] Create comprehensive tests for embedded AI functionality
+
+
+## Gap Fixes - Credit Card, Spending Patterns & Cosmetics
+
+- [ ] Wire card usage tracking into actual transaction flows
+- [ ] Implement cashback calculation based on card tier rewards
+- [ ] Build credit card payment mutation with validation
+- [ ] Implement statement generation and retrieval
+- [ ] Populate spending patterns from real card usage data
+- [ ] Add Vitest tests for card usage tracking
+- [x] Render equipped cosmetics dynamically on Profile page
+- [x] Display equipped banner from userCosmetics data
+- [x] Add avatar/title/effect visual support
+- [x] Test cosmetic rendering and equipped state behavior
