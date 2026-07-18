@@ -651,37 +651,49 @@ export default function Practice() {
                   ? 'bg-green-500/10 border border-green-500'
                   : 'bg-red-500/10 border border-red-500'
               }`}>
-                <p className="font-bold text-lg mb-2">
-                  {selectedAnswer === currentQuestion.correctAnswer ? '✓ Correct!' : '✗ Incorrect'}
-                </p>
-                <button
-                  onClick={() => setShowExplanation(!showExplanation)}
-                  className="text-blue-400 hover:text-blue-300 text-sm font-medium flex items-center gap-1"
-                >
-                  {showExplanation ? 'Hide' : 'Show'} Explanation
-                  <ChevronDown className={`w-4 h-4 transition-transform ${showExplanation ? 'rotate-180' : ''}`} />
-                </button>
-                {showExplanation && (
+                <div className="flex items-center justify-between mb-4">
+                  <p className="font-bold text-lg">
+                    {selectedAnswer === currentQuestion.correctAnswer ? '✓ Correct!' : '✗ Incorrect'}
+                  </p>
+                  <button
+                    onClick={() => setShowExplanation(!showExplanation)}
+                    className="text-blue-400 hover:text-blue-300 text-sm font-medium flex items-center gap-2 px-3 py-1 rounded hover:bg-blue-500/10 transition-colors"
+                  >
+                    {showExplanation ? 'Hide' : 'Show'} Explanation
+                    <ChevronDown className={`w-4 h-4 transition-transform ${showExplanation ? 'rotate-180' : ''}`} />
+                  </button>
+                </div>
+                {showExplanation && currentQuestion && (
                   <div className="mt-4 pt-4 border-t border-foreground/20 space-y-4">
-                    <div>
-                      <h4 className="font-semibold text-foreground mb-2">Rationale:</h4>
-                      <p className="text-foreground/90">{currentQuestion.rationale}</p>
-                    </div>
+                    {currentQuestion.rationale && (
+                      <div>
+                        <h4 className="font-semibold text-foreground mb-2">Correct Answer Rationale:</h4>
+                        <p className="text-foreground/90 leading-relaxed">{currentQuestion.rationale}</p>
+                      </div>
+                    )}
                     {(currentQuestion.distractorRationaleA || currentQuestion.distractorRationaleB || currentQuestion.distractorRationaleC || currentQuestion.distractorRationaleD) && (
                       <div>
-                        <h4 className="font-semibold text-foreground mb-2">Distractor Rationale:</h4>
-                        <div className="space-y-2 text-sm">
+                        <h4 className="font-semibold text-foreground mb-3">Why Other Answers Are Incorrect:</h4>
+                        <div className="space-y-3 text-sm">
                           {currentQuestion.distractorRationaleA && (
-                            <p className="text-foreground/80"><span className="font-medium">A:</span> {currentQuestion.distractorRationaleA}</p>
+                            <div className="bg-foreground/5 p-3 rounded">
+                              <p className="text-foreground/80"><span className="font-semibold text-foreground">Option A:</span> {currentQuestion.distractorRationaleA}</p>
+                            </div>
                           )}
                           {currentQuestion.distractorRationaleB && (
-                            <p className="text-foreground/80"><span className="font-medium">B:</span> {currentQuestion.distractorRationaleB}</p>
+                            <div className="bg-foreground/5 p-3 rounded">
+                              <p className="text-foreground/80"><span className="font-semibold text-foreground">Option B:</span> {currentQuestion.distractorRationaleB}</p>
+                            </div>
                           )}
                           {currentQuestion.distractorRationaleC && (
-                            <p className="text-foreground/80"><span className="font-medium">C:</span> {currentQuestion.distractorRationaleC}</p>
+                            <div className="bg-foreground/5 p-3 rounded">
+                              <p className="text-foreground/80"><span className="font-semibold text-foreground">Option C:</span> {currentQuestion.distractorRationaleC}</p>
+                            </div>
                           )}
                           {currentQuestion.distractorRationaleD && (
-                            <p className="text-foreground/80"><span className="font-medium">D:</span> {currentQuestion.distractorRationaleD}</p>
+                            <div className="bg-foreground/5 p-3 rounded">
+                              <p className="text-foreground/80"><span className="font-semibold text-foreground">Option D:</span> {currentQuestion.distractorRationaleD}</p>
+                            </div>
                           )}
                         </div>
                       </div>
@@ -724,14 +736,6 @@ export default function Practice() {
             <Info className="w-4 h-4" />
           </Button>
 
-          <Button 
-            variant="ghost" 
-            size="sm"
-            onClick={() => setShowExplanation(!showExplanation)}
-            className="text-foreground/70"
-          >
-            Explanation
-          </Button>
           <Button 
             variant="ghost" 
             size="sm"
