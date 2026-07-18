@@ -736,6 +736,18 @@ export default function Practice() {
             <Info className="w-4 h-4" />
           </Button>
 
+          {showResult && (
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => setShowExplanation(!showExplanation)}
+              className="text-foreground/70"
+              title="Show/Hide Explanation"
+            >
+              {showExplanation ? 'Hide' : 'Show'} Explanation
+            </Button>
+          )}
+
           <Button 
             variant="ghost" 
             size="sm"
