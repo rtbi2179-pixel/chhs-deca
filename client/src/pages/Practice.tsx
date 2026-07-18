@@ -2,10 +2,10 @@
 
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
-import { Loader2, ChevronDown, CheckCircle2, Bookmark, Grid3x3, Save, Award, Clock, DollarSign, Info } from "lucide-react";
+import { Loader2, ChevronDown, CheckCircle2, Bookmark, Grid3x3, Save, Award, Clock, DollarSign, Info, TrendingUp } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Practice() {
   const [selectedCluster, setSelectedCluster] = useState<string | null>(null);
@@ -30,6 +30,7 @@ export default function Practice() {
   const [showSessionSummary, setShowSessionSummary] = useState(false);
   const [sessionBlueBucks, setSessionBlueBucks] = useState(0);
   const [showQuestionInfo, setShowQuestionInfo] = useState(false);
+  const [blueBucksChange, setBlueBucksChange] = useState<{ amount: number; timestamp: number } | null>(null);
 
   // Timer effect
   useEffect(() => {
@@ -226,6 +227,12 @@ export default function Practice() {
 
       if (result.blueBucksAwarded > 0) {
         toast.success(`${result.message}`);
+        setBlueBucksChange({
+          amount: result.blueBucksAwarded,
+          timestamp: Date.now()
+        });
+        // Clear the animation after 2 seconds
+        setTimeout(() => setBlueBucksChange(null), 2000);
       }
 
       await updateLeaderboardMutation.mutateAsync({
@@ -480,12 +487,28 @@ export default function Practice() {
           <Button variant="ghost" size="sm" className="text-foreground/70">
             ⋯
           </Button>
-          <div className="flex items-center gap-3 ml-4 pl-4 border-l border-border">
+          <div className="flex items-center gap-3 ml-4 pl-4 border-l border-border relative">
             <div className="text-center">
               <span className="text-sm text-red-500 font-bold">0</span>
             </div>
-            <div className="text-center">
-              <span className="text-sm text-blue-500 font-bold">20</span>
+            <div className="text-center relative">
+              <div className="flex items-center gap-2">
+                <DollarSign className="w-4 h-4 text-green-400" />
+                <span className="text-sm text-green-400 font-bold">20</span>
+              </div>
+              <AnimatePresence>
+                {blueBucksChange && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 0 }}
+                    animate={{ opacity: 1, y: -30 }}
+                    exit={{ opacity: 0, y: -50 }}
+                    transition={{ duration: 1.5 }}
+                    className="absolute top-0 left-1/2 transform -translate-x-1/2 text-green-400 font-bold text-lg"
+                  >
+                    +{blueBucksChange.amount}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </div>

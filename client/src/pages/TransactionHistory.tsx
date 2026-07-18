@@ -2,11 +2,11 @@ import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, ArrowDownLeft, Loader2 } from "lucide-react";
-
+import { ArrowUpRight, ArrowDownLeft, Loader2, TrendingUp, TrendingDown } from "lucide-react";
 export default function TransactionHistory() {
   const [limit] = useState(50);
   const [offset, setOffset] = useState(0);
+  const [showBlueBucksBreakdown, setShowBlueBucksBreakdown] = useState(false);
 
   const { data: transactions, isLoading } = trpc.market.getTransactionHistory.useQuery({
     limit,
@@ -42,7 +42,53 @@ export default function TransactionHistory() {
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-foreground mb-2">Transaction History</h1>
           <p className="text-foreground/70">View all your past trades with execution prices and timestamps</p>
+          <Button
+            onClick={() => setShowBlueBucksBreakdown(!showBlueBucksBreakdown)}
+            variant="outline"
+            className="mt-4"
+          >
+            {showBlueBucksBreakdown ? 'Hide' : 'Show'} Blue Bucks Breakdown
+          </Button>
         </div>
+
+        {/* Blue Bucks Breakdown */}
+        {showBlueBucksBreakdown && (
+          <Card className="border border-border p-6 mb-8 bg-card">
+            <h2 className="text-2xl font-bold text-foreground mb-4">Blue Bucks Breakdown</h2>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-foreground/5 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <TrendingUp className="w-5 h-5 text-green-400" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Correct Answer - Practice</p>
+                    <p className="text-xs text-foreground/60">+5 Blue Bucks per correct answer</p>
+                  </div>
+                </div>
+                <span className="font-bold text-lg text-green-400">+5</span>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-foreground/5 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <TrendingUp className="w-5 h-5 text-green-400" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Stock Purchase Profit</p>
+                    <p className="text-xs text-foreground/60">Earnings from selling stocks at a gain</p>
+                  </div>
+                </div>
+                <span className="font-bold text-lg text-green-400">+50</span>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-foreground/5 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <TrendingDown className="w-5 h-5 text-red-400" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Stock Purchase Loss</p>
+                    <p className="text-xs text-foreground/60">Loss from selling stocks at a loss</p>
+                  </div>
+                </div>
+                <span className="font-bold text-lg text-red-400">-25</span>
+              </div>
+            </div>
+          </Card>
+        )}
 
         {/* Transactions Table */}
         <Card className="border border-border overflow-hidden">
