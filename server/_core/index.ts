@@ -33,6 +33,16 @@ async function startServer() {
   const server = createServer(app);
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
+
+  // Configure Permissions Policy headers for microphone access
+  // Allow microphone access for the main website and embedded AI systems
+  app.use((req, res, next) => {
+    res.setHeader(
+      'Permissions-Policy',
+      'microphone=(self "https://chhsdeca-hn7kwxwp.manus.space" "https://chhsdeca-9shazsx7.manus.space"), autoplay=(self)'
+    );
+    next();
+  });
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);

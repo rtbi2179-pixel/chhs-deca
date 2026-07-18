@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { Zap, ChevronRight } from 'lucide-react'
+import { useLocation } from 'wouter'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -12,7 +13,7 @@ const fadeUp = {
 
 const aiTools = [
   {
-    href: 'https://chhsdeca-hn7kwxwp.manus.space',
+    href: '/ai/roleplay',
     title: 'Roleplay Event AI',
     description: 'Practice roleplay scenarios with AI feedback. Get real-time coaching and performance analysis for roleplay competitive events.',
     icon: '',
@@ -22,7 +23,7 @@ const aiTools = [
     tag: 'Roleplay',
   },
   {
-    href: 'https://chhsdeca-9shazsx7.manus.space/',
+    href: '/ai/written',
     title: 'Written Event AI Grader',
     description: 'Submit your written event responses and receive detailed AI evaluation. Get scoring feedback and improvement suggestions.',
     icon: '',
@@ -34,6 +35,7 @@ const aiTools = [
 ]
 
 export default function SpeechAI() {
+  const [, navigate] = useLocation();
   return (
     <div className="min-h-screen bg-[oklch(0.07_0.01_265)] py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -67,10 +69,10 @@ export default function SpeechAI() {
               viewport={{ once: true }}
               variants={fadeUp}
             >
-              <a href={href} target="_blank" rel="noopener noreferrer">
-                <div
-                  className={`group relative p-8 rounded-2xl bg-gradient-to-br ${color} border ${border} ${glow} transition-all duration-300 cursor-pointer overflow-hidden h-full flex flex-col justify-between`}
-                >
+              <div
+                onClick={() => navigate(href)}
+                className={`group relative p-8 rounded-2xl bg-gradient-to-br ${color} border ${border} ${glow} transition-all duration-300 cursor-pointer overflow-hidden h-full flex flex-col justify-between`}
+              >
                   {/* Shimmer on hover */}
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                     <div className="absolute inset-0 animate-shimmer" />
@@ -97,8 +99,7 @@ export default function SpeechAI() {
                       <ChevronRight size={16} />
                     </span>
                   </div>
-                </div>
-              </a>
+              </div>
             </motion.div>
           ))}
         </div>

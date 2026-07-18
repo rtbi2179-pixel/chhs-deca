@@ -16,6 +16,8 @@ import MembersPage from "./pages/MembersPage";
 import Volunteer from "./pages/Volunteer";
 import Discussions from "./pages/Discussions";
 import SpeechAI from "./pages/SpeechAI";
+import RoleplayAI from "./pages/RoleplayAI";
+import WrittenEventAI from "./pages/WrittenEventAI";
 import Leaderboard from "./pages/Leaderboard";
 import LoginSignup from "./pages/LoginSignup";
 import { VerifyEmail } from "./pages/VerifyEmail";
@@ -75,6 +77,8 @@ function Router({ isAuthenticated, showLoginRequired }: { isAuthenticated: boole
       <Route path="/announcements" component={Announcements} />
       <Route path="/blue-market" component={BlueMarket} />
       <Route path="/speech-ai" component={SpeechAI} />
+      <Route path="/ai/roleplay" component={RoleplayAI} />
+      <Route path="/ai/written" component={WrittenEventAI} />
       <Route path="/portfolio-upload" component={PortfolioUpload} />
       <Route path="/admin-portfolios" component={AdminPortfolios} />
       <Route path="/transaction-history" component={TransactionHistory} />
