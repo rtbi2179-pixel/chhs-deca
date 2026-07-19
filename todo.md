@@ -72,7 +72,7 @@
 - [ ] Build Blue Market UI page with stock listings and portfolio display
 - [ ] Integrate Blue Market navigation (money icon with stock icon in header)
 - [ ] Implement market hours tracking (US Eastern Time)
-- [ ] Add pending order system for after-hours trading
+- [x] Add pending order system for after-hours trading
 - [ ] Create leaderboard for market performance
 - [ ] Add admin features for stock management
 - [ ] Test market functionality end-to-end
@@ -93,7 +93,7 @@
 - [x] Implement database tables for market (stocks, holdings, transactions, etc.)
 - [x] Fix stock price fetching with proper tRPC URL encoding
 - [x] Implement market hours tracking (US Eastern Time)
-- [ ] Add pending order system for after-hours trading
+- [x] Add pending order system for after-hours trading
 - [ ] Create admin features for stock management
 - [x] Add portfolio snapshot history (placeholder for background job)
 - [ ] Test market functionality end-to-end
@@ -154,9 +154,9 @@
 - [x] Create practice consistency factor (20% weight)
 - [x] Create net worth factor (20% weight)
 - [x] Create spending behavior factor (10% weight)
-- [ ] Implement monthly credit score updates
-- [ ] Create practice reliability score calculation
-- [ ] Prevent rapid credit score changes
+- [x] Implement daily credit score updates
+- [x] Create practice reliability score calculation
+- [x] Prevent rapid credit score changes
 
 ### Banking System
 - [x] Create 3 virtual banks (Blue Horizon, Summit Financial, Apex Bank)

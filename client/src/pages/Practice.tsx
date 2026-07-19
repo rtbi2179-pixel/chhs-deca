@@ -438,6 +438,39 @@ export default function Practice() {
                 </option>
               ))}
             </select>
+            {/* Difficulty Filter */}
+            <select
+              value={selectedDifficulty}
+              onChange={(e) => {
+                setSelectedDifficulty(e.target.value);
+                setCurrentPage(1);
+                setCurrentQuestionIndex(0);
+              }}
+              className="px-3 py-2 bg-background border border-border rounded-md text-foreground text-sm"
+              title="Filter by difficulty"
+            >
+              <option value="all">All Difficulties</option>
+              <option value="Easy">Easy</option>
+              <option value="Medium">Medium</option>
+              <option value="Hard">Hard</option>
+            </select>
+            {/* Cognitive Level Filter */}
+            <select
+              className="px-3 py-2 bg-background border border-border rounded-md text-foreground text-sm"
+              title="Filter by cognitive level"
+              onChange={(e) => {
+                setCurrentPage(1);
+                setCurrentQuestionIndex(0);
+              }}
+            >
+              <option value="all">All Cognitive Levels</option>
+              <option value="Recall">Recall</option>
+              <option value="Understand">Understand</option>
+              <option value="Apply">Apply</option>
+              <option value="Analyze">Analyze</option>
+              <option value="Evaluate">Evaluate</option>
+              <option value="Create">Create</option>
+            </select>
           </div>
 
           {/* Center Section - Timer */}

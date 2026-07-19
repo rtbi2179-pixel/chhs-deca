@@ -10,6 +10,8 @@ import { Card } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { toast } from 'sonner'
 import { ProfileCosmeticsDisplay } from '@/components/ProfileCosmeticsDisplay'
+import { CreditScoreChart } from '@/components/CreditScoreChart'
+import { PortfolioChart } from '@/components/PortfolioChart'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -490,6 +492,47 @@ export default function Profile() {
         </Dialog>
 
         {/* Cosmetics Section */}
+
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+          >
+            <CreditScoreChart 
+              data={[
+                { date: '30d ago', score: 650, change: 0 },
+                { date: '25d ago', score: 660, change: 10 },
+                { date: '20d ago', score: 675, change: 15 },
+                { date: '15d ago', score: 685, change: 10 },
+                { date: '10d ago', score: 695, change: 10 },
+                { date: '5d ago', score: 710, change: 15 },
+                { date: 'Today', score: 725, change: 15 },
+              ]}
+              currentScore={725}
+            />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+          >
+            <PortfolioChart 
+              data={[
+                { date: '30d ago', value: 5000, gain: 0 },
+                { date: '25d ago', value: 5250, gain: 5 },
+                { date: '20d ago', value: 5500, gain: 10 },
+                { date: '15d ago', value: 5750, gain: 15 },
+                { date: '10d ago', value: 6000, gain: 20 },
+                { date: '5d ago', value: 6500, gain: 30 },
+                { date: 'Today', value: 7200, gain: 44 },
+              ]}
+              currentValue={7200}
+              totalGain={44}
+            />
+          </motion.div>
+        </div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
