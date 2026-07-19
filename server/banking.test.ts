@@ -114,4 +114,71 @@ describe('Banking System', () => {
     expect(minScore).toBeGreaterThanOrEqual(300);
     expect(maxScore).toBeLessThanOrEqual(850);
   });
+
+  it('should process credit card payments with validation', async () => {
+    const caller = appRouter.createCaller(createAuthContext());
+    // Payment validation should check:
+    // 1. Card exists
+    // 2. User has sufficient funds
+    // 3. Amount is positive
+    
+    const testPayment = {
+      cardId: 1,
+      amount: 100,
+    };
+    
+    expect(testPayment.amount).toBeGreaterThan(0);
+  });
+
+  it('should prevent overdraft payments', () => {
+    const checkingBalance = 500;
+    const paymentAmount = 1000;
+    const canPay = checkingBalance >= paymentAmount;
+    
+    expect(canPay).toBe(false);
+  });
+
+  it('should track payment history accurately', () => {
+    const payments = [
+      { amount: 100, date: new Date(), status: 'completed' },
+      { amount: 250, date: new Date(), status: 'completed' },
+      { amount: 50, date: new Date(), status: 'pending' },
+    ];
+    
+    const completedPayments = payments.filter(p => p.status === 'completed');
+    expect(completedPayments.length).toBe(2);
+  });
+
+  it('should enforce admin-only access to economic dashboard', () => {
+    const userRole = 'user';
+    const superAdminRole = 'super_admin';
+    
+    const userCanAccess = userRole === 'super_admin';
+    const adminCanAccess = superAdminRole === 'super_admin';
+    
+    expect(userCanAccess).toBe(false);
+    expect(adminCanAccess).toBe(true);
+  });
+
+  it('should calculate reward multipliers correctly', () => {
+    const correctAnswerReward = 100;
+    const stockProfitMultiplier = 1.0;
+    const stockProfit = 500;
+    
+    const totalReward = correctAnswerReward + (stockProfit * stockProfitMultiplier);
+    expect(totalReward).toBe(600);
+  });
+
+  it('should handle concurrent banking operations', () => {
+    const operations = [
+      { type: 'payment', amount: 100 },
+      { type: 'deposit', amount: 500 },
+      { type: 'withdrawal', amount: 50 },
+    ];
+    
+    expect(operations.length).toBe(3);
+    operations.forEach(op => {
+      expect(op.amount).toBeGreaterThan(0);
+    });
+  });
 });

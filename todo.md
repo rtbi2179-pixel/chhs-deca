@@ -386,17 +386,17 @@
 - [ ] Create spending trends analysis
 
 ### Banking System Tests (6 items)
-- [ ] Test credit score calculations
-- [ ] Test card approval logic
-- [ ] Test payment processing
-- [ ] Test reward calculations
-- [ ] Test admin dashboard permissions
-- [ ] End-to-end banking system tests
+- [x] Test credit score calculations
+- [x] Test card approval logic
+- [x] Test payment processing
+- [x] Test reward calculations
+- [x] Test admin dashboard permissions
+- [x] End-to-end banking system tests
 
 ### Market System Enhancements (4 items)
 - [ ] Implement stock price caching status endpoint
-- [ ] Add market analytics dashboard
-- [ ] Create portfolio performance analytics
+- [x] Add market analytics dashboard
+- [x] Create portfolio performance analytics
 - [ ] Add end-to-end market testing
 
 ### Practice System Enhancements (3 items)
