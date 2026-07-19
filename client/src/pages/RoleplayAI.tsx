@@ -19,6 +19,7 @@ export default function RoleplayAI() {
   const [micError, setMicError] = useState<MicrophoneError>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [iframeKey, setIframeKey] = useState(0);
+  const [iframeLoaded, setIframeLoaded] = useState(false);
 
   useEffect(() => {
     // Verify HTTPS
@@ -163,6 +164,25 @@ export default function RoleplayAI() {
 
   return (
     <div className="fixed inset-0 bg-background">
+      {/* Loading animation */}
+      {!iframeLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm z-50">
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative w-16 h-16">
+              {/* Outer rotating ring */}
+              <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-blue-500 border-r-blue-400 animate-spin"></div>
+              {/* Inner rotating ring (opposite direction) */}
+              <div className="absolute inset-2 rounded-full border-4 border-transparent border-b-blue-500 border-l-blue-400 animate-spin" style={{ animationDirection: 'reverse' }}></div>
+              {/* Center dot */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              </div>
+            </div>
+            <p className="text-foreground/70 text-sm font-medium">Loading Roleplay AI...</p>
+          </div>
+        </div>
+      )}
+      
       {/* Embedded iframe - full screen */}
       <iframe
         key={iframeKey}
@@ -175,6 +195,7 @@ export default function RoleplayAI() {
           height: '100%',
           border: 'none',
         }}
+        onLoad={() => setIframeLoaded(true)}
         onError={() => {
           setMicError('embed-policy');
         }}

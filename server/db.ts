@@ -2263,3 +2263,35 @@ export async function getTransactionHistoryFiltered(
     return [];
   }
 }
+
+
+// Recalculate all leaderboard accuracies (for data migration/fix)
+export async function recalculateAllLeaderboardAccuracies() {
+  const db = await getDb();
+  if (!db) return { updated: 0, error: 'Database not available' };
+
+  try {
+    const allLeaderboardEntries = await db.select().from(leaderboard);
+    let updated = 0;
+
+    for (const entry of allLeaderboardEntries) {
+      if (entry.totalQuestionsAnswered > 0) {
+        const correctAccuracy = Math.round((entry.totalCorrectAnswers / entry.totalQuestionsAnswered) * 100);
+        
+        // Only update if accuracy changed
+        if (correctAccuracy !== entry.accuracyPercentage) {
+          await db.update(leaderboard).set({
+            accuracyPercentage: correctAccuracy,
+            lastUpdated: new Date(),
+          }).where(eq(leaderboard.id, entry.id));
+          updated++;
+        }
+      }
+    }
+
+    return { updated, error: null };
+  } catch (error) {
+    console.error('Error recalculating leaderboard accuracies:', error);
+    return { updated: 0, error: String(error) };
+  }
+}

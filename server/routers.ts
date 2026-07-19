@@ -788,6 +788,12 @@ export const appRouter = router({
         return { answeredQuestionIds };
       }),
 
+    recalculateLeaderboardAccuracies: adminProcedure
+      .mutation(async () => {
+        const result = await db.recalculateAllLeaderboardAccuracies();
+        return result;
+      }),
+
     submitAnswer: protectedProcedure
       .input(z.object({
         questionId: z.string(),
