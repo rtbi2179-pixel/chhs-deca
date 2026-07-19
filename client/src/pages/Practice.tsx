@@ -65,6 +65,7 @@ export default function Practice() {
   const { data: questionsData, isLoading } = trpc.practice.getQuestions.useQuery({
     cluster: selectedCluster === "all" || !selectedCluster ? undefined : selectedCluster,
     difficulty: selectedDifficulty === "all" ? undefined : selectedDifficulty,
+    cognitiveLevel: selectedCognitiveLevel === "all" ? undefined : selectedCognitiveLevel,
     page: 1,
     pageSize: 10000,
   }, { enabled: !!selectedCluster && !showClusterModal });
@@ -74,11 +75,8 @@ export default function Practice() {
   const totalQuestions = questionsData?.total || 0;
   const totalPages = questionsData?.totalPages || 1;
 
-  // Apply cognitive level filter and sorting on client
-  const filteredQuestions = allQuestions.filter(q => {
-    if (selectedCognitiveLevel === "all") return true;
-    return q.cognitiveLevel === selectedCognitiveLevel;
-  }).sort((a, b) => {
+  // Apply sorting on client (filtering now done on server)
+  const filteredQuestions = allQuestions.sort((a, b) => {
     if (sortBy === "difficulty") {
       const diffOrder = { Easy: 1, Medium: 2, Hard: 3 };
       return (diffOrder[a.difficulty as keyof typeof diffOrder] || 0) - (diffOrder[b.difficulty as keyof typeof diffOrder] || 0);

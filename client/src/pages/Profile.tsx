@@ -79,18 +79,26 @@ export default function Profile() {
     { enabled: !!user?.id }
   )
 
+  // Fetch credit score history for chart
+  const { data: creditScoreHistoryData = [] } = trpc.banking.getCreditScoreHistory.useQuery(
+    { limit: 30 },
+    { enabled: !!user?.id }
+  )
+
   // Fetch portfolio history for chart
   const { data: portfolioHistory = [] } = trpc.market.getPortfolioSnapshots.useQuery(
     { limit: 30 },
     { enabled: !!user?.id }
   )
 
-  // Transform credit score data to chart format
-  const creditHistory = creditScoreData ? [{
-    date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-    score: creditScoreData.score,
-    scoreChange: 0
-  }] : []
+  // Use real credit history if available, otherwise fallback to current score
+  const creditHistory = creditScoreHistoryData && creditScoreHistoryData.length > 0 
+    ? creditScoreHistoryData 
+    : (creditScoreData ? [{
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        score: creditScoreData.score,
+        change: 0
+      }] : [])
 
   // Find current user in leaderboard
   const userStats = (leaderboardData as any[]).find((entry: any) => {

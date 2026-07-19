@@ -7,10 +7,16 @@ export default function TransactionHistory() {
   const [limit] = useState(50);
   const [offset, setOffset] = useState(0);
   const [showBlueBucksBreakdown, setShowBlueBucksBreakdown] = useState(false);
+  const [selectedTicker, setSelectedTicker] = useState<string>('');
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
 
   const { data: transactions, isLoading } = trpc.market.getTransactionHistory.useQuery({
     limit,
     offset,
+    ticker: selectedTicker || undefined,
+    startDate: startDate ? new Date(startDate) : undefined,
+    endDate: endDate ? new Date(endDate) : undefined,
   });
 
   const formatDate = (date: Date | null | undefined) => {
@@ -42,10 +48,43 @@ export default function TransactionHistory() {
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-foreground mb-2">Transaction History</h1>
           <p className="text-foreground/70">View all your past trades with execution prices and timestamps</p>
+          
+          {/* Filters */}
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Stock Ticker</label>
+              <input
+                type="text"
+                placeholder="e.g., AAPL"
+                value={selectedTicker}
+                onChange={(e) => setSelectedTicker(e.target.value.toUpperCase())}
+                className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Start Date</label>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">End Date</label>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground"
+              />
+            </div>
+          </div>
+          
           <Button
             onClick={() => setShowBlueBucksBreakdown(!showBlueBucksBreakdown)}
             variant="outline"
-            className="mt-4"
+            className="mt-2"
           >
             {showBlueBucksBreakdown ? 'Hide' : 'Show'} Blue Bucks Breakdown
           </Button>

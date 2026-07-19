@@ -689,6 +689,7 @@ export const appRouter = router({
       .input(z.object({
         cluster: z.string().optional(),
         difficulty: z.string().optional(),
+        cognitiveLevel: z.string().optional(),
         page: z.number().int().positive().default(1),
         pageSize: z.number().int().positive().max(10000).default(10000),
       }))
@@ -705,6 +706,10 @@ export const appRouter = router({
         
         if (input.difficulty && input.difficulty !== "all") {
           whereConditions.push(eq(questions.difficulty, input.difficulty));
+        }
+        
+        if (input.cognitiveLevel && input.cognitiveLevel !== "all") {
+          whereConditions.push(eq(questions.cognitiveLevel, input.cognitiveLevel));
         }
         
         // Combine conditions with AND
@@ -882,9 +887,22 @@ export const appRouter = router({
       }),
     
     getTransactionHistory: protectedProcedure
-      .input(z.object({ limit: z.number().default(100), offset: z.number().default(0) }))
+      .input(z.object({
+        limit: z.number().default(100),
+        offset: z.number().default(0),
+        ticker: z.string().optional(),
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }))
       .query(async ({ ctx, input }) => {
-        return await db.getTransactionHistory(ctx.user.id, input.limit, input.offset);
+        return await db.getTransactionHistoryFiltered(
+          ctx.user.id,
+          input.limit,
+          input.offset,
+          input.ticker,
+          input.startDate,
+          input.endDate
+        );
       }),
     
     getStockPriceData: publicProcedure
@@ -962,12 +980,13 @@ export const appRouter = router({
     getPortfolioSnapshots: protectedProcedure
       .input(z.object({ limit: z.number().default(30) }))
       .query(async ({ ctx, input }) => {
-        const database = await db.getDb();
-        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
-        
-        // For now, return empty array as snapshots need to be created by a background job
-        // This is a placeholder for future implementation
-        return [];
+        const snapshots = await db.getPortfolioSnapshotHistory(ctx.user.id, input.limit);
+        return snapshots.map(s => ({
+          date: new Date(s.snapshotDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+          value: parseFloat(s.totalValue.toString()),
+          gain: parseFloat(s.totalProfit.toString()),
+          percentageReturn: parseFloat(s.percentageReturn.toString()),
+        }));
       }),
   }),
 
@@ -1059,6 +1078,18 @@ export const appRouter = router({
       const details = await getCreditScoreDetails(ctx.user.id, schoolCode);
       return { score, details };
     }),
+
+    getCreditScoreHistory: protectedProcedure
+      .input(z.object({ limit: z.number().default(30) }))
+      .query(async ({ ctx, input }) => {
+        const history = await db.getCreditHistory(ctx.user.id, input.limit);
+        return history.map(h => ({
+          date: new Date(h.calculatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+          score: h.newScore,
+          change: h.scoreChange,
+          reason: h.reason,
+        }));
+      }),
 
     transferFunds: protectedProcedure
       .input(z.object({ fromAccount: z.enum(['checking', 'savings', 'investment']), toAccount: z.enum(['checking', 'savings', 'investment']), amount: z.number().positive() }))

@@ -2137,3 +2137,123 @@ export async function getTransactionHistory(userId: number, limit: number = 100,
     return [];
   }
 }
+
+
+/**
+ * Get user's credit score history
+ */
+export async function getCreditHistory(userId: number, limit: number = 30) {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const { creditHistory } = await import("../drizzle/schema");
+    const { eq, desc } = await import("drizzle-orm");
+    
+    return await db
+      .select({
+        id: creditHistory.id,
+        userId: creditHistory.userId,
+        previousScore: creditHistory.previousScore,
+        newScore: creditHistory.newScore,
+        scoreChange: creditHistory.scoreChange,
+        factors: creditHistory.factors,
+        reason: creditHistory.reason,
+        calculatedAt: creditHistory.calculatedAt,
+      })
+      .from(creditHistory)
+      .where(eq(creditHistory.userId, userId))
+      .orderBy(desc(creditHistory.calculatedAt))
+      .limit(limit);
+  } catch (error) {
+    console.error('[Credit History] Error:', error);
+    return [];
+  }
+}
+
+/**
+ * Get user's portfolio snapshot history
+ */
+export async function getPortfolioSnapshotHistory(userId: number, limit: number = 30) {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const { portfolioSnapshots } = await import("../drizzle/schema");
+    const { eq, desc } = await import("drizzle-orm");
+    
+    return await db
+      .select({
+        id: portfolioSnapshots.id,
+        userId: portfolioSnapshots.userId,
+        totalValue: portfolioSnapshots.totalValue,
+        cashBalance: portfolioSnapshots.cashBalance,
+        totalProfit: portfolioSnapshots.totalProfit,
+        percentageReturn: portfolioSnapshots.percentageReturn,
+        snapshotDate: portfolioSnapshots.snapshotDate,
+      })
+      .from(portfolioSnapshots)
+      .where(eq(portfolioSnapshots.userId, userId))
+      .orderBy(desc(portfolioSnapshots.snapshotDate))
+      .limit(limit);
+  } catch (error) {
+    console.error('[Portfolio Snapshots] Error:', error);
+    return [];
+  }
+}
+
+/**
+ * Get user's transaction history with ticker and date range filters
+ */
+export async function getTransactionHistoryFiltered(
+  userId: number,
+  limit: number = 100,
+  offset: number = 0,
+  ticker?: string,
+  startDate?: Date,
+  endDate?: Date
+) {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const { marketTransactions, stocks } = await import("../drizzle/schema");
+    const { eq, desc, and, gte, lte } = await import("drizzle-orm");
+    
+    const conditions = [eq(marketTransactions.userId, userId)];
+    
+    if (ticker) {
+      conditions.push(eq(stocks.ticker, ticker));
+    }
+    
+    if (startDate) {
+      conditions.push(gte(marketTransactions.executedAt, startDate));
+    }
+    
+    if (endDate) {
+      conditions.push(lte(marketTransactions.executedAt, endDate));
+    }
+    
+    return await db
+      .select({
+        id: marketTransactions.id,
+        type: marketTransactions.type,
+        ticker: stocks.ticker,
+        stockName: stocks.companyName,
+        shares: marketTransactions.shares,
+        pricePerShare: marketTransactions.pricePerShare,
+        totalAmount: marketTransactions.totalAmount,
+        executedAt: marketTransactions.executedAt,
+        createdAt: marketTransactions.createdAt,
+      })
+      .from(marketTransactions)
+      .innerJoin(stocks, eq(marketTransactions.stockId, stocks.id))
+      .where(and(...conditions))
+      .orderBy(desc(marketTransactions.executedAt))
+      .limit(limit)
+      .offset(offset);
+  } catch (error) {
+    console.error('[Transaction History Filtered] Error:', error);
+    return [];
+  }
+}

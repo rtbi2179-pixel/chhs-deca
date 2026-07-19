@@ -120,8 +120,14 @@
 - [x] Build transaction history UI page
 - [x] Add transaction history link to navigation
 - [x] Display execution prices and timestamps
-- [ ] Add filters by stock ticker and date range
-- [x] Show transaction type (buy/sell) with color coding
+- [x] Add filters by stock ticker and date range (Transaction History)
+- [x] Wire cognitive level filter to server with state binding
+- [x] Implement sorting by difficulty and cognitive level
+- [x] Wire credit score data to Profile chart with real history
+- [x] Wire portfolio data to Profile chart with real snapshots
+- [x] Add getCreditScoreHistory procedure
+- [x] Add getPortfolioSnapshotHistory procedure
+- [x] Add getTransactionHistoryFiltered procedure
 
 
 ## Centralized Stock Price Caching
