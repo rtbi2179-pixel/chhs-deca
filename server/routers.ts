@@ -10,6 +10,7 @@ import { getAnnouncementsBySchool, createAnnouncement, likeAnnouncement, getAnno
 import { notifyOwner } from "./_core/notification";
 import { getStockPrice } from "./stockPriceService";
 
+import { initializeBanksForSchool, getBanksForSchool, getCreditCardsForBank } from './bankInitializer';
 import { questions, userAnswers, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls } from "../drizzle/schema";
 import { and, eq, sql, inArray, desc, lte } from "drizzle-orm";
 
@@ -1273,6 +1274,18 @@ export const appRouter = router({
         return patterns;
       }),
 
+
+    getBanks: protectedProcedure.query(async ({ ctx }) => {
+      const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
+      if (!schoolCode) throw new TRPCError({ code: "BAD_REQUEST", message: "No school code" });
+      return await getBanksForSchool(schoolCode);
+    }),
+
+    getCreditCards: protectedProcedure
+      .input(z.object({ bankId: z.number() }))
+      .query(async ({ input }) => {
+        return await getCreditCardsForBank(input.bankId);
+      }),
   }),
 });
 
