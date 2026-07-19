@@ -13,7 +13,7 @@ import { getStockPrice } from "./stockPriceService";
 import { initializeBanksForSchool, getBanksForSchool, getCreditCardsForBank } from './bankInitializer';
 import { questions, userAnswers, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls } from "../drizzle/schema";
 import { and, eq, sql, inArray, desc, lte } from "drizzle-orm";
-import { practiceAnalyticsRouter } from './practice-analytics';
+
 
 export const announcementsRouter = router({
   getBySchool: publicProcedure
@@ -626,8 +626,7 @@ export const appRouter = router({
         await notifyOwner({
           title: "New Volunteer Sign-Up",
           content: `${ctx.user.name} (${ctx.user.email}) signed up for volunteer opportunity #${input.opportunityId}`,
-        practiceAnalytics: practiceAnalyticsRouter,
-  });
+        });
         
         return signup;
       }),
@@ -788,7 +787,11 @@ export const appRouter = router({
         return { answeredQuestionIds };
       }),
 
-    recalculateLeaderboardAccuracies: adminProcedure
+    recalculateLeaderboardAccuracies: protectedProcedure
+      .use(({ ctx, next }) => {
+        if (ctx.user.role !== 'admin') throw new TRPCError({ code: 'FORBIDDEN' });
+        return next({ ctx });
+      })
       .mutation(async () => {
         const result = await db.recalculateAllLeaderboardAccuracies();
         return result;
