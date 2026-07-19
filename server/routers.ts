@@ -13,6 +13,7 @@ import { getStockPrice } from "./stockPriceService";
 import { initializeBanksForSchool, getBanksForSchool, getCreditCardsForBank } from './bankInitializer';
 import { questions, userAnswers, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls } from "../drizzle/schema";
 import { and, eq, sql, inArray, desc, lte } from "drizzle-orm";
+import { practiceAnalyticsRouter } from './practice-analytics';
 
 export const announcementsRouter = router({
   getBySchool: publicProcedure
@@ -625,7 +626,8 @@ export const appRouter = router({
         await notifyOwner({
           title: "New Volunteer Sign-Up",
           content: `${ctx.user.name} (${ctx.user.email}) signed up for volunteer opportunity #${input.opportunityId}`,
-        });
+        practiceAnalytics: practiceAnalyticsRouter,
+  });
         
         return signup;
       }),
