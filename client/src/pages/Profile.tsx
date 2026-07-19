@@ -73,6 +73,25 @@ export default function Profile() {
     { enabled: !!user?.id }
   )
 
+  // Fetch credit score for chart
+  const { data: creditScoreData } = trpc.banking.getCreditScore.useQuery(
+    undefined,
+    { enabled: !!user?.id }
+  )
+
+  // Fetch portfolio history for chart
+  const { data: portfolioHistory = [] } = trpc.market.getPortfolioSnapshots.useQuery(
+    { limit: 30 },
+    { enabled: !!user?.id }
+  )
+
+  // Transform credit score data to chart format
+  const creditHistory = creditScoreData ? [{
+    date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+    score: creditScoreData.score,
+    scoreChange: 0
+  }] : []
+
   // Find current user in leaderboard
   const userStats = (leaderboardData as any[]).find((entry: any) => {
     if ('user' in entry) return entry.user.id === user?.id
@@ -501,7 +520,11 @@ export default function Profile() {
             transition={{ delay: 0.3, duration: 0.6 }}
           >
             <CreditScoreChart 
-              data={[
+              data={creditHistory.length > 0 ? creditHistory.map((h: any) => ({
+                date: h.date,
+                score: h.score,
+                change: h.scoreChange || 0
+              })) : [
                 { date: '30d ago', score: 650, change: 0 },
                 { date: '25d ago', score: 660, change: 10 },
                 { date: '20d ago', score: 675, change: 15 },
@@ -510,7 +533,7 @@ export default function Profile() {
                 { date: '5d ago', score: 710, change: 15 },
                 { date: 'Today', score: 725, change: 15 },
               ]}
-              currentScore={725}
+              currentScore={creditScoreData?.score || 725}
             />
           </motion.div>
           <motion.div
@@ -528,8 +551,8 @@ export default function Profile() {
                 { date: '5d ago', value: 6500, gain: 30 },
                 { date: 'Today', value: 7200, gain: 44 },
               ]}
-              currentValue={7200}
-              totalGain={44}
+              currentValue={userStats?.portfolioValue || 7200}
+              totalGain={userStats?.portfolioGain || 44}
             />
           </motion.div>
         </div>

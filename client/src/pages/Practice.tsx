@@ -12,6 +12,8 @@ export default function Practice() {
   const [showClusterModal, setShowClusterModal] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("all");
+  const [selectedCognitiveLevel, setSelectedCognitiveLevel] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<string>("none");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10000);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -72,9 +74,26 @@ export default function Practice() {
   const totalQuestions = questionsData?.total || 0;
   const totalPages = questionsData?.totalPages || 1;
 
-  const currentQuestion = allQuestions[currentQuestionIndex];
+  // Apply cognitive level filter and sorting on client
+  const filteredQuestions = allQuestions.filter(q => {
+    if (selectedCognitiveLevel === "all") return true;
+    return q.cognitiveLevel === selectedCognitiveLevel;
+  }).sort((a, b) => {
+    if (sortBy === "difficulty") {
+      const diffOrder = { Easy: 1, Medium: 2, Hard: 3 };
+      return (diffOrder[a.difficulty as keyof typeof diffOrder] || 0) - (diffOrder[b.difficulty as keyof typeof diffOrder] || 0);
+    }
+    if (sortBy === "cognitive") {
+      const cogOrder = { Recall: 1, Understand: 2, Apply: 3, Analyze: 4, Evaluate: 5, Create: 6 };
+      return (cogOrder[a.cognitiveLevel as keyof typeof cogOrder] || 0) - (cogOrder[b.cognitiveLevel as keyof typeof cogOrder] || 0);
+    }
+    return 0;
+  });
+
+  const currentQuestion = filteredQuestions[currentQuestionIndex];
   const isCurrentQuestionAnswered = currentQuestion ? answeredQuestionIds.has(currentQuestion.id) : false;
   const isCurrentQuestionMarked = currentQuestion ? markedForReview.has(currentQuestion.id) : false;
+  const totalFilteredQuestions = filteredQuestions.length;
 
 
   // Save session to localStorage
@@ -456,12 +475,14 @@ export default function Practice() {
             </select>
             {/* Cognitive Level Filter */}
             <select
-              className="px-3 py-2 bg-background border border-border rounded-md text-foreground text-sm"
-              title="Filter by cognitive level"
+              value={selectedCognitiveLevel}
               onChange={(e) => {
+                setSelectedCognitiveLevel(e.target.value);
                 setCurrentPage(1);
                 setCurrentQuestionIndex(0);
               }}
+              className="px-3 py-2 bg-background border border-border rounded-md text-foreground text-sm"
+              title="Filter by cognitive level"
             >
               <option value="all">All Cognitive Levels</option>
               <option value="Recall">Recall</option>
@@ -470,6 +491,21 @@ export default function Practice() {
               <option value="Analyze">Analyze</option>
               <option value="Evaluate">Evaluate</option>
               <option value="Create">Create</option>
+            </select>
+
+            {/* Sort By */}
+            <select
+              value={sortBy}
+              onChange={(e) => {
+                setSortBy(e.target.value);
+                setCurrentQuestionIndex(0);
+              }}
+              className="px-3 py-2 bg-background border border-border rounded-md text-foreground text-sm"
+              title="Sort questions"
+            >
+              <option value="none">No Sorting</option>
+              <option value="difficulty">Sort by Difficulty</option>
+              <option value="cognitive">Sort by Cognitive Level</option>
             </select>
           </div>
 
