@@ -351,3 +351,67 @@
 - [x] Display equipped banner from userCosmetics data
 - [x] Add avatar/title/effect visual support
 - [x] Test cosmetic rendering and equipped state behavior
+
+
+## High-Impact Remaining Features (45 items)
+
+### Gacha Rarity Weighting System (4 items)
+- [x] Implement rarity weighting: Common 60%, Rare 25%, Epic 10%, Legendary 5%
+- [x] Create cost structure: Common 100, Rare 250, Epic 500, Legendary 1000
+- [x] Update gacha pull procedure with weighted randomization
+- [x] Add tests for rarity distribution
+
+### Super Admin Economic Dashboard (9 items)
+- [x] Create SuperAdminDashboard.tsx page
+- [x] Add economic management UI (credit score formula, factor weights, card tiers)
+- [x] Implement credit score formula adjustment controls
+- [x] Implement factor weight adjustment controls
+- [x] Implement card tier modification controls
+- [x] Implement interest rate adjustment controls
+- [x] Implement rewards percentage adjustment controls
+- [ ] Add economic change logging to database
+- [ ] Create comprehensive tests for admin permissions
+
+### Credit Card Payment System (6 items)
+- [x] Create payment mutation in banking router
+- [x] Implement payment validation and balance checks
+- [ ] Create card statement generation procedure
+- [ ] Wire card usage tracking into transaction flows
+- [ ] Implement cashback calculation based on card tier
+- [ ] Add tests for payment processing
+
+### Spending Patterns Enhancement (3 items)
+- [ ] Populate spending patterns from real card usage data
+- [ ] Add category breakdown to spending patterns
+- [ ] Create spending trends analysis
+
+### Banking System Tests (6 items)
+- [ ] Test credit score calculations
+- [ ] Test card approval logic
+- [ ] Test payment processing
+- [ ] Test reward calculations
+- [ ] Test admin dashboard permissions
+- [ ] End-to-end banking system tests
+
+### Market System Enhancements (4 items)
+- [ ] Implement stock price caching status endpoint
+- [ ] Add market analytics dashboard
+- [ ] Create portfolio performance analytics
+- [ ] Add end-to-end market testing
+
+### Practice System Enhancements (3 items)
+- [ ] Add difficulty progression recommendations
+- [ ] Implement performance analytics by cluster
+- [ ] Create study path recommendations
+
+### Remaining Minor Features (10 items)
+- [ ] Add cache status monitoring endpoint
+- [ ] Implement system inflation tracking
+- [ ] Create economic audit log viewer
+- [ ] Add user feedback system
+- [ ] Implement notification preferences
+- [ ] Create user profile customization
+- [ ] Add export functionality for reports
+- [ ] Implement data backup system
+- [ ] Create admin activity logs
+- [ ] Add system health monitoring dashboard

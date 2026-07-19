@@ -1317,6 +1317,65 @@ export const appRouter = router({
       .query(async ({ input }) => {
         return await getCreditCardsForBank(input.bankId);
       }),
+
+    // Make a credit card payment
+    makePayment: protectedProcedure
+      .input(z.object({
+        cardId: z.number(),
+        amount: z.number().min(1),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+        
+        const { creditCards, userBankAccounts } = await import('../drizzle/schema');
+        const schoolCode = ctx.user.schoolCode || '';
+        
+        // Get card details
+        const card = await database
+          .select()
+          .from(creditCards)
+          .where(eq(creditCards.id, input.cardId))
+          .limit(1);
+        
+        if (!card[0]) throw new TRPCError({ code: 'NOT_FOUND', message: 'Card not found' });
+        
+        // Get checking account balance
+        const account = await database
+          .select()
+          .from(userBankAccounts)
+          .where(and(
+            eq(userBankAccounts.userId, ctx.user.id),
+            eq(userBankAccounts.schoolCode, schoolCode)
+          ))
+          .limit(1);
+        
+        if (!account[0]) throw new TRPCError({ code: 'NOT_FOUND', message: 'Bank account not found' });
+        
+        const checkingBalance = parseFloat(account[0].checkingBalance);
+        if (checkingBalance < input.amount) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Insufficient funds' });
+        }
+        
+        // Deduct from checking account
+        await database
+          .update(userBankAccounts)
+          .set({ checkingBalance: (checkingBalance - input.amount).toString() })
+          .where(and(
+            eq(userBankAccounts.userId, ctx.user.id),
+            eq(userBankAccounts.schoolCode, schoolCode)
+          ));
+        
+        // Record payment (payments table to be created in future migration)
+        // For now, we just deduct from checking account
+        // TODO: Add payments table and record payment details
+        
+        return {
+          success: true,
+          newBalance: checkingBalance - input.amount,
+          paymentAmount: input.amount,
+        };
+      }),
   }),
 });
 
