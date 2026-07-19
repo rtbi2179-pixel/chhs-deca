@@ -354,10 +354,11 @@ export async function updateLeaderboard(userId: number, correctAnswers: number, 
   const db = await getDb();
   if (!db) return;
   
-  const accuracy = Math.round((correctAnswers / totalAnswered) * 100);
   const existing = await db.select().from(leaderboard).where(eq(leaderboard.userId, userId)).limit(1);
   
   if (existing.length === 0) {
+    // New user - calculate accuracy from this session
+    const accuracy = totalAnswered > 0 ? Math.round((correctAnswers / totalAnswered) * 100) : 0;
     await db.insert(leaderboard).values({
       userId,
       totalQuestionsAnswered: totalAnswered,
@@ -365,10 +366,15 @@ export async function updateLeaderboard(userId: number, correctAnswers: number, 
       accuracyPercentage: accuracy,
     });
   } else {
+    // Existing user - calculate cumulative accuracy
+    const newTotalCorrect = existing[0].totalCorrectAnswers + correctAnswers;
+    const newTotalAnswered = existing[0].totalQuestionsAnswered + totalAnswered;
+    const cumulativeAccuracy = newTotalAnswered > 0 ? Math.round((newTotalCorrect / newTotalAnswered) * 100) : 0;
+    
     await db.update(leaderboard).set({
-      totalQuestionsAnswered: existing[0].totalQuestionsAnswered + totalAnswered,
-      totalCorrectAnswers: existing[0].totalCorrectAnswers + correctAnswers,
-      accuracyPercentage: accuracy,
+      totalQuestionsAnswered: newTotalAnswered,
+      totalCorrectAnswers: newTotalCorrect,
+      accuracyPercentage: cumulativeAccuracy,
       lastUpdated: new Date(),
     }).where(eq(leaderboard.userId, userId));
   }
