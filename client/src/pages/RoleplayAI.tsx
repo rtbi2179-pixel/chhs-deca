@@ -162,36 +162,23 @@ export default function RoleplayAI() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col mt-16">
-      {/* Header */}
-      <div className="bg-background border-b border-border px-6 py-4 sticky top-16 z-40 shadow-sm">
-        <div className="flex items-center gap-3">
-          <Volume2 className="w-5 h-5 text-blue-400" />
-          <div>
-            <h1 className="text-lg font-semibold text-foreground">Roleplay Event AI</h1>
-            <p className="text-sm text-foreground/60">Practice roleplay scenarios with AI feedback</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Embedded iframe */}
-      <div className="flex-1 overflow-hidden">
-        <iframe
-          key={iframeKey}
-          src={ROLEPLAY_AI_URL}
-          title="Roleplay Event AI"
-          allow="microphone; autoplay"
-          referrerPolicy="strict-origin-when-cross-origin"
-          style={{
-            width: '100%',
-            height: '100%',
-            border: 'none',
-          }}
-          onError={() => {
-            setMicError('embed-policy');
-          }}
-        />
-      </div>
+    <div className="fixed inset-0 bg-background">
+      {/* Embedded iframe - full screen */}
+      <iframe
+        key={iframeKey}
+        src={ROLEPLAY_AI_URL}
+        title="Roleplay Event AI"
+        allow="microphone; autoplay"
+        referrerPolicy="strict-origin-when-cross-origin"
+        style={{
+          width: '100%',
+          height: '100%',
+          border: 'none',
+        }}
+        onError={() => {
+          setMicError('embed-policy');
+        }}
+      />
     </div>
   );
 }
