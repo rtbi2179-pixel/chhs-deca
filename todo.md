@@ -165,6 +165,9 @@
 - [x] Create checking account system
 - [ ] Create savings account with interest
 - [x] Create investment account integration with Blue Market
+- [x] Implement code-based bank initialization service
+- [x] Add tRPC procedures for bank/card retrieval
+- [x] Write comprehensive bank initialization tests
 
 ### User Banking Dashboard
 - [x] Create banking dashboard page
