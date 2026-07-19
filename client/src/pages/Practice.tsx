@@ -12,8 +12,6 @@ export default function Practice() {
   const [showClusterModal, setShowClusterModal] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("all");
-  const [selectedCognitiveLevel, setSelectedCognitiveLevel] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<string>("none");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10000);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -65,7 +63,6 @@ export default function Practice() {
   const { data: questionsData, isLoading } = trpc.practice.getQuestions.useQuery({
     cluster: selectedCluster === "all" || !selectedCluster ? undefined : selectedCluster,
     difficulty: selectedDifficulty === "all" ? undefined : selectedDifficulty,
-    cognitiveLevel: selectedCognitiveLevel === "all" ? undefined : selectedCognitiveLevel,
     page: 1,
     pageSize: 10000,
   }, { enabled: !!selectedCluster && !showClusterModal });
@@ -75,18 +72,8 @@ export default function Practice() {
   const totalQuestions = questionsData?.total || 0;
   const totalPages = questionsData?.totalPages || 1;
 
-  // Apply sorting on client (filtering now done on server)
-  const filteredQuestions = allQuestions.sort((a, b) => {
-    if (sortBy === "difficulty") {
-      const diffOrder = { Easy: 1, Medium: 2, Hard: 3 };
-      return (diffOrder[a.difficulty as keyof typeof diffOrder] || 0) - (diffOrder[b.difficulty as keyof typeof diffOrder] || 0);
-    }
-    if (sortBy === "cognitive") {
-      const cogOrder = { Recall: 1, Understand: 2, Apply: 3, Analyze: 4, Evaluate: 5, Create: 6 };
-      return (cogOrder[a.cognitiveLevel as keyof typeof cogOrder] || 0) - (cogOrder[b.cognitiveLevel as keyof typeof cogOrder] || 0);
-    }
-    return 0;
-  });
+  // Use questions as-is (no sorting)
+  const filteredQuestions = allQuestions;
 
   const currentQuestion = filteredQuestions[currentQuestionIndex];
   const isCurrentQuestionAnswered = currentQuestion ? answeredQuestionIds.has(currentQuestion.id) : false;
@@ -471,40 +458,7 @@ export default function Practice() {
               <option value="Medium">Medium</option>
               <option value="Hard">Hard</option>
             </select>
-            {/* Cognitive Level Filter */}
-            <select
-              value={selectedCognitiveLevel}
-              onChange={(e) => {
-                setSelectedCognitiveLevel(e.target.value);
-                setCurrentPage(1);
-                setCurrentQuestionIndex(0);
-              }}
-              className="px-3 py-2 bg-background border border-border rounded-md text-foreground text-sm"
-              title="Filter by cognitive level"
-            >
-              <option value="all">All Cognitive Levels</option>
-              <option value="Recall">Recall</option>
-              <option value="Understand">Understand</option>
-              <option value="Apply">Apply</option>
-              <option value="Analyze">Analyze</option>
-              <option value="Evaluate">Evaluate</option>
-              <option value="Create">Create</option>
-            </select>
 
-            {/* Sort By */}
-            <select
-              value={sortBy}
-              onChange={(e) => {
-                setSortBy(e.target.value);
-                setCurrentQuestionIndex(0);
-              }}
-              className="px-3 py-2 bg-background border border-border rounded-md text-foreground text-sm"
-              title="Sort questions"
-            >
-              <option value="none">No Sorting</option>
-              <option value="difficulty">Sort by Difficulty</option>
-              <option value="cognitive">Sort by Cognitive Level</option>
-            </select>
           </div>
 
           {/* Center Section - Timer */}
