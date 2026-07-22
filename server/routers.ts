@@ -1296,6 +1296,28 @@ export const appRouter = router({
         return rewards;
       }),
 
+    // Get stock price cache status for monitoring
+    getCacheStatus: publicProcedure
+      .query(async () => {
+        const { getCacheStatus } = await import('./stockPriceService');
+        const cacheStats = getCacheStatus?.() || {
+          cachedStocks: 0,
+          cacheAge: 0,
+          isStale: true,
+          lastRefresh: null,
+        };
+        
+        return {
+          status: 'operational',
+          cachedStocks: cacheStats.cachedStocks || 0,
+          cacheAge: cacheStats.cacheAge || 0,
+          isStale: cacheStats.isStale || true,
+          lastRefresh: cacheStats.lastRefresh || null,
+          ttl: 300, // 5 minutes in seconds
+          timestamp: new Date(),
+        };
+      }),
+
     // Get spending patterns by category
     getSpendingPatterns: protectedProcedure
       .input(z.object({ month: z.number().optional() }))

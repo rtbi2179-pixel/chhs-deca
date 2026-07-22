@@ -370,7 +370,7 @@
 - [x] Implement interest rate adjustment controls
 - [x] Implement rewards percentage adjustment controls
 - [x] Add economic change logging to database
-- [ ] Create comprehensive tests for admin permissions
+- [x] Create comprehensive tests for admin permissions
 
 ### Credit Card Payment System (6 items)
 - [x] Create payment mutation in banking router
@@ -394,10 +394,10 @@
 - [x] End-to-end banking system tests
 
 ### Market System Enhancements (4 items)
-- [ ] Implement stock price caching status endpoint
+- [x] Implement stock price caching status endpoint
 - [x] Add market analytics dashboard
 - [x] Create portfolio performance analytics
-- [ ] Add end-to-end market testing
+- [x] Add end-to-end market testing
 
 ### Practice System Enhancements (3 items)
 - [x] Add difficulty progression recommendations
