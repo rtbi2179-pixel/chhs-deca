@@ -1377,14 +1377,69 @@ export const appRouter = router({
             eq(userBankAccounts.schoolCode, schoolCode)
           ));
         
-        // Record payment (payments table to be created in future migration)
-        // For now, we just deduct from checking account
-        // TODO: Add payments table and record payment details
+        // Record payment in payments table
+        const { payments } = await import('../drizzle/schema');
+        await database.insert(payments).values({
+          userId: ctx.user.id,
+          cardId: input.cardId,
+          amount: input.amount.toString(),
+          date: new Date(),
+          status: 'completed',
+          schoolCode: schoolCode,
+        });
         
         return {
           success: true,
           newBalance: checkingBalance - input.amount,
           paymentAmount: input.amount,
+        };
+      }),
+
+    // Get card statement (monthly billing summary)
+    getCardStatement: protectedProcedure
+      .input(z.object({
+        cardId: z.number(),
+        month: z.number().min(1).max(12),
+        year: z.number().min(2024),
+      }))
+      .query(async ({ ctx, input }) => {
+        const { payments, creditCards } = await import('../drizzle/schema');
+        const { getDb } = await import('./db');
+        const database = await getDb();
+        if (!database) return { cardName: '', statement: [], totalCharges: '0', dueDate: '' };
+        
+        // Get card details
+        const card = await database
+          .select()
+          .from(creditCards)
+          .where(eq(creditCards.id, input.cardId))
+          .limit(1);
+        
+        if (!card[0]) throw new TRPCError({ code: 'NOT_FOUND', message: 'Card not found' });
+        
+        // Get payments for this month
+        const startDate = new Date(input.year, input.month - 1, 1);
+        const endDate = new Date(input.year, input.month, 0);
+        
+        const statement = await database
+          .select()
+          .from(payments)
+          .where(and(
+            eq(payments.userId, ctx.user.id),
+            eq(payments.cardId, input.cardId),
+            sql`DATE(${payments.date}) >= DATE(${startDate})`,
+            sql`DATE(${payments.date}) <= DATE(${endDate})`
+          ))
+          .orderBy(desc(payments.date));
+        
+        const totalCharges = statement.reduce((sum, p) => sum + parseFloat(p.amount), 0);
+        const dueDate = new Date(input.year, input.month, 15).toISOString().split('T')[0];
+        
+        return {
+          cardName: card[0].name,
+          statement,
+          totalCharges: totalCharges.toString(),
+          dueDate,
         };
       }),
   }),

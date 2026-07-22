@@ -375,7 +375,7 @@
 ### Credit Card Payment System (6 items)
 - [x] Create payment mutation in banking router
 - [x] Implement payment validation and balance checks
-- [ ] Create card statement generation procedure
+- [x] Create card statement generation procedure
 - [ ] Wire card usage tracking into transaction flows
 - [ ] Implement cashback calculation based on card tier
 - [ ] Add tests for payment processing
