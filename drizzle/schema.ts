@@ -956,4 +956,21 @@ export const payments = mysqlTable("payments", {
 export type Payment = typeof payments.$inferSelect;
 export type InsertPayment = typeof payments.$inferInsert;
 
+/**
+ * Economic Change Logs - Track admin changes to economic system
+ */
+export const economicChangeLogs = mysqlTable("economicChangeLogs", {
+  id: int("id").autoincrement().primaryKey(),
+  adminId: int("adminId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  changeType: varchar("changeType", { length: 100 }).notNull(), // credit_formula, factor_weight, card_tier, interest_rate, rewards_percentage
+  fieldName: varchar("fieldName", { length: 100 }).notNull(),
+  oldValue: text("oldValue"),
+  newValue: text("newValue"),
+  reason: text("reason"),
+  timestamp: timestamp("timestamp").defaultNow().notNull(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+});
+export type EconomicChangeLog = typeof economicChangeLogs.$inferSelect;
+export type InsertEconomicChangeLog = typeof economicChangeLogs.$inferInsert;
+
 export type InsertSpendingPattern = typeof spendingPatterns.$inferInsert;

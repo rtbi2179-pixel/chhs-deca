@@ -1442,6 +1442,72 @@ export const appRouter = router({
           dueDate,
         };
       }),
+
+
+    // Log economic change
+    logEconomicChange: protectedProcedure
+      .input(z.object({
+        changeType: z.string(),
+        fieldName: z.string(),
+        oldValue: z.string().optional(),
+        newValue: z.string(),
+        reason: z.string().optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { economicChangeLogs } = await import('../drizzle/schema');
+        const { getDb } = await import('./db');
+        const database = await getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+        
+        if (ctx.user.role !== 'super_admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only super admins can log economic changes' });
+        }
+        
+        const schoolCode = ctx.user.schoolCode || '';
+        
+        await database.insert(economicChangeLogs).values({
+          adminId: ctx.user.id,
+          changeType: input.changeType,
+          fieldName: input.fieldName,
+          oldValue: input.oldValue || null,
+          newValue: input.newValue,
+          reason: input.reason || null,
+          timestamp: new Date(),
+          schoolCode: schoolCode,
+        });
+        
+        return { success: true };
+      }),
+
+    // Get economic change logs
+    getEconomicChangeLogs: protectedProcedure
+      .input(z.object({
+        limit: z.number().default(50),
+        offset: z.number().default(0),
+      }))
+      .query(async ({ ctx, input }) => {
+        const { economicChangeLogs } = await import('../drizzle/schema');
+        const { getDb } = await import('./db');
+        const database = await getDb();
+        if (!database) return [];
+        
+        if (ctx.user.role !== 'super_admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only super admins can view economic logs' });
+        }
+        
+        const schoolCode = ctx.user.schoolCode || '';
+        
+        const logs = await database
+          .select()
+          .from(economicChangeLogs)
+          .where(eq(economicChangeLogs.schoolCode, schoolCode))
+          .orderBy(desc(economicChangeLogs.timestamp))
+          .limit(input.limit)
+          .offset(input.offset);
+        
+        return logs;
+      }),
+
   }),
 });
 

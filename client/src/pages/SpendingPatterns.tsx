@@ -10,10 +10,7 @@ export default function SpendingPatterns() {
   const { user, loading } = useAuth();
   const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getFullYear() * 100 + (new Date().getMonth() + 1));
 
-  const { data: spendingData, isLoading } = trpc.banking.getSpendingPatterns.useQuery(
-    { month: selectedMonth },
-    { enabled: !!user }
-  );
+  const { data: spendingData, isLoading } = trpc.banking.getSpendingPatterns.useQuery({ month: selectedMonth });
 
   if (loading) {
     return (
@@ -41,14 +38,14 @@ export default function SpendingPatterns() {
     'other': '#6b7280',
   };
 
-  const chartData = spendingData?.map(pattern => ({
+  const chartData = spendingData?.map((pattern: any) => ({
     name: pattern.merchantCategory,
     value: parseFloat(pattern.monthlySpending),
     count: pattern.transactionCount,
     average: parseFloat(pattern.averageTransactionAmount),
   })) || [];
 
-  const totalSpending = chartData.reduce((sum, item) => sum + item.value, 0);
+  const totalSpending = chartData.reduce((sum: number, item: any) => sum + item.value, 0);
 
   return (
     <div className="min-h-screen bg-background pt-20 pb-12">
@@ -111,7 +108,7 @@ export default function SpendingPatterns() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-foreground/70 text-sm font-semibold mb-1">Total Transactions</p>
-                    <p className="text-3xl font-bold text-cyan-400">{chartData.reduce((sum, item) => sum + item.count, 0)}</p>
+                    <p className="text-3xl font-bold text-cyan-400">{chartData.reduce((sum: number, item: any) => sum + item.count, 0)}</p>
                   </div>
                   <TrendingUp className="w-12 h-12 text-cyan-400/30" />
                 </div>
@@ -152,7 +149,7 @@ export default function SpendingPatterns() {
                       fill="#8884d8"
                       dataKey="value"
                     >
-                      {chartData.map((entry, index) => (
+                      {chartData.map((entry: any, index: number) => (
                         <Cell key={`cell-${index}`} fill={categoryColors[entry.name] || '#6b7280'} />
                       ))}
                     </Pie>
@@ -182,7 +179,7 @@ export default function SpendingPatterns() {
                     </tr>
                   </thead>
                   <tbody>
-                    {chartData.map((item, index) => (
+                    {chartData.map((item: any, index: number) => (
                       <tr key={index} className="border-b border-border hover:bg-foreground/5 transition">
                         <td className="px-6 py-4 text-foreground capitalize">{item.name}</td>
                         <td className="px-6 py-4 text-foreground font-semibold">${item.value.toFixed(2)}</td>
