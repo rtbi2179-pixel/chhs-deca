@@ -179,28 +179,3 @@ export async function testAlphaVantageConnection(): Promise<boolean> {
     return false;
   }
 }
-
-/**
- * Get current cache status for monitoring
- */
-export function getCacheStatus() {
-  const now = Date.now();
-  const cachedStocks = Array.from(priceCache.entries()).filter(([_, data]) => {
-    return (now - data.timestamp) < CACHE_TTL;
-  });
-  
-  const oldestCache = Array.from(priceCache.entries())
-    .map(([_, data]) => data.timestamp)
-    .sort((a, b) => b - a)[0];
-  
-  const cacheAge = oldestCache ? Math.floor((now - oldestCache) / 1000) : 0;
-  const isStale = cacheAge > 300; // 5 minutes
-  
-  return {
-    cachedStocks: cachedStocks.length,
-    cacheAge,
-    isStale,
-    lastRefresh: oldestCache ? new Date(oldestCache) : null,
-    inFlightRequests: inFlightRequests.size,
-  };
-}

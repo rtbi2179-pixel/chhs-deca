@@ -369,21 +369,21 @@
 - [x] Implement card tier modification controls
 - [x] Implement interest rate adjustment controls
 - [x] Implement rewards percentage adjustment controls
-- [x] Add economic change logging to database
-- [x] Create comprehensive tests for admin permissions
+- [ ] Add economic change logging to database
+- [ ] Create comprehensive tests for admin permissions
 
 ### Credit Card Payment System (6 items)
 - [x] Create payment mutation in banking router
 - [x] Implement payment validation and balance checks
-- [x] Create card statement generation procedure
+- [ ] Create card statement generation procedure
 - [ ] Wire card usage tracking into transaction flows
 - [ ] Implement cashback calculation based on card tier
 - [ ] Add tests for payment processing
 
 ### Spending Patterns Enhancement (3 items)
-- [x] Populate spending patterns from real card usage data
-- [x] Add category breakdown to spending patterns
-- [x] Create spending trends analysis
+- [ ] Populate spending patterns from real card usage data
+- [ ] Add category breakdown to spending patterns
+- [ ] Create spending trends analysis
 
 ### Banking System Tests (6 items)
 - [x] Test credit score calculations
@@ -394,10 +394,10 @@
 - [x] End-to-end banking system tests
 
 ### Market System Enhancements (4 items)
-- [x] Implement stock price caching status endpoint
+- [ ] Implement stock price caching status endpoint
 - [x] Add market analytics dashboard
 - [x] Create portfolio performance analytics
-- [x] Add end-to-end market testing
+- [ ] Add end-to-end market testing
 
 ### Practice System Enhancements (3 items)
 - [x] Add difficulty progression recommendations

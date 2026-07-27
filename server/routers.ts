@@ -1296,28 +1296,6 @@ export const appRouter = router({
         return rewards;
       }),
 
-    // Get stock price cache status for monitoring
-    getCacheStatus: publicProcedure
-      .query(async () => {
-        const { getCacheStatus } = await import('./stockPriceService');
-        const cacheStats = getCacheStatus?.() || {
-          cachedStocks: 0,
-          cacheAge: 0,
-          isStale: true,
-          lastRefresh: null,
-        };
-        
-        return {
-          status: 'operational',
-          cachedStocks: cacheStats.cachedStocks || 0,
-          cacheAge: cacheStats.cacheAge || 0,
-          isStale: cacheStats.isStale || true,
-          lastRefresh: cacheStats.lastRefresh || null,
-          ttl: 300, // 5 minutes in seconds
-          timestamp: new Date(),
-        };
-      }),
-
     // Get spending patterns by category
     getSpendingPatterns: protectedProcedure
       .input(z.object({ month: z.number().optional() }))
@@ -1399,16 +1377,9 @@ export const appRouter = router({
             eq(userBankAccounts.schoolCode, schoolCode)
           ));
         
-        // Record payment in payments table
-        const { payments } = await import('../drizzle/schema');
-        await database.insert(payments).values({
-          userId: ctx.user.id,
-          cardId: input.cardId,
-          amount: input.amount.toString(),
-          date: new Date(),
-          status: 'completed',
-          schoolCode: schoolCode,
-        });
+        // Record payment (payments table to be created in future migration)
+        // For now, we just deduct from checking account
+        // TODO: Add payments table and record payment details
         
         return {
           success: true,
@@ -1416,120 +1387,6 @@ export const appRouter = router({
           paymentAmount: input.amount,
         };
       }),
-
-    // Get card statement (monthly billing summary)
-    getCardStatement: protectedProcedure
-      .input(z.object({
-        cardId: z.number(),
-        month: z.number().min(1).max(12),
-        year: z.number().min(2024),
-      }))
-      .query(async ({ ctx, input }) => {
-        const { payments, creditCards } = await import('../drizzle/schema');
-        const { getDb } = await import('./db');
-        const database = await getDb();
-        if (!database) return { cardName: '', statement: [], totalCharges: '0', dueDate: '' };
-        
-        // Get card details
-        const card = await database
-          .select()
-          .from(creditCards)
-          .where(eq(creditCards.id, input.cardId))
-          .limit(1);
-        
-        if (!card[0]) throw new TRPCError({ code: 'NOT_FOUND', message: 'Card not found' });
-        
-        // Get payments for this month
-        const startDate = new Date(input.year, input.month - 1, 1);
-        const endDate = new Date(input.year, input.month, 0);
-        
-        const statement = await database
-          .select()
-          .from(payments)
-          .where(and(
-            eq(payments.userId, ctx.user.id),
-            eq(payments.cardId, input.cardId),
-            sql`DATE(${payments.date}) >= DATE(${startDate})`,
-            sql`DATE(${payments.date}) <= DATE(${endDate})`
-          ))
-          .orderBy(desc(payments.date));
-        
-        const totalCharges = statement.reduce((sum, p) => sum + parseFloat(p.amount), 0);
-        const dueDate = new Date(input.year, input.month, 15).toISOString().split('T')[0];
-        
-        return {
-          cardName: card[0].name,
-          statement,
-          totalCharges: totalCharges.toString(),
-          dueDate,
-        };
-      }),
-
-
-    // Log economic change
-    logEconomicChange: protectedProcedure
-      .input(z.object({
-        changeType: z.string(),
-        fieldName: z.string(),
-        oldValue: z.string().optional(),
-        newValue: z.string(),
-        reason: z.string().optional(),
-      }))
-      .mutation(async ({ ctx, input }) => {
-        const { economicChangeLogs } = await import('../drizzle/schema');
-        const { getDb } = await import('./db');
-        const database = await getDb();
-        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
-        
-        if (ctx.user.role !== 'super_admin') {
-          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only super admins can log economic changes' });
-        }
-        
-        const schoolCode = ctx.user.schoolCode || '';
-        
-        await database.insert(economicChangeLogs).values({
-          adminId: ctx.user.id,
-          changeType: input.changeType,
-          fieldName: input.fieldName,
-          oldValue: input.oldValue || null,
-          newValue: input.newValue,
-          reason: input.reason || null,
-          timestamp: new Date(),
-          schoolCode: schoolCode,
-        });
-        
-        return { success: true };
-      }),
-
-    // Get economic change logs
-    getEconomicChangeLogs: protectedProcedure
-      .input(z.object({
-        limit: z.number().default(50),
-        offset: z.number().default(0),
-      }))
-      .query(async ({ ctx, input }) => {
-        const { economicChangeLogs } = await import('../drizzle/schema');
-        const { getDb } = await import('./db');
-        const database = await getDb();
-        if (!database) return [];
-        
-        if (ctx.user.role !== 'super_admin') {
-          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only super admins can view economic logs' });
-        }
-        
-        const schoolCode = ctx.user.schoolCode || '';
-        
-        const logs = await database
-          .select()
-          .from(economicChangeLogs)
-          .where(eq(economicChangeLogs.schoolCode, schoolCode))
-          .orderBy(desc(economicChangeLogs.timestamp))
-          .limit(input.limit)
-          .offset(input.offset);
-        
-        return logs;
-      }),
-
   }),
 });
 

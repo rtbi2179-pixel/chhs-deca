@@ -38,6 +38,7 @@ const allEvents: DECAEvent[] = [
       { label: 'Marketing Cluster Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
       { label: 'Sample Marketing Exam (TeachDECA)', url: 'https://teachdeca.org/wp-content/uploads/2019/08/Teach_DECA_Marketing_Sample_Exam.pdf', type: 'practice' },
       { label: 'Quizlet Flashcards', url: 'https://quizlet.com/276054979/deca-marketing-cluster-practice-exam-flash-cards/', type: 'practice' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -47,6 +48,7 @@ const allEvents: DECAEvent[] = [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/automotive-services-marketing-series', type: 'guide' },
       { label: 'Marketing Cluster Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
       { label: 'Sample Marketing Exam', url: 'https://teachdeca.org/wp-content/uploads/2019/08/Teach_DECA_Marketing_Sample_Exam.pdf', type: 'practice' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -55,6 +57,7 @@ const allEvents: DECAEvent[] = [
     resources: [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/business-services-marketing-series', type: 'guide' },
       { label: 'Marketing Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -63,6 +66,7 @@ const allEvents: DECAEvent[] = [
     resources: [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/food-marketing-series', type: 'guide' },
       { label: 'Marketing Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -71,6 +75,7 @@ const allEvents: DECAEvent[] = [
     resources: [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/marketing-communications-series', type: 'guide' },
       { label: 'Marketing Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -79,6 +84,7 @@ const allEvents: DECAEvent[] = [
     resources: [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/retail-merchandising-series', type: 'guide' },
       { label: 'Marketing Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -87,6 +93,7 @@ const allEvents: DECAEvent[] = [
     resources: [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/sports-and-entertainment-marketing-series', type: 'guide' },
       { label: 'Marketing Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -96,6 +103,7 @@ const allEvents: DECAEvent[] = [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/principles-of-marketing', type: 'guide' },
       { label: 'Sample Role-Play Presentation', url: 'https://www.deca.org/advisor-resources/principles-of-marketing-presentation', type: 'video' },
       { label: 'Marketing Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -104,6 +112,7 @@ const allEvents: DECAEvent[] = [
     resources: [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/marketing-management-team-decision-making', type: 'guide' },
       { label: 'Marketing Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -112,6 +121,7 @@ const allEvents: DECAEvent[] = [
     resources: [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/buying-and-merchandising-team-decision-making', type: 'guide' },
       { label: 'Marketing Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -120,6 +130,7 @@ const allEvents: DECAEvent[] = [
     resources: [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/sports-and-entertainment-marketing-team-decision-making', type: 'guide' },
       { label: 'Marketing Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -128,6 +139,7 @@ const allEvents: DECAEvent[] = [
     resources: [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/professional-selling', type: 'guide' },
       { label: 'Marketing Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -181,6 +193,7 @@ const allEvents: DECAEvent[] = [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/accounting-applications-series', type: 'guide' },
       { label: 'Finance Cluster Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
       { label: 'Sample Finance Exam (TeachDECA)', url: 'https://teachdeca.org/wp-content/uploads/2019/08/Teach_DECA_Finance_Sample_Exam.pdf', type: 'practice' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -190,6 +203,7 @@ const allEvents: DECAEvent[] = [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/business-finance-series', type: 'guide' },
       { label: 'Finance Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
       { label: 'Sample Finance Exam', url: 'https://teachdeca.org/wp-content/uploads/2019/08/Teach_DECA_Finance_Sample_Exam.pdf', type: 'practice' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -198,6 +212,7 @@ const allEvents: DECAEvent[] = [
     resources: [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/financial-consulting', type: 'guide' },
       { label: 'Finance Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -206,6 +221,7 @@ const allEvents: DECAEvent[] = [
     resources: [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/principles-of-finance', type: 'guide' },
       { label: 'Finance Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -214,6 +230,7 @@ const allEvents: DECAEvent[] = [
     resources: [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/financial-services-team-decision-making', type: 'guide' },
       { label: 'Finance Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -242,6 +259,7 @@ const allEvents: DECAEvent[] = [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/hotel-and-lodging-management-series', type: 'guide' },
       { label: 'Hospitality Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
       { label: 'H&T Practice Exam (Quizlet)', url: 'https://quizlet.com/446417010/deca-hospitality-and-tourism-practice-exam-1-50-flash-cards/', type: 'practice' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -250,6 +268,7 @@ const allEvents: DECAEvent[] = [
     resources: [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/quick-serve-restaurant-management-series', type: 'guide' },
       { label: 'Hospitality Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -258,6 +277,7 @@ const allEvents: DECAEvent[] = [
     resources: [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/restaurant-and-food-service-management-series', type: 'guide' },
       { label: 'Hospitality Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -267,6 +287,7 @@ const allEvents: DECAEvent[] = [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/principles-of-hospitality-and-tourism', type: 'guide' },
       { label: 'Hospitality Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
       { label: 'H&T Practice Quiz', url: 'https://wayground.com/admin/quiz/5df28267953902001b7cd0a0/deca-hospitality-tourism-practice-test', type: 'practice' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -275,6 +296,7 @@ const allEvents: DECAEvent[] = [
     resources: [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/hospitality-services-team-decision-making', type: 'guide' },
       { label: 'Hospitality Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -283,6 +305,7 @@ const allEvents: DECAEvent[] = [
     resources: [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/travel-and-tourism-team-decision-making', type: 'guide' },
       { label: 'Hospitality Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -291,6 +314,7 @@ const allEvents: DECAEvent[] = [
     resources: [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/hospitality-and-tourism-professional-selling', type: 'guide' },
       { label: 'Hospitality Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -311,6 +335,7 @@ const allEvents: DECAEvent[] = [
       { label: 'BMA Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
       { label: 'Sample HR Role-Play', url: 'https://www.deca.org/advisor-resources/human-resources-sample-role-play-presentation', type: 'video' },
       { label: 'Sample BMA Exam (TeachDECA)', url: 'https://teachdeca.org/wp-content/uploads/2019/08/Teach_DECA_Business_Management_Sample_Exam.pdf', type: 'practice' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -320,6 +345,7 @@ const allEvents: DECAEvent[] = [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/principles-of-business-management-and-administration', type: 'guide' },
       { label: 'BMA Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
       { label: 'Sample BMA Exam', url: 'https://teachdeca.org/wp-content/uploads/2019/08/Teach_DECA_Business_Management_Sample_Exam.pdf', type: 'practice' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -328,6 +354,7 @@ const allEvents: DECAEvent[] = [
     resources: [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/business-law-and-ethics-team-decision-making', type: 'guide' },
       { label: 'BMA Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -388,6 +415,7 @@ const allEvents: DECAEvent[] = [
     resources: [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/entrepreneurship-series', type: 'guide' },
       { label: 'Entrepreneurship Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -396,6 +424,7 @@ const allEvents: DECAEvent[] = [
     resources: [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/principles-of-entrepreneurship', type: 'guide' },
       { label: 'Entrepreneurship Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -404,6 +433,7 @@ const allEvents: DECAEvent[] = [
     resources: [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/entrepreneurship-team-decision-making', type: 'guide' },
       { label: 'Entrepreneurship Exam Blueprint', url: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', type: 'exam' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -456,6 +486,7 @@ const allEvents: DECAEvent[] = [
       { label: 'DECA Event Page', url: 'https://www.deca.org/compete/personal-financial-literacy', type: 'guide' },
       { label: 'PFL Exam Resource', url: 'https://www.deca.org/advisor-resources/personal-financial-literacy-exam-2025', type: 'exam' },
       { label: 'NGPF Free Resources', url: 'https://www.ngpf.org/', type: 'external' },
+      { label: 'Decademy Practice', url: 'https://decademy.app/practice', type: 'practice' },
     ],
   },
   {
@@ -676,6 +707,7 @@ export default function Events() {
           </div>
           <div className="flex items-center gap-6 text-white/30 text-sm">
             <a href="https://www.deca.org" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">DECA.org</a>
+            <a href="https://decademy.app" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">Decademy</a>
           </div>
         </div>
       </footer>

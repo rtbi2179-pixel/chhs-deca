@@ -940,37 +940,4 @@ export const spendingPatterns = mysqlTable("spendingPatterns", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 export type SpendingPattern = typeof spendingPatterns.$inferSelect;
-/**
- * Payments - Credit card payments
- */
-export const payments = mysqlTable("payments", {
-  id: int("id").autoincrement().primaryKey(),
-  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
-  cardId: int("cardId").notNull().references(() => creditCards.id, { onDelete: "cascade" }),
-  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
-  date: timestamp("date").defaultNow().notNull(),
-  status: varchar("status", { length: 50 }).default("completed").notNull(), // completed, pending, failed
-  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
-export type Payment = typeof payments.$inferSelect;
-export type InsertPayment = typeof payments.$inferInsert;
-
-/**
- * Economic Change Logs - Track admin changes to economic system
- */
-export const economicChangeLogs = mysqlTable("economicChangeLogs", {
-  id: int("id").autoincrement().primaryKey(),
-  adminId: int("adminId").notNull().references(() => users.id, { onDelete: "cascade" }),
-  changeType: varchar("changeType", { length: 100 }).notNull(), // credit_formula, factor_weight, card_tier, interest_rate, rewards_percentage
-  fieldName: varchar("fieldName", { length: 100 }).notNull(),
-  oldValue: text("oldValue"),
-  newValue: text("newValue"),
-  reason: text("reason"),
-  timestamp: timestamp("timestamp").defaultNow().notNull(),
-  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
-});
-export type EconomicChangeLog = typeof economicChangeLogs.$inferSelect;
-export type InsertEconomicChangeLog = typeof economicChangeLogs.$inferInsert;
-
 export type InsertSpendingPattern = typeof spendingPatterns.$inferInsert;

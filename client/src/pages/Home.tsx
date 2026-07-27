@@ -69,6 +69,7 @@ const quickLinks = [
   { label: 'DECA Official Site', href: 'https://www.deca.org', icon: Globe },
   { label: 'DECA Guide 2025-26', href: 'https://issuu.com/decainc/docs/deca_guide_2025-2026', icon: BookOpen },
   { label: 'Exam Blueprints', href: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', icon: Target },
+  { label: 'Decademy Practice', href: 'https://decademy.app', icon: Zap },
   { label: 'ICDC 2026 Info', href: 'https://www.deca.org/conferences/icdc', icon: Trophy },
   { label: 'Texas DECA', href: 'https://www.texasdeca.org', icon: Star },
 ]
@@ -428,7 +429,7 @@ export default function Home() {
             <div className="flex flex-wrap items-center gap-6 text-white/30 text-sm">
               <a href="https://www.deca.org" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">DECA.org</a>
               <a href="https://www.texasdeca.org" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">Texas DECA</a>
-              
+              <a href="https://decademy.app" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">Decademy</a>
               <a href="https://www.deca.org/conferences/icdc" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">ICDC 2026</a>
             </div>
           </div>

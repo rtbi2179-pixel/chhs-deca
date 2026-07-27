@@ -84,35 +84,35 @@ export default function Leaderboard() {
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-12 pt-6">
-          <h1 className="text-4xl font-bold text-foreground mb-3">DECA Leaderboard</h1>
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-foreground mb-2">DECA Leaderboard</h1>
           <p className="text-foreground/70">Top performers in DECA practice questions</p>
         </div>
 
         {/* Personal Stats Card */}
         {user && userStats && (
-          <Card className="p-8 mb-12 border border-blue-500/30 bg-gradient-to-r from-blue-600/10 to-cyan-600/10">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <Card className="p-6 mb-8 border border-blue-500/30 bg-gradient-to-r from-blue-600/10 to-cyan-600/10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {/* Rank */}
-              <div className="flex flex-col items-center justify-center p-6 rounded-lg bg-background/50 border border-border">
+              <div className="flex flex-col items-center justify-center p-4 rounded-lg bg-background/50 border border-border">
                 <div className="text-3xl font-bold text-blue-400 mb-2">#{userRank + 1}</div>
                 <div className="text-sm text-foreground/70">Your Rank</div>
               </div>
 
               {/* Accuracy */}
-              <div className="flex flex-col items-center justify-center p-6 rounded-lg bg-background/50 border border-border">
+              <div className="flex flex-col items-center justify-center p-4 rounded-lg bg-background/50 border border-border">
                 <div className="text-3xl font-bold text-green-400 mb-2">{userStats.leaderboard.accuracyPercentage}%</div>
                 <div className="text-sm text-foreground/70">Accuracy</div>
               </div>
 
               {/* Questions Answered */}
-              <div className="flex flex-col items-center justify-center p-6 rounded-lg bg-background/50 border border-border">
+              <div className="flex flex-col items-center justify-center p-4 rounded-lg bg-background/50 border border-border">
                 <div className="text-3xl font-bold text-purple-400 mb-2">{userStats.leaderboard.totalQuestionsAnswered}</div>
                 <div className="text-sm text-foreground/70">Questions</div>
               </div>
 
               {/* Comparison to Top */}
-              <div className="flex flex-col items-center justify-center p-6 rounded-lg bg-background/50 border border-border">
+              <div className="flex flex-col items-center justify-center p-4 rounded-lg bg-background/50 border border-border">
                 {topPerformer && (() => {
                   const topUserObj = 'user' in topPerformer ? topPerformer.user : (topPerformer as any).users;
                   return topUserObj?.id !== user?.id;
