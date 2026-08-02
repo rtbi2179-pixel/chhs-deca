@@ -1,5 +1,6 @@
 import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean, decimal, date, unique, primaryKey } from "drizzle-orm/mysql-core";
 import { relations } from "drizzle-orm";
+import { json } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
