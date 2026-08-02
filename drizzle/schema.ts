@@ -553,12 +553,10 @@ export type InsertPiQuizQuestion = typeof piQuizQuestions.$inferInsert;
 export const piScenarioChallenges = mysqlTable("piScenarioChallenges", {
   id: int("id").autoincrement().primaryKey(),
   sectionId: int("sectionId").notNull().references(() => piModuleSections.id, { onDelete: "cascade" }),
-  title: varchar("title", { length: 255 }).notNull(),
-  scenarioText: text("scenarioText").notNull(),
+  scenario: text("scenario").notNull(),
   difficulty: mysqlEnum("difficulty", ["easy", "medium", "hard"]).notNull(),
-  expectedResponse: text("expectedResponse"),
+  expectedAnswer: text("expectedAnswer"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 export type PiScenarioChallenge = typeof piScenarioChallenges.$inferSelect;
 export type InsertPiScenarioChallenge = typeof piScenarioChallenges.$inferInsert;
