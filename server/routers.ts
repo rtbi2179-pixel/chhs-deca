@@ -13,6 +13,7 @@ import { getStockPrice } from "./stockPriceService";
 import { initializeBanksForSchool, getBanksForSchool, getCreditCardsForBank } from './bankInitializer';
 import { questions, userAnswers, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls } from "../drizzle/schema";
 import { and, eq, sql, inArray, desc, lte } from "drizzle-orm";
+import { piLearningRouter } from "./piLearningRouter";
 
 
 export const announcementsRouter = router({
@@ -377,6 +378,7 @@ export const appRouter = router({
   announcements: announcementsRouter,
   system: systemRouter,
   gacha: gachaRouter,
+  piLearning: piLearningRouter,
   superAdmin: router({
     selectSchool: protectedProcedure
       .input(z.object({ schoolCode: z.string() }))

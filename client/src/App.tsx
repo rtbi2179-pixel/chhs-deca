@@ -28,6 +28,8 @@ import { SchoolCodeEntry } from "./pages/SchoolCodeEntry";
 import { AdminPanel } from "./pages/AdminPanel";
 import { Announcements } from "./pages/Announcements";
 import Profile from "./pages/Profile";
+import PILearning from "./pages/PILearning";
+import PIQuizlet from "./pages/PIQuizlet";
 import BlueMarket from "./pages/BlueMarket";
 import PortfolioUpload from "./pages/PortfolioUpload";
 import AdminPortfolios from "./pages/AdminPortfolios";
@@ -99,6 +101,8 @@ function Router({ isAuthenticated, showLoginRequired }: { isAuthenticated: boole
       <Route path="/school-code" component={SchoolCodeEntry} />
       <Route path="/admin" component={AdminPanel} />
       <Route path="/profile" component={Profile} />
+      <Route path="/pi-learning" component={PILearning} />
+      <Route path="/pi-quizlet" component={PIQuizlet} />
 
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
