@@ -31,7 +31,7 @@ export default function PIQuizlet() {
   );
 
   // Find the quiz section from the module
-  const quizSection = moduleWithSections?.piModuleSections?.find(
+  const quizSection = moduleWithSections?.sections?.find(
     (section) => section.sectionType === 'quiz'
   );
 
