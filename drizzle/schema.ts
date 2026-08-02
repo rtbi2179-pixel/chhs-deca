@@ -632,3 +632,251 @@ export const userPiSectionProgressRelations = relations(userPiSectionProgress, (
   user: one(users, { fields: [userPiSectionProgress.userId], references: [users.id] }),
   section: one(piModuleSections, { fields: [userPiSectionProgress.sectionId], references: [piModuleSections.id] }),
 }));
+
+/**
+ * Blue Bucks - Virtual currency system
+ */
+export const blueBucks = mysqlTable("blueBucks", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  balance: decimal("balance", { precision: 10, scale: 2 }).default("0").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type BlueBucks = typeof blueBucks.$inferSelect;
+export type InsertBlueBucks = typeof blueBucks.$inferInsert;
+
+/**
+ * Blue Bucks Transactions
+ */
+export const blueBucksTransactions = mysqlTable("blueBucksTransactions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  type: varchar("type", { length: 50 }).notNull(), // "earn", "spend", "transfer"
+  reason: text("reason"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type BlueBucksTransaction = typeof blueBucksTransactions.$inferSelect;
+export type InsertBlueBucksTransaction = typeof blueBucksTransactions.$inferInsert;
+
+/**
+ * User Answers - Practice question responses
+ */
+export const userAnswers = mysqlTable("userAnswers", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  questionId: int("questionId").notNull().references(() => questions.id, { onDelete: "cascade" }),
+  selectedAnswer: varchar("selectedAnswer", { length: 255 }),
+  isCorrect: boolean("isCorrect").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type UserAnswer = typeof userAnswers.$inferSelect;
+export type InsertUserAnswer = typeof userAnswers.$inferInsert;
+
+/**
+ * User Streaks - Tracking practice streaks
+ */
+export const userStreaks = mysqlTable("userStreaks", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  currentStreak: int("currentStreak").default(0).notNull(),
+  longestStreak: int("longestStreak").default(0).notNull(),
+  lastPracticeDate: timestamp("lastPracticeDate"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type UserStreak = typeof userStreaks.$inferSelect;
+export type InsertUserStreak = typeof userStreaks.$inferInsert;
+
+/**
+ * Daily Practice Stats
+ */
+export const dailyPracticeStats = mysqlTable("dailyPracticeStats", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  date: timestamp("date").notNull(),
+  questionsAnswered: int("questionsAnswered").default(0).notNull(),
+  correctAnswers: int("correctAnswers").default(0).notNull(),
+  blueBucksEarned: decimal("blueBucksEarned", { precision: 10, scale: 2 }).default("0").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type DailyPracticeStat = typeof dailyPracticeStats.$inferSelect;
+export type InsertDailyPracticeStat = typeof dailyPracticeStats.$inferInsert;
+
+/**
+ * Economic Settings - Game economy configuration
+ */
+export const economicSettings = mysqlTable("economicSettings", {
+  id: int("id").autoincrement().primaryKey(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  baseBlueBucksPerQuestion: decimal("baseBlueBucksPerQuestion", { precision: 10, scale: 2 }).default("10").notNull(),
+  bonusMultiplier: decimal("bonusMultiplier", { precision: 5, scale: 2 }).default("1.5").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type EconomicSetting = typeof economicSettings.$inferSelect;
+export type InsertEconomicSetting = typeof economicSettings.$inferInsert;
+
+/**
+ * Economic Audit Log
+ */
+export const economicAuditLog = mysqlTable("economicAuditLog", {
+  id: int("id").autoincrement().primaryKey(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  action: varchar("action", { length: 255 }).notNull(),
+  details: text("details"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type EconomicAuditLog = typeof economicAuditLog.$inferSelect;
+export type InsertEconomicAuditLog = typeof economicAuditLog.$inferInsert;
+
+/**
+ * Stocks - Stock market simulation
+ */
+export const stocks = mysqlTable("stocks", {
+  id: int("id").autoincrement().primaryKey(),
+  symbol: varchar("symbol", { length: 10 }).notNull().unique(),
+  name: varchar("name", { length: 255 }).notNull(),
+  currentPrice: decimal("currentPrice", { precision: 10, scale: 2 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type Stock = typeof stocks.$inferSelect;
+export type InsertStock = typeof stocks.$inferInsert;
+
+/**
+ * Portfolio Cash - User cash holdings
+ */
+export const portfolioCash = mysqlTable("portfolioCash", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  amount: decimal("amount", { precision: 15, scale: 2 }).default("0").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type PortfolioCash = typeof portfolioCash.$inferSelect;
+export type InsertPortfolioCash = typeof portfolioCash.$inferInsert;
+
+/**
+ * Market Transactions - Buy/sell transactions
+ */
+export const marketTransactions = mysqlTable("marketTransactions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  stockId: int("stockId").notNull().references(() => stocks.id, { onDelete: "cascade" }),
+  type: varchar("type", { length: 10 }).notNull(), // "buy" or "sell"
+  quantity: int("quantity").notNull(),
+  pricePerShare: decimal("pricePerShare", { precision: 10, scale: 2 }).notNull(),
+  totalAmount: decimal("totalAmount", { precision: 15, scale: 2 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type MarketTransaction = typeof marketTransactions.$inferSelect;
+export type InsertMarketTransaction = typeof marketTransactions.$inferInsert;
+
+/**
+ * Portfolio Holdings - User stock holdings
+ */
+export const portfolioHoldings = mysqlTable("portfolioHoldings", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  stockId: int("stockId").notNull().references(() => stocks.id, { onDelete: "cascade" }),
+  quantity: int("quantity").notNull(),
+  averageCost: decimal("averageCost", { precision: 10, scale: 2 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type PortfolioHolding = typeof portfolioHoldings.$inferSelect;
+export type InsertPortfolioHolding = typeof portfolioHoldings.$inferInsert;
+
+/**
+ * Market Price History - Historical stock prices
+ */
+export const marketPriceHistory = mysqlTable("marketPriceHistory", {
+  id: int("id").autoincrement().primaryKey(),
+  stockId: int("stockId").notNull().references(() => stocks.id, { onDelete: "cascade" }),
+  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  date: timestamp("date").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type MarketPriceHistory = typeof marketPriceHistory.$inferSelect;
+export type InsertMarketPriceHistory = typeof marketPriceHistory.$inferInsert;
+
+/**
+ * Portfolio Snapshots - Portfolio value snapshots
+ */
+export const portfolioSnapshots = mysqlTable("portfolioSnapshots", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  totalValue: decimal("totalValue", { precision: 15, scale: 2 }).notNull(),
+  cashValue: decimal("cashValue", { precision: 15, scale: 2 }).notNull(),
+  stockValue: decimal("stockValue", { precision: 15, scale: 2 }).notNull(),
+  date: timestamp("date").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type PortfolioSnapshot = typeof portfolioSnapshots.$inferSelect;
+export type InsertPortfolioSnapshot = typeof portfolioSnapshots.$inferInsert;
+
+/**
+ * Portfolio Uploads - User portfolio submissions
+ */
+export const portfolioUploads = mysqlTable("portfolioUploads", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  fileName: varchar("fileName", { length: 255 }).notNull(),
+  fileUrl: text("fileUrl").notNull(),
+  uploadedAt: timestamp("uploadedAt").defaultNow().notNull(),
+});
+export type PortfolioUpload = typeof portfolioUploads.$inferSelect;
+export type InsertPortfolioUpload = typeof portfolioUploads.$inferInsert;
+
+/**
+ * Banks - Banking system
+ */
+export const banks = mysqlTable("banks", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type Bank = typeof banks.$inferSelect;
+export type InsertBank = typeof banks.$inferInsert;
+
+/**
+ * Credit Scores - User credit scores
+ */
+export const creditScores = mysqlTable("creditScores", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  score: int("score").default(300).notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type CreditScore = typeof creditScores.$inferSelect;
+export type InsertCreditScore = typeof creditScores.$inferInsert;
+
+/**
+ * Credit History - User credit history
+ */
+export const creditHistory = mysqlTable("creditHistory", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  event: varchar("event", { length: 255 }).notNull(),
+  impact: int("impact").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type CreditHistory = typeof creditHistory.$inferSelect;
+export type InsertCreditHistory = typeof creditHistory.$inferInsert;
+
+/**
+ * Credit Card Products - Available credit card products
+ */
+export const creditCardProducts = mysqlTable("creditCardProducts", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  annualFee: decimal("annualFee", { precision: 10, scale: 2 }).default("0").notNull(),
+  creditLimitMin: decimal("creditLimitMin", { precision: 10, scale: 2 }).notNull(),
+  creditLimitMax: decimal("creditLimitMax", { precision: 10, scale: 2 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type CreditCardProduct = typeof creditCardProducts.$inferSelect;
+export type InsertCreditCardProduct = typeof creditCardProducts.$inferInsert;
