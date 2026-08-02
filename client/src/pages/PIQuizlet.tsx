@@ -96,7 +96,19 @@ export default function PIQuizlet() {
 
   const score = questions.length > 0 ? Math.round((correctCount / questions.length) * 100) : 0;
 
-  const options = currentQuestion ? JSON.parse(currentQuestion.options || "[]") : [];
+  const parseOptions = (opts: any): string[] => {
+    if (!opts) return [];
+    if (typeof opts === 'string') {
+      try {
+        const parsed = JSON.parse(opts);
+        return Array.isArray(parsed) ? parsed : [parsed];
+      } catch {
+        return [opts];
+      }
+    }
+    return Array.isArray(opts) ? opts : [opts];
+  };
+  const options = currentQuestion ? parseOptions(currentQuestion.options) : [];
   const isCorrect = currentAnswer === currentQuestion?.correctAnswer;
 
   if (showResults) {
