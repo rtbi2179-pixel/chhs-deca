@@ -24,9 +24,21 @@ export default function PIQuizlet() {
     cluster: selectedCluster,
   });
 
-  const { data: sectionContent, isLoading: contentLoading } = trpc.piLearning.getSectionContent.useQuery(
-    { sectionId: selectedModuleId! },
+  // First fetch the module with its sections
+  const { data: moduleWithSections, isLoading: moduleLoading } = trpc.piLearning.getModuleWithSections.useQuery(
+    { moduleId: selectedModuleId! },
     { enabled: !!selectedModuleId }
+  );
+
+  // Find the quiz section from the module
+  const quizSection = moduleWithSections?.piModuleSections?.find(
+    (section) => section.sectionType === 'quiz'
+  );
+
+  // Then fetch the section content (including quiz questions)
+  const { data: sectionContent, isLoading: contentLoading } = trpc.piLearning.getSectionContent.useQuery(
+    { sectionId: quizSection?.id! },
+    { enabled: !!quizSection?.id }
   );
 
   if (!user) {
