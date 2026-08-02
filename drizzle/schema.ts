@@ -540,11 +540,11 @@ export const piQuizQuestions = mysqlTable("piQuizQuestions", {
   id: int("id").autoincrement().primaryKey(),
   sectionId: int("sectionId").notNull().references(() => piModuleSections.id, { onDelete: "cascade" }),
   question: text("question").notNull(),
-  options: text("options"), // JSON string for multiple choice options
-  correctAnswer: text("correctAnswer").notNull(),
+  options: json("options"), // JSON for multiple choice options
+  correctAnswer: varchar("correctAnswer", { length: 255 }).notNull(),
   rationale: text("rationale"),
+  explanation: text("explanation"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 export type PiQuizQuestion = typeof piQuizQuestions.$inferSelect;
 export type InsertPiQuizQuestion = typeof piQuizQuestions.$inferInsert;
