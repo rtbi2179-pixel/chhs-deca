@@ -20,6 +20,7 @@ export const piLearningRouter = router({
   getModulesByCluster: protectedProcedure
     .input(z.object({ cluster: z.string() }))
     .query(async ({ input }) => {
+      const database = await db.getDb();
       const modules = await database
         .select()
         .from(piLearningModules)
@@ -33,6 +34,7 @@ export const piLearningRouter = router({
   getModuleWithSections: protectedProcedure
     .input(z.object({ moduleId: z.number() }))
     .query(async ({ input }) => {
+      const database = await db.getDb();
       const module = await database
         .select()
         .from(piLearningModules)
@@ -60,6 +62,7 @@ export const piLearningRouter = router({
   getSectionContent: protectedProcedure
     .input(z.object({ sectionId: z.number() }))
     .query(async ({ input }) => {
+      const database = await db.getDb();
       const section = await database
         .select()
         .from(piModuleSections)
@@ -104,6 +107,7 @@ export const piLearningRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      const database = await db.getDb();
       const existing = await database
         .select()
         .from(userPiProgress)
@@ -168,6 +172,7 @@ export const piLearningRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      const database = await db.getDb();
       const existing = await database
         .select()
         .from(userPiSectionProgress)
@@ -214,6 +219,7 @@ export const piLearningRouter = router({
   getUserModuleProgress: protectedProcedure
     .input(z.object({ moduleId: z.number() }))
     .query(async ({ ctx, input }) => {
+      const database = await db.getDb();
       const progress = await database
         .select()
         .from(userPiProgress)
@@ -234,6 +240,7 @@ export const piLearningRouter = router({
   getUserClusterProgress: protectedProcedure
     .input(z.object({ cluster: z.string() }))
     .query(async ({ ctx, input }) => {
+      const database = await db.getDb();
       const modules = await database
         .select()
         .from(piLearningModules)
@@ -262,6 +269,7 @@ export const piLearningRouter = router({
    * Get user's overall mastery dashboard
    */
   getUserMasteryDashboard: protectedProcedure.query(async ({ ctx }) => {
+    const database = await db.getDb();
     const allProgress = await database
       .select()
       .from(userPiProgress)
@@ -327,6 +335,7 @@ export const piLearningRouter = router({
    * Get modules that need review (spaced repetition)
    */
   getModulesNeedingReview: protectedProcedure.query(async ({ ctx }) => {
+    const database = await db.getDb();
     const now = new Date();
     const needsReview = await database
       .select()
@@ -359,6 +368,7 @@ export const piLearningRouter = router({
         throw new TRPCError({ code: "FORBIDDEN" });
       }
 
+      const database = await db.getDb();
       const result = await database.insert(piLearningModules).values({
         piId: input.piId,
         cluster: input.cluster,
@@ -396,6 +406,7 @@ export const piLearningRouter = router({
         throw new TRPCError({ code: "FORBIDDEN" });
       }
 
+      const database = await db.getDb();
       const result = await database.insert(piModuleSections).values({
         moduleId: input.moduleId,
         sectionType: input.sectionType,
