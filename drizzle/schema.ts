@@ -880,3 +880,82 @@ export const creditCardProducts = mysqlTable("creditCardProducts", {
 });
 export type CreditCardProduct = typeof creditCardProducts.$inferSelect;
 export type InsertCreditCardProduct = typeof creditCardProducts.$inferInsert;
+
+/**
+ * Credit Card Payments - Payment records
+ */
+export const creditCardPayments = mysqlTable("creditCardPayments", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  creditCardId: int("creditCardId").notNull().references(() => creditCards.id, { onDelete: "cascade" }),
+  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  paymentDate: timestamp("paymentDate").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type CreditCardPayment = typeof creditCardPayments.$inferSelect;
+export type InsertCreditCardPayment = typeof creditCardPayments.$inferInsert;
+
+/**
+ * Financial Profiles - User financial profiles
+ */
+export const financialProfiles = mysqlTable("financialProfiles", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  annualIncome: decimal("annualIncome", { precision: 15, scale: 2 }),
+  employmentStatus: varchar("employmentStatus", { length: 50 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type FinancialProfile = typeof financialProfiles.$inferSelect;
+export type InsertFinancialProfile = typeof financialProfiles.$inferInsert;
+
+/**
+ * Economic Config - Game economy configuration
+ */
+export const economicConfig = mysqlTable("economicConfig", {
+  id: int("id").autoincrement().primaryKey(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  key: varchar("key", { length: 255 }).notNull(),
+  value: text("value").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type EconomicConfig = typeof economicConfig.$inferSelect;
+export type InsertEconomicConfig = typeof economicConfig.$inferInsert;
+
+/**
+ * Cosmetics - Cosmetic items (skins, avatars, etc.)
+ */
+export const cosmetics = mysqlTable("cosmetics", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  type: varchar("type", { length: 50 }).notNull(), // "skin", "avatar", "badge", etc.
+  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type Cosmetic = typeof cosmetics.$inferSelect;
+export type InsertCosmetic = typeof cosmetics.$inferInsert;
+
+/**
+ * User Cosmetics - User cosmetic ownership
+ */
+export const userCosmetics = mysqlTable("userCosmetics", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  cosmeticId: int("cosmeticId").notNull().references(() => cosmetics.id, { onDelete: "cascade" }),
+  acquiredAt: timestamp("acquiredAt").defaultNow().notNull(),
+});
+export type UserCosmetic = typeof userCosmetics.$inferSelect;
+export type InsertUserCosmetic = typeof userCosmetics.$inferInsert;
+
+/**
+ * Gacha Pulls - Gacha system pulls
+ */
+export const gachaPulls = mysqlTable("gachaPulls", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  cosmeticId: int("cosmeticId").notNull().references(() => cosmetics.id, { onDelete: "cascade" }),
+  pullDate: timestamp("pullDate").defaultNow().notNull(),
+});
+export type GachaPull = typeof gachaPulls.$inferSelect;
+export type InsertGachaPull = typeof gachaPulls.$inferInsert;

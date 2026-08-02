@@ -12,7 +12,6 @@ import {
   userPiSectionProgress,
 } from "../drizzle/schema";
 import { and, eq, desc } from "drizzle-orm";
-import { database } from "./_core/index";
 
 export const piLearningRouter = router({
   /**
