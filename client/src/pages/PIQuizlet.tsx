@@ -20,7 +20,7 @@ export default function PIQuizlet() {
   const [isFlipped, setIsFlipped] = useState(false);
   
   const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
-  const [showQuizResults, setShowQuizResults] = useState(false);
+  const [quizSubmitted, setQuizSubmitted] = useState(false);
   
   const [teachBackText, setTeachBackText] = useState("");
   const [teachBackFeedback, setTeachBackFeedback] = useState("");
@@ -36,6 +36,8 @@ export default function PIQuizlet() {
     { moduleId: selectedModuleId! },
     { enabled: !!selectedModuleId }
   );
+
+  const submitTeachBackMutation = trpc.piLearning.submitTeachBack.useMutation();
 
   const getSectionByType = (type: string) => moduleWithSections?.sections?.find((s) => s.sectionType === type);
 
@@ -84,16 +86,15 @@ export default function PIQuizlet() {
   };
 
   const handleSubmitTeachBack = async () => {
-    if (!teachBackText.trim()) return;
+    if (!teachBackText.trim() || !selectedModuleId) return;
     
     setLoadingFeedback(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setTeachBackFeedback(
-        `Your explanation demonstrates a solid understanding of ${moduleWithSections?.performanceIndicator}. ` +
-        `You've covered the fundamental concepts well. To strengthen your response, consider incorporating more specific metrics, ` +
-        `industry benchmarks, or advanced strategic implications. Your teach-back shows readiness for application in real scenarios.`
-      );
+      const result = await submitTeachBackMutation.mutateAsync({
+        moduleId: selectedModuleId,
+        response: teachBackText,
+      });
+      setTeachBackFeedback(result.feedback);
     } catch (error) {
       setTeachBackFeedback("Error generating feedback. Please try again.");
     } finally {
@@ -108,6 +109,11 @@ export default function PIQuizlet() {
       return q && answer === q.correctAnswer;
     }
   ).length;
+
+  const handleSubmitQuiz = () => {
+    setQuizSubmitted(true);
+    setActiveTab("quiz-results");
+  };
 
   if (!user) {
     return (
@@ -226,7 +232,7 @@ export default function PIQuizlet() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
-      <div className="container mx-auto py-8 px-4">
+      <div className="container mx-auto py-8 px-4 max-w-5xl">
         {/* Header */}
         <div className="mb-8">
           <Button 
@@ -237,7 +243,7 @@ export default function PIQuizlet() {
               setCurrentFlashcardIndex(0);
               setIsFlipped(false);
               setQuizAnswers({});
-              setShowQuizResults(false);
+              setQuizSubmitted(false);
             }} 
             className="mb-6 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
           >
@@ -252,15 +258,15 @@ export default function PIQuizlet() {
 
         {/* Learning Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 mb-8 bg-slate-200 dark:bg-slate-800 p-2 rounded-xl">
-            <TabsTrigger value="lesson" className="text-xs sm:text-sm rounded-lg">Lesson</TabsTrigger>
-            <TabsTrigger value="vocabulary" className="text-xs sm:text-sm rounded-lg">Vocab</TabsTrigger>
-            <TabsTrigger value="flashcards" className="text-xs sm:text-sm rounded-lg">Cards</TabsTrigger>
-            <TabsTrigger value="quick-review" className="text-xs sm:text-sm rounded-lg">Review</TabsTrigger>
-            <TabsTrigger value="quiz" className="text-xs sm:text-sm rounded-lg">Quiz</TabsTrigger>
-            <TabsTrigger value="scenarios" className="text-xs sm:text-sm rounded-lg">Cases</TabsTrigger>
-            <TabsTrigger value="related" className="text-xs sm:text-sm rounded-lg">Links</TabsTrigger>
-            <TabsTrigger value="teach-back" className="text-xs sm:text-sm rounded-lg">Teach</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 mb-8 bg-slate-200 dark:bg-slate-800 p-2 rounded-xl overflow-x-auto">
+            <TabsTrigger value="lesson" className="text-xs sm:text-sm rounded-lg whitespace-nowrap">Lesson</TabsTrigger>
+            <TabsTrigger value="vocabulary" className="text-xs sm:text-sm rounded-lg whitespace-nowrap">Vocab</TabsTrigger>
+            <TabsTrigger value="flashcards" className="text-xs sm:text-sm rounded-lg whitespace-nowrap">Cards</TabsTrigger>
+            <TabsTrigger value="quick-review" className="text-xs sm:text-sm rounded-lg whitespace-nowrap">Review</TabsTrigger>
+            <TabsTrigger value="quiz" className="text-xs sm:text-sm rounded-lg whitespace-nowrap">Quiz</TabsTrigger>
+            <TabsTrigger value="scenarios" className="text-xs sm:text-sm rounded-lg whitespace-nowrap">Cases</TabsTrigger>
+            <TabsTrigger value="related" className="text-xs sm:text-sm rounded-lg whitespace-nowrap">Links</TabsTrigger>
+            <TabsTrigger value="teach-back" className="text-xs sm:text-sm rounded-lg whitespace-nowrap">Teach</TabsTrigger>
           </TabsList>
 
           {/* Lesson Tab */}
@@ -279,7 +285,7 @@ export default function PIQuizlet() {
               </CardHeader>
               <CardContent className="pt-8">
                 <div className="prose dark:prose-invert max-w-none">
-                  <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-lg whitespace-pre-wrap">
+                  <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-base whitespace-pre-wrap">
                     {theoryContent?.content || "No lesson content available."}
                   </p>
                 </div>
@@ -309,10 +315,10 @@ export default function PIQuizlet() {
                     {vocabContent.content.split('\n').filter(Boolean).map((term, idx) => (
                       <div key={idx} className="p-4 bg-emerald-50 dark:bg-emerald-950 rounded-lg border-2 border-emerald-200 dark:border-emerald-800 hover:shadow-md transition">
                         <div className="flex items-start gap-3">
-                          <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900 px-2 py-1 rounded">
+                          <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900 px-2 py-1 rounded flex-shrink-0">
                             {idx + 1}
                           </span>
-                          <p className="font-semibold text-slate-900 dark:text-white">{term}</p>
+                          <p className="font-semibold text-slate-900 dark:text-white text-sm">{term}</p>
                         </div>
                       </div>
                     ))}
@@ -347,7 +353,7 @@ export default function PIQuizlet() {
                     {/* 3D Flip Card */}
                     <div
                       onClick={() => setIsFlipped(!isFlipped)}
-                      className="h-72 cursor-pointer perspective"
+                      className="h-72 cursor-pointer"
                       style={{
                         perspective: '1000px',
                       }}
@@ -367,7 +373,7 @@ export default function PIQuizlet() {
                           style={{ backfaceVisibility: 'hidden' }}
                         >
                           <p className="text-sm font-semibold text-purple-100 mb-6 uppercase tracking-wide">Question</p>
-                          <p className="text-3xl font-bold text-center leading-tight">{currentFlashcard.question}</p>
+                          <p className="text-2xl font-bold text-center leading-tight">{currentFlashcard.question}</p>
                           <p className="text-xs text-purple-200 mt-8 font-medium">Click card to reveal answer</p>
                         </div>
 
@@ -382,7 +388,7 @@ export default function PIQuizlet() {
                           }}
                         >
                           <p className="text-sm font-semibold text-indigo-100 mb-6 uppercase tracking-wide">Answer</p>
-                          <p className="text-2xl font-semibold text-center leading-tight">{currentFlashcard.answer}</p>
+                          <p className="text-xl font-semibold text-center leading-tight">{currentFlashcard.answer}</p>
                           <p className="text-xs text-indigo-200 mt-8 font-medium">Click card to see question</p>
                         </div>
                       </div>
@@ -447,11 +453,11 @@ export default function PIQuizlet() {
                     {quizContent.quizQuestions.slice(0, 10).map((q, idx) => (
                       <div key={q.id} className="p-5 border-2 border-yellow-200 dark:border-yellow-800 rounded-lg bg-yellow-50 dark:bg-yellow-950 hover:shadow-md transition">
                         <div className="flex gap-4">
-                          <span className="text-sm font-bold text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900 px-3 py-1 rounded h-fit">
+                          <span className="text-sm font-bold text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900 px-3 py-1 rounded h-fit flex-shrink-0">
                             Q{idx + 1}
                           </span>
-                          <div className="flex-1">
-                            <p className="font-semibold text-slate-900 dark:text-white mb-2">{q.question}</p>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-semibold text-slate-900 dark:text-white mb-2 break-words">{q.question}</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">Answer: {q.correctAnswer}</p>
                           </div>
                         </div>
@@ -480,7 +486,7 @@ export default function PIQuizlet() {
                 </div>
               </CardHeader>
               <CardContent className="pt-8">
-                {!showQuizResults ? (
+                {!quizSubmitted ? (
                   <div className="space-y-8">
                     {quizContent?.quizQuestions && quizContent.quizQuestions.length > 0 ? (
                       <>
@@ -489,23 +495,23 @@ export default function PIQuizlet() {
                           return (
                             <div key={q.id} className="p-6 border-2 border-red-200 dark:border-red-800 rounded-lg bg-red-50 dark:bg-red-950 hover:shadow-md transition">
                               <div className="flex gap-4 mb-4">
-                                <span className="text-sm font-bold text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900 px-3 py-1 rounded h-fit">
+                                <span className="text-sm font-bold text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900 px-3 py-1 rounded h-fit flex-shrink-0">
                                   {idx + 1}
                                 </span>
-                                <p className="font-semibold text-slate-900 dark:text-white flex-1">{q.question}</p>
+                                <p className="font-semibold text-slate-900 dark:text-white flex-1 break-words">{q.question}</p>
                               </div>
                               <div className="space-y-3 ml-12">
                                 {options.map((option, optIdx) => (
-                                  <label key={optIdx} className="flex items-center p-3 rounded-lg cursor-pointer hover:bg-red-100 dark:hover:bg-red-900 transition border-2 border-transparent hover:border-red-300 dark:hover:border-red-700">
+                                  <label key={optIdx} className="flex items-start p-3 rounded-lg cursor-pointer hover:bg-red-100 dark:hover:bg-red-900 transition border-2 border-transparent hover:border-red-300 dark:hover:border-red-700">
                                     <input
                                       type="radio"
                                       name={`q${q.id}`}
                                       value={String.fromCharCode(65 + optIdx)}
                                       checked={quizAnswers[q.id] === String.fromCharCode(65 + optIdx)}
                                       onChange={(e) => setQuizAnswers({ ...quizAnswers, [q.id]: e.target.value })}
-                                      className="w-5 h-5 mr-3 cursor-pointer"
+                                      className="w-5 h-5 mr-3 cursor-pointer flex-shrink-0 mt-0.5"
                                     />
-                                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{option}</span>
+                                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300 break-words">{option}</span>
                                   </label>
                                 ))}
                               </div>
@@ -513,7 +519,7 @@ export default function PIQuizlet() {
                           );
                         })}
                         <Button 
-                          onClick={() => setShowQuizResults(true)}
+                          onClick={handleSubmitQuiz}
                           className="w-full bg-red-600 hover:bg-red-700 py-7 text-lg font-bold rounded-xl"
                         >
                           <Play className="w-5 h-5 mr-2" /> Submit Quiz
@@ -524,24 +530,45 @@ export default function PIQuizlet() {
                     )}
                   </div>
                 ) : (
-                  <div className="space-y-8">
-                    <div className="p-8 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-2xl text-center shadow-lg">
-                      <p className="text-sm font-semibold mb-3 uppercase tracking-wide">Your Score</p>
-                      <p className="text-6xl font-bold mb-2">{Math.round((correctCount / 15) * 100)}%</p>
-                      <p className="text-blue-100 text-lg">{correctCount} out of 15 correct</p>
-                    </div>
-                    <Button 
-                      onClick={() => {
-                        setShowQuizResults(false);
-                        setQuizAnswers({});
-                      }}
-                      variant="outline"
-                      className="w-full py-6 text-lg font-semibold rounded-xl border-2"
-                    >
-                      <RotateCw className="w-5 h-5 mr-2" /> Retake Quiz
-                    </Button>
+                  <div className="text-center py-8">
+                    <p className="text-slate-600 dark:text-slate-400">Quiz submitted! View your results below.</p>
                   </div>
                 )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Quiz Results Tab */}
+          <TabsContent value="quiz-results">
+            <Card className="border-2 shadow-lg">
+              <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 border-b-2">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <Award className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <CardTitle>Quiz Results</CardTitle>
+                    <CardDescription>Your Performance Summary</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-8 space-y-8">
+                <div className="p-8 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-2xl text-center shadow-lg">
+                  <p className="text-sm font-semibold mb-3 uppercase tracking-wide">Your Score</p>
+                  <p className="text-6xl font-bold mb-2">{Math.round((correctCount / 15) * 100)}%</p>
+                  <p className="text-blue-100 text-lg">{correctCount} out of 15 correct</p>
+                </div>
+                <Button 
+                  onClick={() => {
+                    setQuizSubmitted(false);
+                    setQuizAnswers({});
+                    setActiveTab("quiz");
+                  }}
+                  variant="outline"
+                  className="w-full py-6 text-lg font-semibold rounded-xl border-2"
+                >
+                  <RotateCw className="w-5 h-5 mr-2" /> Retake Quiz
+                </Button>
               </CardContent>
             </Card>
           </TabsContent>
@@ -644,7 +671,7 @@ export default function PIQuizlet() {
                   value={teachBackText}
                   onChange={(e) => setTeachBackText(e.target.value)}
                   placeholder="Write your comprehensive explanation here. Aim for 3-5 sentences covering all aspects..."
-                  className="w-full p-5 border-2 border-orange-300 dark:border-orange-700 rounded-xl min-h-48 dark:bg-slate-800 dark:text-white focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500 focus:ring-opacity-20 transition font-medium"
+                  className="w-full p-5 border-2 border-orange-300 dark:border-orange-700 rounded-xl min-h-48 dark:bg-slate-800 dark:text-white focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500 focus:ring-opacity-20 transition font-medium resize-none"
                 />
 
                 <Button 
@@ -667,9 +694,9 @@ export default function PIQuizlet() {
                   <div className="p-6 bg-green-50 dark:bg-green-950 border-2 border-green-300 dark:border-green-700 rounded-xl">
                     <div className="flex items-start gap-4">
                       <CheckCircle className="w-7 h-7 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
-                      <div className="flex-1">
+                      <div className="flex-1 min-w-0">
                         <p className="font-semibold text-green-900 dark:text-green-100 mb-3 text-base">AI Feedback</p>
-                        <p className="text-sm text-green-800 dark:text-green-200 leading-relaxed">{teachBackFeedback}</p>
+                        <p className="text-sm text-green-800 dark:text-green-200 leading-relaxed break-words">{teachBackFeedback}</p>
                       </div>
                     </div>
                   </div>
@@ -689,7 +716,7 @@ export default function PIQuizlet() {
               setCurrentFlashcardIndex(0);
               setIsFlipped(false);
               setQuizAnswers({});
-              setShowQuizResults(false);
+              setQuizSubmitted(false);
             }} 
             className="flex-1 py-6 font-semibold rounded-xl border-2"
           >

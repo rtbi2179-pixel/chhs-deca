@@ -12,8 +12,70 @@ import {
   userPiSectionProgress,
 } from "../drizzle/schema";
 import { and, eq, desc } from "drizzle-orm";
+import { invokeLLM } from "./_core/llm";
 
 export const piLearningRouter = router({
+  /**
+   * Submit teach-back response and get AI feedback
+   */
+  submitTeachBack: protectedProcedure
+    .input(z.object({ 
+      moduleId: z.number(),
+      response: z.string().min(10, "Response must be at least 10 characters"),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const database = await db.getDb();
+      const module = await database
+        .select()
+        .from(piLearningModules)
+        .where(eq(piLearningModules.id, input.moduleId))
+        .limit(1);
+
+      if (!module[0]) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Module not found" });
+      }
+
+      try {
+        const llmResponse = await invokeLLM({
+          messages: [
+            {
+              role: "system",
+              content: `You are an expert DECA business educator providing constructive feedback on student explanations of Performance Indicators. 
+              
+Provide specific, actionable feedback that:
+1. Acknowledges what the student did well
+2. Identifies areas for improvement
+3. Suggests concrete examples or applications
+4. Encourages deeper strategic thinking
+
+Keep feedback concise but meaningful (2-3 sentences).`,
+            },
+            {
+              role: "user",
+              content: `The student is learning about: "${module[0].performanceIndicator}"
+              
+Their explanation:
+"${input.response}"
+              
+Provide constructive feedback on their understanding.`,
+            },
+          ],
+        });
+
+        const feedback = llmResponse.choices[0]?.message?.content || "Unable to generate feedback";
+        return {
+          success: true,
+          feedback: typeof feedback === "string" ? feedback : JSON.stringify(feedback),
+        };
+      } catch (error) {
+        console.error("LLM feedback error:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to generate AI feedback. Please try again.",
+        });
+      }
+    }),
+
   /**
    * Get all PI Learning Modules for a cluster
    */
