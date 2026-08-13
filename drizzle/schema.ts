@@ -781,6 +781,26 @@ export type EconomicAuditLog = typeof economicAuditLog.$inferSelect;
 export type InsertEconomicAuditLog = typeof economicAuditLog.$inferInsert;
 
 /**
+ * User feedback submitted for chapter-specific review by administrators.
+ */
+export const userFeedback = mysqlTable("userFeedback", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  category: mysqlEnum("category", ["bug", "feature", "content", "other"]).notNull(),
+  subject: varchar("subject", { length: 160 }).notNull(),
+  message: text("message").notNull(),
+  status: mysqlEnum("status", ["new", "reviewing", "resolved", "dismissed"]).default("new").notNull(),
+  adminResponse: text("adminResponse"),
+  reviewedBy: int("reviewedBy").references(() => users.id, { onDelete: "set null" }),
+  reviewedAt: timestamp("reviewedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type UserFeedback = typeof userFeedback.$inferSelect;
+export type InsertUserFeedback = typeof userFeedback.$inferInsert;
+
+/**
  * Stocks - Stock market simulation
  */
 export const stocks = mysqlTable("stocks", {

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'wouter'
-import { Menu, X, Trophy, BookOpen, Calendar, Users, Home, LogOut, MessageSquare, Mic, Crown, Bell, DollarSign, TrendingUp, History, Building2, Zap, Sparkles, Brain } from 'lucide-react'
+import { Menu, X, Trophy, BookOpen, Calendar, Users, Home, LogOut, MessageSquare, MessageSquarePlus, Mic, Crown, Bell, DollarSign, TrendingUp, History, Building2, Zap, Sparkles, Brain } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { trpc } from '@/lib/trpc'
@@ -15,6 +15,7 @@ const navLinks = [
   { href: '/volunteer', label: 'Volunteer', icon: Users },
   { href: '/discussions', label: 'Discussions', icon: MessageSquare },
   { href: '/announcements', label: 'Announcements', icon: Bell },
+  { href: '/feedback', label: 'Feedback', icon: MessageSquarePlus },
   { href: '/speech-ai', label: 'AI Tools', icon: Zap },
 ]
 

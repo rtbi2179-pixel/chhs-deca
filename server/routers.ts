@@ -14,7 +14,7 @@ import { applyCreditCardCharge, applyCreditCardPayment, calculateCashback, summa
 import { calculateMonetaryPressure } from "./economicMonitoring";
 
 import { initializeBanksForSchool, getBanksForSchool, getCreditCardsForBank } from './bankInitializer';
-import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog } from "../drizzle/schema";
+import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback } from "../drizzle/schema";
 import { and, eq, sql, inArray, desc, lte, gte } from "drizzle-orm";
 import { piLearningRouter } from "./piLearningRouter";
 
@@ -410,6 +410,79 @@ export const appRouter = router({
   system: systemRouter,
   gacha: gachaRouter,
   piLearning: piLearningRouter,
+  feedback: router({
+    submit: protectedProcedure
+      .input(z.object({
+        category: z.enum(['bug', 'feature', 'content', 'other']),
+        subject: z.string().trim().min(3).max(160),
+        message: z.string().trim().min(10).max(4000),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const schoolCode = ctx.user.selectedSchoolCode ?? ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Your account needs a school code before submitting feedback' });
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Feedback storage is unavailable' });
+        const inserted = await database.insert(userFeedback).values({
+          userId: ctx.user.id,
+          schoolCode,
+          category: input.category,
+          subject: input.subject,
+          message: input.message,
+        });
+        return { success: true, feedbackId: Number(inserted[0].insertId) };
+      }),
+
+    listMine: protectedProcedure.query(async ({ ctx }) => {
+      const database = await db.getDb();
+      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Feedback storage is unavailable' });
+      return database.select().from(userFeedback)
+        .where(eq(userFeedback.userId, ctx.user.id))
+        .orderBy(desc(userFeedback.createdAt));
+    }),
+
+    listForSchool: protectedProcedure
+      .input(z.object({ schoolCode: z.string().min(1).optional(), limit: z.number().int().min(1).max(100).default(50) }).optional())
+      .query(async ({ ctx, input }) => {
+        if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only administrators can review feedback' });
+        }
+        const schoolCode = ctx.user.role === 'super_admin'
+          ? input?.schoolCode ?? ctx.user.selectedSchoolCode ?? ctx.user.schoolCode
+          : ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Select a school before reviewing feedback' });
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Feedback storage is unavailable' });
+        return database.select().from(userFeedback)
+          .where(eq(userFeedback.schoolCode, schoolCode))
+          .orderBy(desc(userFeedback.createdAt))
+          .limit(input?.limit ?? 50);
+      }),
+
+    review: protectedProcedure
+      .input(z.object({
+        feedbackId: z.number().int().positive(),
+        status: z.enum(['new', 'reviewing', 'resolved', 'dismissed']),
+        adminResponse: z.string().trim().max(4000).optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only administrators can review feedback' });
+        }
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Feedback storage is unavailable' });
+        const record = await database.select().from(userFeedback).where(eq(userFeedback.id, input.feedbackId)).limit(1);
+        if (!record[0]) throw new TRPCError({ code: 'NOT_FOUND', message: 'Feedback entry not found' });
+        const allowedSchoolCode = ctx.user.role === 'super_admin' ? ctx.user.selectedSchoolCode ?? ctx.user.schoolCode : ctx.user.schoolCode;
+        if (record[0].schoolCode !== allowedSchoolCode) throw new TRPCError({ code: 'FORBIDDEN', message: 'Feedback belongs to another school' });
+        await database.update(userFeedback).set({
+          status: input.status,
+          adminResponse: input.adminResponse ?? record[0].adminResponse,
+          reviewedBy: ctx.user.id,
+          reviewedAt: new Date(),
+        }).where(eq(userFeedback.id, input.feedbackId));
+        return { success: true };
+      }),
+  }),
   superAdmin: router({
     selectSchool: protectedProcedure
       .input(z.object({ schoolCode: z.string() }))
