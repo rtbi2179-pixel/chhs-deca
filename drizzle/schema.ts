@@ -922,6 +922,20 @@ export const marketTransactions = mysqlTable("marketTransactions", {
 export type MarketTransaction = typeof marketTransactions.$inferSelect;
 export type InsertMarketTransaction = typeof marketTransactions.$inferInsert;
 
+export const blueBucksInflationSnapshots = mysqlTable("blueBucksInflationSnapshots", {
+  id: int("id").autoincrement().primaryKey(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  periodKey: varchar("periodKey", { length: 20 }).notNull(),
+  issuedBlueBucks: decimal("issuedBlueBucks", { precision: 15, scale: 2 }).notNull(),
+  sinkBlueBucks: decimal("sinkBlueBucks", { precision: 15, scale: 2 }).notNull(),
+  activeUsers: int("activeUsers").notNull(),
+  netUnitsPerActiveUser: decimal("netUnitsPerActiveUser", { precision: 15, scale: 2 }).notNull(),
+  inflationIndex: decimal("inflationIndex", { precision: 10, scale: 2 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  schoolPeriodUnique: uniqueIndex("blue_bucks_inflation_school_period_unique").on(table.schoolCode, table.periodKey),
+}));
+
 /**
  * After-hours orders queued for market-open execution.
  */

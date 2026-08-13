@@ -132,8 +132,12 @@ export default function SuperAdminDashboard() {
                   <span className="text-foreground/70">Simulation Monetary Pressure</span>
                   <span className="font-bold text-foreground">{monitoringQuery.data ? `${monitoringQuery.data.pressureIndex}% · ${monitoringQuery.data.status}` : '—'}</span>
                 </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-foreground/70">Blue Bucks Inflation Index</span>
+                  <span className="font-bold text-foreground">{monitoringQuery.data ? `${monitoringQuery.data.inflationIndex} · ${monitoringQuery.data.inflationPeriod}` : '—'}</span>
+                </div>
               </div>
-              <p className="mt-4 text-xs text-foreground/60">A 30-day simulation signal based on reward issuance per active user; it is not a real-world inflation measure.</p>
+              <p className="mt-4 text-xs text-foreground/60">The inflation index is 100 plus monthly net Blue Bucks issued per active member. It is a transparent in-app purchasing-power signal, not a real-world inflation measure.</p>
             </Card>
 
             <Card className="border border-border p-6 bg-card">

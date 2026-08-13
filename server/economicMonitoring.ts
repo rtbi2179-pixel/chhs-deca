@@ -17,3 +17,10 @@ export function calculateMonetaryPressure(input: EconomicMonitoringInput) {
 
   return { rewardUnitsPerActiveUser, rewardToTurnoverRatio, pressureIndex, status } as const;
 }
+
+export function calculateBlueBucksInflationIndex(input: { issuedBlueBucks: number; sinkBlueBucks: number; activeUsers: number }) {
+  const activeUsers = Math.max(1, input.activeUsers);
+  const netUnitsPerActiveUser = Number(((Math.max(0, input.issuedBlueBucks) - Math.max(0, input.sinkBlueBucks)) / activeUsers).toFixed(2));
+  const inflationIndex = Number((100 + netUnitsPerActiveUser).toFixed(2));
+  return { netUnitsPerActiveUser, inflationIndex };
+}
