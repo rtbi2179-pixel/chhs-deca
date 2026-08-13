@@ -533,6 +533,24 @@ export const appRouter = router({
         return { success: true };
       }),
 
+    getPrimaryEvent: protectedProcedure.query(async ({ ctx }) => {
+      const database = await db.getDb();
+      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'User data is unavailable' });
+      const [user] = await database.select({ primaryEventCode: users.primaryEventCode, eventSelectedAt: users.eventSelectedAt })
+        .from(users).where(eq(users.id, ctx.user.id)).limit(1);
+      return user ?? { primaryEventCode: null, eventSelectedAt: null };
+    }),
+
+    setPrimaryEvent: protectedProcedure
+      .input(z.object({ eventCode: z.string().trim().min(2).max(20) }))
+      .mutation(async ({ ctx, input }) => {
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'User data is unavailable' });
+        await database.update(users).set({ primaryEventCode: input.eventCode, eventSelectedAt: new Date() })
+          .where(eq(users.id, ctx.user.id));
+        return { success: true, primaryEventCode: input.eventCode };
+      }),
+
     getProfileSettings: protectedProcedure.query(async ({ ctx }) => {
       const database = await db.getDb();
       if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Profile settings storage is unavailable' });

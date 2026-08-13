@@ -32,6 +32,8 @@ export const users = mysqlTable("users", {
   passwordResetExpiresAt: timestamp("passwordResetExpiresAt"),
   adminPromotedAt: timestamp("adminPromotedAt"),
   selectedSchoolCode: varchar("selectedSchoolCode", { length: 50 }), // For super admins to select which school they're managing
+  primaryEventCode: varchar("primaryEventCode", { length: 20 }),
+  eventSelectedAt: timestamp("eventSelectedAt"),
 });
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;

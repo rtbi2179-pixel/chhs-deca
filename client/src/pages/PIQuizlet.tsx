@@ -68,7 +68,12 @@ export default function PIQuizlet() {
   const { data: modules, isLoading: modulesLoading } = trpc.piLearning.getModulesByCluster.useQuery(
     { cluster: selectedCluster }
   );
-  const selectedEvent = allEvents.find((event) => event.code === selectedEventCode);
+  const primaryEventQuery = trpc.preferences.getPrimaryEvent.useQuery();
+  const setPrimaryEvent = trpc.preferences.setPrimaryEvent.useMutation({
+    onSuccess: () => primaryEventQuery.refetch(),
+  });
+  const activeEventCode = selectedEventCode || primaryEventQuery.data?.primaryEventCode || "";
+  const selectedEvent = allEvents.find((event) => event.code === activeEventCode);
   const eventPiCluster = selectedEvent ? EVENT_CLUSTER_TO_PI_CLUSTER[selectedEvent.cluster] : undefined;
   const { data: coreModules, isLoading: coreModulesLoading } = trpc.piLearning.getModulesByCluster.useQuery(
     { cluster: "Business Administration Core" },
@@ -304,8 +309,11 @@ export default function PIQuizlet() {
               <p className="mt-1 text-xs leading-relaxed text-slate-400">Select an event to separate business administration core skills from the indicators aligned with that event’s career cluster.</p>
               <select
                 id="event-study-path"
-                value={selectedEventCode}
-                onChange={(event) => setSelectedEventCode(event.target.value)}
+                value={activeEventCode}
+                onChange={(event) => {
+                  setSelectedEventCode(event.target.value);
+                  if (event.target.value) setPrimaryEvent.mutate({ eventCode: event.target.value });
+                }}
                 className="mt-3 w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2.5 text-sm text-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
               >
                 <option value="">Browse by career cluster instead</option>
