@@ -30,6 +30,7 @@ import { Announcements } from "./pages/Announcements";
 import Profile from "./pages/Profile";
 import PILearning from "./pages/PILearning";
 import PIQuizlet from "./pages/PIQuizlet";
+import ChapterMockExam from "./pages/ChapterMockExam";
 import BlueMarket from "./pages/BlueMarket";
 import PortfolioUpload from "./pages/PortfolioUpload";
 import AdminPortfolios from "./pages/AdminPortfolios";
@@ -106,6 +107,7 @@ function Router({ isAuthenticated, showLoginRequired }: { isAuthenticated: boole
       <Route path="/pi-learning" component={PILearning} />
       <Route path="/pi-quizlet" component={PIQuizlet} />
       <Route path="/study-guide" component={PIQuizlet} />
+      <Route path="/chapter-mock-exam" component={ChapterMockExam} />
 
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
