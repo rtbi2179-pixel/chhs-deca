@@ -1,13 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { getStockPriceCacheStatus } from "./stockPriceService";
+import { getStockPriceCacheStatus, resetStockPriceServiceForTests } from "./stockPriceService";
 
 describe("stock price cache status", () => {
   it("returns operational metadata without exposing cached quote values", () => {
+    resetStockPriceServiceForTests();
     const status = getStockPriceCacheStatus();
 
     expect(status).toMatchObject({
       ttlMilliseconds: 300000,
-      apiMode: "paused",
+      apiMode: "on_demand",
       entryCount: expect.any(Number),
       inFlightRequestCount: expect.any(Number),
     });

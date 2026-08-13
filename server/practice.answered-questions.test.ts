@@ -1,5 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import * as db from './db';
+import { eq } from 'drizzle-orm';
+import { userAnswers, users } from '../drizzle/schema';
 
 /**
  * Test suite for answered question persistence
@@ -10,34 +12,29 @@ import * as db from './db';
  * 4. Question answer status persists across sessions
  */
 describe('Answered Questions Persistence', () => {
-  const testUserId = 99999;
+  const testOpenId = `answered-persistence-${Date.now()}`;
+  let testUserId = 0;
   const testQuestionId = 'test-question-001';
   const testSchoolCode = 'TEST';
 
   beforeAll(async () => {
-    // Clean up any existing test data
     const db_instance = await db.getDb();
-    if (db_instance) {
-      try {
-        // This is optional cleanup - the test should work even if this fails
-        console.log('Test setup complete');
-      } catch (error) {
-        console.error('Setup error:', error);
-      }
-    }
+    if (!db_instance) throw new Error('Database is required for answered-question persistence tests');
+    const createdUser = await db_instance.insert(users).values({
+      openId: testOpenId,
+      name: 'Answered Question Test User',
+      schoolCode: testSchoolCode,
+      role: 'user',
+      loginMethod: 'custom',
+    });
+    testUserId = Number(createdUser[0].insertId);
   });
 
   afterAll(async () => {
-    // Clean up test data after tests
     const db_instance = await db.getDb();
-    if (db_instance) {
-      try {
-        // This is optional cleanup
-        console.log('Test cleanup complete');
-      } catch (error) {
-        console.error('Cleanup error:', error);
-      }
-    }
+    if (!db_instance || !testUserId) return;
+    await db_instance.delete(userAnswers).where(eq(userAnswers.userId, testUserId));
+    await db_instance.delete(users).where(eq(users.id, testUserId));
   });
 
   it('should record a user answer', async () => {

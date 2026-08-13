@@ -12,6 +12,16 @@ const inFlightRequests = new Map<string, Promise<StockQuote | null>>();
 // Request queue to throttle API calls
 let requestQueue: Promise<void> = Promise.resolve();
 const REQUEST_DELAY = 13_000; // Alpha Vantage free tier permits five requests per minute
+let activeRequestDelay = REQUEST_DELAY;
+
+const throttleDelay = () => activeRequestDelay;
+
+export function resetStockPriceServiceForTests() {
+  priceCache.clear();
+  inFlightRequests.clear();
+  requestQueue = Promise.resolve();
+  activeRequestDelay = 0;
+}
 
 interface StockQuote {
   symbol: string;
@@ -83,7 +93,7 @@ export async function getStockPrice(ticker: string): Promise<StockQuote | null> 
         if (!apiKey) {
           console.warn('[Stock Price Service] Alpha Vantage API key not configured');
           resolve(null);
-          await new Promise(r => setTimeout(r, REQUEST_DELAY));
+          await new Promise(r => setTimeout(r, throttleDelay()));
           return;
         }
 
@@ -102,7 +112,7 @@ export async function getStockPrice(ticker: string): Promise<StockQuote | null> 
           if (!response.ok) {
             console.error(`[Stock Price Service] API error: ${response.status}`);
             resolve(null);
-            await new Promise(r => setTimeout(r, REQUEST_DELAY));
+            await new Promise(r => setTimeout(r, throttleDelay()));
             return;
           }
 
@@ -112,7 +122,7 @@ export async function getStockPrice(ticker: string): Promise<StockQuote | null> 
           if (data['Error Message'] || data['Note']) {
             console.warn(`[Stock Price Service] API response: ${data['Error Message'] || data['Note']}`);
             resolve(null);
-            await new Promise(r => setTimeout(r, REQUEST_DELAY));
+            await new Promise(r => setTimeout(r, throttleDelay()));
             return;
           }
 
@@ -120,7 +130,7 @@ export async function getStockPrice(ticker: string): Promise<StockQuote | null> 
           if (!quote || !quote['05. price']) {
             console.warn(`[Stock Price Service] No quote data for ${ticker}`);
             resolve(null);
-            await new Promise(r => setTimeout(r, REQUEST_DELAY));
+            await new Promise(r => setTimeout(r, throttleDelay()));
             return;
           }
 
@@ -135,11 +145,11 @@ export async function getStockPrice(ticker: string): Promise<StockQuote | null> 
           // Cache the result
           priceCache.set(ticker, { data: result, timestamp: Date.now() });
           resolve(result);
-          await new Promise(r => setTimeout(r, REQUEST_DELAY));
+          await new Promise(r => setTimeout(r, throttleDelay()));
         } catch (error) {
           console.error('[Stock Price Service] Error fetching stock price:', error);
           resolve(null);
-          await new Promise(r => setTimeout(r, REQUEST_DELAY));
+          await new Promise(r => setTimeout(r, throttleDelay()));
         }
       });
     });

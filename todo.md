@@ -215,12 +215,14 @@
 - [x] Test payment processing
 - [x] Test reward calculations
 - [x] Test admin dashboard permissions
-- [ ] End-to-end banking system tests
+- [x] End-to-end banking system tests
 - [x] Wire configured credit-rule values into the live score-calculation path
 - [x] Add focused credit-score engine regression coverage for bounds, weights, swing limits, and configured rule effects
 - [x] Fix member-facing credit-card application refresh
 - [x] Exclude already issued credit-card products from the member available-card list
-- [ ] Complete browser-level Banking Dashboard validation for application, purchase, payment handling, statement, rewards, and final balance refresh
+- [x] Complete browser-level Banking Dashboard validation for application, purchase, payment handling, statement, rewards, and final balance refresh
+- [x] Add a traceable Blue Bucks-to-checking deposit path for funded virtual banking payments
+- [x] Add automated coverage for application, deposit, purchase, payment, rewards, statement totals, and final balances in one banking workflow
 - [x] Improve PI Quizlet navigation between study sections, indicators, and module activities
 
 ## Navigation Enhancement - Money Icon Submenu
@@ -455,3 +457,6 @@
 - [x] Import all 32 validated PI data chunks and verify the seven included PI clusters
 - [x] Connect the PI Quizlet interface to complete module content and persisted learner progress
 - [x] Run production build, data validation, and end-to-end PI Quizlet verification
+- [x] Repair full-suite answered-question persistence regressions
+- [x] Repair full-suite stock-price cache status and in-flight deduplication regressions
+- [x] Repair the charts-and-filters MySQL test fixture and cleanup regression

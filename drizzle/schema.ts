@@ -734,7 +734,7 @@ export const blueBucksTransactions = mysqlTable("blueBucksTransactions", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
   amount: int("amount").notNull(),
-  reason: mysqlEnum("reason", ["correct_first_attempt", "discussion_post", "discussion_reply", "admin_award"]).notNull(),
+  reason: mysqlEnum("reason", ["correct_first_attempt", "discussion_post", "discussion_reply", "admin_award", "bank_deposit"]).notNull(),
   relatedId: int("relatedId"),
   schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
   createdAt: timestamp("createdAt").defaultNow(),

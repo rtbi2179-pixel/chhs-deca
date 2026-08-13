@@ -1870,6 +1870,28 @@ export const appRouter = router({
       return account[0] || { checkingBalance: "0", savingsBalance: "0", investmentBalance: "0", totalDebt: "0" };
     }),
 
+    depositBlueBucksToChecking: protectedProcedure
+      .input(z.object({ amount: z.number().int().positive().max(100000) }))
+      .mutation(async ({ ctx, input }) => {
+        const { userBankAccounts } = await import("../drizzle/schema");
+        const database = await db.getDb();
+        const schoolCode = ctx.user.schoolCode || "";
+        if (!database) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Banking data is unavailable" });
+        return database.transaction(async (tx) => {
+          const [bucks] = await tx.select().from(blueBucks).where(eq(blueBucks.userId, ctx.user.id)).limit(1);
+          const availableBlueBucks = Number(bucks?.amount ?? 0);
+          if (availableBlueBucks < input.amount) throw new TRPCError({ code: "FORBIDDEN", message: "Not enough Blue Bucks to fund checking" });
+          const [account] = await tx.select().from(userBankAccounts).where(and(eq(userBankAccounts.userId, ctx.user.id), eq(userBankAccounts.schoolCode, schoolCode))).limit(1);
+          const checkingBefore = Number(account?.checkingBalance ?? 0);
+          const checkingAfter = Number((checkingBefore + input.amount).toFixed(2));
+          if (account) await tx.update(userBankAccounts).set({ checkingBalance: checkingAfter.toFixed(2) }).where(eq(userBankAccounts.id, account.id));
+          else await tx.insert(userBankAccounts).values({ userId: ctx.user.id, checkingBalance: checkingAfter.toFixed(2), savingsBalance: "0", investmentBalance: "0", totalDebt: "0", schoolCode });
+          if (bucks) await tx.update(blueBucks).set({ amount: availableBlueBucks - input.amount }).where(eq(blueBucks.id, bucks.id));
+          await tx.insert(blueBucksTransactions).values({ userId: ctx.user.id, amount: -input.amount, reason: "bank_deposit", schoolCode });
+          return { success: true, deposited: input.amount, checkingBalance: checkingAfter, remainingBlueBucks: availableBlueBucks - input.amount };
+        });
+      }),
+
     getAvailableCards: protectedProcedure.query(async ({ ctx }) => {
       const { getUserCreditScore } = await import('./creditScoreEngine');
       const { creditCards, userCreditCards } = await import('../drizzle/schema');

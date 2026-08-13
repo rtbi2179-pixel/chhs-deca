@@ -21,6 +21,8 @@ export function BankingDashboard() {
   const makePaymentMutation = trpc.banking.makePayment.useMutation();
   const savingsInterestQuery = trpc.banking.getSavingsInterest.useQuery();
   const accrueSavingsInterestMutation = trpc.banking.accrueSavingsInterest.useMutation();
+  const blueBucksQuery = trpc.practice.getBlueBucksBalance.useQuery();
+  const depositBlueBucksMutation = trpc.banking.depositBlueBucksToChecking.useMutation();
   
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [transferData, setTransferData] = useState({
@@ -32,6 +34,7 @@ export function BankingDashboard() {
   const [cardActionAmount, setCardActionAmount] = useState("");
   const [merchantCategory, setMerchantCategory] = useState("General");
   const [selectedStatementCard, setSelectedStatementCard] = useState<number | null>(null);
+  const [blueBucksDepositAmount, setBlueBucksDepositAmount] = useState("");
   const cardStatementQuery = trpc.banking.getCardStatement.useQuery(
     { cardId: selectedStatementCard ?? 1 },
     { enabled: selectedStatementCard !== null },
@@ -108,6 +111,25 @@ export function BankingDashboard() {
       savingsInterestQuery.refetch();
     } catch (error) {
       alert("Savings interest could not be accrued: " + (error as Error).message);
+    }
+  };
+
+  const handleBlueBucksDeposit = async () => {
+    const amount = Number(blueBucksDepositAmount);
+    if (!Number.isInteger(amount) || amount <= 0) {
+      toast.error("Enter a whole, positive Blue Bucks amount.");
+      return;
+    }
+    try {
+      const result = await depositBlueBucksMutation.mutateAsync({ amount });
+      setBlueBucksDepositAmount("");
+      await Promise.all([
+        utils.banking.getBankAccount.invalidate(),
+        utils.practice.getBlueBucksBalance.invalidate(),
+      ]);
+      toast.success(`${result.deposited} Blue Bucks deposited into checking.`);
+    } catch (error) {
+      toast.error("Deposit failed: " + (error as Error).message);
     }
   };
 
@@ -467,6 +489,24 @@ export function BankingDashboard() {
                   <span className="text-slate-300">Checking Account</span>
                 </div>
                 <span className="text-white font-semibold">${(typeof bankAccount?.checkingBalance === 'string' ? parseFloat(bankAccount.checkingBalance) : (bankAccount?.checkingBalance || 0)).toFixed(2)}</span>
+              </div>
+              <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-3">
+                <p className="text-sm font-medium text-blue-100">Fund checking with Blue Bucks</p>
+                <p className="mt-1 text-xs text-slate-400">Available to deposit: {blueBucksQuery.data?.balance ?? 0} Blue Bucks. Every deposit is recorded in the Blue Bucks ledger and reflected in checking.</p>
+                <div className="mt-3 flex gap-2">
+                  <input
+                    type="number"
+                    min="1"
+                    step="1"
+                    value={blueBucksDepositAmount}
+                    onChange={(event) => setBlueBucksDepositAmount(event.target.value)}
+                    placeholder="Blue Bucks amount"
+                    className="min-w-0 flex-1 rounded-md border border-slate-600 bg-slate-900 px-2.5 py-2 text-sm text-white"
+                  />
+                  <Button size="sm" onClick={handleBlueBucksDeposit} disabled={depositBlueBucksMutation.isPending || (blueBucksQuery.data?.balance ?? 0) <= 0} className="bg-blue-600 hover:bg-blue-700">
+                    {depositBlueBucksMutation.isPending ? "Depositing…" : "Deposit"}
+                  </Button>
+                </div>
               </div>
               <div className="flex justify-between items-center p-3 bg-slate-700 rounded-lg">
                 <div className="flex items-center gap-2">

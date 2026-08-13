@@ -1,70 +1,34 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { getStockPrice } from './stockPriceService';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { getStockPrice, resetStockPriceServiceForTests } from './stockPriceService';
+
+const quoteResponse = () => ({ ok: true, json: async () => ({ 'Global Quote': { '05. price': '101.25', '09. change': '0.50', '10. change percent': '0.50%' } }) });
 
 describe('Stock Price Service - In-Flight Deduplication', () => {
   beforeEach(() => {
-    // Clear any cached prices between tests
-    vi.clearAllMocks();
+    resetStockPriceServiceForTests();
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(quoteResponse()));
   });
 
-  it('should deduplicate concurrent requests for the same ticker', async () => {
-    // Make 5 concurrent requests for the same ticker
-    const promises = [
-      getStockPrice('AAPL'),
-      getStockPrice('AAPL'),
-      getStockPrice('AAPL'),
-      getStockPrice('AAPL'),
-      getStockPrice('AAPL'),
-    ];
+  afterEach(() => vi.unstubAllGlobals());
 
-    // All requests should resolve
-    const results = await Promise.all(promises);
-    
-    // All results should be the same (either all null or all have the same data)
-    expect(results.length).toBe(5);
-    
-    // All results should be identical
-    const firstResult = results[0];
-    for (let i = 1; i < results.length; i++) {
-      expect(results[i]).toEqual(firstResult);
-    }
+  it('deduplicates concurrent requests for the same ticker', async () => {
+    const results = await Promise.all([getStockPrice('AAPL'), getStockPrice('AAPL'), getStockPrice('AAPL'), getStockPrice('AAPL'), getStockPrice('AAPL')]);
+    expect(results).toHaveLength(5);
+    expect(results.every((result) => JSON.stringify(result) === JSON.stringify(results[0]))).toBe(true);
+    expect(fetch).toHaveBeenCalledTimes(1);
   });
 
-  it('should handle concurrent requests for different tickers', async () => {
-    // Make concurrent requests for different tickers
-    const promises = [
-      getStockPrice('AAPL'),
-      getStockPrice('MSFT'),
-      getStockPrice('GOOGL'),
-      getStockPrice('AMZN'),
-    ];
-
-    // All requests should resolve
-    const results = await Promise.all(promises);
-    
-    // Should have 4 results
-    expect(results.length).toBe(4);
-    
-    // Results can be null or valid quotes
-    for (const result of results) {
-      if (result !== null) {
-        expect(result).toHaveProperty('symbol');
-        expect(result).toHaveProperty('price');
-        expect(result).toHaveProperty('timestamp');
-        expect(result).toHaveProperty('change');
-        expect(result).toHaveProperty('changePercent');
-      }
-    }
+  it('executes separate requests for different tickers', async () => {
+    const results = await Promise.all([getStockPrice('AAPL'), getStockPrice('MSFT'), getStockPrice('GOOGL'), getStockPrice('AMZN')]);
+    expect(results).toHaveLength(4);
+    results.forEach((result) => expect(result).toMatchObject({ price: 101.25 }));
+    expect(fetch).toHaveBeenCalledTimes(4);
   });
 
-  it('should cache results after first fetch', async () => {
-    // First request
+  it('returns the cached result after the first fetch', async () => {
     const result1 = await getStockPrice('AAPL');
-    
-    // Second request should use cache (no additional API call)
     const result2 = await getStockPrice('AAPL');
-    
-    // Results should be identical
     expect(result1).toEqual(result2);
+    expect(fetch).toHaveBeenCalledTimes(1);
   });
 });
