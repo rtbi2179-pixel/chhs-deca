@@ -425,6 +425,7 @@
 - [x] Fix Direct Messages header visibility and close-control layering
 - [x] Correct leaderboard accuracy, ranking, and question totals from answer records
 - [x] Repair Direct Messages close button visibility and click behavior
+- [x] Refine PI Quizlet into a less AI-styled student study interface
 
 ## Complete PI Quizlet Package Integration
 
