@@ -540,6 +540,47 @@ export const appRouter = router({
         return { success: true };
       }),
   }),
+  reports: router({
+    getMySummary: protectedProcedure.query(async ({ ctx }) => {
+      const database = await db.getDb();
+      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Report data is unavailable' });
+      const [learning, market, card] = await Promise.all([
+        database.select({
+          questionsAnswered: sql<number>`count(*)`,
+          correctAnswers: sql<number>`coalesce(sum(case when ${userAnswers.isCorrect} = 1 then 1 else 0 end), 0)`,
+        }).from(userAnswers).where(eq(userAnswers.userId, ctx.user.id)),
+        database.select({
+          transactionCount: sql<number>`count(*)`,
+          buyVolume: sql<string>`coalesce(sum(case when ${marketTransactions.type} = 'buy' then ${marketTransactions.totalAmount} else 0 end), 0)`,
+          sellVolume: sql<string>`coalesce(sum(case when ${marketTransactions.type} = 'sell' then ${marketTransactions.totalAmount} else 0 end), 0)`,
+        }).from(marketTransactions).where(and(eq(marketTransactions.userId, ctx.user.id), eq(marketTransactions.status, 'executed'))),
+        database.select({
+          chargeCount: sql<number>`count(*)`,
+          totalSpending: sql<string>`coalesce(sum(${cardUsageTracking.transactionAmount}), 0)`,
+        }).from(cardUsageTracking).where(eq(cardUsageTracking.userId, ctx.user.id)),
+      ]);
+      const questionsAnswered = Number(learning[0]?.questionsAnswered ?? 0);
+      const correctAnswers = Number(learning[0]?.correctAnswers ?? 0);
+      return {
+        generatedAt: new Date(),
+        member: { id: ctx.user.id, name: ctx.user.name ?? ctx.user.username ?? 'Blue Blazer Member', schoolCode: ctx.user.schoolCode ?? null },
+        learning: {
+          questionsAnswered,
+          correctAnswers,
+          accuracyPercent: questionsAnswered > 0 ? Number(((correctAnswers / questionsAnswered) * 100).toFixed(1)) : 0,
+        },
+        market: {
+          transactionCount: Number(market[0]?.transactionCount ?? 0),
+          buyVolume: Number(market[0]?.buyVolume ?? 0),
+          sellVolume: Number(market[0]?.sellVolume ?? 0),
+        },
+        banking: {
+          chargeCount: Number(card[0]?.chargeCount ?? 0),
+          totalSpending: Number(card[0]?.totalSpending ?? 0),
+        },
+      };
+    }),
+  }),
   superAdmin: router({
     selectSchool: protectedProcedure
       .input(z.object({ schoolCode: z.string() }))

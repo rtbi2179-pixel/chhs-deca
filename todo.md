@@ -418,7 +418,7 @@
 - [x] Add user feedback system
 - [x] Implement notification preferences
 - [x] Create user profile customization
-- [ ] Add export functionality for reports
+- [x] Add export functionality for reports
 - [ ] Implement data backup system
 - [ ] Create admin activity logs
 - [x] Add system health monitoring dashboard

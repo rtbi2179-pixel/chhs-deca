@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { trpc } from '@/lib/trpc'
-import { ArrowLeft, Flame, BookOpen, CheckCircle, Target, TrendingUp, Medal, Plus, Trash2, Edit2, FileText, Sparkles, Bell } from 'lucide-react'
+import { ArrowLeft, Flame, BookOpen, CheckCircle, Target, TrendingUp, Medal, Plus, Trash2, Edit2, FileText, Sparkles, Bell, Download } from 'lucide-react'
 import { useLocation } from 'wouter'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
@@ -126,6 +126,7 @@ export default function Profile() {
     },
     onError: (error) => toast.error(error.message),
   })
+  const reportSummaryQuery = trpc.reports.getMySummary.useQuery(undefined, { enabled: false })
 
   useEffect(() => {
     const settings = profileSettingsQuery.data
@@ -151,6 +152,43 @@ export default function Profile() {
       studyRemindersEnabled: current.studyRemindersEnabled,
       [key]: checked,
     })
+  }
+
+  const downloadMyReport = async () => {
+    const result = await reportSummaryQuery.refetch()
+    if (!result.data) {
+      toast.error('Your report could not be prepared. Please try again.')
+      return
+    }
+    const report = result.data
+    const rows = [
+      ['Blue Blazer Member Report', ''],
+      ['Generated', new Date(report.generatedAt).toLocaleString()],
+      ['Member', report.member.name],
+      ['School Code', report.member.schoolCode || ''],
+      ['', ''],
+      ['Learning', 'Value'],
+      ['Questions Answered', report.learning.questionsAnswered],
+      ['Correct Answers', report.learning.correctAnswers],
+      ['Accuracy', `${report.learning.accuracyPercent}%`],
+      ['', ''],
+      ['Market', 'Value'],
+      ['Executed Transactions', report.market.transactionCount],
+      ['Buy Volume (Blue Bucks)', report.market.buyVolume],
+      ['Sell Volume (Blue Bucks)', report.market.sellVolume],
+      ['', ''],
+      ['Banking', 'Value'],
+      ['Card Charges', report.banking.chargeCount],
+      ['Card Spending (Blue Bucks)', report.banking.totalSpending],
+    ]
+    const csv = rows.map((row) => row.map((value) => `"${String(value).replaceAll('"', '""')}"`).join(',')).join('\n')
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }))
+    const anchor = document.createElement('a')
+    anchor.href = url
+    anchor.download = `blue-blazer-report-${new Date().toISOString().slice(0, 10)}.csv`
+    anchor.click()
+    URL.revokeObjectURL(url)
+    toast.success('Your report has been downloaded')
   }
 
   // Use real credit history if available, otherwise fallback to current score
@@ -361,6 +399,16 @@ export default function Profile() {
             Show my customized profile on chapter leaderboards
           </label>
           <div className="mt-5 flex justify-end"><Button disabled={updateProfileSettings.isPending} onClick={() => updateProfileSettings.mutate({ displayName: profileCustomization.displayName.trim() || null, bio: profileCustomization.bio.trim() || null, accentColor: profileCustomization.accentColor, showOnLeaderboard: profileCustomization.showOnLeaderboard })}>Save customization</Button></div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12, duration: 0.6 }}
+          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-2xl border border-blue-500/20 bg-blue-500/5 p-5 mb-12"
+        >
+          <div><h2 className="text-xl font-bold text-white">Download Your Report</h2><p className="mt-1 text-sm text-white/60">Export your personal learning, market, and card-activity summary as a CSV file.</p></div>
+          <Button variant="outline" className="border-blue-500/40 text-blue-300 hover:bg-blue-500/10" disabled={reportSummaryQuery.isFetching} onClick={downloadMyReport}><Download className="mr-2 h-4 w-4" />{reportSummaryQuery.isFetching ? 'Preparing…' : 'Download CSV'}</Button>
         </motion.div>
 
         {/* Stats Grid */}
