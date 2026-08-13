@@ -423,6 +423,7 @@
 - [x] Create admin activity logs
 - [x] Add system health monitoring dashboard
 - [x] Fix Direct Messages header visibility and close-control layering
+- [x] Correct leaderboard accuracy, ranking, and question totals from answer records
 
 ## Complete PI Quizlet Package Integration
 

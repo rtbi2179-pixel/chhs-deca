@@ -1,4 +1,4 @@
-import { eq, and, or, inArray, desc, count, asc, ne, like } from "drizzle-orm";
+import { eq, and, or, inArray, desc, count, asc, ne, like, sql } from "drizzle-orm";
 import { randomBytes } from "crypto";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, userAnswers, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments, calendarEvents, CalendarEvent, InsertCalendarEvent, portfolioItems, portfolioUploads, adminMemberNotes, directMessages, blueBucks, blueBucksTransactions } from "../drizzle/schema";
@@ -307,47 +307,65 @@ export async function isQuestionBookmarked(userId: number, questionId: string) {
 export async function getLeaderboard(limit: number = 100) {
   const db = await getDb();
   if (!db) return [];
-  
-  return db.select({
-    leaderboard: leaderboard,
+
+  const totals = await db.select({
     user: users,
-  }).from(leaderboard)
-    .innerJoin(users, eq(leaderboard.userId, users.id))
-    .orderBy((t) => desc(t.leaderboard.accuracyPercentage))
+    totalAnswered: sql<number>`count(${userAnswers.id})`,
+    totalCorrect: sql<number>`coalesce(sum(case when ${userAnswers.isCorrect} = 1 then 1 else 0 end), 0)`,
+  }).from(users)
+    .innerJoin(userAnswers, eq(userAnswers.userId, users.id))
+    .groupBy(users.id)
+    .orderBy(desc(sql`sum(case when ${userAnswers.isCorrect} = 1 then 1 else 0 end) / count(${userAnswers.id})`))
     .limit(limit);
+
+  return totals.map(({ user, totalAnswered, totalCorrect }) => ({
+    user,
+    leaderboard: {
+      id: user.id,
+      userId: user.id,
+      totalQuestionsAnswered: Number(totalAnswered),
+      totalCorrectAnswers: Number(totalCorrect),
+      accuracyPercentage: Math.round((Number(totalCorrect) / Number(totalAnswered)) * 100),
+      marketingScore: 0,
+      businessManagementScore: 0,
+      financeScore: 0,
+      hospitalityScore: 0,
+      lastUpdated: user.updatedAt,
+    },
+  }));
 }
 
 export async function getLeaderboardByCluster(cluster: string, limit: number = 100) {
   const db = await getDb();
   if (!db) return [];
-  
-  // Map cluster name to score field
-  const clusterScoreMap: Record<string, any> = {
-    'Marketing': leaderboard.marketingScore,
-    'Business Management & Administration': leaderboard.businessManagementScore,
-    'Finance': leaderboard.financeScore,
-    'Hospitality & Tourism': leaderboard.hospitalityScore,
-  };
-  
-  const scoreField = clusterScoreMap[cluster];
-  if (!scoreField) {
-    // If cluster not found, return overall leaderboard
-    return db.select({
-      leaderboard: leaderboard,
-      user: users,
-    }).from(leaderboard)
-      .innerJoin(users, eq(leaderboard.userId, users.id))
-      .orderBy((t) => desc(t.leaderboard.accuracyPercentage))
-      .limit(limit);
-  }
-  
-  return db.select({
-    leaderboard: leaderboard,
+
+  const totals = await db.select({
     user: users,
-  }).from(leaderboard)
-    .innerJoin(users, eq(leaderboard.userId, users.id))
-    .orderBy((t) => desc(scoreField))
+    totalAnswered: sql<number>`count(${userAnswers.id})`,
+    totalCorrect: sql<number>`coalesce(sum(case when ${userAnswers.isCorrect} = 1 then 1 else 0 end), 0)`,
+  }).from(users)
+    .innerJoin(userAnswers, eq(userAnswers.userId, users.id))
+    .innerJoin(questions, eq(userAnswers.questionId, questions.id))
+    .where(eq(questions.cluster, cluster))
+    .groupBy(users.id)
+    .orderBy(desc(sql`sum(case when ${userAnswers.isCorrect} = 1 then 1 else 0 end) / count(${userAnswers.id})`))
     .limit(limit);
+
+  return totals.map(({ user, totalAnswered, totalCorrect }) => ({
+    user,
+    leaderboard: {
+      id: user.id,
+      userId: user.id,
+      totalQuestionsAnswered: Number(totalAnswered),
+      totalCorrectAnswers: Number(totalCorrect),
+      accuracyPercentage: Math.round((Number(totalCorrect) / Number(totalAnswered)) * 100),
+      marketingScore: 0,
+      businessManagementScore: 0,
+      financeScore: 0,
+      hospitalityScore: 0,
+      lastUpdated: user.updatedAt,
+    },
+  }));
 }
 
 export async function updateLeaderboard(userId: number, correctAnswers: number, totalAnswered: number, cluster: string) {

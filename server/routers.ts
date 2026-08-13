@@ -1203,7 +1203,15 @@ export const appRouter = router({
         const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
         if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
 
-        const isCorrect = input.selectedAnswer === input.correctAnswer;
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database unavailable' });
+        const question = await database.select({ correctAnswer: questions.correctAnswer })
+          .from(questions)
+          .where(eq(questions.id, input.questionId))
+          .limit(1);
+        if (!question[0]) throw new TRPCError({ code: 'NOT_FOUND', message: 'Question not found' });
+
+        const isCorrect = input.selectedAnswer === question[0].correctAnswer;
         
         // Record the answer
         await db.recordUserAnswer(ctx.user.id, input.questionId, input.selectedAnswer, isCorrect, schoolCode);
