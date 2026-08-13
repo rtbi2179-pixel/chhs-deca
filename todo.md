@@ -412,8 +412,8 @@
 
 ### Remaining Minor Features (10 items)
 - [x] Add cache status monitoring endpoint
-- [ ] Implement system inflation tracking
-- [ ] Define, persist, and chart an actual school-level Blue Bucks inflation index based on issuance, sinks, and purchasing-power baselines
+- [x] Implement system inflation tracking
+- [x] Define, persist, and chart an actual school-level Blue Bucks inflation index based on issuance, sinks, and purchasing-power baselines
 - [x] Create economic audit log viewer
 - [x] Add user feedback system
 - [x] Implement notification preferences

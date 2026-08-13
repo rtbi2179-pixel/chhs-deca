@@ -22,6 +22,7 @@ export default function SuperAdminDashboard() {
   const auditLogQuery = trpc.superAdmin.getEconomicAuditLog.useQuery(undefined, { enabled: user?.role === 'super_admin' });
   const activityLogQuery = trpc.superAdmin.getActivityLog.useQuery(undefined, { enabled: user?.role === 'super_admin' });
   const monitoringQuery = trpc.superAdmin.getEconomicMonitoring.useQuery(undefined, { enabled: user?.role === 'super_admin' });
+  const inflationHistoryQuery = trpc.superAdmin.getInflationHistory.useQuery(undefined, { enabled: user?.role === 'super_admin' });
   const updateWeights = trpc.superAdmin.updateEconomicWeights.useMutation({
     onSuccess: async () => {
       setSaveMessage('Credit-score weights saved and added to the audit log.');
@@ -163,6 +164,20 @@ export default function SuperAdminDashboard() {
                 <div className="flex justify-between gap-4"><span className="text-foreground/70">Market turnover</span><span className="font-medium text-foreground">{monitoringQuery.data ? `${monitoringQuery.data.marketTurnover.toFixed(2)} BB` : '—'}</span></div>
                 <div className="flex justify-between gap-4"><span className="text-foreground/70">Card spending</span><span className="font-medium text-foreground">{monitoringQuery.data ? `${monitoringQuery.data.cardSpending.toFixed(2)} BB` : '—'}</span></div>
               </div>
+            </Card>
+
+            <Card className="border border-border p-6 bg-card md:col-span-2">
+              <div className="flex items-baseline justify-between gap-4"><h3 className="text-lg font-bold text-foreground">Blue Bucks Inflation History</h3><span className="text-xs text-foreground/60">Baseline: 100</span></div>
+              <p className="mt-1 text-sm text-foreground/60">Monthly index of net Blue Bucks issued per active member. Values above 100 indicate net issuance; values below 100 indicate net sinks.</p>
+              {inflationHistoryQuery.data?.length ? (
+                <div className="mt-6 flex h-36 items-end gap-3 border-b border-border pb-1">
+                  {[...inflationHistoryQuery.data].reverse().map((snapshot) => {
+                    const index = Number(snapshot.inflationIndex);
+                    const height = Math.min(100, Math.max(8, index));
+                    return <div key={snapshot.id} className="flex flex-1 flex-col items-center gap-2 text-center"><div className="w-full rounded-t bg-blue-500/80" style={{ height: `${height}%` }} title={`${snapshot.periodKey}: ${index}`} /><span className="text-[10px] text-foreground/60">{snapshot.periodKey}</span></div>;
+                  })}
+                </div>
+              ) : <p className="mt-6 text-sm text-foreground/60">No monthly snapshots yet. Open the overview after chapter activity to create the first snapshot.</p>}
             </Card>
           </div>
         )}

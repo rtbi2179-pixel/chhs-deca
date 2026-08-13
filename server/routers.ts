@@ -845,6 +845,17 @@ export const appRouter = router({
           ...inflation,
         };
       }),
+    getInflationHistory: protectedProcedure
+      .input(z.object({ schoolCode: z.string().min(1).optional(), limit: z.number().int().min(1).max(36).default(12) }).optional())
+      .query(async ({ ctx, input }) => {
+        if (ctx.user.role !== 'super_admin') throw new TRPCError({ code: 'FORBIDDEN', message: 'Only super admins can view inflation history' });
+        const schoolCode = input?.schoolCode ?? ctx.user.selectedSchoolCode ?? ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Select a school before viewing inflation history' });
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Inflation storage is unavailable' });
+        const { blueBucksInflationSnapshots } = await import('../drizzle/schema');
+        return database.select().from(blueBucksInflationSnapshots).where(eq(blueBucksInflationSnapshots.schoolCode, schoolCode)).orderBy(desc(blueBucksInflationSnapshots.periodKey)).limit(input?.limit ?? 12);
+      }),
   }),
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
