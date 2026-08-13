@@ -160,10 +160,10 @@ function MessagesContent() {
 
       {/* Messages Panel */}
       {isOpen && (
-        <div className="fixed bottom-0 right-0 w-96 max-w-full h-screen bg-background border-l border-border shadow-2xl flex flex-col z-50 overflow-hidden">
+        <div className="fixed bottom-0 right-0 isolate flex h-screen w-96 max-w-full flex-col overflow-visible border-l border-border bg-background shadow-2xl z-[100]">
           {/* Header */}
-          <div className="relative z-20 flex min-h-16 shrink-0 items-center gap-3 border-b border-border bg-background px-4 py-3 shadow-sm">
-            <div className="min-w-0 flex-1">
+          <div className="relative z-20 flex min-h-16 shrink-0 items-center border-b border-border bg-background px-4 py-3 pr-16 shadow-sm overflow-visible">
+            <div className="min-w-0 flex-1 pr-2">
               <h2 className="text-lg font-bold leading-6 text-foreground">
                 {selectedUser ? selectedUser.name : 'Direct Messages'}
               </h2>
@@ -172,8 +172,9 @@ function MessagesContent() {
               )}
             </div>
             <button
-              onClick={handleClose}
-              className="relative z-30 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-transparent text-foreground/80 transition-colors hover:border-border hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              type="button"
+              onClick={() => handleClose()}
+              className="absolute right-3 top-1/2 z-[110] inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-background text-foreground shadow-md transition-colors hover:bg-blue-600 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
               aria-label="Close messages"
               title="Close Direct Messages"
             >

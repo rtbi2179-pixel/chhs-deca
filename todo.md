@@ -424,6 +424,7 @@
 - [x] Add system health monitoring dashboard
 - [x] Fix Direct Messages header visibility and close-control layering
 - [x] Correct leaderboard accuracy, ranking, and question totals from answer records
+- [x] Repair Direct Messages close button visibility and click behavior
 
 ## Complete PI Quizlet Package Integration
 
