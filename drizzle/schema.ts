@@ -528,7 +528,9 @@ export const piFlashcards = mysqlTable("piFlashcards", {
   sectionId: int("sectionId").notNull().references(() => piModuleSections.id, { onDelete: "cascade" }),
   question: text("question").notNull(),
   answer: text("answer").notNull(),
-  type: mysqlEnum("type", ["multiple_choice", "true_false", "fill_in_the_blank"]).notNull(),
+  // The complete PI source uses definition, application, scenario, and comparison cards.
+  // Keep this extensible rather than discarding source-card classifications at import time.
+  type: varchar("type", { length: 50 }),
   options: text("options"), // JSON string for multiple choice options
   correctAnswer: text("correctAnswer"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),

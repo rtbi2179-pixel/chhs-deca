@@ -11,7 +11,15 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 
-const CLUSTERS = ["Marketing", "Finance", "Business Management", "Hospitality"];
+const CLUSTERS = [
+  "Marketing",
+  "Finance",
+  "Business Management & Administration",
+  "Hospitality & Tourism",
+  "Business Administration Core",
+  "Entrepreneurship",
+  "Personal Financial Literacy",
+] as const;
 
 const TABS = [
   { id: "lesson",       label: "Lesson",        icon: BookOpen,      color: "blue" },
@@ -26,7 +34,8 @@ const TABS = [
 
 export default function PIQuizlet() {
   const { user } = useAuth();
-  const [selectedCluster, setSelectedCluster] = useState("Marketing");
+  const utils = trpc.useUtils();
+  const [selectedCluster, setSelectedCluster] = useState<(typeof CLUSTERS)[number]>(CLUSTERS[0]);
   const [selectedModuleId, setSelectedModuleId] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState("lesson");
 
@@ -55,6 +64,11 @@ export default function PIQuizlet() {
   );
 
   const submitTeachBackMutation = trpc.piLearning.submitTeachBack.useMutation();
+  const updateSectionProgressMutation = trpc.piLearning.updateSectionProgress.useMutation();
+  const { data: moduleProgress } = trpc.piLearning.getUserModuleProgress.useQuery(
+    { moduleId: selectedModuleId! },
+    { enabled: !!selectedModuleId }
+  );
 
   const getSectionByType = (type: string) =>
     moduleWithSections?.sections?.find((s: any) => s.sectionType === type);
@@ -124,8 +138,25 @@ export default function PIQuizlet() {
     return { relatedPIs, mistakes };
   };
 
+  const parseQuickReview = (content: string) => {
+    try {
+      const source = JSON.parse(content) as { quickReview?: Array<{ number: number; question: string; answer: string }> };
+      return source.quickReview ?? [];
+    } catch {
+      return [];
+    }
+  };
+
   const allQuestions = quizContent?.quizQuestions || [];
-  const quickReviewQs = allQuestions.slice(0, 10);
+  const sourceQuickReview = parseQuickReview(quizContent?.content || "");
+  const quickReviewQs = sourceQuickReview.length
+    ? sourceQuickReview
+    : allQuestions.slice(0, 10).map((question: any, index: number) => ({
+        number: index + 1,
+        question: question.question,
+        answer: question.correctAnswer,
+        explanation: question.explanation || question.rationale || "",
+      }));
   const fullQuizQs    = allQuestions.slice(0, 15);
 
   const correctCount = Object.entries(quizAnswers).filter(([qId, answer]) => {
@@ -133,7 +164,24 @@ export default function PIQuizlet() {
     return q && answer === q.correctAnswer;
   }).length;
 
-  const handleSubmitQuiz = () => {
+  const saveSectionProgress = async (sectionId: number | undefined, score: number) => {
+    if (!sectionId) return;
+    await updateSectionProgressMutation.mutateAsync({
+      sectionId,
+      isCompleted: true,
+      score: Math.round(Math.min(100, Math.max(0, score))),
+    });
+    if (selectedModuleId) {
+      await utils.piLearning.getUserModuleProgress.invalidate({ moduleId: selectedModuleId });
+    }
+  };
+
+  const handleSubmitQuiz = async () => {
+    try {
+      await saveSectionProgress(quizSection?.id, (correctCount / Math.max(fullQuizQs.length, 1)) * 100);
+    } catch {
+      // Preserve the completed review if progress storage is temporarily unavailable.
+    }
     setQuizSubmitted(true);
     setShowQuizResults(true);
     setActiveTab("quiz-results");
@@ -148,6 +196,7 @@ export default function PIQuizlet() {
         response: teachBackText,
       });
       setTeachBackFeedback(result.feedback);
+      await saveSectionProgress(teachBackSection?.id, 100);
     } catch {
       setTeachBackFeedback("Error generating feedback. Please try again.");
     } finally {
@@ -200,7 +249,7 @@ export default function PIQuizlet() {
           </div>
 
           {/* Cluster Tabs */}
-          <div className="flex gap-2 mb-10 bg-slate-900 p-2 rounded-2xl border border-slate-800 w-fit mx-auto">
+          <div className="flex gap-2 mb-10 bg-slate-900 p-2 rounded-2xl border border-slate-800 max-w-full overflow-x-auto">
             {CLUSTERS.map((cluster) => (
               <button
                 key={cluster}
@@ -296,9 +345,23 @@ export default function PIQuizlet() {
 
         {/* Module header */}
         <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 rounded-2xl p-8 mb-8 shadow-2xl shadow-blue-500/20">
-          <p className="text-blue-200 text-sm font-semibold mb-1 uppercase tracking-widest">{moduleWithSections?.instructionalArea}</p>
-          <h1 className="text-3xl font-bold text-white">{moduleWithSections?.performanceIndicator}</h1>
-          <p className="text-blue-200 text-sm mt-2 font-mono">{moduleWithSections?.piId}</p>
+          <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="text-blue-200 text-sm font-semibold mb-1 uppercase tracking-widest">{moduleWithSections?.instructionalArea}</p>
+              <h1 className="text-3xl font-bold text-white">{moduleWithSections?.performanceIndicator}</h1>
+              <p className="text-blue-200 text-sm mt-2 font-mono">{moduleWithSections?.piId}</p>
+            </div>
+            <div className="min-w-44 rounded-xl border border-white/20 bg-slate-950/20 p-3 backdrop-blur">
+              <div className="mb-1 flex items-center justify-between gap-3 text-xs text-blue-100">
+                <span>Mastery</span>
+                <span className="font-bold text-white">{moduleProgress?.masteryScore ?? 0}%</span>
+              </div>
+              <Progress value={moduleProgress?.masteryScore ?? 0} className="h-1.5 bg-blue-950/50" />
+              <p className="mt-2 text-[11px] font-semibold uppercase tracking-wider text-blue-200">
+                {(moduleProgress?.reviewStatus ?? "needs_review").replace("_", " ")}
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Tab navigation */}
@@ -339,6 +402,16 @@ export default function PIQuizlet() {
               <p className="text-slate-300 leading-relaxed text-base whitespace-pre-wrap">
                 {theoryContent?.content || "No lesson content available."}
               </p>
+              {theorySection?.id && (
+                <Button
+                  variant="outline"
+                  onClick={() => saveSectionProgress(theorySection.id, 100)}
+                  disabled={updateSectionProgressMutation.isPending}
+                  className="mt-6 border-blue-500/40 text-blue-300 hover:bg-blue-500/10"
+                >
+                  <CheckCircle className="mr-2 h-4 w-4" /> Mark lesson complete
+                </Button>
+              )}
             </div>
           </div>
         )}
@@ -362,6 +435,7 @@ export default function PIQuizlet() {
             </div>
             <div className="p-6">
               {vocabTerms.length > 0 ? (
+                <>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {vocabTerms.map((v, idx) => (
                     <div key={idx} className="p-4 bg-slate-800 border border-slate-700 hover:border-emerald-500/40 rounded-xl transition">
@@ -377,6 +451,17 @@ export default function PIQuizlet() {
                     </div>
                   ))}
                 </div>
+                {vocabSection?.id && (
+                  <Button
+                    variant="outline"
+                    onClick={() => saveSectionProgress(vocabSection.id, 100)}
+                    disabled={updateSectionProgressMutation.isPending}
+                    className="mt-6 border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/10"
+                  >
+                    <CheckCircle className="mr-2 h-4 w-4" /> Mark vocabulary complete
+                  </Button>
+                )}
+                </>
               ) : (
                 <p className="text-slate-500 text-center py-12">No vocabulary terms available.</p>
               )}
@@ -489,6 +574,15 @@ export default function PIQuizlet() {
                       Next <ChevronRight className="w-4 h-4 ml-1" />
                     </Button>
                   </div>
+                  {flashcardSection?.id && (
+                    <Button
+                      onClick={() => saveSectionProgress(flashcardSection.id, 100)}
+                      disabled={updateSectionProgressMutation.isPending}
+                      className="w-full bg-purple-600 hover:bg-purple-700 py-5"
+                    >
+                      <CheckCircle className="mr-2 h-4 w-4" /> Mark all flashcards reviewed
+                    </Button>
+                  )}
                 </div>
               ) : (
                 <p className="text-slate-500 text-center py-20">No flashcards available.</p>
@@ -515,7 +609,7 @@ export default function PIQuizlet() {
             <div className="p-6 space-y-3">
               {quickReviewQs.length > 0 ? (
                 quickReviewQs.map((q: any, idx: number) => (
-                  <div key={q.id} className="p-5 bg-slate-800 border border-slate-700 hover:border-amber-500/30 rounded-xl transition">
+                  <div key={`${q.number}-${idx}`} className="p-5 bg-slate-800 border border-slate-700 hover:border-amber-500/30 rounded-xl transition">
                     <div className="flex gap-3">
                       <span className="text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-1 rounded-lg h-fit flex-shrink-0">
                         Q{idx + 1}
@@ -523,7 +617,7 @@ export default function PIQuizlet() {
                       <div className="flex-1 min-w-0">
                         <p className="font-semibold text-white text-sm mb-2">{q.question}</p>
                         <p className="text-xs text-amber-300 font-medium">
-                          Answer: <span className="text-slate-300">{q.correctAnswer}</span>
+                          Answer: <span className="text-slate-300">{q.answer}</span>
                         </p>
                         {(q.explanation || q.rationale) && (
                           <p className="text-xs text-slate-500 mt-1 leading-relaxed">{q.explanation || q.rationale}</p>
@@ -723,7 +817,8 @@ export default function PIQuizlet() {
             </div>
             <div className="p-6 space-y-5">
               {scenarioContent?.scenarios && scenarioContent.scenarios.length > 0 ? (
-                scenarioContent.scenarios.map((scenario: any, idx: number) => (
+                <>
+                {scenarioContent.scenarios.map((scenario: any, idx: number) => (
                   <div key={scenario.id} className="p-6 bg-slate-800 border border-slate-700 hover:border-cyan-500/30 rounded-xl transition">
                     <div className="flex items-center gap-3 mb-4">
                       <span className="text-xs font-bold text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-2 py-1 rounded-lg">
@@ -749,7 +844,17 @@ export default function PIQuizlet() {
                       </details>
                     )}
                   </div>
-                ))
+                ))}
+                {scenarioSection?.id && (
+                  <Button
+                    onClick={() => saveSectionProgress(scenarioSection.id, 100)}
+                    disabled={updateSectionProgressMutation.isPending}
+                    className="w-full bg-cyan-600 hover:bg-cyan-700 py-5"
+                  >
+                    <CheckCircle className="mr-2 h-4 w-4" /> Mark scenarios practiced
+                  </Button>
+                )}
+                </>
               ) : (
                 <p className="text-slate-500 text-center py-12">No scenario challenges available.</p>
               )}

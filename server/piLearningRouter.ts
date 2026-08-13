@@ -1,482 +1,306 @@
-import { protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { and, asc, desc, eq, inArray, lte } from "drizzle-orm";
+import { protectedProcedure, router } from "./_core/trpc";
+import { invokeLLM } from "./_core/llm";
 import * as db from "./db";
 import {
+  piFlashcards,
   piLearningModules,
   piModuleSections,
-  piFlashcards,
   piQuizQuestions,
   piScenarioChallenges,
   userPiProgress,
   userPiSectionProgress,
 } from "../drizzle/schema";
-import { and, eq, desc } from "drizzle-orm";
-import { invokeLLM } from "./_core/llm";
+
+export const PI_CLUSTERS = [
+  "Marketing",
+  "Finance",
+  "Business Management & Administration",
+  "Hospitality & Tourism",
+  "Business Administration Core",
+  "Entrepreneurship",
+  "Personal Financial Literacy",
+] as const;
+
+const sectionWeights: Record<string, number> = {
+  theory: 10,
+  vocabulary: 10,
+  flashcards: 20,
+  quiz: 25,
+  scenario_challenge: 20,
+  examples: 0,
+  ai_coach_feedback: 15,
+};
+
+async function requireDatabase() {
+  const database = await db.getDb();
+  if (!database) {
+    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Learning database is unavailable." });
+  }
+  return database;
+}
+
+function reviewStatusFor(score: number): "fresh" | "rusty" | "needs_review" {
+  if (score >= 85) return "fresh";
+  if (score >= 50) return "rusty";
+  return "needs_review";
+}
+
+function nextReviewFor(score: number): Date {
+  const days = score >= 85 ? 14 : score >= 50 ? 7 : 1;
+  return new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+}
+
+async function recalculateModuleProgress(userId: number, moduleId: number) {
+  const database = await requireDatabase();
+  const sections = await database
+    .select({ id: piModuleSections.id, sectionType: piModuleSections.sectionType })
+    .from(piModuleSections)
+    .where(eq(piModuleSections.moduleId, moduleId));
+
+  const sectionIds = sections.map(section => section.id);
+  const progressRows = sectionIds.length
+    ? await database
+        .select()
+        .from(userPiSectionProgress)
+        .where(and(eq(userPiSectionProgress.userId, userId), inArray(userPiSectionProgress.sectionId, sectionIds)))
+    : [];
+
+  const progressBySection = new Map(progressRows.map(progress => [progress.sectionId, progress]));
+  const countByType = new Map<string, number>();
+  for (const section of sections) {
+    countByType.set(section.sectionType, (countByType.get(section.sectionType) ?? 0) + 1);
+  }
+
+  let masteryScore = 0;
+  for (const section of sections) {
+    const weight = sectionWeights[section.sectionType] ?? 0;
+    const perSectionWeight = weight / (countByType.get(section.sectionType) ?? 1);
+    const progress = progressBySection.get(section.id);
+    const score = progress?.isCompleted ? Math.min(100, Math.max(0, progress.score)) : 0;
+    masteryScore += perSectionWeight * (score / 100);
+  }
+
+  const roundedScore = Math.round(Math.min(100, Math.max(0, masteryScore)));
+  const now = new Date();
+  await database
+    .insert(userPiProgress)
+    .values({
+      userId,
+      moduleId,
+      masteryScore: roundedScore,
+      reviewStatus: reviewStatusFor(roundedScore),
+      lastReviewedAt: now,
+      nextReviewAt: nextReviewFor(roundedScore),
+    })
+    .onDuplicateKeyUpdate({
+      set: {
+        masteryScore: roundedScore,
+        reviewStatus: reviewStatusFor(roundedScore),
+        lastReviewedAt: now,
+        nextReviewAt: nextReviewFor(roundedScore),
+        updatedAt: now,
+      },
+    });
+
+  return { masteryScore: roundedScore, reviewStatus: reviewStatusFor(roundedScore), lastReviewedAt: now };
+}
 
 export const piLearningRouter = router({
-  /**
-   * Submit teach-back response and get AI feedback
-   */
-  submitTeachBack: protectedProcedure
-    .input(z.object({ 
-      moduleId: z.number(),
-      response: z.string().min(10, "Response must be at least 10 characters"),
-    }))
-    .mutation(async ({ input, ctx }) => {
-      const database = await db.getDb();
-      const module = await database
-        .select()
-        .from(piLearningModules)
-        .where(eq(piLearningModules.id, input.moduleId))
-        .limit(1);
+  getClusters: protectedProcedure.query(async () => {
+    return PI_CLUSTERS;
+  }),
 
-      if (!module[0]) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Module not found" });
-      }
-
-      try {
-        const llmResponse = await invokeLLM({
-          messages: [
-            {
-              role: "system",
-              content: `You are an expert DECA business educator providing constructive feedback on student explanations of Performance Indicators. 
-              
-Provide specific, actionable feedback that:
-1. Acknowledges what the student did well
-2. Identifies areas for improvement
-3. Suggests concrete examples or applications
-4. Encourages deeper strategic thinking
-
-Keep feedback concise but meaningful (2-3 sentences).`,
-            },
-            {
-              role: "user",
-              content: `The student is learning about: "${module[0].performanceIndicator}"
-              
-Their explanation:
-"${input.response}"
-              
-Provide constructive feedback on their understanding.`,
-            },
-          ],
-        });
-
-        const feedback = llmResponse.choices[0]?.message?.content || "Unable to generate feedback";
-        return {
-          success: true,
-          feedback: typeof feedback === "string" ? feedback : JSON.stringify(feedback),
-        };
-      } catch (error) {
-        console.error("LLM feedback error:", error);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to generate AI feedback. Please try again.",
-        });
-      }
-    }),
-
-  /**
-   * Get all PI Learning Modules for a cluster
-   */
   getModulesByCluster: protectedProcedure
-    .input(z.object({ cluster: z.string() }))
+    .input(z.object({ cluster: z.enum(PI_CLUSTERS) }))
     .query(async ({ input }) => {
-      const database = await db.getDb();
-      const modules = await database
+      const database = await requireDatabase();
+      return database
         .select()
         .from(piLearningModules)
-        .where(eq(piLearningModules.cluster, input.cluster));
-      return modules;
+        .where(eq(piLearningModules.cluster, input.cluster))
+        .orderBy(asc(piLearningModules.instructionalArea), asc(piLearningModules.performanceIndicator));
     }),
 
-  /**
-   * Get a specific PI Learning Module with all its sections
-   */
   getModuleWithSections: protectedProcedure
-    .input(z.object({ moduleId: z.number() }))
+    .input(z.object({ moduleId: z.number().int().positive() }))
     .query(async ({ input }) => {
-      const database = await db.getDb();
-      const module = await database
+      const database = await requireDatabase();
+      const [module] = await database
         .select()
         .from(piLearningModules)
         .where(eq(piLearningModules.id, input.moduleId))
         .limit(1);
-
-      if (!module[0]) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Module not found" });
-      }
+      if (!module) throw new TRPCError({ code: "NOT_FOUND", message: "PI module not found." });
 
       const sections = await database
         .select()
         .from(piModuleSections)
-        .where(eq(piModuleSections.moduleId, input.moduleId));
-
-      return {
-        ...module[0],
-        sections,
-      };
+        .where(eq(piModuleSections.moduleId, module.id))
+        .orderBy(asc(piModuleSections.order));
+      return { ...module, sections };
     }),
 
-  /**
-   * Get a specific section with all its content (flashcards, quiz questions, scenarios)
-   */
   getSectionContent: protectedProcedure
-    .input(z.object({ sectionId: z.number() }))
+    .input(z.object({ sectionId: z.number().int().positive() }))
     .query(async ({ input }) => {
-      const database = await db.getDb();
-      const section = await database
+      const database = await requireDatabase();
+      const [section] = await database
         .select()
         .from(piModuleSections)
         .where(eq(piModuleSections.id, input.sectionId))
         .limit(1);
+      if (!section) throw new TRPCError({ code: "NOT_FOUND", message: "PI section not found." });
 
-      if (!section[0]) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Section not found" });
-      }
+      const [flashcards, quizQuestions, scenarios] = await Promise.all([
+        section.sectionType === "flashcards"
+          ? database.select().from(piFlashcards).where(eq(piFlashcards.sectionId, section.id)).orderBy(asc(piFlashcards.id))
+          : Promise.resolve([]),
+        section.sectionType === "quiz"
+          ? database.select().from(piQuizQuestions).where(eq(piQuizQuestions.sectionId, section.id)).orderBy(asc(piQuizQuestions.id))
+          : Promise.resolve([]),
+        section.sectionType === "scenario_challenge"
+          ? database.select().from(piScenarioChallenges).where(eq(piScenarioChallenges.sectionId, section.id)).orderBy(asc(piScenarioChallenges.id))
+          : Promise.resolve([]),
+      ]);
 
-      const flashcards = await database
+      return { ...section, content: section.content ?? "", flashcards, quizQuestions, scenarios };
+    }),
+
+  getUserModuleProgress: protectedProcedure
+    .input(z.object({ moduleId: z.number().int().positive() }))
+    .query(async ({ ctx, input }) => {
+      const database = await requireDatabase();
+      const [progress] = await database
         .select()
-        .from(piFlashcards)
-        .where(eq(piFlashcards.sectionId, input.sectionId));
-
-      const quizQuestions = await database
-        .select()
-        .from(piQuizQuestions)
-        .where(eq(piQuizQuestions.sectionId, input.sectionId));
-
-      const scenarios = await database
-        .select()
-        .from(piScenarioChallenges)
-        .where(eq(piScenarioChallenges.sectionId, input.sectionId));
-
-      return {
-        ...section[0],
-        flashcards,
-        quizQuestions,
-        scenarios,
+        .from(userPiProgress)
+        .where(and(eq(userPiProgress.userId, ctx.user.id), eq(userPiProgress.moduleId, input.moduleId)))
+        .limit(1);
+      return progress ?? {
+        userId: ctx.user.id,
+        moduleId: input.moduleId,
+        masteryScore: 0,
+        reviewStatus: "needs_review" as const,
+        lastReviewedAt: null,
+        nextReviewAt: null,
       };
     }),
 
-  /**
-   * Update user mastery score for a module
-   */
-  updateModuleMastery: protectedProcedure
-    .input(
-      z.object({
-        moduleId: z.number(),
-        masteryScore: z.number().min(0).max(100),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const database = await db.getDb();
-      const existing = await database
-        .select()
-        .from(userPiProgress)
-        .where(
-          and(
-            eq(userPiProgress.userId, ctx.user.id),
-            eq(userPiProgress.moduleId, input.moduleId)
-          )
-        )
-        .limit(1);
-
-      if (existing[0]) {
-        // Update existing record
-        await database
-          .update(userPiProgress)
-          .set({
-            masteryScore: input.masteryScore,
-            reviewStatus:
-              input.masteryScore >= 80
-                ? "fresh"
-                : input.masteryScore >= 50
-                  ? "rusty"
-                  : "needs_review",
-            lastReviewedAt: new Date(),
-            nextReviewAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-          })
-          .where(
-            and(
-              eq(userPiProgress.userId, ctx.user.id),
-              eq(userPiProgress.moduleId, input.moduleId)
-            )
-          );
-      } else {
-        // Create new record
-        await database.insert(userPiProgress).values({
-          userId: ctx.user.id,
-          moduleId: input.moduleId,
-          masteryScore: input.masteryScore,
-          reviewStatus:
-            input.masteryScore >= 80
-              ? "fresh"
-              : input.masteryScore >= 50
-                ? "rusty"
-                : "needs_review",
-          lastReviewedAt: new Date(),
-          nextReviewAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-        });
-      }
-
-      return { success: true };
-    }),
-
-  /**
-   * Update user progress for a section
-   */
-  updateSectionProgress: protectedProcedure
-    .input(
-      z.object({
-        sectionId: z.number(),
-        isCompleted: z.boolean(),
-        score: z.number().min(0).max(100).optional(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const database = await db.getDb();
-      const existing = await database
-        .select()
-        .from(userPiSectionProgress)
-        .where(
-          and(
-            eq(userPiSectionProgress.userId, ctx.user.id),
-            eq(userPiSectionProgress.sectionId, input.sectionId)
-          )
-        )
-        .limit(1);
-
-      if (existing[0]) {
-        // Update existing record
-        await database
-          .update(userPiSectionProgress)
-          .set({
-            isCompleted: input.isCompleted,
-            score: input.score || existing[0].score,
-            lastAttemptAt: new Date(),
-          })
-          .where(
-            and(
-              eq(userPiSectionProgress.userId, ctx.user.id),
-              eq(userPiSectionProgress.sectionId, input.sectionId)
-            )
-          );
-      } else {
-        // Create new record
-        await database.insert(userPiSectionProgress).values({
-          userId: ctx.user.id,
-          sectionId: input.sectionId,
-          isCompleted: input.isCompleted,
-          score: input.score || 0,
-          lastAttemptAt: new Date(),
-        });
-      }
-
-      return { success: true };
-    }),
-
-  /**
-   * Get user's progress for a module
-   */
-  getUserModuleProgress: protectedProcedure
-    .input(z.object({ moduleId: z.number() }))
-    .query(async ({ ctx, input }) => {
-      const database = await db.getDb();
-      const progress = await database
-        .select()
-        .from(userPiProgress)
-        .where(
-          and(
-            eq(userPiProgress.userId, ctx.user.id),
-            eq(userPiProgress.moduleId, input.moduleId)
-          )
-        )
-        .limit(1);
-
-      return progress[0] || null;
-    }),
-
-  /**
-   * Get user's progress for all modules in a cluster
-   */
   getUserClusterProgress: protectedProcedure
-    .input(z.object({ cluster: z.string() }))
+    .input(z.object({ cluster: z.enum(PI_CLUSTERS) }))
     .query(async ({ ctx, input }) => {
-      const database = await db.getDb();
-      const modules = await database
-        .select()
-        .from(piLearningModules)
-        .where(eq(piLearningModules.cluster, input.cluster));
-
-      const moduleIds = modules.map((m) => m.id);
-
-      if (moduleIds.length === 0) {
-        return [];
-      }
-
-      const progress = await database
+      const database = await requireDatabase();
+      const modules = await database.select({ id: piLearningModules.id }).from(piLearningModules).where(eq(piLearningModules.cluster, input.cluster));
+      const moduleIds = modules.map(module => module.id);
+      if (!moduleIds.length) return [];
+      return database
         .select()
         .from(userPiProgress)
-        .where(
-          and(
-            eq(userPiProgress.userId, ctx.user.id),
-            // We'll filter manually since we need to check against multiple moduleIds
-          )
-        );
-
-      return progress.filter((p) => moduleIds.includes(p.moduleId));
+        .where(and(eq(userPiProgress.userId, ctx.user.id), inArray(userPiProgress.moduleId, moduleIds)));
     }),
 
-  /**
-   * Get user's overall mastery dashboard
-   */
   getUserMasteryDashboard: protectedProcedure.query(async ({ ctx }) => {
-    const database = await db.getDb();
-    const allProgress = await database
-      .select()
-      .from(userPiProgress)
-      .where(eq(userPiProgress.userId, ctx.user.id));
-
-    const clusters = [
-      "Marketing",
-      "Finance",
-      "Business Management",
-      "Hospitality",
-    ];
-    const clusterStats = await Promise.all(
-      clusters.map(async (cluster) => {
-        const modules = await database
-          .select()
-          .from(piLearningModules)
-          .where(eq(piLearningModules.cluster, cluster));
-
-        const clusterProgress = allProgress.filter((p) =>
-          modules.some((m) => m.id === p.moduleId)
-        );
-
-        const avgMastery =
-          clusterProgress.length > 0
-            ? Math.round(
-                clusterProgress.reduce((sum, p) => sum + p.masteryScore, 0) /
-                  clusterProgress.length
-              )
-            : 0;
-
-        return {
-          cluster,
-          totalModules: modules.length,
-          completedModules: clusterProgress.filter(
-            (p) => p.masteryScore >= 80
-          ).length,
-          averageMastery: avgMastery,
-        };
-      })
-    );
-
-    const overallMastery =
-      allProgress.length > 0
-        ? Math.round(
-            allProgress.reduce((sum, p) => sum + p.masteryScore, 0) /
-              allProgress.length
-          )
+    const database = await requireDatabase();
+    const [modules, progress] = await Promise.all([
+      database.select({ id: piLearningModules.id, cluster: piLearningModules.cluster }).from(piLearningModules),
+      database.select().from(userPiProgress).where(eq(userPiProgress.userId, ctx.user.id)),
+    ]);
+    const progressByModule = new Map(progress.map(item => [item.moduleId, item]));
+    const clusters = PI_CLUSTERS.map(cluster => {
+      const clusterModules = modules.filter(module => module.cluster === cluster);
+      const entries = clusterModules.map(module => progressByModule.get(module.id)).filter(Boolean);
+      const averageMastery = entries.length
+        ? Math.round(entries.reduce((sum, item) => sum + item!.masteryScore, 0) / entries.length)
         : 0;
-
+      return {
+        cluster,
+        totalModules: clusterModules.length,
+        completedModules: entries.filter(item => item!.masteryScore >= 85).length,
+        averageMastery,
+      };
+    });
     return {
-      overallMastery,
-      totalModulesCompleted: allProgress.filter(
-        (p) => p.masteryScore >= 80
-      ).length,
-      clusterStats,
-      recentlyReviewed: allProgress
-        .sort((a, b) => b.lastReviewedAt.getTime() - a.lastReviewedAt.getTime())
-        .slice(0, 5),
+      overallMastery: progress.length ? Math.round(progress.reduce((sum, item) => sum + item.masteryScore, 0) / progress.length) : 0,
+      totalModulesCompleted: progress.filter(item => item.masteryScore >= 85).length,
+      clusters,
+      recentlyReviewed: [...progress].sort((a, b) => b.lastReviewedAt.getTime() - a.lastReviewedAt.getTime()).slice(0, 5),
     };
   }),
 
-  /**
-   * Get modules that need review (spaced repetition)
-   */
   getModulesNeedingReview: protectedProcedure.query(async ({ ctx }) => {
-    const database = await db.getDb();
-    const now = new Date();
-    const needsReview = await database
+    const database = await requireDatabase();
+    return database
       .select()
       .from(userPiProgress)
-      .where(
-        and(
-          eq(userPiProgress.userId, ctx.user.id),
-          // We'll filter manually since Drizzle doesn't have a simple way to compare dates
-        )
-      );
-
-    return needsReview.filter((p) => p.nextReviewAt <= now);
+      .where(and(eq(userPiProgress.userId, ctx.user.id), lte(userPiProgress.nextReviewAt, new Date())))
+      .orderBy(asc(userPiProgress.nextReviewAt));
   }),
 
-  /**
-   * Create a new PI Learning Module (admin only)
-   */
-  createModule: protectedProcedure
-    .input(
-      z.object({
-        piId: z.string(),
-        cluster: z.string(),
-        instructionalArea: z.string(),
-        performanceIndicator: z.string(),
-        level: z.string().optional(),
-      })
-    )
+  updateSectionProgress: protectedProcedure
+    .input(z.object({ sectionId: z.number().int().positive(), isCompleted: z.boolean(), score: z.number().int().min(0).max(100) }))
     .mutation(async ({ ctx, input }) => {
-      if (ctx.user.role !== "admin" && ctx.user.role !== "super_admin") {
-        throw new TRPCError({ code: "FORBIDDEN" });
-      }
-
-      const database = await db.getDb();
-      const result = await database.insert(piLearningModules).values({
-        piId: input.piId,
-        cluster: input.cluster,
-        instructionalArea: input.instructionalArea,
-        performanceIndicator: input.performanceIndicator,
-        level: input.level,
-      });
-
-      return result;
+      const database = await requireDatabase();
+      const [section] = await database
+        .select({ moduleId: piModuleSections.moduleId })
+        .from(piModuleSections)
+        .where(eq(piModuleSections.id, input.sectionId))
+        .limit(1);
+      if (!section) throw new TRPCError({ code: "NOT_FOUND", message: "PI section not found." });
+      const now = new Date();
+      await database
+        .insert(userPiSectionProgress)
+        .values({ userId: ctx.user.id, sectionId: input.sectionId, isCompleted: input.isCompleted, score: input.score, lastAttemptAt: now })
+        .onDuplicateKeyUpdate({ set: { isCompleted: input.isCompleted, score: input.score, lastAttemptAt: now, updatedAt: now } });
+      return recalculateModuleProgress(ctx.user.id, section.moduleId);
     }),
 
-  /**
-   * Create a new section for a module (admin only)
-   */
-  createSection: protectedProcedure
-    .input(
-      z.object({
-        moduleId: z.number(),
-        sectionType: z.enum([
-          "theory",
-          "vocabulary",
-          "examples",
-          "flashcards",
-          "quiz",
-          "scenario_challenge",
-          "ai_coach_feedback",
-        ]),
-        title: z.string(),
-        content: z.string().optional(),
-        order: z.number(),
-      })
-    )
+  updateModuleMastery: protectedProcedure
+    .input(z.object({ moduleId: z.number().int().positive(), masteryScore: z.number().int().min(0).max(100) }))
     .mutation(async ({ ctx, input }) => {
-      if (ctx.user.role !== "admin" && ctx.user.role !== "super_admin") {
-        throw new TRPCError({ code: "FORBIDDEN" });
+      const database = await requireDatabase();
+      const now = new Date();
+      await database
+        .insert(userPiProgress)
+        .values({ userId: ctx.user.id, moduleId: input.moduleId, masteryScore: input.masteryScore, reviewStatus: reviewStatusFor(input.masteryScore), lastReviewedAt: now, nextReviewAt: nextReviewFor(input.masteryScore) })
+        .onDuplicateKeyUpdate({ set: { masteryScore: input.masteryScore, reviewStatus: reviewStatusFor(input.masteryScore), lastReviewedAt: now, nextReviewAt: nextReviewFor(input.masteryScore), updatedAt: now } });
+      return { success: true };
+    }),
+
+  submitTeachBack: protectedProcedure
+    .input(z.object({ moduleId: z.number().int().positive(), response: z.string().trim().min(20).max(5000) }))
+    .mutation(async ({ input }) => {
+      const database = await requireDatabase();
+      const [module] = await database.select().from(piLearningModules).where(eq(piLearningModules.id, input.moduleId)).limit(1);
+      if (!module) throw new TRPCError({ code: "NOT_FOUND", message: "PI module not found." });
+      try {
+        const response = await invokeLLM({
+          messages: [
+            {
+              role: "system",
+              content: "You are an expert DECA business educator. Give concise, constructive feedback in 2-3 sentences. Identify a strength, one precise improvement, and one concrete business or competition application. Do not invent facts outside the student's response.",
+            },
+            {
+              role: "user",
+              content: `Performance Indicator: ${module.performanceIndicator}\nInstructional area: ${module.instructionalArea}\n\nStudent teach-back:\n${input.response}`,
+            },
+          ],
+        });
+        const feedback = response.choices[0]?.message?.content;
+        if (!feedback) throw new Error("The AI provider returned no feedback.");
+        return { feedback: typeof feedback === "string" ? feedback : JSON.stringify(feedback) };
+      } catch (error) {
+        console.error("PI teach-back feedback failed", error);
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "AI feedback could not be generated. Please try again." });
       }
+    }),
 
-      const database = await db.getDb();
-      const result = await database.insert(piModuleSections).values({
-        moduleId: input.moduleId,
-        sectionType: input.sectionType,
-        title: input.title,
-        content: input.content,
-        order: input.order,
-      });
-
-      return result;
+  createModule: protectedProcedure
+    .input(z.object({ piId: z.string().min(1), cluster: z.enum(PI_CLUSTERS), instructionalArea: z.string().min(1), performanceIndicator: z.string().min(1), level: z.string().optional() }))
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.user.role !== "admin" && ctx.user.role !== "super_admin") throw new TRPCError({ code: "FORBIDDEN" });
+      const database = await requireDatabase();
+      return database.insert(piLearningModules).values(input);
     }),
 });
