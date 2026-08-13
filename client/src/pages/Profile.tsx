@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { trpc } from '@/lib/trpc'
-import { ArrowLeft, Flame, BookOpen, CheckCircle, Target, TrendingUp, Medal, Plus, Trash2, Edit2, FileText, Sparkles } from 'lucide-react'
+import { ArrowLeft, Flame, BookOpen, CheckCircle, Target, TrendingUp, Medal, Plus, Trash2, Edit2, FileText, Sparkles, Bell } from 'lucide-react'
 import { useLocation } from 'wouter'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
@@ -90,6 +90,33 @@ export default function Profile() {
     { limit: 30 },
     { enabled: !!user?.id }
   )
+
+  const notificationPreferencesQuery = trpc.preferences.getNotificationPreferences.useQuery(
+    undefined,
+    { enabled: !!user?.id }
+  )
+  const updateNotificationPreferences = trpc.preferences.updateNotificationPreferences.useMutation({
+    onSuccess: () => {
+      notificationPreferencesQuery.refetch()
+      toast.success('Notification preferences saved')
+    },
+    onError: (error) => toast.error(error.message),
+  })
+
+  const setNotificationPreference = (
+    key: 'announcementsEnabled' | 'feedbackResponsesEnabled' | 'systemUpdatesEnabled' | 'studyRemindersEnabled',
+    checked: boolean
+  ) => {
+    const current = notificationPreferencesQuery.data
+    if (!current) return
+    updateNotificationPreferences.mutate({
+      announcementsEnabled: current.announcementsEnabled,
+      feedbackResponsesEnabled: current.feedbackResponsesEnabled,
+      systemUpdatesEnabled: current.systemUpdatesEnabled,
+      studyRemindersEnabled: current.studyRemindersEnabled,
+      [key]: checked,
+    })
+  }
 
   // Use real credit history if available, otherwise fallback to current score
   const creditHistory = creditScoreHistoryData && creditScoreHistoryData.length > 0 
@@ -348,6 +375,44 @@ export default function Profile() {
             </div>
           </motion.div>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15, duration: 0.6 }}
+          className="relative overflow-hidden rounded-2xl border border-blue-500/20 bg-gradient-to-br from-blue-600/10 via-slate-900/50 to-slate-950 p-6 backdrop-blur-sm mb-12"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-transparent to-purple-500/5 pointer-events-none" />
+          <div className="relative">
+            <div className="flex items-center gap-3 mb-2">
+              <Bell className="text-blue-400" size={24} />
+              <h2 className="text-2xl font-bold text-white font-['Bebas_Neue'] tracking-wide">Notification Preferences</h2>
+            </div>
+            <p className="text-sm text-white/60 mb-5">Choose which in-app updates you want to see. Changes save automatically.</p>
+            <div className="grid gap-3 md:grid-cols-2">
+              {[
+                ['announcementsEnabled', 'Chapter announcements', 'New chapter-wide posts and updates'],
+                ['feedbackResponsesEnabled', 'Feedback responses', 'Replies to feedback you submit'],
+                ['systemUpdatesEnabled', 'System updates', 'Important Blue Blazer feature notices'],
+                ['studyRemindersEnabled', 'Study reminders', 'Optional practice and PI study reminders'],
+              ].map(([key, title, description]) => {
+                const preferenceKey = key as 'announcementsEnabled' | 'feedbackResponsesEnabled' | 'systemUpdatesEnabled' | 'studyRemindersEnabled'
+                return (
+                  <label key={key} className="flex items-start justify-between gap-4 rounded-xl border border-white/10 bg-slate-950/40 p-4 cursor-pointer hover:border-blue-500/40 transition-colors">
+                    <span><span className="block font-medium text-white">{title}</span><span className="block mt-1 text-xs text-white/55">{description}</span></span>
+                    <input
+                      type="checkbox"
+                      checked={notificationPreferencesQuery.data?.[preferenceKey] ?? (preferenceKey !== 'studyRemindersEnabled')}
+                      disabled={notificationPreferencesQuery.isLoading || updateNotificationPreferences.isPending}
+                      onChange={(event) => setNotificationPreference(preferenceKey, event.target.checked)}
+                      className="mt-1 h-4 w-4 accent-blue-500"
+                    />
+                  </label>
+                )
+              })}
+            </div>
+          </div>
+        </motion.div>
 
         {/* Portfolio Section */}
         <motion.div

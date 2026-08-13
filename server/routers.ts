@@ -14,7 +14,7 @@ import { applyCreditCardCharge, applyCreditCardPayment, calculateCashback, summa
 import { calculateMonetaryPressure } from "./economicMonitoring";
 
 import { initializeBanksForSchool, getBanksForSchool, getCreditCardsForBank } from './bankInitializer';
-import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback } from "../drizzle/schema";
+import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback, notificationPreferences } from "../drizzle/schema";
 import { and, eq, sql, inArray, desc, lte, gte } from "drizzle-orm";
 import { piLearningRouter } from "./piLearningRouter";
 
@@ -480,6 +480,35 @@ export const appRouter = router({
           reviewedBy: ctx.user.id,
           reviewedAt: new Date(),
         }).where(eq(userFeedback.id, input.feedbackId));
+        return { success: true };
+      }),
+  }),
+  preferences: router({
+    getNotificationPreferences: protectedProcedure.query(async ({ ctx }) => {
+      const database = await db.getDb();
+      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Preferences storage is unavailable' });
+      const existing = await database.select().from(notificationPreferences)
+        .where(eq(notificationPreferences.userId, ctx.user.id)).limit(1);
+      return existing[0] ?? {
+        announcementsEnabled: true,
+        feedbackResponsesEnabled: true,
+        systemUpdatesEnabled: true,
+        studyRemindersEnabled: false,
+      };
+    }),
+
+    updateNotificationPreferences: protectedProcedure
+      .input(z.object({
+        announcementsEnabled: z.boolean(),
+        feedbackResponsesEnabled: z.boolean(),
+        systemUpdatesEnabled: z.boolean(),
+        studyRemindersEnabled: z.boolean(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Preferences storage is unavailable' });
+        await database.insert(notificationPreferences).values({ userId: ctx.user.id, ...input })
+          .onDuplicateKeyUpdate({ set: { ...input, updatedAt: new Date() } });
         return { success: true };
       }),
   }),

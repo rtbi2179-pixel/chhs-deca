@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean, decimal, date, unique, primaryKey } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean, decimal, date, unique, uniqueIndex, primaryKey } from "drizzle-orm/mysql-core";
 import { relations } from "drizzle-orm";
 import { json } from "drizzle-orm/mysql-core";
 
@@ -799,6 +799,23 @@ export const userFeedback = mysqlTable("userFeedback", {
 });
 export type UserFeedback = typeof userFeedback.$inferSelect;
 export type InsertUserFeedback = typeof userFeedback.$inferInsert;
+
+/**
+ * User-controlled in-app notification preferences.
+ */
+export const notificationPreferences = mysqlTable("notificationPreferences", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  announcementsEnabled: boolean("announcementsEnabled").default(true).notNull(),
+  feedbackResponsesEnabled: boolean("feedbackResponsesEnabled").default(true).notNull(),
+  systemUpdatesEnabled: boolean("systemUpdatesEnabled").default(true).notNull(),
+  studyRemindersEnabled: boolean("studyRemindersEnabled").default(false).notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  userUnique: uniqueIndex("notificationPreferences_user_unique").on(table.userId),
+}));
+export type NotificationPreference = typeof notificationPreferences.$inferSelect;
+export type InsertNotificationPreference = typeof notificationPreferences.$inferInsert;
 
 /**
  * Stocks - Stock market simulation
