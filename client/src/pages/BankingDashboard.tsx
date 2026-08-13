@@ -2,7 +2,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
-import { TrendingUp, Send, ArrowUpRight, ArrowDownLeft } from "lucide-react";
+import { ArrowDownLeft, ArrowUpRight, CreditCard, ReceiptText, Send, ShoppingBag, TrendingUp } from "lucide-react";
 import { useState } from "react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
@@ -14,6 +14,9 @@ export function BankingDashboard() {
   const availableCardsQuery = trpc.banking.getAvailableCards.useQuery();
   const userCardsQuery = trpc.banking.getUserCards.useQuery();
   const applyCreditCardMutation = trpc.banking.applyCreditCard.useMutation();
+  const spendingAnalyticsQuery = trpc.banking.getSpendingAnalytics.useQuery();
+  const chargeCardMutation = trpc.banking.chargeCard.useMutation();
+  const makePaymentMutation = trpc.banking.makePayment.useMutation();
   
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [transferData, setTransferData] = useState({
@@ -21,6 +24,14 @@ export function BankingDashboard() {
     toAccount: "savings",
     amount: "",
   });
+  const [cardAction, setCardAction] = useState<{ cardId: number; mode: "charge" | "payment" } | null>(null);
+  const [cardActionAmount, setCardActionAmount] = useState("");
+  const [merchantCategory, setMerchantCategory] = useState("General");
+  const [selectedStatementCard, setSelectedStatementCard] = useState<number | null>(null);
+  const cardStatementQuery = trpc.banking.getCardStatement.useQuery(
+    { cardId: selectedStatementCard ?? 1 },
+    { enabled: selectedStatementCard !== null },
+  );
 
   if (!user) return <div>Loading...</div>;
 
@@ -92,6 +103,35 @@ export function BankingDashboard() {
       availableCardsQuery.refetch();
     } catch (error) {
       alert("Failed to apply for card: " + (error as any).message);
+    }
+  };
+
+  const handleCardAction = async () => {
+    if (!cardAction || !cardActionAmount || Number(cardActionAmount) <= 0) {
+      alert("Please enter a valid amount");
+      return;
+    }
+
+    try {
+      if (cardAction.mode === "charge") {
+        await chargeCardMutation.mutateAsync({
+          cardId: cardAction.cardId,
+          amount: Number(cardActionAmount),
+          merchantCategory,
+        });
+      } else {
+        await makePaymentMutation.mutateAsync({
+          cardId: cardAction.cardId,
+          amount: Number(cardActionAmount),
+        });
+      }
+      setCardAction(null);
+      setCardActionAmount("");
+      userCardsQuery.refetch();
+      bankAccountQuery.refetch();
+      spendingAnalyticsQuery.refetch();
+    } catch (error) {
+      alert(`${cardAction.mode === "charge" ? "Purchase" : "Payment"} failed: ${(error as Error).message}`);
     }
   };
 
@@ -197,7 +237,7 @@ export function BankingDashboard() {
                     <div key={card.id} className="p-3 bg-slate-700 rounded-lg border border-blue-500/30">
                       <p className="text-white font-semibold">{card.cardDetails?.name || 'Credit Card'}</p>
                       <p className="text-slate-300 text-xs capitalize mb-2">{card.cardDetails?.tier} Tier</p>
-                      <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div className="grid grid-cols-3 gap-2 text-sm">
                         <div>
                           <p className="text-slate-400 text-xs">Limit</p>
                           <p className="text-blue-400 font-semibold">${parseFloat(card.creditLimit).toFixed(2)}</p>
@@ -206,7 +246,71 @@ export function BankingDashboard() {
                           <p className="text-slate-400 text-xs">Available</p>
                           <p className="text-green-400 font-semibold">${parseFloat(card.availableCredit).toFixed(2)}</p>
                         </div>
+                        <div>
+                          <p className="text-slate-400 text-xs">Balance</p>
+                          <p className="text-amber-300 font-semibold">${parseFloat(card.currentBalance).toFixed(2)}</p>
+                        </div>
                       </div>
+                      <div className="mt-3 grid grid-cols-3 gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setCardAction({ cardId: card.id, mode: "charge" })}
+                          className="border-blue-400/50 text-blue-200 hover:bg-blue-500/10"
+                        >
+                          <ShoppingBag className="mr-1.5 h-3.5 w-3.5" /> Record Purchase
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setCardAction({ cardId: card.id, mode: "payment" })}
+                          className="border-emerald-400/50 text-emerald-200 hover:bg-emerald-500/10"
+                        >
+                          <CreditCard className="mr-1.5 h-3.5 w-3.5" /> Make Payment
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setSelectedStatementCard(card.id)}
+                          className="border-slate-500 text-slate-200 hover:bg-slate-600"
+                        >
+                          <ReceiptText className="mr-1.5 h-3.5 w-3.5" /> Statement
+                        </Button>
+                      </div>
+                      {cardAction?.cardId === card.id && (
+                        <div className="mt-3 space-y-2 rounded-md border border-slate-600 bg-slate-800 p-3">
+                          <p className="text-xs font-medium text-slate-200">
+                            {cardAction?.mode === "charge" ? "Record a card purchase" : "Pay this card from checking"}
+                          </p>
+                          <input
+                            type="number"
+                            min="0.01"
+                            step="0.01"
+                            value={cardActionAmount}
+                            onChange={(event) => setCardActionAmount(event.target.value)}
+                            placeholder="Amount"
+                            className="w-full rounded-md border border-slate-600 bg-slate-900 px-2 py-1.5 text-sm text-white"
+                          />
+                          {cardAction?.mode === "charge" && (
+                            <input
+                              value={merchantCategory}
+                              onChange={(event) => setMerchantCategory(event.target.value)}
+                              placeholder="Category, such as Books or Dining"
+                              className="w-full rounded-md border border-slate-600 bg-slate-900 px-2 py-1.5 text-sm text-white"
+                            />
+                          )}
+                          <div className="flex justify-end gap-2">
+                            <Button size="sm" variant="ghost" onClick={() => setCardAction(null)}>Cancel</Button>
+                            <Button
+                              size="sm"
+                              onClick={handleCardAction}
+                              disabled={chargeCardMutation.isPending || makePaymentMutation.isPending}
+                            >
+                              {chargeCardMutation.isPending || makePaymentMutation.isPending ? "Saving..." : "Confirm"}
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -247,6 +351,89 @@ export function BankingDashboard() {
               )}
             </Card>
           </div>
+
+          {selectedStatementCard !== null && (
+            <Card className="mt-6 border-slate-700 bg-slate-800 p-6">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <div>
+                  <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
+                    <ReceiptText className="h-5 w-5 text-blue-400" /> Card Statement
+                  </h3>
+                  <p className="text-xs text-slate-400">Current statement activity for the selected issued card.</p>
+                </div>
+                <Button size="sm" variant="ghost" onClick={() => setSelectedStatementCard(null)}>Close</Button>
+              </div>
+              {cardStatementQuery.isLoading ? (
+                <p className="text-sm text-slate-400">Loading statement...</p>
+              ) : cardStatementQuery.data ? (
+                <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+                  <div className="rounded-md bg-slate-700 p-3">
+                    <p className="text-xs text-slate-400">Purchases</p>
+                    <p className="font-semibold text-white">${cardStatementQuery.data.summary.charges.toFixed(2)}</p>
+                  </div>
+                  <div className="rounded-md bg-slate-700 p-3">
+                    <p className="text-xs text-slate-400">Payments</p>
+                    <p className="font-semibold text-emerald-300">${cardStatementQuery.data.summary.payments.toFixed(2)}</p>
+                  </div>
+                  <div className="rounded-md bg-slate-700 p-3">
+                    <p className="text-xs text-slate-400">Cashback</p>
+                    <p className="font-semibold text-amber-300">${cardStatementQuery.data.summary.cashback.toFixed(2)}</p>
+                  </div>
+                  <div className="rounded-md bg-slate-700 p-3">
+                    <p className="text-xs text-slate-400">Closing Balance</p>
+                    <p className="font-semibold text-red-300">${cardStatementQuery.data.summary.closingBalance.toFixed(2)}</p>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-slate-400">No statement data is available for this card.</p>
+              )}
+            </Card>
+          )}
+        </div>
+
+        {/* Spending analytics drawn from issued-card purchase activity. */}
+        <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <Card className="border-slate-700 bg-slate-800 p-6">
+            <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-white">
+              <ReceiptText className="h-5 w-5 text-blue-400" /> Spending by Category
+            </h2>
+            {spendingAnalyticsQuery.isLoading ? (
+              <p className="text-sm text-slate-400">Loading spending activity...</p>
+            ) : spendingAnalyticsQuery.data?.categories.length ? (
+              <div className="space-y-3">
+                {spendingAnalyticsQuery.data.categories.slice(0, 5).map((category) => (
+                  <div key={category.category} className="flex items-center justify-between rounded-md bg-slate-700 px-3 py-2 text-sm">
+                    <div>
+                      <p className="font-medium text-white">{category.category}</p>
+                      <p className="text-xs text-slate-400">{category.transactions} transactions · ${category.average.toFixed(2)} average</p>
+                    </div>
+                    <p className="font-semibold text-amber-300">${category.total.toFixed(2)}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-slate-400">Record a credit-card purchase to begin building your spending profile.</p>
+            )}
+          </Card>
+
+          <Card className="border-slate-700 bg-slate-800 p-6">
+            <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-white">
+              <TrendingUp className="h-5 w-5 text-emerald-400" /> Monthly Spending Trend
+            </h2>
+            {spendingAnalyticsQuery.data?.monthly.length ? (
+              <ResponsiveContainer width="100%" height={220}>
+                <BarChart data={spendingAnalyticsQuery.data.monthly}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
+                  <XAxis dataKey="month" stroke="#94a3b8" />
+                  <YAxis stroke="#94a3b8" />
+                  <Tooltip contentStyle={{ backgroundColor: "#1e293b", border: "1px solid #475569" }} />
+                  <Bar dataKey="total" fill="#10b981" />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <p className="text-sm text-slate-400">No monthly spending data yet.</p>
+            )}
+          </Card>
         </div>
 
         {/* Account Details and Transfer */}

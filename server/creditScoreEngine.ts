@@ -80,7 +80,7 @@ async function calculateAccountHistory(userId: number, schoolCode: string): Prom
       return 0;
     }
 
-    const accountOpenDate = new Date(account[0].accountOpenDate);
+    const accountOpenDate = new Date(account[0].accountOpenDate ?? account[0].createdAt ?? new Date());
     const now = new Date();
     const monthsOld = (now.getTime() - accountOpenDate.getTime()) / (1000 * 60 * 60 * 24 * 30);
 

@@ -22,6 +22,29 @@ interface StockQuote {
 }
 
 /**
+ * Returns operational metadata only; quote values are deliberately omitted.
+ */
+export function getStockPriceCacheStatus() {
+  const now = Date.now();
+  const entries = Array.from(priceCache.entries())
+    .map(([ticker, cached]) => ({
+      ticker,
+      ageMilliseconds: now - cached.timestamp,
+      isFresh: now - cached.timestamp < CACHE_TTL,
+      hasQuote: cached.data !== null,
+    }))
+    .sort((left, right) => left.ticker.localeCompare(right.ticker));
+
+  return {
+    ttlMilliseconds: CACHE_TTL,
+    apiMode: "paused" as const,
+    entryCount: entries.length,
+    inFlightRequestCount: inFlightRequests.size,
+    entries,
+  };
+}
+
+/**
  * Get cached price if still valid
  */
 function getCachedPrice(ticker: string): StockQuote | null | undefined {

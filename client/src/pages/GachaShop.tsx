@@ -2,12 +2,13 @@ import { trpc } from '@/lib/trpc';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Sparkles, Zap, History, Package } from 'lucide-react';
+import { CircleCheck, History, Package, Sparkles, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 
 export default function GachaShop() {
   const { user } = useAuth();
+  const utils = trpc.useUtils();
   const [selectedRarity, setSelectedRarity] = useState<'all' | 'common' | 'rare' | 'epic' | 'legendary'>('all');
   const [pullCount, setPullCount] = useState(1);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -34,6 +35,14 @@ export default function GachaShop() {
     onSuccess: () => {
       setIsAnimating(true);
       setTimeout(() => setIsAnimating(false), 2000);
+      void utils.gacha.getUserCosmetics.invalidate();
+      void utils.gacha.getPullHistory.invalidate();
+    },
+  });
+
+  const equipMutation = trpc.gacha.equipCosmetic.useMutation({
+    onSuccess: () => {
+      void utils.gacha.getUserCosmetics.invalidate();
     },
   });
 
@@ -91,9 +100,12 @@ export default function GachaShop() {
                 </div>
 
                 <div className="bg-slate-700 p-4 rounded-lg">
-                  <p className="text-gray-300 text-sm mb-2">Cost per pull:</p>
+                  <p className="text-gray-300 text-sm mb-2">Rarity-based price:</p>
                   <p className="text-2xl font-bold text-yellow-400">
-                    {pullCount * 100} Blue Bucks
+                    100–1,000 Blue Bucks per item
+                  </p>
+                  <p className="mt-2 text-xs text-slate-400">
+                    Each result is charged at its displayed rarity price. Your final total is shown in pull history.
                   </p>
                 </div>
 
@@ -118,17 +130,19 @@ export default function GachaShop() {
               <h2 className="text-xl font-bold text-white mb-4">Rarity Rates</h2>
               <div className="space-y-3">
                 {[
-                  { rarity: 'common', rate: '60%', color: 'bg-gray-500' },
-                  { rarity: 'rare', rate: '25%', color: 'bg-blue-500' },
-                  { rarity: 'epic', rate: '10%', color: 'bg-purple-500' },
-                  { rarity: 'legendary', rate: '5%', color: 'bg-yellow-500' },
+                  { rarity: 'common', rate: '60%', cost: 100, color: 'bg-gray-500' },
+                  { rarity: 'rare', rate: '25%', cost: 250, color: 'bg-blue-500' },
+                  { rarity: 'epic', rate: '10%', cost: 500, color: 'bg-purple-500' },
+                  { rarity: 'legendary', rate: '5%', cost: 1000, color: 'bg-yellow-500' },
                 ].map(item => (
                   <div key={item.rarity} className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className={`w-3 h-3 rounded ${item.color}`} />
                       <span className="text-gray-300 capitalize">{item.rarity}</span>
                     </div>
-                    <span className="text-white font-bold">{item.rate}</span>
+                    <span className="text-right text-white font-bold">
+                      {item.rate} <span className="text-xs font-medium text-yellow-300">· {item.cost} BB</span>
+                    </span>
                   </div>
                 ))}
               </div>
@@ -213,9 +227,12 @@ export default function GachaShop() {
               <p className="text-gray-400">You don't have any cosmetics yet. Start pulling!</p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {userCosmetics.map((userCosmetic: any, idx: number) => (
+                {userCosmetics.map((userCosmetic: any) => {
+                  const inventoryEntry = userCosmetic.userCosmetics;
+                  const isEquipped = Boolean(inventoryEntry?.isEquipped);
+                  return (
                   <motion.div
-                    key={idx}
+                    key={inventoryEntry?.id}
                     whileHover={{ scale: 1.05 }}
                     className="bg-slate-700 border-2 border-blue-500/50 rounded-lg p-4"
                   >
@@ -239,12 +256,24 @@ export default function GachaShop() {
                       }`}>
                         {userCosmetic.cosmetics?.rarity.toUpperCase()}
                       </span>
-                      {userCosmetic.isEquipped && (
-                        <span className="text-green-400 text-xs font-bold">✓ Equipped</span>
+                      {isEquipped && (
+                        <span className="flex items-center gap-1 text-xs font-bold text-emerald-400">
+                          <CircleCheck className="h-3.5 w-3.5" /> Equipped
+                        </span>
                       )}
                     </div>
+                    <Button
+                      size="sm"
+                      variant={isEquipped ? 'outline' : 'default'}
+                      className="mt-3 w-full"
+                      disabled={isEquipped || equipMutation.isPending}
+                      onClick={() => equipMutation.mutate({ userCosmeticId: inventoryEntry.id })}
+                    >
+                      {isEquipped ? 'Equipped' : 'Equip'}
+                    </Button>
                   </motion.div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </Card>
@@ -317,7 +346,7 @@ export default function GachaShop() {
 
                     {isOwned && (
                       <div className="bg-green-500/20 border border-green-500 rounded px-2 py-1 text-center text-green-300 text-xs font-bold">
-                        ✓ Owned
+                        <CircleCheck className="mr-1 inline h-3.5 w-3.5" /> Owned
                       </div>
                     )}
                   </motion.div>

@@ -169,6 +169,7 @@ export default function PIModuleViewer({ moduleId }: PIModuleViewerProps) {
                         updateSectionProgress.mutate({
                           sectionId: currentSection.id,
                           isCompleted: true,
+                          score: 100,
                         });
                       }}
                       disabled={updateSectionProgress.isPending}
@@ -188,7 +189,12 @@ export default function PIModuleViewer({ moduleId }: PIModuleViewerProps) {
                   </div>
                 ) : sectionContent?.flashcards && sectionContent.flashcards.length > 0 ? (
                   <PIFlashcardViewer
-                    flashcards={sectionContent.flashcards}
+                    flashcards={sectionContent.flashcards.map((card) => ({
+                      ...card,
+                      type: "multiple_choice" as const,
+                      options: typeof card.options === "string" ? card.options : JSON.stringify(card.options ?? []),
+                      correctAnswer: card.correctAnswer ?? "",
+                    }))}
                     sectionId={currentSection.id}
                   />
                 ) : (
@@ -210,7 +216,11 @@ export default function PIModuleViewer({ moduleId }: PIModuleViewerProps) {
                   </div>
                 ) : sectionContent?.quizQuestions && sectionContent.quizQuestions.length > 0 ? (
                   <PIQuizViewer
-                    questions={sectionContent.quizQuestions}
+                    questions={sectionContent.quizQuestions.map((question) => ({
+                      ...question,
+                      options: typeof question.options === "string" ? question.options : JSON.stringify(question.options ?? []),
+                      rationale: question.rationale ?? question.explanation ?? "",
+                    }))}
                     sectionId={currentSection.id}
                   />
                 ) : (
@@ -232,7 +242,13 @@ export default function PIModuleViewer({ moduleId }: PIModuleViewerProps) {
                   </div>
                 ) : sectionContent?.scenarios && sectionContent.scenarios.length > 0 ? (
                   <PIScenarioChallengeViewer
-                    scenarios={sectionContent.scenarios}
+                    scenarios={sectionContent.scenarios.map((scenario) => ({
+                      id: scenario.id,
+                      title: "Business Scenario",
+                      scenarioText: scenario.scenario,
+                      difficulty: scenario.difficulty,
+                      expectedResponse: scenario.expectedAnswer ?? "",
+                    }))}
                     sectionId={currentSection.id}
                   />
                 ) : (

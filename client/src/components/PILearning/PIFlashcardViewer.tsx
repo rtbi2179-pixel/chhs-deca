@@ -46,8 +46,7 @@ export default function PIFlashcardViewer({ flashcards, sectionId }: PIFlashcard
   };
 
   const handleShuffle = () => {
-    const shuffled = [...Array(flashcards.length).keys()].sort(() => Math.random() - 0.5);
-    setCurrentIndex(0);
+    setCurrentIndex(Math.floor(Math.random() * flashcards.length));
     setIsFlipped(false);
   };
 

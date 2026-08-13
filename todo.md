@@ -275,6 +275,7 @@
 - [x] Create user cosmetics inventory procedure
 - [x] Implement equip/unequip cosmetic procedure
 - [x] Add cosmetic cost deduction from points
+- [x] Enforce ownership and single equipped cosmetic per type in the inventory workflow
 
 ### Gacha UI Page
 - [x] Create GachaShop page component
@@ -289,10 +290,11 @@
 - [x] Show cosmetic effects on profile
 
 ### Rarity System
-- [ ] Common (60% chance) - 100 points
-- [ ] Rare (25% chance) - 250 points
-- [ ] Epic (10% chance) - 500 points
-- [ ] Legendary (5% chance) - 1000 points
+- [x] Common (60% chance) - 100 points
+- [x] Rare (25% chance) - 250 points
+- [x] Epic (10% chance) - 500 points
+- [x] Legendary (5% chance) - 1000 points
+- [x] Add deterministic rarity-weight and cost tests for the gacha pull procedure
 
 ## Branding & Logo Updates
 
@@ -341,12 +343,16 @@
 
 ## Gap Fixes - Credit Card, Spending Patterns & Cosmetics
 
-- [ ] Wire card usage tracking into actual transaction flows
-- [ ] Implement cashback calculation based on card tier rewards
-- [ ] Build credit card payment mutation with validation
-- [ ] Implement statement generation and retrieval
-- [ ] Populate spending patterns from real card usage data
-- [ ] Add Vitest tests for card usage tracking
+- [x] Restore Blue Bucks helper imports and verify the balance endpoint no longer throws a reference error
+- [x] Restore missing banking schema contracts and eliminate the related TypeScript errors
+- [x] Align remaining financial-table mappings used by the banking dashboard, credit-score services, market helpers, and database utilities
+- [x] Resolve the remaining banking-related TypeScript errors and verify with a clean targeted type check
+- [x] Wire card usage tracking into actual transaction flows
+- [x] Implement cashback calculation based on card tier rewards
+- [x] Build credit card payment mutation with validation
+- [x] Implement statement generation and retrieval
+- [x] Populate spending patterns from real card usage data
+- [x] Add Vitest tests for card usage tracking
 - [x] Render equipped cosmetics dynamically on Profile page
 - [x] Display equipped banner from userCosmetics data
 - [x] Add avatar/title/effect visual support
@@ -375,15 +381,15 @@
 ### Credit Card Payment System (6 items)
 - [x] Create payment mutation in banking router
 - [x] Implement payment validation and balance checks
-- [ ] Create card statement generation procedure
-- [ ] Wire card usage tracking into transaction flows
-- [ ] Implement cashback calculation based on card tier
-- [ ] Add tests for payment processing
+- [x] Create card statement generation procedure
+- [x] Wire card usage tracking into transaction flows
+- [x] Implement cashback calculation based on card tier
+- [x] Add tests for payment processing
 
 ### Spending Patterns Enhancement (3 items)
-- [ ] Populate spending patterns from real card usage data
-- [ ] Add category breakdown to spending patterns
-- [ ] Create spending trends analysis
+- [x] Populate spending patterns from real card usage data
+- [x] Add category breakdown to spending patterns
+- [x] Create spending trends analysis
 
 ### Banking System Tests (6 items)
 - [x] Test credit score calculations
@@ -394,10 +400,10 @@
 - [x] End-to-end banking system tests
 
 ### Market System Enhancements (4 items)
-- [ ] Implement stock price caching status endpoint
+- [x] Implement stock price caching status endpoint
 - [x] Add market analytics dashboard
 - [x] Create portfolio performance analytics
-- [ ] Add end-to-end market testing
+- [x] Add end-to-end market testing
 
 ### Practice System Enhancements (3 items)
 - [x] Add difficulty progression recommendations
@@ -405,7 +411,7 @@
 - [x] Create study path recommendations
 
 ### Remaining Minor Features (10 items)
-- [ ] Add cache status monitoring endpoint
+- [x] Add cache status monitoring endpoint
 - [ ] Implement system inflation tracking
 - [ ] Create economic audit log viewer
 - [ ] Add user feedback system

@@ -10,10 +10,19 @@ interface PIModuleBrowserProps {
   onSelectModule: (moduleId: number) => void;
 }
 
-const CLUSTERS = ["Marketing", "Finance", "Business Management", "Hospitality"];
+const CLUSTERS = [
+  "Marketing",
+  "Finance",
+  "Business Management & Administration",
+  "Hospitality & Tourism",
+  "Business Administration Core",
+  "Entrepreneurship",
+  "Personal Financial Literacy",
+] as const;
+type PICluster = (typeof CLUSTERS)[number];
 
 export default function PIModuleBrowser({ onSelectModule }: PIModuleBrowserProps) {
-  const [selectedCluster, setSelectedCluster] = useState("Marketing");
+  const [selectedCluster, setSelectedCluster] = useState<PICluster>("Marketing");
 
   const { data: modules, isLoading } = trpc.piLearning.getModulesByCluster.useQuery({
     cluster: selectedCluster,
@@ -44,8 +53,8 @@ export default function PIModuleBrowser({ onSelectModule }: PIModuleBrowserProps
   return (
     <div className="space-y-6">
       {/* Cluster Tabs */}
-      <Tabs value={selectedCluster} onValueChange={setSelectedCluster} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
+      <Tabs value={selectedCluster} onValueChange={(cluster) => setSelectedCluster(cluster as PICluster)} className="w-full">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-7">
           {CLUSTERS.map((cluster) => (
             <TabsTrigger key={cluster} value={cluster} className="text-xs sm:text-sm">
               {cluster.split(" ")[0]}

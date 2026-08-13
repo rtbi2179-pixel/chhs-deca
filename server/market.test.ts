@@ -4,14 +4,14 @@ import type { TrpcContext } from './_core/context';
 
 type AuthenticatedUser = NonNullable<TrpcContext['user']>;
 
-function createAuthContext(): TrpcContext {
+function createAuthContext(role: AuthenticatedUser['role'] = 'user'): TrpcContext {
   const user: AuthenticatedUser = {
     id: 1,
     openId: 'test-user',
     email: 'test@example.com',
     name: 'Test User',
     loginMethod: 'custom',
-    role: 'user',
+    role,
     createdAt: new Date(),
     updatedAt: new Date(),
     lastSignedIn: new Date(),
@@ -93,5 +93,19 @@ describe('Market System', () => {
       const isOpen = currentMinutes >= openMinutes && currentMinutes < closeMinutes;
       expect(isOpen).toBe(expected);
     });
+  });
+
+  it('returns operational cache metadata to an admin', async () => {
+    const caller = appRouter.createCaller(createAuthContext('admin'));
+    await expect(caller.market.getCacheStatus()).resolves.toMatchObject({
+      apiMode: 'paused',
+      ttlMilliseconds: 300000,
+      entryCount: expect.any(Number),
+    });
+  });
+
+  it('prevents non-admin users from viewing cache metadata', async () => {
+    const caller = appRouter.createCaller(createAuthContext('user'));
+    await expect(caller.market.getCacheStatus()).rejects.toMatchObject({ code: 'FORBIDDEN' });
   });
 });

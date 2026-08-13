@@ -63,7 +63,7 @@ export default function PIMasteryDashboard() {
 
       {/* Cluster Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {dashboard.clusterStats.map((cluster, index) => (
+        {dashboard.clusters.map((cluster, index) => (
           <Card key={cluster.cluster} className="hover:shadow-lg transition-shadow">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">

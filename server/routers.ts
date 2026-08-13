@@ -8,7 +8,9 @@ import { z } from "zod";
 import * as db from "./db";
 import { getAnnouncementsBySchool, createAnnouncement, likeAnnouncement, getAnnouncementLikes, addAnnouncementComment, getAnnouncementComments, deleteAnnouncement } from "./db";
 import { notifyOwner } from "./_core/notification";
-import { getStockPrice } from "./stockPriceService";
+import { getStockPrice, getStockPriceCacheStatus } from "./stockPriceService";
+import { getGachaRarityCost, selectGachaRarity, type GachaRarity } from "./gachaRarity";
+import { applyCreditCardCharge, applyCreditCardPayment, calculateCashback, summarizeSpending } from "./creditCardMath";
 
 import { initializeBanksForSchool, getBanksForSchool, getCreditCardsForBank } from './bankInitializer';
 import { questions, userAnswers, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls } from "../drizzle/schema";
@@ -209,9 +211,9 @@ export const gachaRouter = router({
     .query(async ({ input }) => {
       const database = await db.getDb();
       if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
-      const allCosmetics = await database
-        .select()
-        .from(cosmetics);
+      const allCosmetics = input.schoolCode
+        ? await database.select().from(cosmetics).where(eq(cosmetics.schoolCode, input.schoolCode))
+        : await database.select().from(cosmetics);
       return allCosmetics;
     }),
 
@@ -220,11 +222,14 @@ export const gachaRouter = router({
     .query(async ({ ctx }) => {
       const database = await db.getDb();
       if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+      const schoolCode = ctx.user.schoolCode;
       const userCosmeticsList = await database
         .select()
         .from(userCosmetics)
         .innerJoin(cosmetics, eq(userCosmetics.cosmeticId, cosmetics.id))
-        .where(eq(userCosmetics.userId, ctx.user.id));
+        .where(schoolCode
+          ? and(eq(userCosmetics.userId, ctx.user.id), eq(userCosmetics.schoolCode, schoolCode))
+          : eq(userCosmetics.userId, ctx.user.id));
       return userCosmeticsList;
     }),
 
@@ -250,33 +255,21 @@ export const gachaRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND', message: 'No cosmetics available' });
       }
 
-      // Rarity weights
-      const rarityWeights = {
-        common: 0.60,
-        rare: 0.25,
-        epic: 0.10,
-        legendary: 0.05,
-      };
-
-      // Rarity costs
-      const rarityCosts = {
-        common: 100,
-        rare: 250,
-        epic: 500,
-        legendary: 1000,
-      };
+      const missingRarities = (["common", "rare", "epic", "legendary"] as GachaRarity[])
+        .filter((rarity) => !allCosmetics.some((cosmetic) => cosmetic.rarity === rarity));
+      if (missingRarities.length > 0) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: `The gacha catalog is missing: ${missingRarities.join(", ")}.`,
+        });
+      }
 
       const pulls: any[] = [];
       let totalCost = 0;
 
       for (let i = 0; i < input.pulls; i++) {
         // Determine rarity
-        const rand = Math.random();
-        let rarity: 'common' | 'rare' | 'epic' | 'legendary';
-        if (rand < rarityWeights.common) rarity = 'common';
-        else if (rand < rarityWeights.common + rarityWeights.rare) rarity = 'rare';
-        else if (rand < rarityWeights.common + rarityWeights.rare + rarityWeights.epic) rarity = 'epic';
-        else rarity = 'legendary';
+        const rarity = selectGachaRarity(Math.random());
 
         // Get cosmetics of this rarity
         const cosmeticsOfRarity = allCosmetics.filter(c => c.rarity === rarity);
@@ -284,7 +277,7 @@ export const gachaRouter = router({
 
         // Pick random cosmetic
         const cosmetic = cosmeticsOfRarity[Math.floor(Math.random() * cosmeticsOfRarity.length)];
-        const cost = rarityCosts[rarity];
+        const cost = getGachaRarityCost(rarity);
         totalCost += cost;
 
         pulls.push({
@@ -347,14 +340,51 @@ export const gachaRouter = router({
     .mutation(async ({ ctx, input }) => {
       const database = await db.getDb();
       if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
-      
-      // Equip the selected cosmetic
+
+      const ownedCosmetic = await database
+        .select()
+        .from(userCosmetics)
+        .innerJoin(cosmetics, eq(userCosmetics.cosmeticId, cosmetics.id))
+        .where(and(
+          eq(userCosmetics.id, input.userCosmeticId),
+          eq(userCosmetics.userId, ctx.user.id),
+        ))
+        .limit(1);
+
+      if (!ownedCosmetic[0]) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Cosmetic is not in your inventory' });
+      }
+
+      if (ctx.user.schoolCode && ownedCosmetic[0].userCosmetics.schoolCode !== ctx.user.schoolCode) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Cosmetic belongs to a different chapter' });
+      }
+
+      const inventory = await database
+        .select()
+        .from(userCosmetics)
+        .innerJoin(cosmetics, eq(userCosmetics.cosmeticId, cosmetics.id))
+        .where(eq(userCosmetics.userId, ctx.user.id));
+
+      const matchingTypeEntries = inventory.filter(
+        (entry) => entry.cosmetics.type === ownedCosmetic[0].cosmetics.type,
+      );
+
+      for (const entry of matchingTypeEntries) {
+        await database
+          .update(userCosmetics)
+          .set({ isEquipped: false })
+          .where(eq(userCosmetics.id, entry.userCosmetics.id));
+      }
+
       await database
         .update(userCosmetics)
         .set({ isEquipped: true })
-        .where(eq(userCosmetics.id, input.userCosmeticId));
-
-      return { success: true };
+        .where(and(
+          eq(userCosmetics.id, input.userCosmeticId),
+          eq(userCosmetics.userId, ctx.user.id),
+        ));
+      
+      return { success: true, equippedType: ownedCosmetic[0].cosmetics.type };
     }),
 
   // Get pull history
@@ -923,6 +953,13 @@ export const appRouter = router({
       .query(async ({ input }) => {
         return await getStockPrice(input.ticker);
       }),
+
+    getCacheStatus: protectedProcedure.query(({ ctx }) => {
+      if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Only admins can view market cache status' });
+      }
+      return getStockPriceCacheStatus();
+    }),
     
     initializeDefaultStocks: protectedProcedure
       .mutation(async ({ ctx }) => {
@@ -1097,7 +1134,7 @@ export const appRouter = router({
       .query(async ({ ctx, input }) => {
         const history = await db.getCreditHistory(ctx.user.id, input.limit);
         return history.map(h => ({
-          date: new Date(h.calculatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+          date: new Date(h.calculatedAt ?? new Date()).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
           score: h.newScore,
           change: h.scoreChange,
           reason: h.reason,
@@ -1331,7 +1368,7 @@ export const appRouter = router({
         return await getCreditCardsForBank(input.bankId);
       }),
 
-    // Make a credit card payment
+    // Make a credit card payment from checking to an issued card account.
     makePayment: protectedProcedure
       .input(z.object({
         cardId: z.number(),
@@ -1341,17 +1378,20 @@ export const appRouter = router({
         const database = await db.getDb();
         if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
         
-        const { creditCards, userBankAccounts } = await import('../drizzle/schema');
+        const { creditCardPayments, userBankAccounts, userCreditCards } = await import('../drizzle/schema');
         const schoolCode = ctx.user.schoolCode || '';
         
-        // Get card details
-        const card = await database
+        const issuedCard = await database
           .select()
-          .from(creditCards)
-          .where(eq(creditCards.id, input.cardId))
+          .from(userCreditCards)
+          .where(and(
+            eq(userCreditCards.id, input.cardId),
+            eq(userCreditCards.userId, ctx.user.id),
+            eq(userCreditCards.schoolCode, schoolCode),
+          ))
           .limit(1);
         
-        if (!card[0]) throw new TRPCError({ code: 'NOT_FOUND', message: 'Card not found' });
+        if (!issuedCard[0]) throw new TRPCError({ code: 'NOT_FOUND', message: 'Issued card not found' });
         
         // Get checking account balance
         const account = await database
@@ -1370,25 +1410,236 @@ export const appRouter = router({
           throw new TRPCError({ code: 'BAD_REQUEST', message: 'Insufficient funds' });
         }
         
-        // Deduct from checking account
+        const cardBalance = {
+          creditLimit: Number(issuedCard[0].creditLimit),
+          currentBalance: Number(issuedCard[0].currentBalance),
+        };
+        let paymentUpdate;
+        try {
+          paymentUpdate = applyCreditCardPayment(cardBalance, input.amount);
+        } catch (error) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: (error as Error).message });
+        }
+
+        // Deduct from checking, reduce card debt, and restore available credit.
         await database
           .update(userBankAccounts)
-          .set({ checkingBalance: (checkingBalance - input.amount).toString() })
+          .set({
+            checkingBalance: (checkingBalance - input.amount).toFixed(2),
+            totalDebt: Math.max(0, Number(account[0].totalDebt) - input.amount).toFixed(2),
+          })
           .where(and(
             eq(userBankAccounts.userId, ctx.user.id),
             eq(userBankAccounts.schoolCode, schoolCode)
           ));
         
-        // Record payment (payments table to be created in future migration)
-        // For now, we just deduct from checking account
-        // TODO: Add payments table and record payment details
+        await database
+          .update(userCreditCards)
+          .set({
+            currentBalance: paymentUpdate.currentBalance.toFixed(2),
+            availableCredit: paymentUpdate.availableCredit.toFixed(2),
+            utilizationRate: paymentUpdate.utilizationRate.toFixed(2),
+          })
+          .where(eq(userCreditCards.id, issuedCard[0].id));
+
+        await database.insert(creditCardPayments).values({
+          userId: ctx.user.id,
+          userCreditCardId: issuedCard[0].id,
+          amount: input.amount.toFixed(2),
+          status: 'completed',
+          dueDate: new Date(),
+          paidDate: new Date(),
+          daysLate: 0,
+          schoolCode,
+        });
         
         return {
           success: true,
           newBalance: checkingBalance - input.amount,
           paymentAmount: input.amount,
+          remainingCardBalance: paymentUpdate.currentBalance,
+          availableCredit: paymentUpdate.availableCredit,
         };
       }),
+
+    // Record an actual issued-card purchase and all related financial effects.
+    chargeCard: protectedProcedure
+      .input(z.object({
+        cardId: z.number().int().positive(),
+        amount: z.number().positive(),
+        merchantCategory: z.string().trim().min(1).max(50),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+        const schoolCode = ctx.user.schoolCode || '';
+        const { cardUsageTracking, cashbackRewards, creditCards, spendingPatterns, userBankAccounts, userCreditCards } = await import('../drizzle/schema');
+
+        const issuedCard = await database
+          .select()
+          .from(userCreditCards)
+          .where(and(
+            eq(userCreditCards.id, input.cardId),
+            eq(userCreditCards.userId, ctx.user.id),
+            eq(userCreditCards.schoolCode, schoolCode),
+          ))
+          .limit(1);
+        if (!issuedCard[0]) throw new TRPCError({ code: 'NOT_FOUND', message: 'Issued card not found' });
+
+        const product = await database
+          .select()
+          .from(creditCards)
+          .where(eq(creditCards.id, issuedCard[0].creditCardId))
+          .limit(1);
+        if (!product[0]) throw new TRPCError({ code: 'NOT_FOUND', message: 'Card product not found' });
+
+        let chargeUpdate;
+        try {
+          chargeUpdate = applyCreditCardCharge({
+            creditLimit: Number(issuedCard[0].creditLimit),
+            currentBalance: Number(issuedCard[0].currentBalance),
+          }, input.amount);
+        } catch (error) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: (error as Error).message });
+        }
+
+        const cashback = calculateCashback(input.amount, Number(product[0].rewardsPercentage));
+        const transactionDate = new Date();
+        const month = transactionDate.getUTCMonth() + 1;
+        const category = input.merchantCategory;
+
+        await database.update(userCreditCards).set({
+          currentBalance: chargeUpdate.currentBalance.toFixed(2),
+          availableCredit: chargeUpdate.availableCredit.toFixed(2),
+          utilizationRate: chargeUpdate.utilizationRate.toFixed(2),
+        }).where(eq(userCreditCards.id, issuedCard[0].id));
+
+        await database.insert(cardUsageTracking).values({
+          userId: ctx.user.id,
+          cardId: product[0].id,
+          transactionAmount: input.amount.toFixed(2),
+          merchantCategory: category,
+          transactionDate,
+          schoolCode,
+        });
+
+        await database.insert(cashbackRewards).values({
+          userId: ctx.user.id,
+          cardId: product[0].id,
+          amount: cashback.toFixed(2),
+          source: `${product[0].name} ${category} purchase`,
+          earnedDate: transactionDate,
+          schoolCode,
+        });
+
+        const existingPattern = await database.select().from(spendingPatterns).where(and(
+          eq(spendingPatterns.userId, ctx.user.id),
+          eq(spendingPatterns.schoolCode, schoolCode),
+          eq(spendingPatterns.merchantCategory, category),
+          eq(spendingPatterns.month, month),
+        )).limit(1);
+
+        if (existingPattern[0]) {
+          const nextTotal = Number(existingPattern[0].monthlySpending) + input.amount;
+          const nextCount = existingPattern[0].transactionCount + 1;
+          await database.update(spendingPatterns).set({
+            monthlySpending: nextTotal.toFixed(2),
+            transactionCount: nextCount,
+            averageTransactionAmount: (nextTotal / nextCount).toFixed(2),
+          }).where(eq(spendingPatterns.id, existingPattern[0].id));
+        } else {
+          await database.insert(spendingPatterns).values({
+            userId: ctx.user.id,
+            merchantCategory: category,
+            monthlySpending: input.amount.toFixed(2),
+            averageTransactionAmount: input.amount.toFixed(2),
+            transactionCount: 1,
+            month,
+            schoolCode,
+          });
+        }
+
+        const account = await database.select().from(userBankAccounts).where(and(
+          eq(userBankAccounts.userId, ctx.user.id),
+          eq(userBankAccounts.schoolCode, schoolCode),
+        )).limit(1);
+        if (account[0]) {
+          await database.update(userBankAccounts).set({
+            totalDebt: (Number(account[0].totalDebt) + input.amount).toFixed(2),
+          }).where(eq(userBankAccounts.id, account[0].id));
+        }
+
+        return {
+          success: true,
+          chargedAmount: input.amount,
+          cashback,
+          currentBalance: chargeUpdate.currentBalance,
+          availableCredit: chargeUpdate.availableCredit,
+          utilizationRate: chargeUpdate.utilizationRate,
+        };
+      }),
+
+    getCardStatement: protectedProcedure
+      .input(z.object({
+        cardId: z.number().int().positive(),
+        month: z.number().int().min(1).max(12).optional(),
+        year: z.number().int().min(2000).max(2100).optional(),
+      }))
+      .query(async ({ ctx, input }) => {
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+        const schoolCode = ctx.user.schoolCode || '';
+        const { cardUsageTracking, cashbackRewards, creditCardPayments, creditCards, userCreditCards } = await import('../drizzle/schema');
+
+        const issuedCard = await database.select().from(userCreditCards).where(and(
+          eq(userCreditCards.id, input.cardId),
+          eq(userCreditCards.userId, ctx.user.id),
+          eq(userCreditCards.schoolCode, schoolCode),
+        )).limit(1);
+        if (!issuedCard[0]) throw new TRPCError({ code: 'NOT_FOUND', message: 'Issued card not found' });
+
+        const matchesPeriod = (date: Date) =>
+          (!input.month || date.getUTCMonth() + 1 === input.month) &&
+          (!input.year || date.getUTCFullYear() === input.year);
+        const [product, usage, payments, cashback] = await Promise.all([
+          database.select().from(creditCards).where(eq(creditCards.id, issuedCard[0].creditCardId)).limit(1),
+          database.select().from(cardUsageTracking).where(and(eq(cardUsageTracking.userId, ctx.user.id), eq(cardUsageTracking.cardId, issuedCard[0].creditCardId))).orderBy(desc(cardUsageTracking.transactionDate)),
+          database.select().from(creditCardPayments).where(and(eq(creditCardPayments.userId, ctx.user.id), eq(creditCardPayments.userCreditCardId, issuedCard[0].id))).orderBy(desc(creditCardPayments.createdAt)),
+          database.select().from(cashbackRewards).where(and(eq(cashbackRewards.userId, ctx.user.id), eq(cashbackRewards.cardId, issuedCard[0].creditCardId))).orderBy(desc(cashbackRewards.earnedDate)),
+        ]);
+        const charges = usage.filter((entry) => matchesPeriod(entry.transactionDate));
+        const statementPayments = payments.filter((entry) => matchesPeriod(entry.createdAt ?? new Date()));
+        const statementCashback = cashback.filter((entry) => matchesPeriod(entry.earnedDate));
+
+        return {
+          card: { ...issuedCard[0], product: product[0] ?? null },
+          charges,
+          payments: statementPayments,
+          cashback: statementCashback,
+          summary: {
+            charges: charges.reduce((total, entry) => total + Number(entry.transactionAmount), 0),
+            payments: statementPayments.reduce((total, entry) => total + Number(entry.amount), 0),
+            cashback: statementCashback.reduce((total, entry) => total + Number(entry.amount), 0),
+            closingBalance: Number(issuedCard[0].currentBalance),
+          },
+        };
+      }),
+
+    getSpendingAnalytics: protectedProcedure.query(async ({ ctx }) => {
+      const database = await db.getDb();
+      if (!database) return { categories: [], monthly: [], totalSpending: 0 };
+      const { cardUsageTracking } = await import('../drizzle/schema');
+      const usage = await database.select().from(cardUsageTracking).where(eq(cardUsageTracking.userId, ctx.user.id));
+      const summary = summarizeSpending(usage.map((entry) => ({
+        amount: Number(entry.transactionAmount),
+        category: entry.merchantCategory,
+        occurredAt: entry.transactionDate,
+      })));
+      return {
+        ...summary,
+        totalSpending: summary.categories.reduce((total, category) => total + category.total, 0),
+      };
+    }),
   }),
 });
 
