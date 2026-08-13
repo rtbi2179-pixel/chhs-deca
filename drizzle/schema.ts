@@ -818,6 +818,23 @@ export type NotificationPreference = typeof notificationPreferences.$inferSelect
 export type InsertNotificationPreference = typeof notificationPreferences.$inferInsert;
 
 /**
+ * Optional visual and privacy customizations shown on a member's profile.
+ */
+export const userProfileSettings = mysqlTable("userProfileSettings", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  displayName: varchar("displayName", { length: 60 }),
+  bio: varchar("bio", { length: 280 }),
+  accentColor: mysqlEnum("accentColor", ["blue", "violet", "emerald", "rose"]).default("blue").notNull(),
+  showOnLeaderboard: boolean("showOnLeaderboard").default(true).notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  userUnique: uniqueIndex("userProfileSettings_user_unique").on(table.userId),
+}));
+export type UserProfileSetting = typeof userProfileSettings.$inferSelect;
+export type InsertUserProfileSetting = typeof userProfileSettings.$inferInsert;
+
+/**
  * Stocks - Stock market simulation
  */
 export const stocks = mysqlTable("stocks", {

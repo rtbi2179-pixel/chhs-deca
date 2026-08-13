@@ -34,6 +34,13 @@ const PORTFOLIO_CATEGORIES = [
   'Other',
 ]
 
+const ACCENT_STYLES = {
+  blue: 'from-blue-600/10 via-slate-900/50 to-slate-950 border-blue-500/20',
+  violet: 'from-violet-600/10 via-slate-900/50 to-slate-950 border-violet-500/20',
+  emerald: 'from-emerald-600/10 via-slate-900/50 to-slate-950 border-emerald-500/20',
+  rose: 'from-rose-600/10 via-slate-900/50 to-slate-950 border-rose-500/20',
+} as const
+
 export default function Profile() {
   const { user } = useAuth()
   const [, setLocation] = useLocation()
@@ -47,6 +54,12 @@ export default function Profile() {
     fileUrl: '',
     externalUrl: '',
     memberProgressNotes: '',
+  })
+  const [profileCustomization, setProfileCustomization] = useState({
+    displayName: '',
+    bio: '',
+    accentColor: 'blue' as 'blue' | 'violet' | 'emerald' | 'rose',
+    showOnLeaderboard: true,
   })
 
   // Fetch bookmarked questions
@@ -102,6 +115,28 @@ export default function Profile() {
     },
     onError: (error) => toast.error(error.message),
   })
+  const profileSettingsQuery = trpc.preferences.getProfileSettings.useQuery(
+    undefined,
+    { enabled: !!user?.id }
+  )
+  const updateProfileSettings = trpc.preferences.updateProfileSettings.useMutation({
+    onSuccess: () => {
+      profileSettingsQuery.refetch()
+      toast.success('Profile customization saved')
+    },
+    onError: (error) => toast.error(error.message),
+  })
+
+  useEffect(() => {
+    const settings = profileSettingsQuery.data
+    if (!settings) return
+    setProfileCustomization({
+      displayName: settings.displayName || '',
+      bio: settings.bio || '',
+      accentColor: settings.accentColor,
+      showOnLeaderboard: settings.showOnLeaderboard,
+    })
+  }, [profileSettingsQuery.data])
 
   const setNotificationPreference = (
     key: 'announcementsEnabled' | 'feedbackResponsesEnabled' | 'systemUpdatesEnabled' | 'studyRemindersEnabled',
@@ -272,7 +307,7 @@ export default function Profile() {
           transition={{ duration: 0.6 }}
           className="mb-12"
         >
-          <div className="relative overflow-hidden rounded-2xl border border-blue-500/20 bg-gradient-to-br from-blue-600/10 via-slate-900/50 to-slate-950 p-8 backdrop-blur-sm">
+          <div className={`relative overflow-hidden rounded-2xl border bg-gradient-to-br p-8 backdrop-blur-sm ${ACCENT_STYLES[profileCustomization.accentColor]}`}>
             {/* Background glow */}
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-transparent to-purple-500/5 pointer-events-none" />
             
@@ -284,9 +319,10 @@ export default function Profile() {
               </div>
               <div className="flex-1">
                 <h1 className="text-4xl font-bold text-white font-['Bebas_Neue'] tracking-wide mb-2">
-                  {user.name || user.username}
+                  {profileCustomization.displayName || user.name || user.username}
                 </h1>
                 <p className="text-blue-300 font-['Outfit'] mb-3">{user.email}</p>
+                {profileCustomization.bio && <p className="max-w-xl text-sm text-white/70 mb-3">{profileCustomization.bio}</p>}
                 {user.schoolCode && (
                   <div className="inline-block px-4 py-2 rounded-lg bg-blue-500/10 border border-blue-500/30">
                     <p className="text-blue-300 text-sm font-['Outfit']">School Code: {user.schoolCode}</p>
@@ -295,6 +331,36 @@ export default function Profile() {
               </div>
             </div>
           </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.6 }}
+          className="relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60 p-6 backdrop-blur-sm mb-12"
+        >
+          <div className="flex items-center justify-between gap-4 mb-5">
+            <div><h2 className="text-2xl font-bold text-white font-['Bebas_Neue'] tracking-wide">Profile Customization</h2><p className="text-sm text-white/60">Personalize what other members see on your profile.</p></div>
+            <Sparkles className="text-blue-400" size={24} />
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <label className="text-sm text-white/80">Display name
+              <Input value={profileCustomization.displayName} onChange={(event) => setProfileCustomization((current) => ({ ...current, displayName: event.target.value }))} placeholder={user.name || user.username || 'Your display name'} maxLength={60} className="mt-1 bg-slate-950/60 border-white/10 text-white" />
+            </label>
+            <label className="text-sm text-white/80">Accent color
+              <select value={profileCustomization.accentColor} onChange={(event) => setProfileCustomization((current) => ({ ...current, accentColor: event.target.value as typeof current.accentColor }))} className="mt-1 w-full rounded-md border border-white/10 bg-slate-950/60 p-2 text-white">
+                <option value="blue">Blue</option><option value="violet">Violet</option><option value="emerald">Emerald</option><option value="rose">Rose</option>
+              </select>
+            </label>
+            <label className="text-sm text-white/80 md:col-span-2">Short bio
+              <textarea value={profileCustomization.bio} onChange={(event) => setProfileCustomization((current) => ({ ...current, bio: event.target.value }))} maxLength={280} rows={3} placeholder="Share your DECA focus, event, or goal." className="mt-1 w-full resize-y rounded-md border border-white/10 bg-slate-950/60 p-2 text-white" />
+            </label>
+          </div>
+          <label className="mt-4 flex items-center gap-3 text-sm text-white/80 cursor-pointer">
+            <input type="checkbox" checked={profileCustomization.showOnLeaderboard} onChange={(event) => setProfileCustomization((current) => ({ ...current, showOnLeaderboard: event.target.checked }))} className="h-4 w-4 accent-blue-500" />
+            Show my customized profile on chapter leaderboards
+          </label>
+          <div className="mt-5 flex justify-end"><Button disabled={updateProfileSettings.isPending} onClick={() => updateProfileSettings.mutate({ displayName: profileCustomization.displayName.trim() || null, bio: profileCustomization.bio.trim() || null, accentColor: profileCustomization.accentColor, showOnLeaderboard: profileCustomization.showOnLeaderboard })}>Save customization</Button></div>
         </motion.div>
 
         {/* Stats Grid */}

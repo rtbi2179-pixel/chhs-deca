@@ -14,7 +14,7 @@ import { applyCreditCardCharge, applyCreditCardPayment, calculateCashback, summa
 import { calculateMonetaryPressure } from "./economicMonitoring";
 
 import { initializeBanksForSchool, getBanksForSchool, getCreditCardsForBank } from './bankInitializer';
-import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback, notificationPreferences } from "../drizzle/schema";
+import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback, notificationPreferences, userProfileSettings } from "../drizzle/schema";
 import { and, eq, sql, inArray, desc, lte, gte } from "drizzle-orm";
 import { piLearningRouter } from "./piLearningRouter";
 
@@ -508,6 +508,34 @@ export const appRouter = router({
         const database = await db.getDb();
         if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Preferences storage is unavailable' });
         await database.insert(notificationPreferences).values({ userId: ctx.user.id, ...input })
+          .onDuplicateKeyUpdate({ set: { ...input, updatedAt: new Date() } });
+        return { success: true };
+      }),
+
+    getProfileSettings: protectedProcedure.query(async ({ ctx }) => {
+      const database = await db.getDb();
+      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Profile settings storage is unavailable' });
+      const existing = await database.select().from(userProfileSettings)
+        .where(eq(userProfileSettings.userId, ctx.user.id)).limit(1);
+      return existing[0] ?? {
+        displayName: null,
+        bio: null,
+        accentColor: 'blue' as const,
+        showOnLeaderboard: true,
+      };
+    }),
+
+    updateProfileSettings: protectedProcedure
+      .input(z.object({
+        displayName: z.string().trim().min(1).max(60).nullable(),
+        bio: z.string().trim().max(280).nullable(),
+        accentColor: z.enum(['blue', 'violet', 'emerald', 'rose']),
+        showOnLeaderboard: z.boolean(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Profile settings storage is unavailable' });
+        await database.insert(userProfileSettings).values({ userId: ctx.user.id, ...input })
           .onDuplicateKeyUpdate({ set: { ...input, updatedAt: new Date() } });
         return { success: true };
       }),
