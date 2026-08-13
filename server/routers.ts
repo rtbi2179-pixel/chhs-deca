@@ -1126,6 +1126,28 @@ export const appRouter = router({
           .where(eq(sessionQuestions.sessionId, input.sessionId));
         return { session, ...analyzeMockExamResults(rows.map(row => ({ ...row, isCorrect: Boolean(row.isCorrect) }))) };
       }),
+    submitAnswer: protectedProcedure
+      .input(z.object({ sessionId: z.number().int().positive(), questionId: z.string(), selectedAnswer: z.string().length(1) }))
+      .mutation(async ({ ctx, input }) => {
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Question bank is unavailable' });
+        const [session] = await database.select().from(studySessions)
+          .where(and(eq(studySessions.id, input.sessionId), eq(studySessions.userId, ctx.user.id))).limit(1);
+        if (!session) throw new TRPCError({ code: 'NOT_FOUND', message: 'Mock exam not found' });
+        const [question] = await database.select({ correctAnswer: questions.correctAnswer }).from(questions).where(eq(questions.id, input.questionId)).limit(1);
+        if (!question) throw new TRPCError({ code: 'NOT_FOUND', message: 'Question not found' });
+        const [sessionQuestion] = await database.select().from(sessionQuestions)
+          .where(and(eq(sessionQuestions.sessionId, input.sessionId), eq(sessionQuestions.questionId, input.questionId))).limit(1);
+        if (!sessionQuestion) throw new TRPCError({ code: 'FORBIDDEN', message: 'Question is not in this mock exam' });
+        const isCorrect = input.selectedAnswer === question.correctAnswer;
+        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
+        await database.update(sessionQuestions).set({ userAnswer: input.selectedAnswer, isCorrect: isCorrect ? 1 : 0 }).where(eq(sessionQuestions.id, sessionQuestion.id));
+        await db.recordUserAnswer(ctx.user.id, input.questionId, input.selectedAnswer, isCorrect, schoolCode);
+        const answered = await database.select({ id: sessionQuestions.id, isCorrect: sessionQuestions.isCorrect }).from(sessionQuestions).where(eq(sessionQuestions.sessionId, input.sessionId));
+        await database.update(studySessions).set({ questionsAnswered: answered.filter(item => item.id).length, correctAnswers: answered.filter(item => item.isCorrect === 1).length }).where(eq(studySessions.id, input.sessionId));
+        return { isCorrect, questionsAnswered: answered.length, correctAnswers: answered.filter(item => item.isCorrect === 1).length };
+      }),
   }),
 
   practice: router({

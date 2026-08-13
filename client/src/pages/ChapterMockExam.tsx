@@ -4,7 +4,10 @@ import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 
 export default function ChapterMockExam() {
-  const [exam, setExam] = useState<{ sessionId: number; totalQuestions: number; difficultyPlan: { easy: number; medium: number; hard: number } } | null>(null);
+  const [exam, setExam] = useState<any | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [finished, setFinished] = useState(false);
   const createMock = trpc.mockExams.createChapterMock.useMutation({
     onSuccess: (result) => {
       setExam(result);
@@ -12,6 +15,19 @@ export default function ChapterMockExam() {
     },
     onError: (error) => toast.error(error.message),
   });
+  const submitAnswer = trpc.mockExams.submitAnswer.useMutation({
+    onSuccess: () => {
+      setSelectedAnswer(null);
+      if (exam && currentIndex + 1 === exam.questions.length) setFinished(true);
+      else setCurrentIndex((index) => index + 1);
+    },
+    onError: (error) => toast.error(error.message),
+  });
+  const results = trpc.mockExams.getResults.useQuery(
+    { sessionId: exam?.sessionId ?? 0 },
+    { enabled: !!exam?.sessionId && finished }
+  );
+  const question = exam?.questions[currentIndex];
 
   return (
     <main className="min-h-screen bg-slate-950 px-4 py-12 text-slate-100 sm:px-6">
@@ -29,11 +45,35 @@ export default function ChapterMockExam() {
             {createMock.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Target className="h-4 w-4" />}
             Build My Mock Exam
           </button>
+        ) : finished ? (
+          <div className="mt-8 space-y-5">
+            <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-5">
+              <p className="font-semibold text-emerald-200">Mock exam complete</p>
+              <p className="mt-1 text-sm text-slate-300">{results.data?.score ?? 0} / {results.data?.total ?? exam.totalQuestions} correct · {results.data?.accuracy ?? 0}% accuracy</p>
+            </div>
+            {results.data?.recommendation && (
+              <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-amber-300">Recommended study guide</p>
+                <p className="mt-2 font-semibold text-white">{results.data.recommendation.instructionalArea}</p>
+                <p className="mt-1 text-sm text-slate-300">Review: {results.data.recommendation.recommendedPI ?? "the lowest-performing indicators in this area"}.</p>
+                <a href="/study-guide" className="mt-4 inline-flex rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500">Open Study Guide</a>
+              </div>
+            )}
+          </div>
         ) : (
           <div className="mt-8 rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-5">
-            <p className="font-semibold text-emerald-200">Your exam is ready.</p>
-            <p className="mt-1 text-sm text-slate-300">{exam.totalQuestions} unused questions: {exam.difficultyPlan.easy} easy, {exam.difficultyPlan.medium} medium, and {exam.difficultyPlan.hard} hard.</p>
-            <p className="mt-3 text-xs text-slate-400">Session #{exam.sessionId} is saved. Submit answers through the practice flow to record performance and unlock weak-area recommendations.</p>
+            <div className="flex items-center justify-between gap-4"><p className="font-semibold text-emerald-200">Question {currentIndex + 1} of {exam.totalQuestions}</p><p className="text-xs text-slate-400">Saved session #{exam.sessionId}</p></div>
+            <p className="mt-5 text-lg font-medium leading-relaxed text-white">{question?.stem}</p>
+            <div className="mt-5 grid gap-3">
+              {(["A", "B", "C", "D"] as const).map((choice) => (
+                <button key={choice} onClick={() => setSelectedAnswer(choice)} className={`rounded-md border p-3 text-left text-sm transition ${selectedAnswer === choice ? "border-blue-400 bg-blue-500/15 text-white" : "border-slate-700 bg-slate-950 text-slate-300 hover:border-slate-500"}`}>
+                  <span className="mr-3 font-semibold text-blue-300">{choice}.</span>{question?.[`option${choice}`]}
+                </button>
+              ))}
+            </div>
+            <button onClick={() => selectedAnswer && submitAnswer.mutate({ sessionId: exam.sessionId, questionId: question.id, selectedAnswer })} disabled={!selectedAnswer || submitAnswer.isPending} className="mt-5 inline-flex items-center gap-2 rounded-md bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-500 disabled:opacity-60">
+              {submitAnswer.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}{currentIndex + 1 === exam.totalQuestions ? "Finish Exam" : "Save & Next"}
+            </button>
           </div>
         )}
       </section>
