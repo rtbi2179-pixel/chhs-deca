@@ -74,16 +74,11 @@ export default function PIQuizlet() {
   });
   const activeEventCode = selectedEventCode || primaryEventQuery.data?.primaryEventCode || "";
   const selectedEvent = allEvents.find((event) => event.code === activeEventCode);
-  const eventPiCluster = selectedEvent ? EVENT_CLUSTER_TO_PI_CLUSTER[selectedEvent.cluster] : undefined;
-  const { data: coreModules, isLoading: coreModulesLoading } = trpc.piLearning.getModulesByCluster.useQuery(
-    { cluster: "Business Administration Core" },
+  const eventStudyQuery = trpc.piLearning.getEventStudyGuide.useQuery(
+    { eventCode: activeEventCode || "AAM" },
     { enabled: !!selectedEvent }
   );
-  const { data: eventSpecificModules, isLoading: eventSpecificModulesLoading } = trpc.piLearning.getModulesByCluster.useQuery(
-    { cluster: eventPiCluster ?? "Marketing" },
-    { enabled: !!eventPiCluster }
-  );
-  const eventStudyLoading = !!selectedEvent && (coreModulesLoading || eventSpecificModulesLoading);
+  const eventStudyLoading = !!selectedEvent && eventStudyQuery.isLoading;
 
   const { data: moduleWithSections, isLoading: moduleLoading } = trpc.piLearning.getModuleWithSections.useQuery(
     { moduleId: selectedModuleId! },
@@ -351,28 +346,16 @@ export default function PIQuizlet() {
             </div>
           ) : selectedEvent ? (
             <div className="space-y-10">
-              <div>
-                <div className="mb-4 flex flex-col gap-1 border-l-2 border-blue-500 pl-4 sm:flex-row sm:items-end sm:justify-between">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-300">General business skills</p>
-                    <h2 className="mt-1 text-xl font-bold text-white">Business Administration Core</h2>
-                    <p className="mt-1 text-sm text-slate-400">Foundational indicators used across DECA competitive events.</p>
-                  </div>
-                  <span className="text-sm text-slate-500">{coreModules?.length ?? 0} indicators</span>
-                </div>
-                {coreModules?.length ? <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">{coreModules.map(renderModuleCard)}</div> : <p className="rounded-lg border border-dashed border-slate-800 p-5 text-sm text-slate-400">No core indicators are available yet.</p>}
+              <div className="rounded-xl border border-blue-500/25 bg-blue-500/5 p-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-300">Official 2026–2027 PI guide</p>
+                <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between"><div><h2 className="text-xl font-bold text-white">{selectedEvent.name}</h2><p className="mt-1 text-sm text-slate-400">Shared PI modules mapped to this event’s active performance-indicator list. Modules are grouped by instructional area; no content is duplicated.</p></div><span className="text-sm text-slate-400">{eventStudyQuery.data?.completedModules ?? 0} / {eventStudyQuery.data?.totalModules ?? 0} mastered</span></div>
               </div>
-              <div>
-                <div className="mb-4 flex flex-col gap-1 border-l-2 border-emerald-500 pl-4 sm:flex-row sm:items-end sm:justify-between">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300">Event-specific preparation</p>
-                    <h2 className="mt-1 text-xl font-bold text-white">{selectedEvent.name}</h2>
-                    <p className="mt-1 text-sm text-slate-400">Indicators aligned with the {eventPiCluster} career cluster for this event.</p>
-                  </div>
-                  <span className="text-sm text-slate-500">{eventSpecificModules?.length ?? 0} indicators</span>
+              {eventStudyQuery.data?.instructionalAreas?.length ? eventStudyQuery.data.instructionalAreas.map((area) => (
+                <div key={area.instructionalArea}>
+                  <div className="mb-4 flex items-end justify-between gap-4 border-l-2 border-emerald-500 pl-4"><div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300">{area.modules[0]?.cluster === "Business Administration Core" ? "General business skills" : "Event-specific preparation"}</p><h3 className="mt-1 text-xl font-bold text-white">{area.instructionalArea}</h3></div><span className="text-sm text-slate-500">{area.modules.length} indicators</span></div>
+                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">{area.modules.map(renderModuleCard)}</div>
                 </div>
-                {eventSpecificModules?.length ? <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">{eventSpecificModules.map(renderModuleCard)}</div> : <p className="rounded-lg border border-dashed border-slate-800 p-5 text-sm text-slate-400">No event-aligned indicators are available for this event yet.</p>}
-              </div>
+              )) : <p className="rounded-lg border border-dashed border-slate-800 p-5 text-sm text-slate-400">No official PI mapping is available for this event.</p>}
             </div>
           ) : modules && modules.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

@@ -10,6 +10,7 @@ import {
   piModuleSections,
   piQuizQuestions,
   piScenarioChallenges,
+  eventPerformanceIndicators,
   userPiProgress,
   userPiSectionProgress,
 } from "../drizzle/schema";
@@ -122,6 +123,34 @@ export const piLearningRouter = router({
         .from(piLearningModules)
         .where(eq(piLearningModules.cluster, input.cluster))
         .orderBy(asc(piLearningModules.instructionalArea), asc(piLearningModules.performanceIndicator));
+    }),
+
+  getEventStudyGuide: protectedProcedure
+    .input(z.object({ eventCode: z.string().trim().min(2).max(20) }))
+    .query(async ({ ctx, input }) => {
+      const database = await requireDatabase();
+      const mappings = await database
+        .select({ module: piLearningModules, mappingBasis: eventPerformanceIndicators.mappingBasis })
+        .from(eventPerformanceIndicators)
+        .innerJoin(piLearningModules, eq(eventPerformanceIndicators.moduleId, piLearningModules.id))
+        .where(eq(eventPerformanceIndicators.eventCode, input.eventCode.toUpperCase()))
+        .orderBy(asc(piLearningModules.instructionalArea), asc(piLearningModules.performanceIndicator));
+      const moduleIds = mappings.map(item => item.module.id);
+      const progress = moduleIds.length
+        ? await database.select().from(userPiProgress).where(and(eq(userPiProgress.userId, ctx.user.id), inArray(userPiProgress.moduleId, moduleIds)))
+        : [];
+      const progressByModule = new Map(progress.map(item => [item.moduleId, item]));
+      const modules = mappings.map(({ module, mappingBasis }) => ({ ...module, mappingBasis, progress: progressByModule.get(module.id) ?? null }));
+      const grouped = modules.reduce<Record<string, typeof modules>>((groups, module) => {
+        (groups[module.instructionalArea] ??= []).push(module);
+        return groups;
+      }, {});
+      return {
+        eventCode: input.eventCode.toUpperCase(),
+        totalModules: modules.length,
+        completedModules: modules.filter(module => (module.progress?.masteryScore ?? 0) >= 85).length,
+        instructionalAreas: Object.entries(grouped).map(([instructionalArea, areaModules]) => ({ instructionalArea, modules: areaModules })),
+      };
     }),
 
   getModuleWithSections: protectedProcedure
