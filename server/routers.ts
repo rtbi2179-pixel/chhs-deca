@@ -636,6 +636,23 @@ export const appRouter = router({
           .orderBy(desc(adminActivityLogs.createdAt))
           .limit(input?.limit ?? 50);
       }),
+    exportChapterBackup: protectedProcedure
+      .input(z.object({ schoolCode: z.string().min(1).optional() }).optional())
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== 'super_admin') throw new TRPCError({ code: 'FORBIDDEN', message: 'Only super admins can export chapter backups' });
+        const schoolCode = input?.schoolCode ?? ctx.user.selectedSchoolCode ?? ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Select a school before exporting a backup' });
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Backup storage is unavailable' });
+        const members = await database.select({ id: users.id, name: users.name, username: users.username, email: users.email, role: users.role, createdAt: users.createdAt, primaryEventCode: users.primaryEventCode }).from(users).where(eq(users.schoolCode, schoolCode));
+        const memberIds = members.map(member => member.id);
+        const [practiceAnswers, mockExamSessions] = memberIds.length ? await Promise.all([
+          database.select().from(userAnswers).where(inArray(userAnswers.userId, memberIds)),
+          database.select().from(studySessions).where(inArray(studySessions.userId, memberIds)),
+        ]) : [[], []];
+        await database.insert(adminActivityLogs).values({ schoolCode, actorUserId: ctx.user.id, action: 'chapter_backup_exported', targetType: 'chapter_backup', targetId: schoolCode, details: JSON.stringify({ memberCount: members.length, practiceAnswerCount: practiceAnswers.length, mockExamSessionCount: mockExamSessions.length }) });
+        return { exportedAt: new Date(), schoolCode, members, practiceAnswers, mockExamSessions };
+      }),
     selectSchool: protectedProcedure
       .input(z.object({ schoolCode: z.string() }))
       .mutation(async ({ ctx, input }) => {

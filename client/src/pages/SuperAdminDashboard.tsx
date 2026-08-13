@@ -29,6 +29,20 @@ export default function SuperAdminDashboard() {
     },
     onError: (error) => setSaveMessage(error.message),
   });
+  const exportBackup = trpc.superAdmin.exportChapterBackup.useMutation({
+    onSuccess: (backup) => {
+      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `blue-blazer-${backup.schoolCode}-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+      setSaveMessage(`Chapter backup exported for ${backup.schoolCode}.`);
+      activityLogQuery.refetch();
+    },
+    onError: (error) => setSaveMessage(error.message),
+  });
 
   useEffect(() => {
     if (!economicConfigQuery.data) return;
@@ -128,8 +142,8 @@ export default function SuperAdminDashboard() {
                 <Button variant="outline" className="w-full justify-start">
                   View Economic Audit Log
                 </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  Export System Report
+                <Button variant="outline" className="w-full justify-start" disabled={exportBackup.isPending} onClick={() => exportBackup.mutate()}>
+                  {exportBackup.isPending ? 'Preparing Chapter Backup…' : 'Download Chapter Backup'}
                 </Button>
                 <Button variant="outline" className="w-full justify-start">
                   Reset Daily Metrics
