@@ -460,3 +460,6 @@
 - [x] Repair full-suite answered-question persistence regressions
 - [x] Repair full-suite stock-price cache status and in-flight deduplication regressions
 - [x] Repair the charts-and-filters MySQL test fixture and cleanup regression
+- [x] Improve public landing-page sign-up flow, product discovery, and chapter-buyer value proposition
+- [x] Replace stale third-party practice references with current Blue Blazer product guidance
+- [x] Refresh stale Blue Blazer page-title and season labels discovered during conversion review

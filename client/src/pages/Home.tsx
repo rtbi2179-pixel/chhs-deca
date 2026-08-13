@@ -9,8 +9,8 @@
 import { Link } from 'wouter'
 import { motion } from 'framer-motion'
 import { useAuth } from '@/_core/hooks/useAuth'
-import { Trophy, BookOpen, Calendar, Users, ArrowRight, Star, Target, Zap, Globe, ChevronRight } from 'lucide-react'
-import { useToast } from '@/components/Toast'
+import { Trophy, BookOpen, Calendar, Users, ArrowRight, Star, Target, Globe, ChevronRight, Building2, BarChart3, CheckCircle2, Compass } from 'lucide-react'
+import { getLoginUrl } from '@/const'
 import { InteractiveBackground } from '@/components/InteractiveBackground'
 
 const HERO_BG = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/deca-hero-bg-3D56BJM7ugEtwwxPTqT3y7.webp'
@@ -51,7 +51,7 @@ const features = [
     color: 'from-cyan-600/20 to-cyan-800/10',
     border: 'border-cyan-500/20 hover:border-cyan-500/50',
     glow: 'hover:shadow-[0_0_30px_oklch(0.65_0.15_210/0.2)]',
-    tag: '2025–2026 Season',
+    tag: 'Chapter Planning',
   },
   {
     href: '/volunteer',
@@ -67,10 +67,10 @@ const features = [
 
 const quickLinks = [
   { label: 'DECA Official Site', href: 'https://www.deca.org', icon: Globe },
-  { label: 'DECA Guide 2025-26', href: 'https://issuu.com/decainc/docs/deca_guide_2025-2026', icon: BookOpen },
+  { label: 'DECA Competitive Events', href: 'https://www.deca.org/compete/competitive-events', icon: BookOpen },
   { label: 'Exam Blueprints', href: 'https://www.deca.org/advisor-resources/competitive-events-exam-blueprints', icon: Target },
-  { label: 'Decademy Practice', href: 'https://decademy.app', icon: Zap },
-  { label: 'ICDC 2026 Info', href: 'https://www.deca.org/conferences/icdc', icon: Trophy },
+  { label: 'Blue Blazer Practice', href: '/practice', icon: BookOpen },
+  { label: 'ICDC Information', href: 'https://www.deca.org/conferences/icdc', icon: Trophy },
   { label: 'Texas DECA', href: 'https://www.texasdeca.org', icon: Star },
 ]
 
@@ -84,16 +84,14 @@ const fadeUp = {
 }
 
 export default function Home() {
-  // The userAuth hooks provides authentication state
-  // To implement login/logout functionality, simply call logout() or redirect to getLoginUrl()
-  let { user, loading, error, isAuthenticated, logout } = useAuth();
-  const { addToast } = useToast();
+  const { user } = useAuth();
 
-  const handleProtectedClick = (e: React.MouseEvent) => {
-    if (!user) {
-      e.preventDefault();
-      addToast('Log in required', 'warning', 3000);
+  const beginJourney = (destination: string) => {
+    if (user) {
+      window.location.href = destination;
+      return;
     }
+    window.location.href = getLoginUrl();
   };
 
   return (
@@ -131,31 +129,19 @@ export default function Home() {
                 </h1>
 
                 <p className="text-white/60 text-lg leading-relaxed max-w-lg mb-8">
-                  Everything you need to compete and win — event resources, practice exams,
-                  competition calendar, and volunteer opportunities. One hub. Zero excuses.
+                  Give every competitor a clearer path from first practice to peak performance —
+                  with PI study guides, balanced mock exams, chapter operations, and student momentum in one hub.
                 </p>
 
                 <div className="flex flex-wrap gap-3">
-                  <Link href={user ? "/events" : "#"} onClick={handleProtectedClick}>
-                    <motion.div
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
-                      className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-colors duration-200 hover:shadow-[0_0_30px_oklch(0.55_0.22_260/0.4)] cursor-pointer"
-                    >
-                      Explore Events
-                      <ArrowRight size={16} />
-                    </motion.div>
-                  </Link>
-                  <Link href={user ? "/practice" : "#"} onClick={handleProtectedClick}>
-                    <motion.div
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
-                      className="flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white font-semibold rounded-lg transition-all duration-200 cursor-pointer"
-                    >
-                      Start Practicing
-                    </motion.div>
-                  </Link>
+                  <motion.button type="button" onClick={() => beginJourney('/study-guide')} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-colors duration-200 hover:shadow-[0_0_30px_oklch(0.55_0.22_260/0.4)]">
+                    {user ? 'Open My Study Guide' : 'Start Your Chapter'} <ArrowRight size={16} />
+                  </motion.button>
+                  <motion.button type="button" onClick={() => beginJourney('/practice')} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white font-semibold rounded-lg transition-all duration-200">
+                    {user ? 'Start Practicing' : 'See How It Works'}
+                  </motion.button>
                 </div>
+                {!user && <p className="mt-4 text-sm text-white/40">Secure chapter access for students, advisors, and chapter administrators.</p>}
               </motion.div>
 
               {/* Stats Row */}
@@ -229,7 +215,7 @@ export default function Home() {
               viewport={{ once: true }}
               variants={fadeUp}
             >
-              <Link href={user ? href : "#"} onClick={handleProtectedClick}>
+              <Link href={user ? href : "/"} onClick={(event) => { if (!user) { event.preventDefault(); beginJourney(href); } }}>
                 <div
                   className={`group relative p-8 rounded-2xl bg-gradient-to-br ${color} border ${border} ${glow} transition-all duration-300 cursor-pointer overflow-hidden`}
                 >
@@ -261,7 +247,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── ICDC Countdown Banner ── */}
+      {/* ── Chapter value banner ── */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <motion.div
@@ -279,18 +265,18 @@ export default function Home() {
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 text-xs font-mono-data tracking-widest uppercase mb-3">
                   <Trophy size={12} />
-                  The Ultimate Goal
+                  Built for Chapter Momentum
                 </div>
-                <h2 className="font-display text-4xl sm:text-5xl text-white mb-2">ICDC 2026</h2>
-                <p className="text-white/60 text-lg">International Career Development Conference</p>
-                <p className="text-white/40 text-sm mt-1 font-mono-data">April 25–28, 2026 · Orlando, FL</p>
+                <h2 className="font-display text-4xl sm:text-5xl text-white mb-2">A FULL-SEASON ADVANTAGE</h2>
+                <p className="text-white/60 text-lg">A purposeful experience for competitors and a practical command center for chapter leaders.</p>
+                <p className="text-white/40 text-sm mt-1 font-mono-data">Study, simulate, organize, and review progress from one secure chapter space.</p>
               </div>
               <div className="flex flex-col items-center sm:items-end gap-4">
                 <div className="grid grid-cols-3 gap-4 text-center">
                   {[
-                    { value: '22', label: 'Days' },
-                    { value: '4', label: 'Clusters' },
-                    { value: '60+', label: 'Events' },
+                    { value: '2,772', label: 'PI Modules' },
+                    { value: '100', label: 'Mock Questions' },
+                    { value: '1', label: 'Chapter Hub' },
                   ].map(({ value, label }) => (
                     <div key={label} className="glass-card px-4 py-3 border-blue-500/20">
                       <div className="font-display text-3xl text-blue-400">{value}</div>
@@ -298,18 +284,47 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
-                <a
-                  href="https://www.deca.org/conferences/icdc"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  type="button"
+                  onClick={() => beginJourney('/study-guide')}
                   className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-all hover:shadow-[0_0_30px_oklch(0.55_0.22_260/0.4)]"
                 >
-                  Learn About ICDC
+                  {user ? 'Open Study Guide' : 'Bring Blue Blazer to Your Chapter'}
                   <ChevronRight size={16} />
-                </a>
+                </button>
               </div>
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* ── Chapter leader conversion section ── */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="section-divider mb-16" />
+        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900 to-blue-950/40 p-8 sm:p-12">
+          <div className="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-center">
+            <div>
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1.5 text-xs font-mono-data uppercase tracking-widest text-emerald-300"><Building2 size={13} /> For chapter leaders</div>
+              <h2 className="font-display text-4xl sm:text-5xl text-white">RUN A STRONGER CHAPTER, WITHOUT MORE SPREADSHEETS.</h2>
+              <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/60">Blue Blazer pairs serious competition preparation with the everyday tools chapters need to keep students informed, organized, and motivated.</p>
+              <button type="button" onClick={() => beginJourney('/')} className="mt-7 inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold text-slate-950 transition-colors hover:bg-slate-200">
+                {user ? 'Return to My Chapter' : 'Start with Blue Blazer'} <ArrowRight size={16} />
+              </button>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+              {[
+                { icon: Compass, title: 'Clear student paths', detail: 'Guide students from event selection to PI study, practice, and mock exams.' },
+                { icon: BarChart3, title: 'Visible progress', detail: 'Use accurate practice, market, and learning activity to guide support.' },
+                { icon: CheckCircle2, title: 'One operational home', detail: 'Keep announcements, calendars, volunteer work, feedback, and chapter tools together.' },
+              ].map(({ icon: Icon, title, detail }) => (
+                <div key={title} className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
+                  <Icon className="mb-3 h-5 w-5 text-blue-300" />
+                  <h3 className="font-semibold text-white">{title}</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-white/50">{detail}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -429,8 +444,8 @@ export default function Home() {
             <div className="flex flex-wrap items-center gap-6 text-white/30 text-sm">
               <a href="https://www.deca.org" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">DECA.org</a>
               <a href="https://www.texasdeca.org" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">Texas DECA</a>
-              <a href="https://decademy.app" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">Decademy</a>
-              <a href="https://www.deca.org/conferences/icdc" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">ICDC 2026</a>
+              <Link href="/practice" className="hover:text-white/60 transition-colors">Blue Blazer Practice</Link>
+              <a href="https://www.deca.org/conferences/icdc" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">ICDC Information</a>
             </div>
           </div>
           <div className="section-divider mb-6" />
