@@ -11,10 +11,11 @@ import { notifyOwner } from "./_core/notification";
 import { getStockPrice, getStockPriceCacheStatus } from "./stockPriceService";
 import { getGachaRarityCost, selectGachaRarity, type GachaRarity } from "./gachaRarity";
 import { applyCreditCardCharge, applyCreditCardPayment, calculateCashback, summarizeSpending } from "./creditCardMath";
+import { calculateMonetaryPressure } from "./economicMonitoring";
 
 import { initializeBanksForSchool, getBanksForSchool, getCreditCardsForBank } from './bankInitializer';
-import { questions, userAnswers, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls } from "../drizzle/schema";
-import { and, eq, sql, inArray, desc, lte } from "drizzle-orm";
+import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog } from "../drizzle/schema";
+import { and, eq, sql, inArray, desc, lte, gte } from "drizzle-orm";
 import { piLearningRouter } from "./piLearningRouter";
 
 
@@ -539,6 +540,49 @@ export const appRouter = router({
           .where(eq(economicAuditLog.schoolCode, schoolCode))
           .orderBy(desc(economicAuditLog.createdAt))
           .limit(input?.limit ?? 50);
+      }),
+
+    getEconomicMonitoring: protectedProcedure
+      .input(z.object({ schoolCode: z.string().min(1).optional() }).optional())
+      .query(async ({ ctx, input }) => {
+        if (ctx.user.role !== 'super_admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only super admins can view economic monitoring' });
+        }
+        const schoolCode = input?.schoolCode ?? ctx.user.selectedSchoolCode ?? ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Select a school before viewing economic monitoring' });
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Monitoring database is unavailable' });
+        const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+        const [activeUsers, issuedRewards, marketActivity, cardActivity, latestAudit] = await Promise.all([
+          database.select({ count: sql<number>`count(*)` }).from(users).where(eq(users.schoolCode, schoolCode)),
+          database.select({ total: sql<string>`coalesce(sum(${blueBucksTransactions.amount}), 0)` }).from(blueBucksTransactions)
+            .where(and(eq(blueBucksTransactions.schoolCode, schoolCode), gte(blueBucksTransactions.createdAt, since))),
+          database.select({ count: sql<number>`count(*)`, turnover: sql<string>`coalesce(sum(${marketTransactions.totalAmount}), 0)` }).from(marketTransactions)
+            .where(and(eq(marketTransactions.schoolCode, schoolCode), eq(marketTransactions.status, 'executed'), gte(marketTransactions.createdAt, since))),
+          database.select({ count: sql<number>`count(*)`, spending: sql<string>`coalesce(sum(${cardUsageTracking.transactionAmount}), 0)` }).from(cardUsageTracking)
+            .where(and(eq(cardUsageTracking.schoolCode, schoolCode), gte(cardUsageTracking.transactionDate, since))),
+          database.select().from(economicAuditLog).where(eq(economicAuditLog.schoolCode, schoolCode)).orderBy(desc(economicAuditLog.createdAt)).limit(1),
+        ]);
+        const monitoring = calculateMonetaryPressure({
+          rewardUnitsIssued: Number(issuedRewards[0]?.total ?? 0),
+          activeUsers: Number(activeUsers[0]?.count ?? 0),
+          marketTurnover: Number(marketActivity[0]?.turnover ?? 0),
+          cardSpending: Number(cardActivity[0]?.spending ?? 0),
+        });
+        return {
+          schoolCode,
+          sampleWindowDays: 30,
+          generatedAt: new Date(),
+          databaseStatus: 'healthy' as const,
+          activeUsers: Number(activeUsers[0]?.count ?? 0),
+          rewardUnitsIssued: Number(issuedRewards[0]?.total ?? 0),
+          marketTransactions: Number(marketActivity[0]?.count ?? 0),
+          marketTurnover: Number(marketActivity[0]?.turnover ?? 0),
+          cardTransactions: Number(cardActivity[0]?.count ?? 0),
+          cardSpending: Number(cardActivity[0]?.spending ?? 0),
+          latestEconomicChangeAt: latestAudit[0]?.createdAt ?? null,
+          ...monitoring,
+        };
       }),
   }),
   auth: router({

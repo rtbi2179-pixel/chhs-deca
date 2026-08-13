@@ -75,6 +75,14 @@ describe("super-admin economic audit workflow", () => {
       "paymentReliabilityWeight",
     ]);
     expect(logs.every((entry) => entry.superAdminId === userId && entry.reason === "Rebalance payment and history emphasis")).toBe(true);
+
+    await expect(caller.superAdmin.getEconomicMonitoring()).resolves.toMatchObject({
+      schoolCode,
+      sampleWindowDays: 30,
+      databaseStatus: "healthy",
+      activeUsers: expect.any(Number),
+      pressureIndex: expect.any(Number),
+    });
   });
 
   it("blocks non-super-admin callers from all economic configuration procedures", async () => {
@@ -92,6 +100,7 @@ describe("super-admin economic audit workflow", () => {
 
     await expect(caller.superAdmin.getEconomicConfig()).rejects.toMatchObject({ code: "FORBIDDEN" });
     await expect(caller.superAdmin.getEconomicAuditLog()).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(caller.superAdmin.getEconomicMonitoring()).rejects.toMatchObject({ code: "FORBIDDEN" });
     await expect(caller.superAdmin.updateEconomicWeights({
       paymentReliabilityWeight: 25,
       accountHistoryWeight: 25,

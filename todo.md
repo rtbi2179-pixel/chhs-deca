@@ -200,7 +200,7 @@
 - [ ] Allow card tier modification
 - [ ] Allow interest rate adjustment
 - [ ] Allow rewards percentage adjustment
-- [ ] Log all economic changes
+- [x] Log all economic changes
 - [ ] Display credit score analytics
 - [ ] Monitor system inflation
 
@@ -413,6 +413,7 @@
 ### Remaining Minor Features (10 items)
 - [x] Add cache status monitoring endpoint
 - [ ] Implement system inflation tracking
+- [ ] Define, persist, and chart an actual school-level Blue Bucks inflation index based on issuance, sinks, and purchasing-power baselines
 - [x] Create economic audit log viewer
 - [ ] Add user feedback system
 - [ ] Implement notification preferences
@@ -420,7 +421,7 @@
 - [ ] Add export functionality for reports
 - [ ] Implement data backup system
 - [ ] Create admin activity logs
-- [ ] Add system health monitoring dashboard
+- [x] Add system health monitoring dashboard
 
 ## Complete PI Quizlet Package Integration
 

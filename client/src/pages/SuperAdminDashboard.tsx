@@ -20,6 +20,7 @@ export default function SuperAdminDashboard() {
   const selectedSchoolQuery = trpc.superAdmin.getSelectedSchool.useQuery(undefined, { enabled: user?.role === 'super_admin' });
   const economicConfigQuery = trpc.superAdmin.getEconomicConfig.useQuery(undefined, { enabled: user?.role === 'super_admin' });
   const auditLogQuery = trpc.superAdmin.getEconomicAuditLog.useQuery(undefined, { enabled: user?.role === 'super_admin' });
+  const monitoringQuery = trpc.superAdmin.getEconomicMonitoring.useQuery(undefined, { enabled: user?.role === 'super_admin' });
   const updateWeights = trpc.superAdmin.updateEconomicWeights.useMutation({
     onSuccess: async () => {
       setSaveMessage('Credit-score weights saved and added to the audit log.');
@@ -106,17 +107,18 @@ export default function SuperAdminDashboard() {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-foreground/70">Active Users</span>
-                  <span className="font-bold text-foreground">--</span>
+                  <span className="font-bold text-foreground">{monitoringQuery.data?.activeUsers ?? '—'}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-foreground/70">Total Transactions</span>
-                  <span className="font-bold text-foreground">--</span>
+                  <span className="text-foreground/70">30-Day Transactions</span>
+                  <span className="font-bold text-foreground">{monitoringQuery.data ? monitoringQuery.data.marketTransactions + monitoringQuery.data.cardTransactions : '—'}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-foreground/70">System Inflation Rate</span>
-                  <span className="font-bold text-foreground">0%</span>
+                  <span className="text-foreground/70">Simulation Monetary Pressure</span>
+                  <span className="font-bold text-foreground">{monitoringQuery.data ? `${monitoringQuery.data.pressureIndex}% · ${monitoringQuery.data.status}` : '—'}</span>
                 </div>
               </div>
+              <p className="mt-4 text-xs text-foreground/60">A 30-day simulation signal based on reward issuance per active user; it is not a real-world inflation measure.</p>
             </Card>
 
             <Card className="border border-border p-6 bg-card">
@@ -131,6 +133,16 @@ export default function SuperAdminDashboard() {
                 <Button variant="outline" className="w-full justify-start">
                   Reset Daily Metrics
                 </Button>
+              </div>
+            </Card>
+
+            <Card className="border border-border p-6 bg-card">
+              <h3 className="text-lg font-bold text-foreground mb-4">Operational Health</h3>
+              <div className="space-y-3 text-sm">
+                <div className="flex justify-between gap-4"><span className="text-foreground/70">Database</span><span className="font-medium text-emerald-500">{monitoringQuery.data?.databaseStatus ?? 'checking'}</span></div>
+                <div className="flex justify-between gap-4"><span className="text-foreground/70">Reward units issued</span><span className="font-medium text-foreground">{monitoringQuery.data?.rewardUnitsIssued.toLocaleString() ?? '—'}</span></div>
+                <div className="flex justify-between gap-4"><span className="text-foreground/70">Market turnover</span><span className="font-medium text-foreground">{monitoringQuery.data ? `${monitoringQuery.data.marketTurnover.toFixed(2)} BB` : '—'}</span></div>
+                <div className="flex justify-between gap-4"><span className="text-foreground/70">Card spending</span><span className="font-medium text-foreground">{monitoringQuery.data ? `${monitoringQuery.data.cardSpending.toFixed(2)} BB` : '—'}</span></div>
               </div>
             </Card>
           </div>
