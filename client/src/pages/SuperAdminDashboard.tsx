@@ -20,11 +20,12 @@ export default function SuperAdminDashboard() {
   const selectedSchoolQuery = trpc.superAdmin.getSelectedSchool.useQuery(undefined, { enabled: user?.role === 'super_admin' });
   const economicConfigQuery = trpc.superAdmin.getEconomicConfig.useQuery(undefined, { enabled: user?.role === 'super_admin' });
   const auditLogQuery = trpc.superAdmin.getEconomicAuditLog.useQuery(undefined, { enabled: user?.role === 'super_admin' });
+  const activityLogQuery = trpc.superAdmin.getActivityLog.useQuery(undefined, { enabled: user?.role === 'super_admin' });
   const monitoringQuery = trpc.superAdmin.getEconomicMonitoring.useQuery(undefined, { enabled: user?.role === 'super_admin' });
   const updateWeights = trpc.superAdmin.updateEconomicWeights.useMutation({
     onSuccess: async () => {
       setSaveMessage('Credit-score weights saved and added to the audit log.');
-      await Promise.all([economicConfigQuery.refetch(), auditLogQuery.refetch()]);
+      await Promise.all([economicConfigQuery.refetch(), auditLogQuery.refetch(), activityLogQuery.refetch()]);
     },
     onError: (error) => setSaveMessage(error.message),
   });
@@ -262,22 +263,40 @@ export default function SuperAdminDashboard() {
 
         {/* Logs Tab */}
         {activeTab === 'logs' && (
-          <Card className="border border-border p-6 bg-card">
-            <h3 className="text-lg font-bold text-foreground mb-4">Economic Audit Log</h3>
-            <div className="space-y-2 max-h-96 overflow-y-auto">
-              {auditLogQuery.isLoading ? (
-                <div className="text-sm text-foreground/60 p-3 bg-foreground/5 rounded">Loading audit history…</div>
-              ) : auditLogQuery.data?.length ? auditLogQuery.data.map((entry) => (
-                <div key={entry.id} className="text-sm p-3 bg-foreground/5 rounded space-y-1">
-                  <div className="flex justify-between gap-4"><span className="font-medium text-foreground">{entry.fieldChanged}</span><span className="text-foreground/60">{new Date(entry.createdAt).toLocaleString()}</span></div>
-                  <p className="text-foreground/70">{entry.oldValue ?? '—'} → {entry.newValue ?? '—'}</p>
-                  {entry.reason && <p className="text-foreground/60">Reason: {entry.reason}</p>}
-                </div>
-              )) : (
-                <div className="text-sm text-foreground/60 p-3 bg-foreground/5 rounded">No audit logs available yet.</div>
-              )}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <Card className="border border-border p-6 bg-card">
+              <h3 className="text-lg font-bold text-foreground mb-4">Economic Audit Log</h3>
+              <div className="space-y-2 max-h-96 overflow-y-auto">
+                {auditLogQuery.isLoading ? (
+                  <div className="text-sm text-foreground/60 p-3 bg-foreground/5 rounded">Loading audit history…</div>
+                ) : auditLogQuery.data?.length ? auditLogQuery.data.map((entry) => (
+                  <div key={entry.id} className="text-sm p-3 bg-foreground/5 rounded space-y-1">
+                    <div className="flex justify-between gap-4"><span className="font-medium text-foreground">{entry.fieldChanged}</span><span className="text-foreground/60">{new Date(entry.createdAt).toLocaleString()}</span></div>
+                    <p className="text-foreground/70">{entry.oldValue ?? '—'} → {entry.newValue ?? '—'}</p>
+                    {entry.reason && <p className="text-foreground/60">Reason: {entry.reason}</p>}
+                  </div>
+                )) : (
+                  <div className="text-sm text-foreground/60 p-3 bg-foreground/5 rounded">No audit logs available yet.</div>
+                )}
+              </div>
+            </Card>
+            <Card className="border border-border p-6 bg-card">
+              <h3 className="text-lg font-bold text-foreground mb-1">Administrator Activity</h3>
+              <p className="text-sm text-foreground/60 mb-4">Recent privileged actions for the selected chapter.</p>
+              <div className="space-y-2 max-h-96 overflow-y-auto">
+                {activityLogQuery.isLoading ? (
+                  <div className="text-sm text-foreground/60 p-3 bg-foreground/5 rounded">Loading administrator activity…</div>
+                ) : activityLogQuery.data?.length ? activityLogQuery.data.map((entry) => (
+                  <div key={entry.id} className="text-sm p-3 bg-foreground/5 rounded space-y-1">
+                    <div className="flex justify-between gap-4"><span className="font-medium text-foreground">{entry.action.replaceAll('_', ' ')}</span><span className="text-foreground/60">{new Date(entry.createdAt).toLocaleString()}</span></div>
+                    <p className="text-foreground/70">Target: {entry.targetType}{entry.targetId ? ` · ${entry.targetId}` : ''}</p>
+                  </div>
+                )) : (
+                  <div className="text-sm text-foreground/60 p-3 bg-foreground/5 rounded">No administrator activity has been recorded for this chapter yet.</div>
+                )}
+              </div>
+            </Card>
             </div>
-          </Card>
         )}
       </div>
     </div>

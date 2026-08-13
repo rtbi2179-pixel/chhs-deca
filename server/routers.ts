@@ -14,7 +14,7 @@ import { applyCreditCardCharge, applyCreditCardPayment, calculateCashback, summa
 import { calculateMonetaryPressure } from "./economicMonitoring";
 
 import { initializeBanksForSchool, getBanksForSchool, getCreditCardsForBank } from './bankInitializer';
-import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback, notificationPreferences, userProfileSettings } from "../drizzle/schema";
+import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback, notificationPreferences, userProfileSettings, adminActivityLogs } from "../drizzle/schema";
 import { and, eq, sql, inArray, desc, lte, gte } from "drizzle-orm";
 import { piLearningRouter } from "./piLearningRouter";
 
@@ -91,7 +91,17 @@ export const announcementsRouter = router({
       if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
         throw new TRPCError({ code: 'FORBIDDEN' })
       }
-      
+      const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
+      const database = await db.getDb();
+      if (database && schoolCode) {
+        await database.insert(adminActivityLogs).values({
+          actorUserId: ctx.user.id,
+          schoolCode,
+          action: 'announcement_deleted',
+          targetType: 'announcement',
+          targetId: String(input.announcementId),
+        });
+      }
       return await deleteAnnouncement(input.announcementId)
     }),
 
@@ -105,7 +115,18 @@ export const announcementsRouter = router({
       if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
         throw new TRPCError({ code: 'FORBIDDEN' })
       }
-      
+      const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
+      const database = await db.getDb();
+      if (database && schoolCode) {
+        await database.insert(adminActivityLogs).values({
+          actorUserId: ctx.user.id,
+          schoolCode,
+          action: 'announcement_updated',
+          targetType: 'announcement',
+          targetId: String(input.announcementId),
+          details: JSON.stringify({ title: input.title }),
+        });
+      }
       return await db.updateAnnouncement(input.announcementId, {
         title: input.title,
         content: input.content,
