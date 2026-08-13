@@ -434,6 +434,112 @@ export const appRouter = router({
         }
         return await db.getAllSchoolCodes()
       }),
+
+    getEconomicConfig: protectedProcedure
+      .input(z.object({ schoolCode: z.string().min(1).optional() }).optional())
+      .query(async ({ ctx, input }) => {
+        if (ctx.user.role !== 'super_admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only super admins can view economic configuration' });
+        }
+        const schoolCode = input?.schoolCode ?? ctx.user.selectedSchoolCode ?? ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Select a school before viewing economic configuration' });
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+        const { economicConfig } = await import('../drizzle/schema');
+        const config = await database.select().from(economicConfig).where(eq(economicConfig.schoolCode, schoolCode)).limit(1);
+        return config[0] ?? {
+          schoolCode,
+          paymentReliabilityWeight: '25',
+          accountHistoryWeight: '25',
+          practiceConsistencyWeight: '20',
+          netWorthWeight: '20',
+          spendingBehaviorWeight: '10',
+          onTimePaymentPoints: 2,
+          missedPaymentPenalty: 15,
+          savingsInterestRate: '0.5',
+        };
+      }),
+
+    updateEconomicWeights: protectedProcedure
+      .input(z.object({
+        schoolCode: z.string().min(1).optional(),
+        paymentReliabilityWeight: z.number().min(0).max(100),
+        accountHistoryWeight: z.number().min(0).max(100),
+        practiceConsistencyWeight: z.number().min(0).max(100),
+        netWorthWeight: z.number().min(0).max(100),
+        spendingBehaviorWeight: z.number().min(0).max(100),
+        reason: z.string().trim().max(500).optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== 'super_admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only super admins can update economic configuration' });
+        }
+        const schoolCode = input.schoolCode ?? ctx.user.selectedSchoolCode ?? ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Select a school before updating economic configuration' });
+        const totalWeight = input.paymentReliabilityWeight + input.accountHistoryWeight + input.practiceConsistencyWeight + input.netWorthWeight + input.spendingBehaviorWeight;
+        if (Math.abs(totalWeight - 100) > 0.001) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Credit-score weights must total 100%' });
+        }
+
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+        const { economicAuditLog, economicConfig } = await import('../drizzle/schema');
+        const existing = await database.select().from(economicConfig).where(eq(economicConfig.schoolCode, schoolCode)).limit(1);
+        const values = {
+          paymentReliabilityWeight: input.paymentReliabilityWeight.toFixed(2),
+          accountHistoryWeight: input.accountHistoryWeight.toFixed(2),
+          practiceConsistencyWeight: input.practiceConsistencyWeight.toFixed(2),
+          netWorthWeight: input.netWorthWeight.toFixed(2),
+          spendingBehaviorWeight: input.spendingBehaviorWeight.toFixed(2),
+        };
+
+        if (existing[0]) {
+          await database.update(economicConfig).set(values).where(eq(economicConfig.id, existing[0].id));
+        } else {
+          await database.insert(economicConfig).values({ schoolCode, ...values });
+        }
+
+        const prior = existing[0] ?? {
+          paymentReliabilityWeight: '25.00',
+          accountHistoryWeight: '25.00',
+          practiceConsistencyWeight: '20.00',
+          netWorthWeight: '20.00',
+          spendingBehaviorWeight: '10.00',
+        };
+        for (const [fieldChanged, newValue] of Object.entries(values)) {
+          const oldValue = prior[fieldChanged as keyof typeof values];
+          if (String(oldValue) !== newValue) {
+            await database.insert(economicAuditLog).values({
+              superAdminId: ctx.user.id,
+              schoolCode,
+              changeType: 'credit_score_weights',
+              fieldChanged,
+              oldValue: String(oldValue),
+              newValue,
+              reason: input.reason || null,
+            });
+          }
+        }
+
+        return { success: true, schoolCode, totalWeight };
+      }),
+
+    getEconomicAuditLog: protectedProcedure
+      .input(z.object({ schoolCode: z.string().min(1).optional(), limit: z.number().int().min(1).max(100).default(50) }).optional())
+      .query(async ({ ctx, input }) => {
+        if (ctx.user.role !== 'super_admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only super admins can view economic audit logs' });
+        }
+        const schoolCode = input?.schoolCode ?? ctx.user.selectedSchoolCode ?? ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Select a school before viewing audit logs' });
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+        const { economicAuditLog } = await import('../drizzle/schema');
+        return database.select().from(economicAuditLog)
+          .where(eq(economicAuditLog.schoolCode, schoolCode))
+          .orderBy(desc(economicAuditLog.createdAt))
+          .limit(input?.limit ?? 50);
+      }),
   }),
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),

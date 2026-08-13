@@ -768,9 +768,13 @@ export type InsertEconomicSetting = typeof economicSettings.$inferInsert;
  */
 export const economicAuditLog = mysqlTable("economicAuditLog", {
   id: int("id").autoincrement().primaryKey(),
+  superAdminId: int("superAdminId").notNull().references(() => users.id, { onDelete: "cascade" }),
   schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
-  action: varchar("action", { length: 255 }).notNull(),
-  details: text("details"),
+  changeType: varchar("changeType", { length: 100 }).notNull(),
+  fieldChanged: varchar("fieldChanged", { length: 100 }).notNull(),
+  oldValue: text("oldValue"),
+  newValue: text("newValue"),
+  reason: text("reason"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 export type EconomicAuditLog = typeof economicAuditLog.$inferSelect;

@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { useEffect } from 'react';
 import { useAuth } from '@/_core/hooks/useAuth';
+import { trpc } from '@/lib/trpc';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, Settings, TrendingUp, DollarSign, Zap } from 'lucide-react';
@@ -7,6 +9,44 @@ import { AlertCircle, Settings, TrendingUp, DollarSign, Zap } from 'lucide-react
 export default function SuperAdminDashboard() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<'overview' | 'credit' | 'cards' | 'rewards' | 'logs'>('overview');
+  const [saveMessage, setSaveMessage] = useState<string | null>(null);
+  const [weights, setWeights] = useState({
+    paymentReliabilityWeight: 25,
+    accountHistoryWeight: 25,
+    practiceConsistencyWeight: 20,
+    netWorthWeight: 20,
+    spendingBehaviorWeight: 10,
+  });
+  const selectedSchoolQuery = trpc.superAdmin.getSelectedSchool.useQuery(undefined, { enabled: user?.role === 'super_admin' });
+  const economicConfigQuery = trpc.superAdmin.getEconomicConfig.useQuery(undefined, { enabled: user?.role === 'super_admin' });
+  const auditLogQuery = trpc.superAdmin.getEconomicAuditLog.useQuery(undefined, { enabled: user?.role === 'super_admin' });
+  const updateWeights = trpc.superAdmin.updateEconomicWeights.useMutation({
+    onSuccess: async () => {
+      setSaveMessage('Credit-score weights saved and added to the audit log.');
+      await Promise.all([economicConfigQuery.refetch(), auditLogQuery.refetch()]);
+    },
+    onError: (error) => setSaveMessage(error.message),
+  });
+
+  useEffect(() => {
+    if (!economicConfigQuery.data) return;
+    setWeights({
+      paymentReliabilityWeight: Number(economicConfigQuery.data.paymentReliabilityWeight),
+      accountHistoryWeight: Number(economicConfigQuery.data.accountHistoryWeight),
+      practiceConsistencyWeight: Number(economicConfigQuery.data.practiceConsistencyWeight),
+      netWorthWeight: Number(economicConfigQuery.data.netWorthWeight),
+      spendingBehaviorWeight: Number(economicConfigQuery.data.spendingBehaviorWeight),
+    });
+  }, [economicConfigQuery.data]);
+
+  const totalWeight = Object.values(weights).reduce((sum, value) => sum + value, 0);
+  const weightFields = [
+    { key: 'paymentReliabilityWeight' as const, label: 'Payment Reliability Weight', description: 'Influence of on-time payments on credit score' },
+    { key: 'accountHistoryWeight' as const, label: 'Account History Weight', description: 'Influence of account age on credit score' },
+    { key: 'practiceConsistencyWeight' as const, label: 'Practice Consistency Weight', description: 'Influence of practice activity on credit score' },
+    { key: 'netWorthWeight' as const, label: 'Net Worth Weight', description: 'Influence of net worth on credit score' },
+    { key: 'spendingBehaviorWeight' as const, label: 'Spending Behavior Weight', description: 'Influence of spending patterns on credit score' },
+  ];
 
   // Redirect if not super admin
   if (user?.role !== 'super_admin') {
@@ -101,92 +141,33 @@ export default function SuperAdminDashboard() {
           <Card className="border border-border p-6 bg-card">
             <h3 className="text-lg font-bold text-foreground mb-6">Credit Score Configuration</h3>
             <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Payment Reliability Weight
-                </label>
-                <div className="flex items-center gap-4">
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    defaultValue="25"
-                    className="flex-1"
-                  />
-                  <span className="text-foreground font-bold w-12">25%</span>
+              <p className="text-sm text-foreground/60">Managing economics for {selectedSchoolQuery.data?.selectedSchoolCode ?? user.schoolCode}. Weights must total 100%.</p>
+              {weightFields.map((field) => (
+                <div key={field.key}>
+                  <label className="block text-sm font-medium text-foreground mb-2">{field.label}</label>
+                  <div className="flex items-center gap-4">
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={weights[field.key]}
+                      onChange={(event) => setWeights((current) => ({ ...current, [field.key]: Number(event.target.value) }))}
+                      className="flex-1"
+                    />
+                    <span className="text-foreground font-bold w-12">{weights[field.key]}%</span>
+                  </div>
+                  <p className="text-xs text-foreground/60 mt-1">{field.description}</p>
                 </div>
-                <p className="text-xs text-foreground/60 mt-1">Influence of on-time payments on credit score</p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Account History Weight
-                </label>
-                <div className="flex items-center gap-4">
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    defaultValue="25"
-                    className="flex-1"
-                  />
-                  <span className="text-foreground font-bold w-12">25%</span>
-                </div>
-                <p className="text-xs text-foreground/60 mt-1">Influence of account age on credit score</p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Practice Consistency Weight
-                </label>
-                <div className="flex items-center gap-4">
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    defaultValue="20"
-                    className="flex-1"
-                  />
-                  <span className="text-foreground font-bold w-12">20%</span>
-                </div>
-                <p className="text-xs text-foreground/60 mt-1">Influence of practice activity on credit score</p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Net Worth Weight
-                </label>
-                <div className="flex items-center gap-4">
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    defaultValue="20"
-                    className="flex-1"
-                  />
-                  <span className="text-foreground font-bold w-12">20%</span>
-                </div>
-                <p className="text-xs text-foreground/60 mt-1">Influence of net worth on credit score</p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Spending Behavior Weight
-                </label>
-                <div className="flex items-center gap-4">
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    defaultValue="10"
-                    className="flex-1"
-                  />
-                  <span className="text-foreground font-bold w-12">10%</span>
-                </div>
-                <p className="text-xs text-foreground/60 mt-1">Influence of spending patterns on credit score</p>
-              </div>
-
-              <Button className="w-full mt-6">Save Credit Score Configuration</Button>
+              ))}
+              <div className={`text-sm font-medium ${totalWeight === 100 ? 'text-emerald-500' : 'text-red-500'}`}>Total: {totalWeight}%</div>
+              {saveMessage && <p className="text-sm text-foreground/70">{saveMessage}</p>}
+              <Button
+                className="w-full mt-6"
+                disabled={totalWeight !== 100 || updateWeights.isPending}
+                onClick={() => updateWeights.mutate(weights)}
+              >
+                {updateWeights.isPending ? 'Saving configuration...' : 'Save Credit Score Configuration'}
+              </Button>
             </div>
           </Card>
         )}
@@ -272,9 +253,17 @@ export default function SuperAdminDashboard() {
           <Card className="border border-border p-6 bg-card">
             <h3 className="text-lg font-bold text-foreground mb-4">Economic Audit Log</h3>
             <div className="space-y-2 max-h-96 overflow-y-auto">
-              <div className="text-sm text-foreground/60 p-3 bg-foreground/5 rounded">
-                No audit logs available yet
-              </div>
+              {auditLogQuery.isLoading ? (
+                <div className="text-sm text-foreground/60 p-3 bg-foreground/5 rounded">Loading audit history…</div>
+              ) : auditLogQuery.data?.length ? auditLogQuery.data.map((entry) => (
+                <div key={entry.id} className="text-sm p-3 bg-foreground/5 rounded space-y-1">
+                  <div className="flex justify-between gap-4"><span className="font-medium text-foreground">{entry.fieldChanged}</span><span className="text-foreground/60">{new Date(entry.createdAt).toLocaleString()}</span></div>
+                  <p className="text-foreground/70">{entry.oldValue ?? '—'} → {entry.newValue ?? '—'}</p>
+                  {entry.reason && <p className="text-foreground/60">Reason: {entry.reason}</p>}
+                </div>
+              )) : (
+                <div className="text-sm text-foreground/60 p-3 bg-foreground/5 rounded">No audit logs available yet.</div>
+              )}
             </div>
           </Card>
         )}
