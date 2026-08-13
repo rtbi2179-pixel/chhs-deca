@@ -273,7 +273,7 @@ export default function PIQuizlet() {
       key={module.id}
       type="button"
       onClick={() => openModule(module.id)}
-      className="group w-full cursor-pointer rounded-lg border border-slate-800 bg-slate-900 p-5 text-left transition-colors duration-150 hover:border-blue-500/60 hover:bg-slate-900/80"
+      className="editorial-panel editorial-panel-interactive group w-full cursor-pointer p-5 text-left"
     >
       <div className="flex items-start justify-between gap-3 mb-4">
         <div className="flex h-10 w-10 items-center justify-center rounded-md border border-blue-500/30 bg-blue-500/10 group-hover:border-blue-400/60 transition">
@@ -315,21 +315,21 @@ export default function PIQuizlet() {
   // ── Module selection screen ────────────────────────────────────────────────
   if (!selectedModuleId) {
     return (
-      <div className="min-h-screen bg-slate-950 text-white">
-        <div className="container mx-auto py-16 px-4 max-w-6xl">
+      <div className="page-shell">
+        <div className="page-content max-w-6xl">
           {/* Header */}
-          <div className="mb-10 border-b border-slate-800 pb-8">
+          <div className="mb-10 border-b border-white/10 pb-8">
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-blue-500/40 bg-blue-500/10">
                 <BookOpen className="h-5 w-5 text-blue-300" />
               </div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-300">Blue Blazer Study Library</p>
             </div>
-            <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">Performance Indicator Study</h1>
-            <p className="max-w-2xl text-base leading-relaxed text-slate-400">
+            <h1 className="page-title mb-2">Performance Indicator Study</h1>
+            <p className="page-intro">
               Choose a career cluster, then work through lessons, vocabulary, flashcards, review questions, and scenarios at your own pace.
             </p>
-            <div className="mt-6 max-w-2xl rounded-lg border border-slate-800 bg-slate-900 p-4">
+            <div className="editorial-panel-muted mt-6 max-w-2xl p-4">
               <label htmlFor="event-study-path" className="block text-sm font-semibold text-slate-200">Study for a specific competitive event</label>
               <p className="mt-1 text-xs leading-relaxed text-slate-400">Select an event to separate business administration core skills from the indicators aligned with that event’s career cluster.</p>
               <select
@@ -350,15 +350,15 @@ export default function PIQuizlet() {
           </div>
 
           {/* Cluster Tabs */}
-          <div className="flex max-w-full gap-1.5 mb-8 overflow-x-auto border-b border-slate-800 pb-3">
+          <div className="mb-8 flex max-w-full gap-1.5 overflow-x-auto border-b border-white/10 pb-3">
             {CLUSTERS.map((cluster) => (
               <button
                 key={cluster}
                 onClick={() => setSelectedCluster(cluster)}
                 className={`px-4 py-2 rounded-md border font-medium text-sm transition-colors duration-150 ${
                   selectedCluster === cluster
-                    ? "border-blue-500 bg-blue-600 text-white"
-                    : "border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-700 hover:text-white"
+                    ? "editorial-tab editorial-tab-active"
+                    : "editorial-tab bg-white/[0.02]"
                 }`}
               >
                 {cluster}
@@ -368,7 +368,7 @@ export default function PIQuizlet() {
 
           {/* Modules Grid */}
           {modulesLoading || eventStudyLoading ? (
-            <div className="flex items-center justify-center py-24">
+            <div className="loading-state py-12">
               <div className="text-center">
                 <Loader2 className="w-12 h-12 animate-spin text-blue-500 mx-auto mb-4" />
                 <p className="text-slate-400">Loading modules...</p>
@@ -376,7 +376,7 @@ export default function PIQuizlet() {
             </div>
           ) : selectedEvent ? (
             <div className="space-y-10">
-              <div className="rounded-xl border border-blue-500/25 bg-blue-500/5 p-5">
+              <div className="editorial-panel border-blue-500/20 bg-blue-500/[0.045] p-5">
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-300">Official 2026–2027 PI guide</p>
                 <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between"><div><h2 className="text-xl font-bold text-white">{selectedEvent.name}</h2><p className="mt-1 text-sm text-slate-400">Shared PI modules mapped to this event’s active performance-indicator list. Modules are grouped by instructional area; no content is duplicated.</p></div><span className="text-sm text-slate-400">{eventStudyQuery.data?.completedModules ?? 0} / {eventStudyQuery.data?.totalModules ?? 0} mastered</span></div>
               </div>
@@ -385,14 +385,14 @@ export default function PIQuizlet() {
                   <div className="mb-4 flex items-end justify-between gap-4 border-l-2 border-emerald-500 pl-4"><div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300">{area.modules[0]?.cluster === "Business Administration Core" ? "General business skills" : "Event-specific preparation"}</p><h3 className="mt-1 text-xl font-bold text-white">{area.instructionalArea}</h3></div><span className="text-sm text-slate-500">{area.modules.length} indicators</span></div>
                   <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">{area.modules.map(renderModuleCard)}</div>
                 </div>
-              )) : <p className="rounded-lg border border-dashed border-slate-800 p-5 text-sm text-slate-400">No official PI mapping is available for this event.</p>}
+              )) : <p className="empty-state min-h-32 p-5 text-sm">No official PI mapping is available for this event.</p>}
             </div>
           ) : modules && modules.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {modules.map(renderModuleCard)}
             </div>
           ) : (
-            <div className="text-center py-24 border border-dashed border-slate-800 rounded-2xl">
+            <div className="empty-state py-16">
               <AlertCircle className="w-14 h-14 text-slate-700 mx-auto mb-4" />
               <p className="text-slate-400 font-medium">No modules available for this cluster yet</p>
             </div>
@@ -421,8 +421,8 @@ export default function PIQuizlet() {
 
   // ── Module view ────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      <div className="container mx-auto py-8 px-4 max-w-5xl">
+    <div className="page-shell">
+      <div className="page-content max-w-5xl">
 
         {/* Back button */}
         <button
@@ -433,7 +433,7 @@ export default function PIQuizlet() {
         </button>
 
         {/* Module header */}
-        <div className="mb-6 rounded-lg border border-slate-700 border-l-4 border-l-blue-500 bg-slate-900 p-6">
+        <div className="editorial-panel mb-6 border-l-4 border-l-blue-500 p-6">
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-blue-300 text-xs font-semibold mb-2 uppercase tracking-[0.16em]">{moduleWithSections?.instructionalArea}</p>
@@ -453,7 +453,7 @@ export default function PIQuizlet() {
           </div>
         </div>
 
-        <div className="mb-6 grid gap-3 rounded-lg border border-slate-800 bg-slate-900/70 p-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
+        <div className="editorial-panel-muted mb-6 grid gap-3 p-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
           <div className="flex min-w-0 items-start gap-3">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-slate-700 bg-slate-950">
               <Map className="h-4 w-4 text-blue-300" />
@@ -491,8 +491,8 @@ export default function PIQuizlet() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-md border text-xs font-medium whitespace-nowrap transition-colors duration-150 flex-shrink-0 ${
                   isActive
-                    ? "border-blue-500 bg-blue-600 text-white"
-                    : "border-transparent text-slate-400 hover:border-slate-700 hover:bg-slate-900 hover:text-white"
+                    ? "editorial-tab editorial-tab-active"
+                    : "editorial-tab"
                 }`}
               >
                 <span className={`flex h-4 w-4 items-center justify-center rounded-full text-[9px] font-bold ${isActive ? "bg-white/20 text-white" : "bg-slate-800 text-slate-400"}`}>{index + 1}</span>
@@ -502,7 +502,7 @@ export default function PIQuizlet() {
             );
           })}
         </div>
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-md border border-slate-800 bg-slate-900/70 p-3">
+        <div className="editorial-panel-muted mb-6 flex flex-wrap items-center justify-between gap-3 p-3">
           <p className="text-xs text-slate-400"><span className="font-semibold text-slate-200">Now studying:</span> {visibleTabs[activeTabIndex]?.label ?? "Lesson"}</p>
           <div className="flex gap-2">
             <Button variant="ghost" size="sm" onClick={() => moveActivity(-1)} disabled={activeTabIndex <= 0} className="text-slate-300 hover:bg-slate-800 hover:text-white"><ChevronLeft className="mr-1 h-4 w-4" /> Previous activity</Button>

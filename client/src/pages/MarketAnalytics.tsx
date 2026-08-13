@@ -61,15 +61,15 @@ export default function MarketAnalytics() {
   const smallestSale = sellReturns.length ? Math.min(...sellReturns) : null;
 
   return (
-    <div className="min-h-screen bg-background py-8">
-      <div className="container max-w-6xl mx-auto px-4">
+    <div className="page-shell">
+      <div className="page-content max-w-6xl">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
+          <div className="mb-2 flex items-center gap-3">
             <BarChart3 className="w-8 h-8 text-blue-500" />
-            <h1 className="text-4xl font-bold text-foreground">Market Analytics</h1>
+            <div><p className="page-eyebrow">Portfolio review</p><h1 className="page-title mt-2">Market Analytics</h1></div>
           </div>
-          <p className="text-foreground/70">Track your portfolio performance and compare with other traders</p>
+          <p className="page-intro mt-3">Track your portfolio performance and compare with other traders.</p>
         </div>
 
         {/* Timeframe Selector */}
@@ -77,8 +77,9 @@ export default function MarketAnalytics() {
           {(['1w', '1m', '3m', '1y'] as const).map(tf => (
             <Button
               key={tf}
-              variant={timeframe === tf ? 'default' : 'outline'}
+              variant="outline"
               onClick={() => setTimeframe(tf)}
+              className={timeframe === tf ? 'editorial-tab-active' : 'editorial-tab'}
             >
               {tf === '1w' ? '1 Week' : tf === '1m' ? '1 Month' : tf === '3m' ? '3 Months' : '1 Year'}
             </Button>
@@ -156,7 +157,7 @@ export default function MarketAnalytics() {
               <div className="mt-3 flex justify-between text-xs text-foreground/60"><span>{new Date(visibleSnapshots[0].snapshotDate).toLocaleDateString()}</span><span>{new Date(visibleSnapshots.at(-1)?.snapshotDate ?? '').toLocaleDateString()}</span></div>
             </div>
           ) : (
-            <div className="flex h-64 items-center justify-center rounded-lg border border-dashed border-border bg-foreground/[0.03] px-6 text-center text-sm text-foreground/60">{snapshots.length ? 'Complete one more trade to build a historical performance line for this period.' : 'Your first executed trade will create a portfolio snapshot here.'}</div>
+            <div className="empty-state h-64 min-h-0 px-6 text-sm">{snapshots.length ? 'Complete one more trade to build a historical performance line for this period.' : 'Your first executed trade will create a portfolio snapshot here.'}</div>
           )}
           <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-xs text-foreground/60"><span>Low: {chartMin.toFixed(2)} BB</span><span>High: {chartMax.toFixed(2)} BB</span><span>{visibleSnapshots.length} snapshot{visibleSnapshots.length === 1 ? '' : 's'} in range</span></div>
         </Card>

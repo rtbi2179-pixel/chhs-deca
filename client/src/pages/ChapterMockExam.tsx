@@ -30,14 +30,15 @@ export default function ChapterMockExam() {
   const question = exam?.questions[currentIndex];
 
   return (
-    <main className="min-h-screen bg-slate-950 px-4 py-12 text-slate-100 sm:px-6">
-      <section className="mx-auto max-w-3xl rounded-xl border border-slate-800 bg-slate-900 p-6 sm:p-8">
+    <main className="page-shell">
+      <section className="page-content max-w-3xl">
+      <div className="editorial-panel p-6 sm:p-8">
         <div className="flex items-start gap-4">
           <div className="rounded-lg border border-blue-500/40 bg-blue-500/10 p-3"><ClipboardCheck className="h-6 w-6 text-blue-300" /></div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-300">Chapter preparation</p>
-            <h1 className="mt-1 text-3xl font-bold text-white">Chapter Mock Exam</h1>
-            <p className="mt-3 max-w-2xl leading-relaxed text-slate-400">A fresh 100-question practice exam built from questions you have not answered. The exam targets 25 easy, 50 medium, and 25 hard questions to reflect a balanced DECA-style challenge.</p>
+            <p className="page-eyebrow">Chapter preparation</p>
+            <h1 className="page-title mt-2">Chapter Mock Exam</h1>
+            <p className="page-intro mt-3">A fresh 100-question practice exam built from questions you have not answered. The exam targets 25 easy, 50 medium, and 25 hard questions to reflect a balanced DECA-style challenge.</p>
           </div>
         </div>
         {!exam ? (
@@ -47,12 +48,12 @@ export default function ChapterMockExam() {
           </button>
         ) : finished ? (
           <div className="mt-8 space-y-5">
-            <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-5">
+            <div className="editorial-panel border-emerald-500/25 bg-emerald-500/[0.045] p-5">
               <p className="font-semibold text-emerald-200">Mock exam complete</p>
               <p className="mt-1 text-sm text-slate-300">{results.data?.score ?? 0} / {results.data?.total ?? exam.totalQuestions} correct · {results.data?.accuracy ?? 0}% accuracy</p>
             </div>
             {results.data?.recommendation && (
-              <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-5">
+              <div className="editorial-panel border-amber-500/25 bg-amber-500/[0.045] p-5">
                 <p className="text-xs font-semibold uppercase tracking-[0.14em] text-amber-300">Recommended study guide</p>
                 <p className="mt-2 font-semibold text-white">{results.data.recommendation.instructionalArea}</p>
                 <p className="mt-1 text-sm text-slate-300">Review: {results.data.recommendation.recommendedPI ?? "the lowest-performing indicators in this area"}.</p>
@@ -61,12 +62,12 @@ export default function ChapterMockExam() {
             )}
           </div>
         ) : (
-          <div className="mt-8 rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-5">
+          <div className="editorial-panel mt-8 border-emerald-500/25 bg-emerald-500/[0.035] p-5">
             <div className="flex items-center justify-between gap-4"><p className="font-semibold text-emerald-200">Question {currentIndex + 1} of {exam.totalQuestions}</p><p className="text-xs text-slate-400">Saved session #{exam.sessionId}</p></div>
             <p className="mt-5 text-lg font-medium leading-relaxed text-white">{question?.stem}</p>
             <div className="mt-5 grid gap-3">
               {(["A", "B", "C", "D"] as const).map((choice) => (
-                <button key={choice} onClick={() => setSelectedAnswer(choice)} className={`rounded-md border p-3 text-left text-sm transition ${selectedAnswer === choice ? "border-blue-400 bg-blue-500/15 text-white" : "border-slate-700 bg-slate-950 text-slate-300 hover:border-slate-500"}`}>
+                <button key={choice} onClick={() => setSelectedAnswer(choice)} className={`editorial-panel-interactive rounded-md border p-3 text-left text-sm ${selectedAnswer === choice ? "border-blue-400 bg-blue-500/15 text-white" : "border-white/10 bg-white/[0.025] text-slate-300"}`}>
                   <span className="mr-3 font-semibold text-blue-300">{choice}.</span>{question?.[`option${choice}`]}
                 </button>
               ))}
@@ -76,6 +77,7 @@ export default function ChapterMockExam() {
             </button>
           </div>
         )}
+      </div>
       </section>
     </main>
   );

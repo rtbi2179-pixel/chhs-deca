@@ -118,17 +118,17 @@ export default function BlueMarket() {
   };
 
   return (
-    <main className="min-h-screen bg-background py-8">
-      <div className="container mx-auto max-w-7xl px-4">
+    <main className="page-shell">
+      <div className="page-content max-w-7xl">
         <header className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div><h1 className="text-4xl font-bold text-foreground">Blue Blazer Market</h1><p className="mt-2 text-foreground/70">Trade with Blue Bucks using a required on-demand market quote.</p></div>
+          <div><p className="page-eyebrow">Financial learning lab</p><h1 className="page-title mt-2">Blue Blazer Market</h1><p className="page-intro mt-3">Trade with Blue Bucks using a required on-demand market quote.</p></div>
           <Button variant="outline" onClick={() => setLocation("/market-analytics")}>View Analytics</Button>
         </header>
 
         <section className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <Card className="border border-border p-6"><p className="text-sm text-foreground/70">Cash Balance</p><p className="mt-2 text-3xl font-bold text-blue-500">{formatCurrency(cashBalance)}</p></Card>
-          <Card className="border border-border p-6"><p className="text-sm text-foreground/70">Open Holdings</p><p className="mt-2 text-3xl font-bold text-emerald-500">{portfolio.length}</p></Card>
-          <Card className="border border-border p-6"><p className="text-sm text-foreground/70">Quote Policy</p><p className="mt-2 text-lg font-semibold text-foreground">On demand · cached 5 min</p></Card>
+          <Card className="editorial-panel p-6"><p className="data-label">Cash Balance</p><p className="mt-3 text-3xl font-bold text-blue-400">{formatCurrency(cashBalance)}</p></Card>
+          <Card className="editorial-panel p-6"><p className="data-label">Open Holdings</p><p className="mt-3 text-3xl font-bold text-emerald-400">{portfolio.length}</p></Card>
+          <Card className="editorial-panel p-6"><p className="data-label">Quote Policy</p><p className="mt-3 text-lg font-semibold text-foreground">On demand · cached 5 min</p></Card>
         </section>
 
         <div className="mt-6 flex flex-wrap gap-3">
@@ -138,14 +138,14 @@ export default function BlueMarket() {
         </div>
 
         <section className="mt-8 grid gap-8 lg:grid-cols-3">
-          <Card className="border border-border p-6 lg:col-span-2">
-            <h2 className="text-2xl font-bold text-foreground">Available Stocks</h2>
+          <Card className="editorial-panel p-6 lg:col-span-2">
+            <h2 className="section-heading">Available Stocks</h2>
             <p className="mt-1 text-sm text-foreground/60">Select Buy or Sell to request a live quote for that listing. A trade cannot be submitted without it.</p>
             <div className="mt-5 space-y-3">
-              {stocksLoading ? <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-blue-500" /></div> : stocks.length === 0 ? <p className="py-12 text-center text-foreground/60">No active stocks are configured for this chapter.</p> : stocks.map((stock) => {
+              {stocksLoading ? <div className="loading-state min-h-36"><Loader2 className="h-8 w-8 animate-spin text-blue-400" /></div> : stocks.length === 0 ? <p className="empty-state min-h-36 px-5 text-sm">No active stocks are configured for this chapter.</p> : stocks.map((stock) => {
                 const quote = stockPrices[stock.ticker];
                 const isLoadingQuote = loadingQuoteTicker === stock.ticker;
-                return <div key={stock.id} className="flex flex-col gap-3 rounded-lg bg-muted/50 p-4 sm:flex-row sm:items-center sm:justify-between">
+                return <div key={stock.id} className="editorial-panel-muted flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
                   <div><p className="font-semibold text-foreground">{stock.ticker}</p><p className="text-sm text-foreground/60">{stock.companyName}</p></div>
                   <div className="sm:text-right">{quote ? <><p className="font-semibold text-foreground">{formatCurrency(quote.price)}</p><p className={`text-xs ${quote.changePercent >= 0 ? "text-emerald-500" : "text-red-500"}`}>{quote.changePercent >= 0 ? <TrendingUp className="mr-1 inline h-3 w-3" /> : <TrendingDown className="mr-1 inline h-3 w-3" />}{Math.abs(quote.changePercent).toFixed(2)}%</p></> : <p className="text-sm text-foreground/50">Quote on demand</p>}</div>
                   <div className="flex gap-2"><Button size="sm" className="bg-emerald-600 hover:bg-emerald-700" disabled={isLoadingQuote} onClick={() => void openTradeDialog(stock, "buy")}>{isLoadingQuote ? "Loading…" : "Buy"}</Button><Button size="sm" variant="outline" disabled={isLoadingQuote} onClick={() => void openTradeDialog(stock, "sell")}>Sell</Button></div>
@@ -154,10 +154,10 @@ export default function BlueMarket() {
             </div>
           </Card>
 
-          <Card className="border border-border p-6"><h2 className="text-xl font-bold text-foreground">Your Holdings</h2><div className="mt-5 space-y-3">{portfolio.length === 0 ? <p className="py-8 text-center text-sm text-foreground/60">No holdings yet. Your portfolio starts with 10,000 Blue Bucks.</p> : portfolio.map((holding: any) => <div key={holding.id} className="rounded-lg bg-muted/50 p-3"><p className="font-semibold text-foreground">{holding.ticker}</p><p className="text-sm text-foreground/60">{formatShares(holding.shares)} shares</p><p className="mt-1 text-sm text-blue-500">Cost basis: {formatCurrency(holding.totalInvested ?? 0)}</p></div>)}</div></Card>
+          <Card className="editorial-panel p-6"><h2 className="section-heading">Your Holdings</h2><div className="mt-5 space-y-3">{portfolio.length === 0 ? <p className="empty-state min-h-36 px-5 text-sm">No holdings yet. Your portfolio starts with 10,000 Blue Bucks.</p> : portfolio.map((holding: any) => <div key={holding.id} className="editorial-panel-muted p-3"><p className="font-semibold text-foreground">{holding.ticker}</p><p className="text-sm text-foreground/60">{formatShares(holding.shares)} shares</p><p className="mt-1 text-sm text-blue-400">Cost basis: {formatCurrency(holding.totalInvested ?? 0)}</p></div>)}</div></Card>
         </section>
 
-        {showLeaderboard && <Card className="mt-8 border border-border p-6"><h2 className="text-2xl font-bold text-foreground">Market Leaderboard</h2>{leaderboard.length === 0 ? <p className="mt-4 text-foreground/60">No portfolio snapshots are available yet.</p> : <div className="mt-4 divide-y divide-border">{leaderboard.map((entry: any, index: number) => <div key={`${entry.userId}-${index}`} className="flex justify-between py-3 text-sm"><span className="text-foreground">#{index + 1} · {entry.userName ?? "Member"}</span><span className="font-semibold text-foreground">{formatCurrency(entry.totalPortfolioValue ?? entry.totalValue ?? 0)}</span></div>)}</div>}</Card>}
+        {showLeaderboard && <Card className="editorial-panel mt-8 p-6"><h2 className="section-heading">Market Leaderboard</h2>{leaderboard.length === 0 ? <p className="mt-4 text-foreground/60">No portfolio snapshots are available yet.</p> : <div className="mt-4 divide-y divide-border">{leaderboard.map((entry: any, index: number) => <div key={`${entry.userId}-${index}`} className="flex justify-between py-3 text-sm"><span className="text-foreground">#{index + 1} · {entry.userName ?? "Member"}</span><span className="font-semibold text-foreground">{formatCurrency(entry.totalPortfolioValue ?? entry.totalValue ?? 0)}</span></div>)}</div>}</Card>}
       </div>
 
       {tradeMode && selectedStock && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"><Card className="w-full max-w-md border border-border p-6"><h2 className="text-xl font-bold text-foreground">{tradeMode === "buy" ? "Buy" : "Sell"} {selectedStock.ticker}</h2><p className="mt-2 text-sm text-foreground/70">Quoted at {formatCurrency(stockPrices[selectedStock.ticker]?.price ?? 0)}.</p><label className="mt-5 block text-sm text-foreground/70">{tradeMode === "buy" ? "Blue Bucks amount" : "Shares to sell"}<input type="number" min="0" step={tradeMode === "buy" ? "0.01" : "0.000001"} value={tradeMode === "buy" ? buyAmount : sellShares} onChange={(event) => tradeMode === "buy" ? setBuyAmount(event.target.value) : setSellShares(event.target.value)} className="mt-2 w-full rounded border border-border bg-muted px-3 py-2 text-foreground" /></label><div className="mt-6 flex gap-3"><Button className="flex-1" disabled={buyStockMutation.isPending || sellStockMutation.isPending} onClick={tradeMode === "buy" ? submitBuy : submitSell}>{tradeMode === "buy" ? "Confirm Buy" : "Confirm Sale"}</Button><Button className="flex-1" variant="outline" onClick={() => { setTradeMode(null); setSelectedStock(null); }}>Cancel</Button></div></Card></div>}

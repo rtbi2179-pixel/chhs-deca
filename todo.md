@@ -463,3 +463,7 @@
 - [x] Improve public landing-page sign-up flow, product discovery, and chapter-buyer value proposition
 - [x] Replace stale third-party practice references with current Blue Blazer product guidance
 - [x] Refresh stale Blue Blazer page-title and season labels discovered during conversion review
+- [x] Establish a shared restrained editorial visual system for Blue Blazer pages
+- [x] Standardize panels, typography, spacing, buttons, and loading states across priority pages
+- [x] Refine PI Quizlet, banking, mock-exam, market, and super-admin interfaces to reduce overly futuristic styling
+- [x] Validate the visual consistency update with tests, build checks, and browser review

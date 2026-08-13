@@ -40,7 +40,7 @@ export function BankingDashboard() {
     { enabled: selectedStatementCard !== null },
   );
 
-  if (!user) return <div>Loading...</div>;
+  if (!user) return <div className="page-shell"><div className="page-content"><div className="loading-state">Loading your banking dashboard…</div></div></div>;
 
   const creditScore = creditScoreQuery.data?.score || 500;
   const creditDetails = creditScoreQuery.data?.details;
@@ -177,14 +177,14 @@ export function BankingDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-6 mt-16">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold text-white mb-8">Banking Dashboard</h1>
+    <div className="page-shell banking-dashboard mt-16">
+      <div className="page-content max-w-7xl">
+        <div className="mb-8"><p className="page-eyebrow">Financial systems</p><h1 className="page-title mt-2">Banking Dashboard</h1><p className="page-intro mt-3">Track virtual accounts, credit-building decisions, and spending patterns in one clear workspace.</p></div>
 
         {/* Top Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {/* Credit Score Card */}
-          <Card className={`border-2 p-6 ${getScoreBgColor(creditScore)}`}>
+          <Card className={`editorial-panel border p-6 ${getScoreBgColor(creditScore)}`}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-white">Credit Score</h2>
               <TrendingUp className="w-6 h-6 text-blue-400" />
@@ -196,7 +196,7 @@ export function BankingDashboard() {
           </Card>
 
           {/* Total Balance Card */}
-          <Card className="bg-slate-800 border-slate-700 border-2 p-6">
+          <Card className="editorial-panel p-6">
             <h2 className="text-lg font-semibold text-white mb-4">Total Balance</h2>
             <div className="text-5xl font-bold text-green-400 mb-2">
               ${totalBalance.toFixed(2)}
@@ -205,7 +205,7 @@ export function BankingDashboard() {
           </Card>
 
           {/* Total Debt Card */}
-          <Card className="bg-slate-800 border-slate-700 border-2 p-6">
+          <Card className="editorial-panel p-6">
             <h2 className="text-lg font-semibold text-white mb-4">Total Debt</h2>
             <div className="text-5xl font-bold text-red-400 mb-2">
               ${(typeof bankAccount?.totalDebt === 'string' ? parseFloat(bankAccount.totalDebt) : (bankAccount?.totalDebt || 0)).toFixed(2)}
@@ -217,7 +217,7 @@ export function BankingDashboard() {
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Credit Score Breakdown Pie Chart */}
-          <Card className="bg-slate-800 border-slate-700 p-6">
+          <Card className="editorial-panel p-6">
             <h2 className="text-xl font-semibold text-white mb-4">Credit Score Breakdown</h2>
             {creditScoreBreakdown.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
@@ -245,7 +245,7 @@ export function BankingDashboard() {
           </Card>
 
           {/* Account Balances Bar Chart */}
-          <Card className="bg-slate-800 border-slate-700 p-6">
+          <Card className="editorial-panel p-6">
             <h2 className="text-xl font-semibold text-white mb-4">Account Balances</h2>
             {accountBalances.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
@@ -268,7 +268,7 @@ export function BankingDashboard() {
           <h2 className="text-2xl font-bold text-white mb-6">Credit Cards</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* User's Current Cards */}
-            <Card className="bg-slate-800 border-slate-700 p-6">
+            <Card className="editorial-panel p-6">
               <h3 className="text-lg font-semibold text-white mb-4">Your Cards</h3>
               {userCardsQuery.isLoading ? (
                 <p className="text-slate-400">Loading cards...</p>
@@ -361,7 +361,7 @@ export function BankingDashboard() {
             </Card>
 
             {/* Available Cards to Apply */}
-            <Card className="bg-slate-800 border-slate-700 p-6">
+            <Card className="editorial-panel p-6">
               <h3 className="text-lg font-semibold text-white mb-4">Available Cards</h3>
               {availableCardsQuery.isLoading ? (
                 <p className="text-slate-400">Loading available cards...</p>
@@ -394,7 +394,7 @@ export function BankingDashboard() {
           </div>
 
           {selectedStatementCard !== null && (
-            <Card className="mt-6 border-slate-700 bg-slate-800 p-6">
+            <Card className="editorial-panel mt-6 p-6">
               <div className="mb-4 flex items-center justify-between gap-3">
                 <div>
                   <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
@@ -434,7 +434,7 @@ export function BankingDashboard() {
 
         {/* Spending analytics drawn from issued-card purchase activity. */}
         <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <Card className="border-slate-700 bg-slate-800 p-6">
+          <Card className="editorial-panel p-6">
             <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-white">
               <ReceiptText className="h-5 w-5 text-blue-400" /> Spending by Category
             </h2>
@@ -457,7 +457,7 @@ export function BankingDashboard() {
             )}
           </Card>
 
-          <Card className="border-slate-700 bg-slate-800 p-6">
+          <Card className="editorial-panel p-6">
             <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-white">
               <TrendingUp className="h-5 w-5 text-emerald-400" /> Monthly Spending Trend
             </h2>
@@ -480,7 +480,7 @@ export function BankingDashboard() {
         {/* Account Details and Transfer */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Account Details */}
-          <Card className="bg-slate-800 border-slate-700 p-6">
+          <Card className="editorial-panel p-6">
             <h2 className="text-xl font-semibold text-white mb-4">Account Details</h2>
             <div className="space-y-4">
               <div className="flex justify-between items-center p-3 bg-slate-700 rounded-lg">
@@ -531,7 +531,7 @@ export function BankingDashboard() {
           </Card>
 
           {/* Transfer Funds */}
-          <Card className="bg-slate-800 border-slate-700 p-6">
+          <Card className="editorial-panel p-6">
             <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
               <Send className="w-5 h-5" />
               Transfer Funds

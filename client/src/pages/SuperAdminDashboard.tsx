@@ -89,19 +89,19 @@ export default function SuperAdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-background py-8">
-      <div className="container max-w-6xl mx-auto px-4">
+    <div className="page-shell">
+      <div className="page-content max-w-6xl">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
+          <div className="mb-2 flex items-center gap-3">
             <Settings className="w-8 h-8 text-blue-500" />
-            <h1 className="text-4xl font-bold text-foreground">Economic Management</h1>
+            <div><p className="page-eyebrow">Chapter operations</p><h1 className="page-title mt-2">Economic Management</h1></div>
           </div>
-          <p className="text-foreground/70">Configure credit scoring, card tiers, and system economics</p>
+          <p className="page-intro mt-3">Configure credit scoring, card tiers, and system economics.</p>
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex gap-2 mb-8 border-b border-border overflow-x-auto">
+        <div className="mb-8 flex gap-2 overflow-x-auto border-b border-white/10 pb-3">
           {[
             { id: 'overview' as const, label: 'Overview', icon: TrendingUp },
             { id: 'credit' as const, label: 'Credit Score', icon: Zap },
@@ -113,10 +113,10 @@ export default function SuperAdminDashboard() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-3 font-medium border-b-2 transition-colors whitespace-nowrap ${
+              className={`editorial-tab px-4 py-2.5 text-sm font-medium whitespace-nowrap ${
                 activeTab === tab.id
-                  ? 'border-blue-500 text-blue-500'
-                  : 'border-transparent text-foreground/60 hover:text-foreground'
+                  ? 'editorial-tab-active'
+                  : ''
               }`}
             >
               <tab.icon className="w-4 h-4 inline mr-2" />
@@ -128,8 +128,8 @@ export default function SuperAdminDashboard() {
         {/* Overview Tab */}
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="border border-border p-6 bg-card">
-              <h3 className="text-lg font-bold text-foreground mb-4">System Status</h3>
+            <Card className="editorial-panel p-6">
+              <h3 className="section-heading mb-4">System Status</h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-foreground/70">Active Users</span>
@@ -151,8 +151,8 @@ export default function SuperAdminDashboard() {
               <p className="mt-4 text-xs text-foreground/60">The inflation index is 100 plus monthly net Blue Bucks issued per active member. It is a transparent in-app purchasing-power signal, not a real-world inflation measure.</p>
             </Card>
 
-            <Card className="border border-border p-6 bg-card">
-              <h3 className="text-lg font-bold text-foreground mb-4">Quick Actions</h3>
+            <Card className="editorial-panel p-6">
+              <h3 className="section-heading mb-4">Quick Actions</h3>
               <div className="space-y-2">
                 <Button variant="outline" className="w-full justify-start">
                   View Economic Audit Log
@@ -166,8 +166,8 @@ export default function SuperAdminDashboard() {
               </div>
             </Card>
 
-            <Card className="border border-border p-6 bg-card">
-              <h3 className="text-lg font-bold text-foreground mb-4">Operational Health</h3>
+            <Card className="editorial-panel p-6">
+              <h3 className="section-heading mb-4">Operational Health</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between gap-4"><span className="text-foreground/70">Database</span><span className="font-medium text-emerald-500">{monitoringQuery.data?.databaseStatus ?? 'checking'}</span></div>
                 <div className="flex justify-between gap-4"><span className="text-foreground/70">Reward units issued</span><span className="font-medium text-foreground">{monitoringQuery.data?.rewardUnitsIssued.toLocaleString() ?? '—'}</span></div>
@@ -176,8 +176,8 @@ export default function SuperAdminDashboard() {
               </div>
             </Card>
 
-            <Card className="border border-border p-6 bg-card md:col-span-2">
-              <div className="flex items-baseline justify-between gap-4"><h3 className="text-lg font-bold text-foreground">Blue Bucks Inflation History</h3><span className="text-xs text-foreground/60">Baseline: 100</span></div>
+            <Card className="editorial-panel p-6 md:col-span-2">
+              <div className="flex items-baseline justify-between gap-4"><h3 className="section-heading">Blue Bucks Inflation History</h3><span className="text-xs text-foreground/60">Baseline: 100</span></div>
               <p className="mt-1 text-sm text-foreground/60">Monthly index of net Blue Bucks issued per active member. Values above 100 indicate net issuance; values below 100 indicate net sinks.</p>
               {inflationHistoryQuery.data?.length ? (
                 <div className="mt-6 flex h-36 items-end gap-3 border-b border-border pb-1">

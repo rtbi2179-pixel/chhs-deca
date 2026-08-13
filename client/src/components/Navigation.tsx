@@ -60,7 +60,7 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
       <header
         className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${
           scrolled
-            ? 'bg-[oklch(0.07_0.01_265/0.92)] backdrop-blur-xl border-b border-white/5 shadow-[0_4px_30px_oklch(0_0_0/0.5)]'
+            ? 'bg-[oklch(0.07_0.01_265/0.97)] border-b border-white/10 shadow-[0_8px_24px_oklch(0_0_0/0.22)]'
             : 'bg-transparent'
         }`}
       >
@@ -73,7 +73,7 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
                   <img
                     src="/manus-storage/Untitleddesign_c1fb0d88.png"
                     alt="Blue Blazer Logo"
-                    className="w-8 h-8 group-hover:drop-shadow-[0_0_12px_oklch(0.55_0.22_260/0.6)] transition-all duration-300"
+                    className="w-8 h-8 transition-opacity duration-200 group-hover:opacity-85"
                   />
                 </div>
                 <div className="hidden sm:block">
