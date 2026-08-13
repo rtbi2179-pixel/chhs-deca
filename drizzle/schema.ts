@@ -444,6 +444,17 @@ export const savingsInterestAccruals = mysqlTable("savingsInterestAccruals", {
 }));
 export type SavingsInterestAccrual = typeof savingsInterestAccruals.$inferSelect;
 
+export const adminActivityLogs = mysqlTable("adminActivityLogs", {
+  id: int("id").autoincrement().primaryKey(),
+  actorUserId: int("actorUserId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  action: varchar("action", { length: 100 }).notNull(),
+  targetType: varchar("targetType", { length: 60 }).notNull(),
+  targetId: varchar("targetId", { length: 100 }),
+  details: text("details"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
 /**
  * Card Usage Tracking
  */

@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { eq } from "drizzle-orm";
 import { appRouter } from "./routers";
 import { getDb } from "./db";
-import { economicAuditLog, economicConfig, users } from "../drizzle/schema";
+import { adminActivityLogs, economicAuditLog, economicConfig, users } from "../drizzle/schema";
 import type { TrpcContext } from "./_core/context";
 
 type AuthenticatedUser = NonNullable<TrpcContext["user"]>;
@@ -36,6 +36,7 @@ describe("super-admin economic audit workflow", () => {
   afterEach(async () => {
     const database = await getDb();
     if (!database) return;
+    await database.delete(adminActivityLogs).where(eq(adminActivityLogs.schoolCode, schoolCode));
     await database.delete(economicAuditLog).where(eq(economicAuditLog.schoolCode, schoolCode));
     await database.delete(economicConfig).where(eq(economicConfig.schoolCode, schoolCode));
     if (userId) await database.delete(users).where(eq(users.id, userId));
@@ -76,6 +77,15 @@ describe("super-admin economic audit workflow", () => {
     ]);
     expect(logs.every((entry) => entry.superAdminId === userId && entry.reason === "Rebalance payment and history emphasis")).toBe(true);
 
+    await expect(caller.superAdmin.getActivityLog()).resolves.toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        actorUserId: userId,
+        schoolCode,
+        action: "economic_weights_updated",
+        targetType: "economic_config",
+      }),
+    ]));
+
     await expect(caller.superAdmin.getEconomicMonitoring()).resolves.toMatchObject({
       schoolCode,
       sampleWindowDays: 30,
@@ -100,6 +110,7 @@ describe("super-admin economic audit workflow", () => {
 
     await expect(caller.superAdmin.getEconomicConfig()).rejects.toMatchObject({ code: "FORBIDDEN" });
     await expect(caller.superAdmin.getEconomicAuditLog()).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(caller.superAdmin.getActivityLog()).rejects.toMatchObject({ code: "FORBIDDEN" });
     await expect(caller.superAdmin.getEconomicMonitoring()).rejects.toMatchObject({ code: "FORBIDDEN" });
     await expect(caller.superAdmin.updateEconomicWeights({
       paymentReliabilityWeight: 25,

@@ -582,6 +582,19 @@ export const appRouter = router({
     }),
   }),
   superAdmin: router({
+    getActivityLog: protectedProcedure
+      .input(z.object({ limit: z.number().int().min(1).max(100).default(50) }).optional())
+      .query(async ({ ctx, input }) => {
+        if (ctx.user.role !== 'super_admin') throw new TRPCError({ code: 'FORBIDDEN', message: 'Only super admins can review administrator activity' });
+        const { adminActivityLogs } = await import('../drizzle/schema');
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Activity log storage is unavailable' });
+        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode || '';
+        return database.select().from(adminActivityLogs)
+          .where(eq(adminActivityLogs.schoolCode, schoolCode))
+          .orderBy(desc(adminActivityLogs.createdAt))
+          .limit(input?.limit ?? 50);
+      }),
     selectSchool: protectedProcedure
       .input(z.object({ schoolCode: z.string() }))
       .mutation(async ({ ctx, input }) => {
@@ -655,7 +668,7 @@ export const appRouter = router({
 
         const database = await db.getDb();
         if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
-        const { economicAuditLog, economicConfig } = await import('../drizzle/schema');
+        const { economicAuditLog, economicConfig, adminActivityLogs } = await import('../drizzle/schema');
         const existing = await database.select().from(economicConfig).where(eq(economicConfig.schoolCode, schoolCode)).limit(1);
         const values = {
           paymentReliabilityWeight: input.paymentReliabilityWeight.toFixed(2),
@@ -692,6 +705,15 @@ export const appRouter = router({
             });
           }
         }
+
+        await database.insert(adminActivityLogs).values({
+          actorUserId: ctx.user.id,
+          schoolCode,
+          action: 'economic_weights_updated',
+          targetType: 'economic_config',
+          targetId: schoolCode,
+          details: JSON.stringify({ values, reason: input.reason || null }),
+        });
 
         return { success: true, schoolCode, totalWeight };
       }),
