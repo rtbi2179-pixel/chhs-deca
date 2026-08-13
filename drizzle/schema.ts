@@ -38,6 +38,16 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
+export const eventPerformanceIndicators = mysqlTable("eventPerformanceIndicators", {
+  id: int("id").autoincrement().primaryKey(),
+  eventCode: varchar("eventCode", { length: 20 }).notNull(),
+  moduleId: int("moduleId").notNull(),
+  mappingBasis: varchar("mappingBasis", { length: 50 }).notNull().default("cluster_instructional_area"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  uniqueEventModule: unique("event_pi_unique").on(table.eventCode, table.moduleId),
+}));
+
 /**
  * Volunteer opportunities and sign-ups
  */

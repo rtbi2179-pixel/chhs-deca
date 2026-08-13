@@ -429,6 +429,8 @@
 - [x] Fix Volunteer page selected-school query error for super administrators
 - [x] Add event-based PI Quizlet filters for general business and event-specific indicators
 - [ ] Implement persistent event selection, exact event-to-PI mapping, and personalized study guide MVP
+- [ ] Build complete zero-unmapped PI-to-DECA-event mapping and coverage guide
+- [ ] Build 100-question unused-question Chapter Mock Exams with weak-area study recommendations
 
 ## Complete PI Quizlet Package Integration
 

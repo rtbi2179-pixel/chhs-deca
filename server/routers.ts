@@ -3,7 +3,9 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { membersRouter } from "./membersRouter";
-import { TRPCError } from "@trpc/server";
+import { TRPCError } from '@trpc/server';
+import { selectBalancedMockExam } from './mockExamSelection';
+import { analyzeMockExamResults } from './mockExamAnalysis';
 import { z } from "zod";
 import * as db from "./db";
 import { getAnnouncementsBySchool, createAnnouncement, likeAnnouncement, getAnnouncementLikes, addAnnouncementComment, getAnnouncementComments, deleteAnnouncement } from "./db";
@@ -14,7 +16,7 @@ import { applyCreditCardCharge, applyCreditCardPayment, calculateCashback, summa
 import { calculateMonetaryPressure } from "./economicMonitoring";
 
 import { initializeBanksForSchool, getBanksForSchool, getCreditCardsForBank } from './bankInitializer';
-import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback, notificationPreferences, userProfileSettings, adminActivityLogs } from "../drizzle/schema";
+import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback, notificationPreferences, userProfileSettings, adminActivityLogs, studySessions, sessionQuestions } from "../drizzle/schema";
 import { and, eq, sql, inArray, desc, lte, gte } from "drizzle-orm";
 import { piLearningRouter } from "./piLearningRouter";
 
@@ -1090,6 +1092,39 @@ export const appRouter = router({
           throw new TRPCError({ code: 'FORBIDDEN', message: 'Only admins can delete opportunities' });
         }
         return db.deleteVolunteerOpportunityAdmin(input.id);
+      }),
+  }),
+
+  mockExams: router({
+    createChapterMock: protectedProcedure.mutation(async ({ ctx }) => {
+      const database = await db.getDb();
+      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Question bank is unavailable' });
+      const answeredIds = new Set(await db.getUserAnsweredQuestions(ctx.user.id));
+      const bank = (await database.select().from(questions)).filter(question => !answeredIds.has(question.id));
+      const selected = selectBalancedMockExam(bank, 100);
+      if (selected.length < 100) {
+        throw new TRPCError({ code: 'PRECONDITION_FAILED', message: `A 100-question mock exam needs 100 unanswered questions; ${selected.length} are currently available.` });
+      }
+      const session = await db.createStudySession(ctx.user.id, 'Chapter Mock Exam', selected.map(question => question.id));
+      return {
+        sessionId: Number(session[0].insertId),
+        totalQuestions: 100,
+        difficultyPlan: { easy: selected.filter(question => question.difficulty === 'Easy').length, medium: selected.filter(question => question.difficulty === 'Medium').length, hard: selected.filter(question => question.difficulty === 'Hard').length },
+        questions: selected.map(({ correctAnswer, rationale, distractorRationaleA, distractorRationaleB, distractorRationaleC, distractorRationaleD, ...question }) => question),
+      };
+    }),
+    getResults: protectedProcedure
+      .input(z.object({ sessionId: z.number().int().positive() }))
+      .query(async ({ ctx, input }) => {
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Question bank is unavailable' });
+        const [session] = await database.select().from(studySessions)
+          .where(and(eq(studySessions.id, input.sessionId), eq(studySessions.userId, ctx.user.id))).limit(1);
+        if (!session) throw new TRPCError({ code: 'NOT_FOUND', message: 'Mock exam not found' });
+        const rows = await database.select({ instructionalArea: questions.instructionalArea, performanceIndicatorFocus: questions.performanceIndicatorFocus, isCorrect: sessionQuestions.isCorrect })
+          .from(sessionQuestions).innerJoin(questions, eq(sessionQuestions.questionId, questions.id))
+          .where(eq(sessionQuestions.sessionId, input.sessionId));
+        return { session, ...analyzeMockExamResults(rows.map(row => ({ ...row, isCorrect: Boolean(row.isCorrect) }))) };
       }),
   }),
 
