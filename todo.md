@@ -422,6 +422,7 @@
 - [ ] Implement data backup system
 - [x] Create admin activity logs
 - [x] Add system health monitoring dashboard
+- [x] Fix Direct Messages header visibility and close-control layering
 
 ## Complete PI Quizlet Package Integration
 

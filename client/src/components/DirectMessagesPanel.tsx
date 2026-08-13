@@ -160,11 +160,11 @@ function MessagesContent() {
 
       {/* Messages Panel */}
       {isOpen && (
-        <div className="fixed bottom-0 right-0 w-96 max-w-full h-screen bg-background border-l border-border shadow-2xl flex flex-col z-50">
+        <div className="fixed bottom-0 right-0 w-96 max-w-full h-screen bg-background border-l border-border shadow-2xl flex flex-col z-50 overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-border bg-background/95 backdrop-blur">
-            <div className="flex-1">
-              <h2 className="text-lg font-bold text-foreground truncate">
+          <div className="relative z-20 flex min-h-16 shrink-0 items-center gap-3 border-b border-border bg-background px-4 py-3 shadow-sm">
+            <div className="min-w-0 flex-1">
+              <h2 className="text-lg font-bold leading-6 text-foreground">
                 {selectedUser ? selectedUser.name : 'Direct Messages'}
               </h2>
               {currentUser?.role === 'super_admin' && activeSchoolCode && !selectedUser && (
@@ -173,8 +173,9 @@ function MessagesContent() {
             </div>
             <button
               onClick={handleClose}
-              className="text-foreground/60 hover:text-foreground transition-colors p-1"
+              className="relative z-30 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-transparent text-foreground/80 transition-colors hover:border-border hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
               aria-label="Close messages"
+              title="Close Direct Messages"
             >
               <X className="w-5 h-5" />
             </button>
