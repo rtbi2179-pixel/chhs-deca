@@ -5,9 +5,11 @@ import { trpc } from "@/lib/trpc";
 import { ArrowDownLeft, ArrowUpRight, CreditCard, ReceiptText, Send, ShoppingBag, TrendingUp } from "lucide-react";
 import { useState } from "react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { toast } from "sonner";
 
 export function BankingDashboard() {
   const { user } = useAuth();
+  const utils = trpc.useUtils();
   const creditScoreQuery = trpc.banking.getCreditScore.useQuery();
   const bankAccountQuery = trpc.banking.getBankAccount.useQuery();
   const transferMutation = trpc.banking.transferFunds.useMutation();
@@ -111,11 +113,15 @@ export function BankingDashboard() {
 
   const handleApplyCard = async (cardId: number) => {
     try {
-      await applyCreditCardMutation.mutateAsync({ creditCardId: cardId });
-      userCardsQuery.refetch();
-      availableCardsQuery.refetch();
+      const result = await applyCreditCardMutation.mutateAsync({ creditCardId: cardId });
+      await Promise.all([
+        utils.banking.getUserCards.invalidate(),
+        utils.banking.getAvailableCards.invalidate(),
+        utils.banking.getCreditScore.invalidate(),
+      ]);
+      toast.success(`Card application approved with a ${Number(result.creditLimit).toLocaleString()} credit limit.`);
     } catch (error) {
-      alert("Failed to apply for card: " + (error as any).message);
+      toast.error("Card application failed: " + (error as Error).message);
     }
   };
 

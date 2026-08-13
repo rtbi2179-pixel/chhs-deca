@@ -4,6 +4,7 @@ import { useAuth } from '@/_core/hooks/useAuth';
 import { trpc } from '@/lib/trpc';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import BankingAdminControls, { CreditScoreAnalytics } from '@/components/BankingAdminControls';
 import { AlertCircle, Settings, TrendingUp, DollarSign, Zap } from 'lucide-react';
 
 export default function SuperAdminDashboard() {
@@ -193,6 +194,7 @@ export default function SuperAdminDashboard() {
 
         {/* Credit Score Tab */}
         {activeTab === 'credit' && (
+          <div className="space-y-6">
           <Card className="border border-border p-6 bg-card">
             <h3 className="text-lg font-bold text-foreground mb-6">Credit Score Configuration</h3>
             <div className="space-y-6">
@@ -225,83 +227,16 @@ export default function SuperAdminDashboard() {
               </Button>
             </div>
           </Card>
-        )}
-
-        {/* Card Tiers Tab */}
-        {activeTab === 'cards' && (
-          <div className="space-y-6">
-            {['Starter', 'Rewards', 'Elite'].map(tier => (
-              <Card key={tier} className="border border-border p-6 bg-card">
-                <h4 className="text-lg font-bold text-foreground mb-4">{tier} Tier</h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">
-                      Min Credit Score
-                    </label>
-                    <input
-                      type="number"
-                      placeholder="e.g., 500"
-                      className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">
-                      Rewards %
-                    </label>
-                    <input
-                      type="number"
-                      placeholder="e.g., 1"
-                      step="0.1"
-                      className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">
-                      Annual Fee
-                    </label>
-                    <input
-                      type="number"
-                      placeholder="e.g., 0"
-                      className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground"
-                    />
-                  </div>
-                </div>
-                <Button variant="outline" className="w-full mt-4">Update {tier} Tier</Button>
-              </Card>
-            ))}
+          <BankingAdminControls mode="rules" />
+          <CreditScoreAnalytics />
           </div>
         )}
 
+        {/* Card Tiers Tab */}
+        {activeTab === 'cards' && <BankingAdminControls mode="cards" />}
+
         {/* Rewards Tab */}
-        {activeTab === 'rewards' && (
-          <Card className="border border-border p-6 bg-card">
-            <h3 className="text-lg font-bold text-foreground mb-6">Rewards Configuration</h3>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Correct Answer Reward
-                </label>
-                <input
-                  type="number"
-                  defaultValue="100"
-                  className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Stock Profit Multiplier
-                </label>
-                <input
-                  type="number"
-                  step="0.1"
-                  defaultValue="1"
-                  className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground"
-                />
-              </div>
-              <Button className="w-full mt-6">Save Rewards Configuration</Button>
-            </div>
-          </Card>
-        )}
+        {activeTab === 'rewards' && <BankingAdminControls mode="rewards" />}
 
         {activeTab === 'market' && (
           <Card className="border border-border p-6 bg-card">

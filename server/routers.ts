@@ -795,6 +795,89 @@ export const appRouter = router({
         return { success: true, schoolCode, totalWeight };
       }),
 
+    updateEconomicCreditRules: protectedProcedure
+      .input(z.object({
+        schoolCode: z.string().min(1).optional(),
+        onTimePaymentPoints: z.number().int().min(0).max(100),
+        missedPaymentPenalty: z.number().int().min(0).max(100),
+        savingsInterestRate: z.number().min(0).max(100),
+        reason: z.string().trim().max(500).optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== 'super_admin') throw new TRPCError({ code: 'FORBIDDEN', message: 'Only super admins can update credit rules' });
+        const schoolCode = input.schoolCode ?? ctx.user.selectedSchoolCode ?? ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Select a school before updating credit rules' });
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Economic storage is unavailable' });
+        const { economicConfig, economicAuditLog } = await import('../drizzle/schema');
+        const [existing] = await database.select().from(economicConfig).where(eq(economicConfig.schoolCode, schoolCode)).limit(1);
+        const values = { onTimePaymentPoints: input.onTimePaymentPoints, missedPaymentPenalty: input.missedPaymentPenalty, savingsInterestRate: input.savingsInterestRate.toFixed(2) };
+        if (existing) await database.update(economicConfig).set(values).where(eq(economicConfig.id, existing.id));
+        else await database.insert(economicConfig).values({ schoolCode, ...values });
+        const prior = existing ?? { onTimePaymentPoints: 2, missedPaymentPenalty: 15, savingsInterestRate: '0.50' };
+        for (const [fieldChanged, newValue] of Object.entries(values)) {
+          const oldValue = prior[fieldChanged as keyof typeof prior];
+          if (String(oldValue) !== String(newValue)) await database.insert(economicAuditLog).values({ superAdminId: ctx.user.id, schoolCode, changeType: 'credit_score_rules', fieldChanged, oldValue: String(oldValue), newValue: String(newValue), reason: input.reason || null });
+        }
+        await database.insert(adminActivityLogs).values({ actorUserId: ctx.user.id, schoolCode, action: 'credit_rules_updated', targetType: 'economic_config', targetId: schoolCode, details: JSON.stringify({ values, reason: input.reason || null }) });
+        return { success: true, schoolCode, ...values };
+      }),
+
+    getCardCatalog: protectedProcedure
+      .query(async ({ ctx }) => {
+        if (ctx.user.role !== 'super_admin') throw new TRPCError({ code: 'FORBIDDEN', message: 'Only super admins can view card configuration' });
+        const schoolCode = ctx.user.selectedSchoolCode ?? ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Select a school before viewing card configuration' });
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Card storage is unavailable' });
+        const { creditCards } = await import('../drizzle/schema');
+        return database.select().from(creditCards).where(eq(creditCards.schoolCode, schoolCode)).orderBy(asc(creditCards.tier), asc(creditCards.name));
+      }),
+
+    updateCardProduct: protectedProcedure
+      .input(z.object({
+        cardId: z.number().int().positive(),
+        creditScoreRequired: z.number().int().min(300).max(850),
+        rewardsPercentage: z.number().min(0).max(100),
+        interestRate: z.number().min(0).max(100),
+        annualFee: z.number().min(0).max(100000),
+        reason: z.string().trim().max(500).optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== 'super_admin') throw new TRPCError({ code: 'FORBIDDEN', message: 'Only super admins can update card products' });
+        const schoolCode = ctx.user.selectedSchoolCode ?? ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Select a school before updating card products' });
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Card storage is unavailable' });
+        const { creditCards, economicAuditLog } = await import('../drizzle/schema');
+        const [card] = await database.select().from(creditCards).where(and(eq(creditCards.id, input.cardId), eq(creditCards.schoolCode, schoolCode))).limit(1);
+        if (!card) throw new TRPCError({ code: 'NOT_FOUND', message: 'Card product not found in the selected chapter' });
+        const values = { creditScoreRequired: input.creditScoreRequired, rewardsPercentage: input.rewardsPercentage.toFixed(2), interestRate: input.interestRate.toFixed(2), annualFee: input.annualFee.toFixed(2) };
+        await database.update(creditCards).set(values).where(eq(creditCards.id, card.id));
+        for (const [fieldChanged, newValue] of Object.entries(values)) {
+          const oldValue = card[fieldChanged as keyof typeof values];
+          if (String(oldValue) !== String(newValue)) await database.insert(economicAuditLog).values({ superAdminId: ctx.user.id, schoolCode, changeType: 'card_product', fieldChanged: `${card.name}.${fieldChanged}`, oldValue: String(oldValue), newValue: String(newValue), reason: input.reason || null });
+        }
+        await database.insert(adminActivityLogs).values({ actorUserId: ctx.user.id, schoolCode, action: 'card_product_updated', targetType: 'credit_card', targetId: String(card.id), details: JSON.stringify({ cardName: card.name, values, reason: input.reason || null }) });
+        return { success: true, cardId: card.id, ...values };
+      }),
+
+    getCreditScoreAnalytics: protectedProcedure
+      .query(async ({ ctx }) => {
+        if (ctx.user.role !== 'super_admin') throw new TRPCError({ code: 'FORBIDDEN', message: 'Only super admins can view credit analytics' });
+        const schoolCode = ctx.user.selectedSchoolCode ?? ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Select a school before viewing credit analytics' });
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Credit analytics storage is unavailable' });
+        const { creditScores, userCreditCards, cardUsageTracking } = await import('../drizzle/schema');
+        const [scores, issuedCards, spending] = await Promise.all([
+          database.select({ members: sql<number>`count(*)`, averageScore: sql<string>`coalesce(avg(${creditScores.score}), 0)`, minScore: sql<number>`coalesce(min(${creditScores.score}), 0)`, maxScore: sql<number>`coalesce(max(${creditScores.score}), 0)` }).from(creditScores).where(eq(creditScores.schoolCode, schoolCode)),
+          database.select({ count: sql<number>`count(*)`, outstandingBalance: sql<string>`coalesce(sum(${userCreditCards.currentBalance}), 0)` }).from(userCreditCards).where(eq(userCreditCards.schoolCode, schoolCode)),
+          database.select({ transactions: sql<number>`count(*)`, totalSpending: sql<string>`coalesce(sum(${cardUsageTracking.transactionAmount}), 0)` }).from(cardUsageTracking).where(eq(cardUsageTracking.schoolCode, schoolCode)),
+        ]);
+        return { schoolCode, scoredMembers: Number(scores[0]?.members ?? 0), averageScore: Number(scores[0]?.averageScore ?? 0), minScore: Number(scores[0]?.minScore ?? 0), maxScore: Number(scores[0]?.maxScore ?? 0), issuedCards: Number(issuedCards[0]?.count ?? 0), outstandingBalance: Number(issuedCards[0]?.outstandingBalance ?? 0), cardTransactions: Number(spending[0]?.transactions ?? 0), totalCardSpending: Number(spending[0]?.totalSpending ?? 0) };
+      }),
+
     getEconomicAuditLog: protectedProcedure
       .input(z.object({ schoolCode: z.string().min(1).optional(), limit: z.number().int().min(1).max(100).default(50) }).optional())
       .query(async ({ ctx, input }) => {
@@ -1390,12 +1473,45 @@ export const appRouter = router({
     
     getCashBalance: protectedProcedure
       .query(async ({ ctx }) => {
-        return await db.getCashBalance(ctx.user.id);
+        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
+        const account = await db.getOrCreatePortfolioCash(ctx.user.id, schoolCode);
+        return String(account.cashBalance);
       }),
     
     getPortfolio: protectedProcedure
       .query(async ({ ctx }) => {
-        return await db.getPortfolioHoldings(ctx.user.id);
+        const holdings = await db.getPortfolioHoldings(ctx.user.id);
+        return holdings.map((entry: any) => {
+          const holding = entry.portfolioHoldings ?? entry;
+          const stock = entry.stocks ?? entry;
+          const totalInvested = Number(holding.totalInvested ?? 0);
+          return {
+            id: holding.id,
+            stockId: holding.stockId,
+            ticker: stock.ticker,
+            companyName: stock.companyName,
+            shares: String(holding.shares ?? "0"),
+            averageBuyPrice: String(holding.averageBuyPrice ?? "0"),
+            totalInvested: String(holding.totalInvested ?? "0"),
+            currentValue: totalInvested,
+            gain: 0,
+          };
+        });
+      }),
+
+    getPortfolioSummary: protectedProcedure
+      .query(async ({ ctx }) => {
+        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
+        const cashAccount = await db.getOrCreatePortfolioCash(ctx.user.id, schoolCode);
+        const holdings = await db.getPortfolioHoldings(ctx.user.id);
+        const investedValue = holdings.reduce((sum: number, entry: any) => sum + Number((entry.portfolioHoldings ?? entry).totalInvested ?? 0), 0);
+        const cashBalance = Number(cashAccount.cashBalance);
+        const initialAllocation = Number(cashAccount.initialAllocation);
+        const totalValue = cashBalance + investedValue;
+        const totalProfit = totalValue - initialAllocation;
+        return { cashBalance, investedValue, initialAllocation, totalValue, totalProfit, percentageReturn: initialAllocation > 0 ? (totalProfit / initialAllocation) * 100 : 0 };
       }),
     
     buyStock: protectedProcedure
@@ -1403,18 +1519,26 @@ export const appRouter = router({
       .mutation(async ({ input, ctx }) => {
         const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
         if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
-        
-        const shares = (parseFloat(input.blueBucksAmount) / parseFloat(input.pricePerShare)).toString();
-        const currentBalance = await db.getCashBalance(ctx.user.id);
+        const amount = Number(input.blueBucksAmount);
+        const price = Number(input.pricePerShare);
+        if (!Number.isFinite(amount) || amount <= 0 || !Number.isFinite(price) || price <= 0) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Trade amount and price must be positive numbers' });
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Market storage is unavailable' });
+        const [stock] = await database.select().from(stocks).where(and(eq(stocks.id, input.stockId), eq(stocks.schoolCode, schoolCode), eq(stocks.isActive, true))).limit(1);
+        if (!stock) throw new TRPCError({ code: 'NOT_FOUND', message: 'Active stock not found in this chapter' });
+        const cashAccount = await db.getOrCreatePortfolioCash(ctx.user.id, schoolCode);
+        const shares = (amount / price).toString();
+        const currentBalance = String(cashAccount.cashBalance);
         
         if (parseFloat(currentBalance) < parseFloat(input.blueBucksAmount)) {
           throw new TRPCError({ code: 'BAD_REQUEST', message: 'Insufficient Blue Bucks' });
         }
         
-        await db.recordMarketTransaction(ctx.user.id, input.stockId, 'buy', shares, input.pricePerShare, schoolCode);
-        await db.updatePortfolioHolding(ctx.user.id, input.stockId, shares, input.pricePerShare, input.blueBucksAmount, schoolCode);
-        const newBalance = (parseFloat(currentBalance) - parseFloat(input.blueBucksAmount)).toString();
+        await db.recordMarketTransaction(ctx.user.id, input.stockId, 'buy', shares, price.toString(), schoolCode);
+        await db.addPortfolioHolding(ctx.user.id, input.stockId, shares, price.toString(), schoolCode);
+        const newBalance = (parseFloat(currentBalance) - amount).toString();
         await db.updateCashBalance(ctx.user.id, newBalance);
+        await db.createPortfolioExecutionSnapshot(ctx.user.id, schoolCode);
         
         return { success: true, shares, newBalance };
       }),
@@ -1425,11 +1549,21 @@ export const appRouter = router({
         const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
         if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
         
-        const totalAmount = (parseFloat(input.shares) * parseFloat(input.pricePerShare)).toString();
-        await db.recordMarketTransaction(ctx.user.id, input.stockId, 'sell', input.shares, input.pricePerShare, schoolCode);
-        const currentBalance = await db.getCashBalance(ctx.user.id);
+        const shares = Number(input.shares);
+        const price = Number(input.pricePerShare);
+        if (!Number.isFinite(shares) || shares <= 0 || !Number.isFinite(price) || price <= 0) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Shares and price must be positive numbers' });
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Market storage is unavailable' });
+        const [stock] = await database.select().from(stocks).where(and(eq(stocks.id, input.stockId), eq(stocks.schoolCode, schoolCode))).limit(1);
+        if (!stock) throw new TRPCError({ code: 'NOT_FOUND', message: 'Stock not found in this chapter' });
+        try { await db.removePortfolioHolding(ctx.user.id, input.stockId, shares.toString()); } catch (error) { throw new TRPCError({ code: 'BAD_REQUEST', message: error instanceof Error ? error.message : 'Unable to sell this holding' }); }
+        const totalAmount = (shares * price).toString();
+        await db.recordMarketTransaction(ctx.user.id, input.stockId, 'sell', shares.toString(), price.toString(), schoolCode);
+        const cashAccount = await db.getOrCreatePortfolioCash(ctx.user.id, schoolCode);
+        const currentBalance = String(cashAccount.cashBalance);
         const newBalance = (parseFloat(currentBalance) + parseFloat(totalAmount)).toString();
         await db.updateCashBalance(ctx.user.id, newBalance);
+        await db.createPortfolioExecutionSnapshot(ctx.user.id, schoolCode);
         
         return { success: true, newBalance };
       }),
@@ -1568,6 +1702,7 @@ export const appRouter = router({
       .query(async ({ ctx, input }) => {
         const snapshots = await db.getPortfolioSnapshotHistory(ctx.user.id, input.limit);
         return snapshots.map(s => ({
+          snapshotDate: s.snapshotDate,
           date: new Date(s.snapshotDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
           value: parseFloat(s.totalValue.toString()),
           gain: parseFloat(s.totalProfit.toString()),
@@ -1737,14 +1872,18 @@ export const appRouter = router({
 
     getAvailableCards: protectedProcedure.query(async ({ ctx }) => {
       const { getUserCreditScore } = await import('./creditScoreEngine');
-      const { creditCards } = await import('../drizzle/schema');
+      const { creditCards, userCreditCards } = await import('../drizzle/schema');
       const { getDb } = await import('./db');
       const schoolCode = ctx.user.schoolCode || '';
       const creditScore = await getUserCreditScore(ctx.user.id, schoolCode);
       const database = await getDb();
       if (!database) return [];
-      const cards = await database.select().from(creditCards).where(and(eq(creditCards.schoolCode, schoolCode), lte(creditCards.creditScoreRequired, creditScore)));
-      return cards;
+      const [cards, issuedCards] = await Promise.all([
+        database.select().from(creditCards).where(and(eq(creditCards.schoolCode, schoolCode), lte(creditCards.creditScoreRequired, creditScore))),
+        database.select({ creditCardId: userCreditCards.creditCardId }).from(userCreditCards).where(and(eq(userCreditCards.userId, ctx.user.id), eq(userCreditCards.schoolCode, schoolCode))),
+      ]);
+      const issuedProductIds = new Set(issuedCards.map((card) => card.creditCardId));
+      return cards.filter((card) => !issuedProductIds.has(card.id));
     }),
 
     getUserCards: protectedProcedure.query(async ({ ctx }) => {
@@ -1810,11 +1949,13 @@ export const appRouter = router({
     // Get savings account interest earned
     getSavingsInterest: protectedProcedure
       .query(async ({ ctx }) => {
-        const { userBankAccounts } = await import('../drizzle/schema');
+        const { userBankAccounts, economicConfig } = await import('../drizzle/schema');
         const { getDb } = await import('./db');
         const schoolCode = ctx.user.schoolCode || '';
         const database = await getDb();
         if (!database) return { savingsBalance: '0', interestEarned: '0', apy: '0.5' };
+        const [config] = await database.select().from(economicConfig).where(eq(economicConfig.schoolCode, schoolCode)).limit(1);
+        const apyPercent = Number(config?.savingsInterestRate ?? 0.5);
         
         const account = await database
           .select()
@@ -1822,10 +1963,10 @@ export const appRouter = router({
           .where(and(eq(userBankAccounts.userId, ctx.user.id), eq(userBankAccounts.schoolCode, schoolCode)))
           .limit(1);
         
-        if (!account[0]) return { savingsBalance: '0', interestEarned: '0', apy: '0.5' };
+        if (!account[0]) return { savingsBalance: '0', interestEarned: '0', apy: String(apyPercent) };
         
         const savingsBalance = parseFloat(account[0].savingsBalance);
-        const apy = 0.005; // 0.5% APY
+        const apy = apyPercent / 100;
         const interestEarned = (savingsBalance * apy) / 12; // Monthly interest
         
         return {
@@ -1836,12 +1977,14 @@ export const appRouter = router({
       }),
 
     accrueSavingsInterest: protectedProcedure.mutation(async ({ ctx }) => {
-      const { userBankAccounts, savingsInterestAccruals } = await import('../drizzle/schema');
+      const { userBankAccounts, savingsInterestAccruals, economicConfig } = await import('../drizzle/schema');
       const { getDb } = await import('./db');
-      const { calculateMonthlySavingsInterest, savingsInterestPeriodKey, SAVINGS_APY_PERCENT } = await import('./savingsInterest');
+      const { calculateMonthlySavingsInterest, savingsInterestPeriodKey } = await import('./savingsInterest');
       const database = await getDb();
       const schoolCode = ctx.user.schoolCode || '';
       if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Banking data is unavailable' });
+      const [config] = await database.select().from(economicConfig).where(eq(economicConfig.schoolCode, schoolCode)).limit(1);
+      const apyPercent = Number(config?.savingsInterestRate ?? 0.5);
       const periodKey = savingsInterestPeriodKey();
       const existing = await database.select().from(savingsInterestAccruals).where(and(
         eq(savingsInterestAccruals.userId, ctx.user.id),
@@ -1854,20 +1997,20 @@ export const appRouter = router({
       )).limit(1);
       if (!account[0]) throw new TRPCError({ code: 'NOT_FOUND', message: 'Bank account not found' });
       const balanceBefore = Number(account[0].savingsBalance);
-      const interestAmount = calculateMonthlySavingsInterest(balanceBefore);
+      const interestAmount = calculateMonthlySavingsInterest(balanceBefore, apyPercent);
       const balanceAfter = Number((balanceBefore + interestAmount).toFixed(2));
       if (interestAmount <= 0) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Add funds to savings before accruing interest' });
       await database.insert(savingsInterestAccruals).values({
         userId: ctx.user.id,
         schoolCode,
         periodKey,
-        apy: (SAVINGS_APY_PERCENT / 100).toFixed(4),
+        apy: (apyPercent / 100).toFixed(4),
         balanceBefore: balanceBefore.toFixed(2),
         interestAmount: interestAmount.toFixed(2),
         balanceAfter: balanceAfter.toFixed(2),
       });
       await database.update(userBankAccounts).set({ savingsBalance: balanceAfter.toFixed(2) }).where(eq(userBankAccounts.id, account[0].id));
-      return { success: true, periodKey, apy: SAVINGS_APY_PERCENT, interestAmount, savingsBalance: balanceAfter };
+      return { success: true, periodKey, apy: apyPercent, interestAmount, savingsBalance: balanceAfter };
     }),
 
     // Get card usage tracking for a specific card

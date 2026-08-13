@@ -84,6 +84,7 @@ function Router({ isAuthenticated, showLoginRequired }: { isAuthenticated: boole
       <Route path="/discussions" component={Discussions} />
       <Route path="/announcements" component={Announcements} />
       <Route path="/blue-market" component={BlueMarket} />
+      <Route path="/market" component={BlueMarket} />
       <Route path="/speech-ai" component={SpeechAI} />
       <Route path="/ai/roleplay" component={RoleplayAI} />
       <Route path="/ai/written" component={WrittenEventAI} />

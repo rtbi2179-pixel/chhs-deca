@@ -140,6 +140,12 @@ describe("credit-card workflow", () => {
     });
   });
 
+  it("does not offer a product that the member has already been issued", async () => {
+    const caller = appRouter.createCaller(createAuthContext());
+    const availableCards = await caller.banking.getAvailableCards();
+    expect(availableCards.map((card) => card.id)).not.toContain(productId);
+  });
+
   it("generates a statement and applies a validated checking-account payment", async () => {
     const caller = appRouter.createCaller(createAuthContext());
     const statement = await caller.banking.getCardStatement({ cardId: issuedCardId });

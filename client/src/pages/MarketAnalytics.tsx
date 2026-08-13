@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { trpc } from '@/lib/trpc';
+import { buildPortfolioPolyline, filterPortfolioSnapshots } from '@/lib/marketAnalytics';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { TrendingUp, TrendingDown, BarChart3, PieChart, Activity } from 'lucide-react';
@@ -13,11 +14,19 @@ export default function MarketAnalytics() {
   const { data: portfolio } = trpc.market.getPortfolio.useQuery(undefined, {
     enabled: !!user?.id,
   });
+  const { data: portfolioSummary } = trpc.market.getPortfolioSummary.useQuery(undefined, {
+    enabled: !!user?.id,
+  });
 
   // Fetch portfolio snapshots for chart
   const { data: snapshots = [] } = trpc.market.getPortfolioSnapshots.useQuery(
     { limit: 30 },
     { enabled: !!user?.id }
+  );
+
+  const { data: transactions = [] } = trpc.market.getTransactionHistory.useQuery(
+    { limit: 100, offset: 0 },
+    { enabled: !!user?.id },
   );
 
   // Fetch leaderboard for comparison
@@ -26,13 +35,9 @@ export default function MarketAnalytics() {
   });
 
   // Calculate portfolio stats
-  const portfolioValue = portfolio && Array.isArray(portfolio) && portfolio.length > 0
-    ? portfolio.reduce((sum: number, p: any) => sum + parseFloat(p.currentValue || '0'), 0)
-    : 0;
-  const portfolioGain = portfolio && Array.isArray(portfolio) && portfolio.length > 0
-    ? portfolio.reduce((sum: number, p: any) => sum + parseFloat(p.gain || '0'), 0)
-    : 0;
-  const gainPercentage = portfolioValue > 0 ? (portfolioGain / (portfolioValue - portfolioGain)) * 100 : 0;
+  const portfolioValue = portfolioSummary?.totalValue ?? 0;
+  const portfolioGain = portfolioSummary?.totalProfit ?? 0;
+  const gainPercentage = portfolioSummary?.percentageReturn ?? 0;
 
   // Find user's rank
   const userRank = leaderboard.findIndex((entry: any) => {
@@ -45,6 +50,15 @@ export default function MarketAnalytics() {
   const bestPerformer = leaderboard[0] as any;
   const comparisonGain = bestPerformer?.totalProfit ? parseFloat(bestPerformer.totalProfit) : 0;
   const gainDifference = portfolioGain - comparisonGain;
+  const visibleSnapshots = filterPortfolioSnapshots(snapshots, timeframe);
+  const snapshotValues = visibleSnapshots.map((snapshot) => snapshot.value);
+  const chartMin = snapshotValues.length ? Math.min(...snapshotValues) : 0;
+  const chartMax = snapshotValues.length ? Math.max(...snapshotValues) : 0;
+  const chartLine = buildPortfolioPolyline(visibleSnapshots);
+  const executedTrades = transactions.filter((transaction: any) => transaction.status === 'executed');
+  const sellReturns = executedTrades.filter((transaction: any) => transaction.type === 'sell').map((transaction: any) => Number(transaction.totalAmount ?? 0));
+  const largestSale = sellReturns.length ? Math.max(...sellReturns) : null;
+  const smallestSale = sellReturns.length ? Math.min(...sellReturns) : null;
 
   return (
     <div className="min-h-screen bg-background py-8">
@@ -76,7 +90,7 @@ export default function MarketAnalytics() {
           <Card className="border border-border p-6 bg-card">
             <p className="text-foreground/70 text-sm mb-2">Portfolio Value</p>
             <p className="text-3xl font-bold text-foreground">${portfolioValue.toFixed(2)}</p>
-            <p className="text-xs text-foreground/60 mt-2">Total invested capital</p>
+            <p className="text-xs text-foreground/60 mt-2">Cash plus recorded cost basis</p>
           </Card>
 
           <Card className="border border-border p-6 bg-card">
@@ -126,16 +140,25 @@ export default function MarketAnalytics() {
             <Activity className="w-5 h-5" />
             Portfolio Value Over Time
           </h3>
-          <div className="h-64 bg-foreground/5 rounded-lg flex items-center justify-center">
-            <p className="text-foreground/60">
-              {snapshots.length > 0
-                ? `${snapshots.length} data points available`
-                : 'No historical data yet'}
-            </p>
-          </div>
-          <div className="mt-4 text-xs text-foreground/60">
-            Chart visualization would be rendered here using a charting library
-          </div>
+          {visibleSnapshots.length >= 2 ? (
+            <div className="rounded-lg border border-border bg-foreground/[0.03] p-4">
+              <svg viewBox="0 0 600 220" className="h-64 w-full" role="img" aria-label={`Portfolio value from ${new Date(visibleSnapshots[0].snapshotDate).toLocaleDateString()} to ${new Date(visibleSnapshots.at(-1)?.snapshotDate ?? '').toLocaleDateString()}`}>
+                <defs><linearGradient id="portfolio-line" x1="0" x2="1"><stop stopColor="#3b82f6" /><stop offset="1" stopColor="#60a5fa" /></linearGradient></defs>
+                <line x1="0" y1="212" x2="600" y2="212" stroke="currentColor" className="text-foreground/15" />
+                <polyline points={chartLine} fill="none" stroke="url(#portfolio-line)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                {visibleSnapshots.map((snapshot, index) => {
+                  const range = chartMax - chartMin || 1;
+                  const x = (index / (visibleSnapshots.length - 1)) * 600;
+                  const y = 220 - ((snapshot.value - chartMin) / range) * 204 - 8;
+                  return <circle key={`${snapshot.snapshotDate}-${index}`} cx={x} cy={y} r="4" className="fill-blue-400 stroke-background" strokeWidth="2"><title>{`${new Date(snapshot.snapshotDate).toLocaleDateString()}: ${snapshot.value.toFixed(2)} Blue Bucks`}</title></circle>;
+                })}
+              </svg>
+              <div className="mt-3 flex justify-between text-xs text-foreground/60"><span>{new Date(visibleSnapshots[0].snapshotDate).toLocaleDateString()}</span><span>{new Date(visibleSnapshots.at(-1)?.snapshotDate ?? '').toLocaleDateString()}</span></div>
+            </div>
+          ) : (
+            <div className="flex h-64 items-center justify-center rounded-lg border border-dashed border-border bg-foreground/[0.03] px-6 text-center text-sm text-foreground/60">{snapshots.length ? 'Complete one more trade to build a historical performance line for this period.' : 'Your first executed trade will create a portfolio snapshot here.'}</div>
+          )}
+          <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-xs text-foreground/60"><span>Low: {chartMin.toFixed(2)} BB</span><span>High: {chartMax.toFixed(2)} BB</span><span>{visibleSnapshots.length} snapshot{visibleSnapshots.length === 1 ? '' : 's'} in range</span></div>
         </Card>
 
         {/* Holdings Breakdown */}
@@ -175,20 +198,20 @@ export default function MarketAnalytics() {
             <h3 className="text-lg font-bold text-foreground mb-4">Performance Metrics</h3>
             <div className="space-y-4">
               <div className="flex justify-between items-center p-3 bg-foreground/5 rounded">
-                <span className="text-foreground/70">Win Rate</span>
-                <span className="font-bold text-foreground">--</span>
+                <span className="text-foreground/70">Executed Trades</span>
+                <span className="font-bold text-foreground">{executedTrades.length}</span>
               </div>
               <div className="flex justify-between items-center p-3 bg-foreground/5 rounded">
-                <span className="text-foreground/70">Avg Trade Return</span>
-                <span className="font-bold text-foreground">--</span>
+                <span className="text-foreground/70">Tracked Snapshots</span>
+                <span className="font-bold text-foreground">{snapshots.length}</span>
               </div>
               <div className="flex justify-between items-center p-3 bg-foreground/5 rounded">
-                <span className="text-foreground/70">Largest Win</span>
-                <span className="font-bold text-green-500">--</span>
+                <span className="text-foreground/70">Largest Sale</span>
+                <span className="font-bold text-green-500">{largestSale === null ? '—' : `${largestSale.toFixed(2)} BB`}</span>
               </div>
               <div className="flex justify-between items-center p-3 bg-foreground/5 rounded">
-                <span className="text-foreground/70">Largest Loss</span>
-                <span className="font-bold text-red-500">--</span>
+                <span className="text-foreground/70">Smallest Sale</span>
+                <span className="font-bold text-red-500">{smallestSale === null ? '—' : `${smallestSale.toFixed(2)} BB`}</span>
               </div>
             </div>
           </Card>

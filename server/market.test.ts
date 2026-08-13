@@ -98,7 +98,7 @@ describe('Market System', () => {
   it('returns operational cache metadata to an admin', async () => {
     const caller = appRouter.createCaller(createAuthContext('admin'));
     await expect(caller.market.getCacheStatus()).resolves.toMatchObject({
-      apiMode: 'paused',
+      apiMode: 'on_demand',
       ttlMilliseconds: 300000,
       entryCount: expect.any(Number),
     });

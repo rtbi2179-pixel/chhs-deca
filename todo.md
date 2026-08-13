@@ -65,18 +65,23 @@
 
 ## Blue Blazer Market Feature (In Progress)
 
-- [ ] Plan and setup Blue Blazer Market infrastructure
-- [ ] Create database schema for stocks, holdings, transactions, orders, and portfolio snapshots
-- [ ] Integrate free stock data API (Alpha Vantage or similar)
-- [ ] Implement backend market logic (buy/sell/portfolio calculations)
-- [ ] Build Blue Market UI page with stock listings and portfolio display
-- [ ] Integrate Blue Market navigation (money icon with stock icon in header)
-- [ ] Implement market hours tracking (US Eastern Time)
+- [x] Plan and setup Blue Blazer Market infrastructure
+- [x] Create database schema for stocks, holdings, transactions, orders, and portfolio snapshots
+- [x] Integrate free stock data API (Alpha Vantage or similar)
+- [x] Implement backend market logic (buy/sell/portfolio calculations)
+- [x] Build Blue Market UI page with stock listings and portfolio display
+- [x] Integrate Blue Market navigation (money icon with stock icon in header)
+- [x] Implement market hours tracking (US Eastern Time)
 - [x] Add pending order system for after-hours trading
-- [ ] Create leaderboard for market performance
+- [x] Create leaderboard for market performance
 - [x] Add admin features for stock management
-- [ ] Test market functionality end-to-end
-- [ ] Deploy Blue Blazer Market
+- [x] Test market functionality end-to-end
+- [x] Deploy Blue Blazer Market
+- [x] Add a stable /market route alias for the member-facing Blue Market page
+- [x] Fix member-facing market quote loading and require a valid quote before trade submission
+- [x] Initialize a member portfolio cash account before displaying the market cash balance
+- [x] Fix member-facing market holdings rendering after a successful purchase
+- [x] Correct Market Analytics portfolio value and executed-trade metrics from persisted cash and transaction records
 
 
 ## Blue Blazer Market Implementation
@@ -96,7 +101,7 @@
 - [x] Add pending order system for after-hours trading
 - [x] Create admin features for stock management
 - [x] Add portfolio snapshot history (placeholder for background job)
-- [ ] Test market functionality end-to-end
+- [x] Test market functionality end-to-end
 
 ## Blue Blazer Market - Real Stock Integration Complete
 
@@ -107,11 +112,11 @@
 - [x] Real-time price display with change percentage
 - [x] Stock price tests passing
 - [x] All 16 tests passing (5 test files)
-- [ ] Market hours tracking (US Eastern Time 9:30 AM - 4:00 PM)
-- [ ] After-hours pending order system
-- [ ] Portfolio snapshot history
-- [ ] Historical performance charts
-- [ ] End-to-end market testing
+- [x] Market hours tracking (US Eastern Time 9:30 AM - 4:00 PM)
+- [x] After-hours pending order system
+- [x] Portfolio snapshot history
+- [x] Historical performance charts
+- [x] End-to-end market testing
 
 
 ## Transaction History Feature
@@ -138,7 +143,7 @@
 - [x] Ensure single API call per stock regardless of user count (request queue throttling + in-flight deduplication)
 - [x] Implement in-flight request deduplication per ticker (concurrent requests share same pending promise)
 - [x] Add tests proving concurrent requests result in exactly one upstream API call
-- [ ] Add cache status endpoint for monitoring
+- [x] Add cache status endpoint for monitoring
 
 
 ## Blue Blazer Banking System
@@ -194,23 +199,29 @@
 - [x] Track spending patterns
 
 ### Super Admin Dashboard
-- [ ] Create economic management dashboard (super admin only)
-- [ ] Allow credit score formula adjustment
-- [ ] Allow factor weight adjustment
-- [ ] Allow card tier modification
-- [ ] Allow interest rate adjustment
-- [ ] Allow rewards percentage adjustment
+- [x] Create economic management dashboard (super admin only)
+- [x] Allow credit score formula adjustment
+- [x] Allow factor weight adjustment
+- [x] Allow card tier modification
+- [x] Allow interest rate adjustment
+- [x] Allow rewards percentage adjustment
 - [x] Log all economic changes
-- [ ] Display credit score analytics
-- [ ] Monitor system inflation
+- [x] Display credit score analytics
+- [x] Monitor system inflation
 
 ### Testing
-- [ ] Test credit score calculations
-- [ ] Test card approval logic
-- [ ] Test payment processing
-- [ ] Test reward calculations
-- [ ] Test admin dashboard permissions
+- [x] Test credit score calculations
+- [x] Test card approval logic
+- [x] Test payment processing
+- [x] Test reward calculations
+- [x] Test admin dashboard permissions
 - [ ] End-to-end banking system tests
+- [x] Wire configured credit-rule values into the live score-calculation path
+- [x] Add focused credit-score engine regression coverage for bounds, weights, swing limits, and configured rule effects
+- [x] Fix member-facing credit-card application refresh
+- [x] Exclude already issued credit-card products from the member available-card list
+- [ ] Complete browser-level Banking Dashboard validation for application, purchase, payment handling, statement, rewards, and final balance refresh
+- [x] Improve PI Quizlet navigation between study sections, indicators, and module activities
 
 ## Navigation Enhancement - Money Icon Submenu
 

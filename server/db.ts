@@ -2001,6 +2001,47 @@ export async function updatePortfolioHolding(userId: number, stockId: number, sh
   }
 }
 
+export async function addPortfolioHolding(userId: number, stockId: number, shares: string, pricePerShare: string, schoolCode: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const { portfolioHoldings } = await import("../drizzle/schema");
+  const { applyPortfolioPurchase } = await import("./marketPortfolioMath");
+  const existing = await db.select().from(portfolioHoldings).where(and(eq(portfolioHoldings.userId, userId), eq(portfolioHoldings.stockId, stockId))).limit(1);
+  const next = applyPortfolioPurchase(existing[0] ? { shares: Number(existing[0].shares), averageBuyPrice: Number(existing[0].averageBuyPrice), totalInvested: Number(existing[0].totalInvested) } : null, Number(shares), Number(pricePerShare));
+  if (existing[0]) {
+    await db.update(portfolioHoldings).set({ shares: next.shares.toFixed(6), averageBuyPrice: next.averageBuyPrice.toFixed(6), totalInvested: next.totalInvested.toFixed(2) }).where(eq(portfolioHoldings.id, existing[0].id));
+  } else {
+    await db.insert(portfolioHoldings).values({ userId, stockId, schoolCode, shares: next.shares.toFixed(6), averageBuyPrice: next.averageBuyPrice.toFixed(6), totalInvested: next.totalInvested.toFixed(2) });
+  }
+  return next;
+}
+
+export async function removePortfolioHolding(userId: number, stockId: number, shares: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const { portfolioHoldings } = await import("../drizzle/schema");
+  const { applyPortfolioSale } = await import("./marketPortfolioMath");
+  const existing = await db.select().from(portfolioHoldings).where(and(eq(portfolioHoldings.userId, userId), eq(portfolioHoldings.stockId, stockId))).limit(1);
+  if (!existing[0]) throw new Error("No holding exists for this stock");
+  const next = applyPortfolioSale({ shares: Number(existing[0].shares), averageBuyPrice: Number(existing[0].averageBuyPrice), totalInvested: Number(existing[0].totalInvested) }, Number(shares));
+  if (next.closed) await db.delete(portfolioHoldings).where(eq(portfolioHoldings.id, existing[0].id));
+  else await db.update(portfolioHoldings).set({ shares: next.shares.toFixed(6), totalInvested: next.totalInvested.toFixed(2) }).where(eq(portfolioHoldings.id, existing[0].id));
+  return next;
+}
+
+export async function createPortfolioExecutionSnapshot(userId: number, schoolCode: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const { portfolioCash, portfolioHoldings } = await import("../drizzle/schema");
+  const { calculatePortfolioSnapshot } = await import("./marketPortfolioMath");
+  const [cash] = await db.select().from(portfolioCash).where(eq(portfolioCash.userId, userId)).limit(1);
+  if (!cash) throw new Error("Portfolio cash account not found");
+  const holdings = await db.select({ totalInvested: portfolioHoldings.totalInvested }).from(portfolioHoldings).where(eq(portfolioHoldings.userId, userId));
+  const snapshot = calculatePortfolioSnapshot({ cashBalance: Number(cash.cashBalance), initialAllocation: Number(cash.initialAllocation), totalInvested: holdings.reduce((sum, holding) => sum + Number(holding.totalInvested), 0) });
+  await createPortfolioSnapshot(userId, snapshot.totalValue.toFixed(2), Number(cash.cashBalance).toFixed(2), snapshot.totalProfit.toFixed(2), snapshot.percentageReturn.toFixed(4), schoolCode);
+  return snapshot;
+}
+
 /**
  * Store market price history
  */
@@ -2267,6 +2308,7 @@ export async function getTransactionHistoryFiltered(
         shares: marketTransactions.shares,
         pricePerShare: marketTransactions.pricePerShare,
         totalAmount: marketTransactions.totalAmount,
+        status: marketTransactions.status,
         executedAt: marketTransactions.executedAt,
         createdAt: marketTransactions.createdAt,
       })

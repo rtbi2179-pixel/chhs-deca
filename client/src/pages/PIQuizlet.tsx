@@ -7,7 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import {
   ChevronLeft, ChevronRight, BookOpen, Loader2, RotateCw, Send, CheckCircle, XCircle,
   Brain, Lightbulb, Zap, Target, MessageSquare, Award, ArrowRight, AlertCircle,
-  GraduationCap, ListChecks, FlipHorizontal, ClipboardList, Layers, Link2
+  GraduationCap, ListChecks, FlipHorizontal, ClipboardList, Layers, Link2, Map, SkipBack, SkipForward
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { allEvents } from "@/pages/Events";
@@ -91,6 +91,14 @@ export default function PIQuizlet() {
     { moduleId: selectedModuleId! },
     { enabled: !!selectedModuleId }
   );
+
+  const activeModuleList = selectedEvent
+    ? (eventStudyQuery.data?.instructionalAreas?.flatMap((area) => area.modules) ?? [])
+    : (modules ?? []);
+  const currentModuleIndex = selectedModuleId === null ? -1 : activeModuleList.findIndex((module: any) => module.id === selectedModuleId);
+  const currentModulePosition = currentModuleIndex >= 0 ? currentModuleIndex + 1 : 0;
+  const visibleTabs = [...TABS, ...(showQuizResults ? [{ id: "quiz-results", label: "Results", icon: Award, color: "indigo" }] : [])];
+  const activeTabIndex = visibleTabs.findIndex((tab) => tab.id === activeTab);
 
   const getSectionByType = (type: string) =>
     moduleWithSections?.sections?.find((s: any) => s.sectionType === type);
@@ -238,11 +246,33 @@ export default function PIQuizlet() {
     setTeachBackFeedback("");
   };
 
+  const openModule = (moduleId: number) => {
+    setSelectedModuleId(moduleId);
+    setActiveTab("lesson");
+    setCurrentFlashcardIndex(0);
+    setIsFlipped(false);
+    setQuizAnswers({});
+    setQuizSubmitted(false);
+    setShowQuizResults(false);
+    setTeachBackText("");
+    setTeachBackFeedback("");
+  };
+
+  const moveModule = (direction: -1 | 1) => {
+    const nextModule = activeModuleList[currentModuleIndex + direction];
+    if (nextModule) openModule(nextModule.id);
+  };
+
+  const moveActivity = (direction: -1 | 1) => {
+    const nextTab = visibleTabs[activeTabIndex + direction];
+    if (nextTab) setActiveTab(nextTab.id);
+  };
+
   const renderModuleCard = (module: any) => (
     <button
       key={module.id}
       type="button"
-      onClick={() => setSelectedModuleId(module.id)}
+      onClick={() => openModule(module.id)}
       className="group w-full cursor-pointer rounded-lg border border-slate-800 bg-slate-900 p-5 text-left transition-colors duration-150 hover:border-blue-500/60 hover:bg-slate-900/80"
     >
       <div className="flex items-start justify-between gap-3 mb-4">
@@ -423,9 +453,36 @@ export default function PIQuizlet() {
           </div>
         </div>
 
+        <div className="mb-6 grid gap-3 rounded-lg border border-slate-800 bg-slate-900/70 p-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
+          <div className="flex min-w-0 items-start gap-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-slate-700 bg-slate-950">
+              <Map className="h-4 w-4 text-blue-300" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">Study path</p>
+              <p className="mt-1 truncate text-sm text-slate-200">
+                {currentModulePosition ? `Indicator ${currentModulePosition} of ${activeModuleList.length}` : "Current performance indicator"}
+              </p>
+              <p className="mt-1 text-xs text-slate-500">Use the activity steps below, or move directly to the previous or next indicator in this study list.</p>
+            </div>
+          </div>
+          <div className="flex shrink-0 gap-2">
+            <Button variant="outline" size="sm" onClick={() => moveModule(-1)} disabled={currentModuleIndex <= 0} className="border-slate-700 bg-slate-950 text-slate-200 hover:bg-slate-800">
+              <SkipBack className="mr-1.5 h-3.5 w-3.5" /> Previous PI
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => moveModule(1)} disabled={currentModuleIndex < 0 || currentModuleIndex >= activeModuleList.length - 1} className="border-slate-700 bg-slate-950 text-slate-200 hover:bg-slate-800">
+              Next PI <SkipForward className="ml-1.5 h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </div>
+
         {/* Tab navigation */}
-        <div className="flex gap-1 mb-6 border-b border-slate-800 pb-3 overflow-x-auto">
-          {[...TABS, ...(showQuizResults ? [{ id: "quiz-results", label: "Results", icon: Award, color: "indigo" }] : [])].map((tab) => {
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <div><p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">Module activities</p><p className="mt-1 text-xs text-slate-500">Follow the recommended sequence or jump to any activity.</p></div>
+          <span className="shrink-0 text-xs font-medium text-slate-400">Step {Math.max(activeTabIndex + 1, 1)} of {visibleTabs.length}</span>
+        </div>
+        <div className="flex gap-1 mb-4 border-b border-slate-800 pb-3 overflow-x-auto" aria-label="Module activity navigation">
+          {visibleTabs.map((tab, index) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
             return (
@@ -438,11 +495,19 @@ export default function PIQuizlet() {
                     : "border-transparent text-slate-400 hover:border-slate-700 hover:bg-slate-900 hover:text-white"
                 }`}
               >
+                <span className={`flex h-4 w-4 items-center justify-center rounded-full text-[9px] font-bold ${isActive ? "bg-white/20 text-white" : "bg-slate-800 text-slate-400"}`}>{index + 1}</span>
                 <Icon className="w-3.5 h-3.5" />
                 {tab.label}
               </button>
             );
           })}
+        </div>
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-md border border-slate-800 bg-slate-900/70 p-3">
+          <p className="text-xs text-slate-400"><span className="font-semibold text-slate-200">Now studying:</span> {visibleTabs[activeTabIndex]?.label ?? "Lesson"}</p>
+          <div className="flex gap-2">
+            <Button variant="ghost" size="sm" onClick={() => moveActivity(-1)} disabled={activeTabIndex <= 0} className="text-slate-300 hover:bg-slate-800 hover:text-white"><ChevronLeft className="mr-1 h-4 w-4" /> Previous activity</Button>
+            <Button variant="ghost" size="sm" onClick={() => moveActivity(1)} disabled={activeTabIndex < 0 || activeTabIndex >= visibleTabs.length - 1} className="text-slate-300 hover:bg-slate-800 hover:text-white">Next activity <ChevronRight className="ml-1 h-4 w-4" /></Button>
+          </div>
         </div>
 
         {/* ── LESSON ── */}

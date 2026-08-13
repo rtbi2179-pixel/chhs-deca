@@ -11,7 +11,7 @@ const inFlightRequests = new Map<string, Promise<StockQuote | null>>();
 
 // Request queue to throttle API calls
 let requestQueue: Promise<void> = Promise.resolve();
-const REQUEST_DELAY = 300; // 300ms between requests to respect rate limits
+const REQUEST_DELAY = 13_000; // Alpha Vantage free tier permits five requests per minute
 
 interface StockQuote {
   symbol: string;
@@ -37,7 +37,7 @@ export function getStockPriceCacheStatus() {
 
   return {
     ttlMilliseconds: CACHE_TTL,
-    apiMode: "paused" as const,
+    apiMode: "on_demand" as const,
     entryCount: entries.length,
     inFlightRequestCount: inFlightRequests.size,
     entries,
@@ -66,10 +66,6 @@ export async function getStockPrice(ticker: string): Promise<StockQuote | null> 
   if (cached !== undefined) {
     return cached;
   }
-  
-  // API is paused - return null to use cached data only
-  console.log(`[Stock Price Service] API paused - returning null for ${ticker}`);
-  return null;
   
   // Check if this request is already in-flight (deduplication)
   const inFlight = inFlightRequests.get(ticker);
