@@ -1620,6 +1620,41 @@ export const appRouter = router({
         };
       }),
 
+    accrueSavingsInterest: protectedProcedure.mutation(async ({ ctx }) => {
+      const { userBankAccounts, savingsInterestAccruals } = await import('../drizzle/schema');
+      const { getDb } = await import('./db');
+      const { calculateMonthlySavingsInterest, savingsInterestPeriodKey, SAVINGS_APY_PERCENT } = await import('./savingsInterest');
+      const database = await getDb();
+      const schoolCode = ctx.user.schoolCode || '';
+      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Banking data is unavailable' });
+      const periodKey = savingsInterestPeriodKey();
+      const existing = await database.select().from(savingsInterestAccruals).where(and(
+        eq(savingsInterestAccruals.userId, ctx.user.id),
+        eq(savingsInterestAccruals.periodKey, periodKey),
+      )).limit(1);
+      if (existing[0]) throw new TRPCError({ code: 'CONFLICT', message: 'Savings interest was already accrued for this period' });
+      const account = await database.select().from(userBankAccounts).where(and(
+        eq(userBankAccounts.userId, ctx.user.id),
+        eq(userBankAccounts.schoolCode, schoolCode),
+      )).limit(1);
+      if (!account[0]) throw new TRPCError({ code: 'NOT_FOUND', message: 'Bank account not found' });
+      const balanceBefore = Number(account[0].savingsBalance);
+      const interestAmount = calculateMonthlySavingsInterest(balanceBefore);
+      const balanceAfter = Number((balanceBefore + interestAmount).toFixed(2));
+      if (interestAmount <= 0) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Add funds to savings before accruing interest' });
+      await database.insert(savingsInterestAccruals).values({
+        userId: ctx.user.id,
+        schoolCode,
+        periodKey,
+        apy: (SAVINGS_APY_PERCENT / 100).toFixed(4),
+        balanceBefore: balanceBefore.toFixed(2),
+        interestAmount: interestAmount.toFixed(2),
+        balanceAfter: balanceAfter.toFixed(2),
+      });
+      await database.update(userBankAccounts).set({ savingsBalance: balanceAfter.toFixed(2) }).where(eq(userBankAccounts.id, account[0].id));
+      return { success: true, periodKey, apy: SAVINGS_APY_PERCENT, interestAmount, savingsBalance: balanceAfter };
+    }),
+
     // Get card usage tracking for a specific card
     getCardUsageTracking: protectedProcedure
       .input(z.object({ cardId: z.number() }))

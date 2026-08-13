@@ -17,6 +17,8 @@ export function BankingDashboard() {
   const spendingAnalyticsQuery = trpc.banking.getSpendingAnalytics.useQuery();
   const chargeCardMutation = trpc.banking.chargeCard.useMutation();
   const makePaymentMutation = trpc.banking.makePayment.useMutation();
+  const savingsInterestQuery = trpc.banking.getSavingsInterest.useQuery();
+  const accrueSavingsInterestMutation = trpc.banking.accrueSavingsInterest.useMutation();
   
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [transferData, setTransferData] = useState({
@@ -93,6 +95,17 @@ export function BankingDashboard() {
       bankAccountQuery.refetch();
     } catch (error) {
       alert("Transfer failed: " + (error as any).message);
+    }
+  };
+
+  const handleAccrueSavingsInterest = async () => {
+    try {
+      const result = await accrueSavingsInterestMutation.mutateAsync();
+      alert(`Savings interest credited: $${result.interestAmount.toFixed(2)} at ${result.apy}% APY.`);
+      bankAccountQuery.refetch();
+      savingsInterestQuery.refetch();
+    } catch (error) {
+      alert("Savings interest could not be accrued: " + (error as Error).message);
     }
   };
 
@@ -455,6 +468,11 @@ export function BankingDashboard() {
                   <span className="text-slate-300">Savings Account</span>
                 </div>
                 <span className="text-white font-semibold">${(typeof bankAccount?.savingsBalance === 'string' ? parseFloat(bankAccount.savingsBalance) : (bankAccount?.savingsBalance || 0)).toFixed(2)}</span>
+              </div>
+              <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
+                <div className="flex items-center justify-between gap-3"><span className="text-sm text-emerald-200">Simulated savings interest</span><span className="text-sm font-semibold text-emerald-300">{savingsInterestQuery.data?.apy ?? '0.5'}% APY</span></div>
+                <p className="mt-1 text-xs text-slate-400">Projected monthly credit: ${Number(savingsInterestQuery.data?.interestEarned ?? 0).toFixed(2)}. Interest can be credited once per monthly period.</p>
+                <Button size="sm" className="mt-3 bg-emerald-600 hover:bg-emerald-700" disabled={accrueSavingsInterestMutation.isPending || Number(savingsInterestQuery.data?.interestEarned ?? 0) <= 0} onClick={handleAccrueSavingsInterest}>{accrueSavingsInterestMutation.isPending ? 'Crediting…' : 'Accrue monthly interest'}</Button>
               </div>
               <div className="flex justify-between items-center p-3 bg-slate-700 rounded-lg">
                 <div className="flex items-center gap-2">

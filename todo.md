@@ -169,7 +169,7 @@
 - [x] Create 3 credit card tiers per bank (Starter, Rewards, Elite)
 - [x] Implement credit card approval logic
 - [x] Create checking account system
-- [ ] Create savings account with interest
+- [x] Create savings account with interest
 - [x] Create investment account integration with Blue Market
 - [x] Implement code-based bank initialization service
 - [x] Add tRPC procedures for bank/card retrieval

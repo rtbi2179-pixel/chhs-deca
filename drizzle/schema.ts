@@ -429,6 +429,21 @@ export const userBankAccounts = mysqlTable("userBankAccounts", {
 export type UserBankAccount = typeof userBankAccounts.$inferSelect;
 export type InsertUserBankAccount = typeof userBankAccounts.$inferInsert;
 
+export const savingsInterestAccruals = mysqlTable("savingsInterestAccruals", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  periodKey: varchar("periodKey", { length: 7 }).notNull(),
+  apy: decimal("apy", { precision: 5, scale: 4 }).notNull(),
+  balanceBefore: decimal("balanceBefore", { precision: 15, scale: 2 }).notNull(),
+  interestAmount: decimal("interestAmount", { precision: 15, scale: 2 }).notNull(),
+  balanceAfter: decimal("balanceAfter", { precision: 15, scale: 2 }).notNull(),
+  accruedAt: timestamp("accruedAt").defaultNow().notNull(),
+}, (table) => ({
+  userPeriodUnique: uniqueIndex("savingsInterest_user_period_unique").on(table.userId, table.periodKey),
+}));
+export type SavingsInterestAccrual = typeof savingsInterestAccruals.$inferSelect;
+
 /**
  * Card Usage Tracking
  */
