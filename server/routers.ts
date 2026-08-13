@@ -16,8 +16,8 @@ import { applyCreditCardCharge, applyCreditCardPayment, calculateCashback, summa
 import { calculateMonetaryPressure, calculateBlueBucksInflationIndex } from "./economicMonitoring";
 
 import { initializeBanksForSchool, getBanksForSchool, getCreditCardsForBank } from './bankInitializer';
-import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback, notificationPreferences, userProfileSettings, adminActivityLogs, studySessions, sessionQuestions } from "../drizzle/schema";
-import { and, eq, sql, inArray, desc, lte, gte } from "drizzle-orm";
+import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback, notificationPreferences, userProfileSettings, adminActivityLogs, studySessions, sessionQuestions, stocks } from "../drizzle/schema";
+import { and, eq, sql, inArray, desc, asc, lte, gte } from "drizzle-orm";
 import { piLearningRouter } from "./piLearningRouter";
 
 
@@ -1445,6 +1445,30 @@ export const appRouter = router({
       }
       return getStockPriceCacheStatus();
     }),
+
+    getAdminStocks: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== 'super_admin') throw new TRPCError({ code: 'FORBIDDEN', message: 'Only super admins can manage stocks' });
+      const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
+      if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Select a school before managing stocks' });
+      const database = await db.getDb();
+      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Market storage is unavailable' });
+      return database.select().from(stocks).where(eq(stocks.schoolCode, schoolCode)).orderBy(asc(stocks.ticker));
+    }),
+
+    setStockActive: protectedProcedure
+      .input(z.object({ stockId: z.number().int().positive(), isActive: z.boolean() }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== 'super_admin') throw new TRPCError({ code: 'FORBIDDEN', message: 'Only super admins can manage stocks' });
+        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Select a school before managing stocks' });
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Market storage is unavailable' });
+        const [stock] = await database.select().from(stocks).where(and(eq(stocks.id, input.stockId), eq(stocks.schoolCode, schoolCode))).limit(1);
+        if (!stock) throw new TRPCError({ code: 'NOT_FOUND', message: 'Stock not found in the selected chapter' });
+        await database.update(stocks).set({ isActive: input.isActive }).where(eq(stocks.id, stock.id));
+        await database.insert(adminActivityLogs).values({ schoolCode, actorUserId: ctx.user.id, action: input.isActive ? 'stock_activated' : 'stock_deactivated', targetType: 'stock', targetId: String(stock.id), details: JSON.stringify({ ticker: stock.ticker, companyName: stock.companyName }) });
+        return { success: true, stockId: stock.id, isActive: input.isActive };
+      }),
     
     initializeDefaultStocks: protectedProcedure
       .mutation(async ({ ctx }) => {

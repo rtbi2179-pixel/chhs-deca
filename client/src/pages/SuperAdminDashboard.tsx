@@ -8,7 +8,7 @@ import { AlertCircle, Settings, TrendingUp, DollarSign, Zap } from 'lucide-react
 
 export default function SuperAdminDashboard() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<'overview' | 'credit' | 'cards' | 'rewards' | 'logs'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'credit' | 'cards' | 'rewards' | 'market' | 'logs'>('overview');
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [weights, setWeights] = useState({
     paymentReliabilityWeight: 25,
@@ -23,6 +23,7 @@ export default function SuperAdminDashboard() {
   const activityLogQuery = trpc.superAdmin.getActivityLog.useQuery(undefined, { enabled: user?.role === 'super_admin' });
   const monitoringQuery = trpc.superAdmin.getEconomicMonitoring.useQuery(undefined, { enabled: user?.role === 'super_admin' });
   const inflationHistoryQuery = trpc.superAdmin.getInflationHistory.useQuery(undefined, { enabled: user?.role === 'super_admin' });
+  const adminStocksQuery = trpc.market.getAdminStocks.useQuery(undefined, { enabled: user?.role === 'super_admin' });
   const updateWeights = trpc.superAdmin.updateEconomicWeights.useMutation({
     onSuccess: async () => {
       setSaveMessage('Credit-score weights saved and added to the audit log.');
@@ -41,6 +42,13 @@ export default function SuperAdminDashboard() {
       URL.revokeObjectURL(url);
       setSaveMessage(`Chapter backup exported for ${backup.schoolCode}.`);
       activityLogQuery.refetch();
+    },
+    onError: (error) => setSaveMessage(error.message),
+  });
+  const setStockActive = trpc.market.setStockActive.useMutation({
+    onSuccess: async () => {
+      setSaveMessage('Stock availability updated and recorded in administrator activity.');
+      await Promise.all([adminStocksQuery.refetch(), activityLogQuery.refetch()]);
     },
     onError: (error) => setSaveMessage(error.message),
   });
@@ -98,6 +106,7 @@ export default function SuperAdminDashboard() {
             { id: 'credit' as const, label: 'Credit Score', icon: Zap },
             { id: 'cards' as const, label: 'Card Tiers', icon: DollarSign },
             { id: 'rewards' as const, label: 'Rewards', icon: TrendingUp },
+            { id: 'market' as const, label: 'Market', icon: TrendingUp },
             { id: 'logs' as const, label: 'Audit Logs', icon: AlertCircle },
           ].map(tab => (
             <button
@@ -290,6 +299,22 @@ export default function SuperAdminDashboard() {
                 />
               </div>
               <Button className="w-full mt-6">Save Rewards Configuration</Button>
+            </div>
+          </Card>
+        )}
+
+        {activeTab === 'market' && (
+          <Card className="border border-border p-6 bg-card">
+            <h3 className="text-lg font-bold text-foreground">Market Stock Management</h3>
+            <p className="mt-1 text-sm text-foreground/60">Activate or pause stocks for the selected chapter. Paused stocks are excluded from member-facing market listings; prior holdings remain recorded.</p>
+            {saveMessage && <p className="mt-4 text-sm text-foreground/70">{saveMessage}</p>}
+            <div className="mt-6 divide-y divide-border rounded-lg border border-border">
+              {adminStocksQuery.isLoading ? <p className="p-4 text-sm text-foreground/60">Loading chapter stocks…</p> : adminStocksQuery.data?.length ? adminStocksQuery.data.map((stock) => (
+                <div key={stock.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div><p className="font-semibold text-foreground">{stock.ticker} <span className="font-normal text-foreground/60">· {stock.companyName}</span></p><p className={`mt-1 text-xs ${stock.isActive ? 'text-emerald-500' : 'text-amber-500'}`}>{stock.isActive ? 'Active for members' : 'Paused for members'}</p></div>
+                  <Button variant="outline" disabled={setStockActive.isPending} onClick={() => setStockActive.mutate({ stockId: stock.id, isActive: !stock.isActive })}>{stock.isActive ? 'Pause Stock' : 'Activate Stock'}</Button>
+                </div>
+              )) : <p className="p-4 text-sm text-foreground/60">No stocks have been initialized for the selected chapter.</p>}
             </div>
           </Card>
         )}
