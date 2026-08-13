@@ -10,6 +10,7 @@ import {
   GraduationCap, ListChecks, FlipHorizontal, ClipboardList, Layers, Link2
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { allEvents } from "@/pages/Events";
 
 const CLUSTERS = [
   "Marketing",
@@ -32,10 +33,20 @@ const TABS = [
   { id: "teach-back",   label: "Teach-Back",    icon: GraduationCap, color: "orange" },
 ];
 
+const EVENT_CLUSTER_TO_PI_CLUSTER: Record<string, (typeof CLUSTERS)[number]> = {
+  "Business Management": "Business Management & Administration",
+  "Personal Finance": "Personal Financial Literacy",
+  "Marketing": "Marketing",
+  "Finance": "Finance",
+  "Hospitality & Tourism": "Hospitality & Tourism",
+  "Entrepreneurship": "Entrepreneurship",
+};
+
 export default function PIQuizlet() {
   const { user } = useAuth();
   const utils = trpc.useUtils();
   const [selectedCluster, setSelectedCluster] = useState<(typeof CLUSTERS)[number]>(CLUSTERS[0]);
+  const [selectedEventCode, setSelectedEventCode] = useState("");
   const [selectedModuleId, setSelectedModuleId] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState("lesson");
 
@@ -57,6 +68,17 @@ export default function PIQuizlet() {
   const { data: modules, isLoading: modulesLoading } = trpc.piLearning.getModulesByCluster.useQuery(
     { cluster: selectedCluster }
   );
+  const selectedEvent = allEvents.find((event) => event.code === selectedEventCode);
+  const eventPiCluster = selectedEvent ? EVENT_CLUSTER_TO_PI_CLUSTER[selectedEvent.cluster] : undefined;
+  const { data: coreModules, isLoading: coreModulesLoading } = trpc.piLearning.getModulesByCluster.useQuery(
+    { cluster: "Business Administration Core" },
+    { enabled: !!selectedEvent }
+  );
+  const { data: eventSpecificModules, isLoading: eventSpecificModulesLoading } = trpc.piLearning.getModulesByCluster.useQuery(
+    { cluster: eventPiCluster ?? "Marketing" },
+    { enabled: !!eventPiCluster }
+  );
+  const eventStudyLoading = !!selectedEvent && (coreModulesLoading || eventSpecificModulesLoading);
 
   const { data: moduleWithSections, isLoading: moduleLoading } = trpc.piLearning.getModuleWithSections.useQuery(
     { moduleId: selectedModuleId! },
@@ -216,6 +238,34 @@ export default function PIQuizlet() {
     setTeachBackFeedback("");
   };
 
+  const renderModuleCard = (module: any) => (
+    <button
+      key={module.id}
+      type="button"
+      onClick={() => setSelectedModuleId(module.id)}
+      className="group w-full cursor-pointer rounded-lg border border-slate-800 bg-slate-900 p-5 text-left transition-colors duration-150 hover:border-blue-500/60 hover:bg-slate-900/80"
+    >
+      <div className="flex items-start justify-between gap-3 mb-4">
+        <div className="flex h-10 w-10 items-center justify-center rounded-md border border-blue-500/30 bg-blue-500/10 group-hover:border-blue-400/60 transition">
+          <Lightbulb className="w-5 h-5 text-blue-400" />
+        </div>
+        {module.level && (
+          <Badge variant="outline" className="text-xs border-slate-700 text-slate-400">
+            {module.level}
+          </Badge>
+        )}
+      </div>
+      <h3 className="font-semibold text-white text-base mb-1 group-hover:text-blue-200 transition line-clamp-2">
+        {module.performanceIndicator}
+      </h3>
+      <p className="text-sm text-slate-500 mb-4">{module.instructionalArea}</p>
+      <div className="flex items-center justify-between pt-4 border-t border-slate-800">
+        <span className="text-xs font-mono text-slate-600">{module.piId}</span>
+        <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-blue-400 group-hover:translate-x-1 transition-all" />
+      </div>
+    </button>
+  );
+
   // ── Auth guard ─────────────────────────────────────────────────────────────
   if (!user) {
     return (
@@ -249,6 +299,21 @@ export default function PIQuizlet() {
             <p className="max-w-2xl text-base leading-relaxed text-slate-400">
               Choose a career cluster, then work through lessons, vocabulary, flashcards, review questions, and scenarios at your own pace.
             </p>
+            <div className="mt-6 max-w-2xl rounded-lg border border-slate-800 bg-slate-900 p-4">
+              <label htmlFor="event-study-path" className="block text-sm font-semibold text-slate-200">Study for a specific competitive event</label>
+              <p className="mt-1 text-xs leading-relaxed text-slate-400">Select an event to separate business administration core skills from the indicators aligned with that event’s career cluster.</p>
+              <select
+                id="event-study-path"
+                value={selectedEventCode}
+                onChange={(event) => setSelectedEventCode(event.target.value)}
+                className="mt-3 w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2.5 text-sm text-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              >
+                <option value="">Browse by career cluster instead</option>
+                {[...allEvents].sort((a, b) => a.name.localeCompare(b.name)).map((event) => (
+                  <option key={event.code} value={event.code}>{event.code} — {event.name}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {/* Cluster Tabs */}
@@ -269,41 +334,41 @@ export default function PIQuizlet() {
           </div>
 
           {/* Modules Grid */}
-          {modulesLoading ? (
+          {modulesLoading || eventStudyLoading ? (
             <div className="flex items-center justify-center py-24">
               <div className="text-center">
                 <Loader2 className="w-12 h-12 animate-spin text-blue-500 mx-auto mb-4" />
                 <p className="text-slate-400">Loading modules...</p>
               </div>
             </div>
+          ) : selectedEvent ? (
+            <div className="space-y-10">
+              <div>
+                <div className="mb-4 flex flex-col gap-1 border-l-2 border-blue-500 pl-4 sm:flex-row sm:items-end sm:justify-between">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-300">General business skills</p>
+                    <h2 className="mt-1 text-xl font-bold text-white">Business Administration Core</h2>
+                    <p className="mt-1 text-sm text-slate-400">Foundational indicators used across DECA competitive events.</p>
+                  </div>
+                  <span className="text-sm text-slate-500">{coreModules?.length ?? 0} indicators</span>
+                </div>
+                {coreModules?.length ? <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">{coreModules.map(renderModuleCard)}</div> : <p className="rounded-lg border border-dashed border-slate-800 p-5 text-sm text-slate-400">No core indicators are available yet.</p>}
+              </div>
+              <div>
+                <div className="mb-4 flex flex-col gap-1 border-l-2 border-emerald-500 pl-4 sm:flex-row sm:items-end sm:justify-between">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300">Event-specific preparation</p>
+                    <h2 className="mt-1 text-xl font-bold text-white">{selectedEvent.name}</h2>
+                    <p className="mt-1 text-sm text-slate-400">Indicators aligned with the {eventPiCluster} career cluster for this event.</p>
+                  </div>
+                  <span className="text-sm text-slate-500">{eventSpecificModules?.length ?? 0} indicators</span>
+                </div>
+                {eventSpecificModules?.length ? <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">{eventSpecificModules.map(renderModuleCard)}</div> : <p className="rounded-lg border border-dashed border-slate-800 p-5 text-sm text-slate-400">No event-aligned indicators are available for this event yet.</p>}
+              </div>
+            </div>
           ) : modules && modules.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {modules.map((module: any) => (
-                <div
-                  key={module.id}
-                  onClick={() => setSelectedModuleId(module.id)}
-                  className="group cursor-pointer rounded-lg border border-slate-800 bg-slate-900 p-5 transition-colors duration-150 hover:border-blue-500/60 hover:bg-slate-900/80"
-                >
-                  <div className="flex items-start justify-between gap-3 mb-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-md border border-blue-500/30 bg-blue-500/10 group-hover:border-blue-400/60 transition">
-                      <Lightbulb className="w-5 h-5 text-blue-400" />
-                    </div>
-                    {module.level && (
-                      <Badge variant="outline" className="text-xs border-slate-700 text-slate-400">
-                        {module.level}
-                      </Badge>
-                    )}
-                  </div>
-                  <h3 className="font-semibold text-white text-base mb-1 group-hover:text-blue-200 transition line-clamp-2">
-                    {module.performanceIndicator}
-                  </h3>
-                  <p className="text-sm text-slate-500 mb-4">{module.instructionalArea}</p>
-                  <div className="flex items-center justify-between pt-4 border-t border-slate-800">
-                    <span className="text-xs font-mono text-slate-600">{module.piId}</span>
-                    <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-blue-400 group-hover:translate-x-1 transition-all" />
-                  </div>
-                </div>
-              ))}
+              {modules.map(renderModuleCard)}
             </div>
           ) : (
             <div className="text-center py-24 border border-dashed border-slate-800 rounded-2xl">

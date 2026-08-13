@@ -427,6 +427,7 @@
 - [x] Repair Direct Messages close button visibility and click behavior
 - [x] Refine PI Quizlet into a less AI-styled student study interface
 - [x] Fix Volunteer page selected-school query error for super administrators
+- [x] Add event-based PI Quizlet filters for general business and event-specific indicators
 
 ## Complete PI Quizlet Package Integration
 

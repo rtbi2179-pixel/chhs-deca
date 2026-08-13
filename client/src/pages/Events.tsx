@@ -18,7 +18,7 @@ interface EventResource {
   type: 'guide' | 'exam' | 'video' | 'practice' | 'external'
 }
 
-interface DECAEvent {
+export interface DECAEvent {
   code: string
   name: string
   cluster: Cluster
@@ -28,7 +28,7 @@ interface DECAEvent {
   resources: EventResource[]
 }
 
-const allEvents: DECAEvent[] = [
+export const allEvents: DECAEvent[] = [
   // ── MARKETING ──
   {
     code: 'AAM', name: 'Apparel and Accessories Marketing Series', cluster: 'Marketing', type: 'Individual Series', participants: '1',
