@@ -6,6 +6,8 @@ import { membersRouter } from "./membersRouter";
 import { TRPCError } from '@trpc/server';
 import { selectBalancedMockExam } from './mockExamSelection';
 import { analyzeMockExamResults } from './mockExamAnalysis';
+import { calculateMockExamProgress } from './mockExamProgress';
+import { createAdministratorActivityRecord } from './adminActivity';
 import { z } from "zod";
 import * as db from "./db";
 import { getAnnouncementsBySchool, createAnnouncement, likeAnnouncement, getAnnouncementLikes, addAnnouncementComment, getAnnouncementComments, deleteAnnouncement } from "./db";
@@ -16,7 +18,7 @@ import { applyCreditCardCharge, applyCreditCardPayment, calculateCashback, summa
 import { calculateMonetaryPressure, calculateBlueBucksInflationIndex } from "./economicMonitoring";
 
 import { initializeBanksForSchool, getBanksForSchool, getCreditCardsForBank } from './bankInitializer';
-import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback, notificationPreferences, userProfileSettings, adminActivityLogs, studySessions, sessionQuestions, stocks } from "../drizzle/schema";
+import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback, notificationPreferences, userProfileSettings, adminActivityLogs, studySessions, sessionQuestions, stocks, userPiProgress } from "../drizzle/schema";
 import { and, eq, sql, inArray, desc, asc, lte, gte } from "drizzle-orm";
 import { piLearningRouter } from "./piLearningRouter";
 
@@ -503,6 +505,14 @@ export const appRouter = router({
           reviewedBy: ctx.user.id,
           reviewedAt: new Date(),
         }).where(eq(userFeedback.id, input.feedbackId));
+        await database.insert(adminActivityLogs).values(createAdministratorActivityRecord({
+          schoolCode: record[0].schoolCode,
+          actorUserId: ctx.user.id,
+          action: 'feedback_reviewed',
+          targetType: 'feedback',
+          targetId: String(record[0].id),
+          details: { status: input.status, responseProvided: Boolean(input.adminResponse) },
+        }));
         return { success: true };
       }),
   }),
@@ -646,12 +656,21 @@ export const appRouter = router({
         if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Backup storage is unavailable' });
         const members = await database.select({ id: users.id, name: users.name, username: users.username, email: users.email, role: users.role, createdAt: users.createdAt, primaryEventCode: users.primaryEventCode }).from(users).where(eq(users.schoolCode, schoolCode));
         const memberIds = members.map(member => member.id);
-        const [practiceAnswers, mockExamSessions] = memberIds.length ? await Promise.all([
+        const [practiceAnswers, mockExamSessions, mockExamQuestions, piProgress, feedback, marketRecords, blueBucksLedger, cardUsage, economicChanges, administratorActivity, announcements] = memberIds.length ? await Promise.all([
           database.select().from(userAnswers).where(inArray(userAnswers.userId, memberIds)),
           database.select().from(studySessions).where(inArray(studySessions.userId, memberIds)),
-        ]) : [[], []];
-        await database.insert(adminActivityLogs).values({ schoolCode, actorUserId: ctx.user.id, action: 'chapter_backup_exported', targetType: 'chapter_backup', targetId: schoolCode, details: JSON.stringify({ memberCount: members.length, practiceAnswerCount: practiceAnswers.length, mockExamSessionCount: mockExamSessions.length }) });
-        return { exportedAt: new Date(), schoolCode, members, practiceAnswers, mockExamSessions };
+          database.select().from(sessionQuestions).where(inArray(sessionQuestions.sessionId, (await database.select({ id: studySessions.id }).from(studySessions).where(inArray(studySessions.userId, memberIds))).map(session => session.id))),
+          database.select().from(userPiProgress).where(inArray(userPiProgress.userId, memberIds)),
+          database.select().from(userFeedback).where(eq(userFeedback.schoolCode, schoolCode)),
+          database.select().from(marketTransactions).where(eq(marketTransactions.schoolCode, schoolCode)),
+          database.select().from(blueBucksTransactions).where(eq(blueBucksTransactions.schoolCode, schoolCode)),
+          database.select().from(cardUsageTracking).where(eq(cardUsageTracking.schoolCode, schoolCode)),
+          database.select().from(economicAuditLog).where(eq(economicAuditLog.schoolCode, schoolCode)),
+          database.select().from(adminActivityLogs).where(eq(adminActivityLogs.schoolCode, schoolCode)),
+          getAnnouncementsBySchool(schoolCode),
+        ]) : [[], [], [], [], [], [], [], [], [], [], []];
+        await database.insert(adminActivityLogs).values({ schoolCode, actorUserId: ctx.user.id, action: 'chapter_backup_exported', targetType: 'chapter_backup', targetId: schoolCode, details: JSON.stringify({ memberCount: members.length, practiceAnswerCount: practiceAnswers.length, mockExamSessionCount: mockExamSessions.length, piProgressCount: piProgress.length, marketRecordCount: marketRecords.length }) });
+        return { exportedAt: new Date(), schoolCode, members, practiceAnswers, mockExamSessions, mockExamQuestions, piProgress, feedback, marketRecords, blueBucksLedger, cardUsage, economicChanges, administratorActivity, announcements };
       }),
     selectSchool: protectedProcedure
       .input(z.object({ schoolCode: z.string() }))
@@ -1010,7 +1029,10 @@ export const appRouter = router({
             throw new Error("Only super admins can promote users");
           }
           
+          const target = await db.getUserByEmail(input.email);
           const result = await db.promoteToAdmin(input.email);
+          const schoolCode = target?.schoolCode ?? ctx.user.selectedSchoolCode ?? ctx.user.schoolCode;
+          if (schoolCode) await (await db.getDb())?.insert(adminActivityLogs).values(createAdministratorActivityRecord({ schoolCode, actorUserId: ctx.user.id, action: 'user_promoted_to_admin', targetType: 'user', targetId: target ? String(target.id) : input.email, details: { email: input.email } }));
           return result;
         } catch (error: any) {
           throw new Error(error.message);
@@ -1029,7 +1051,10 @@ export const appRouter = router({
             throw new Error(`Only super admins can demote users. Current role: ${ctx.user?.role || 'unknown'}`);
           }
           
+          const target = await db.getUserByEmail(input.email);
           const result = await db.demoteFromAdmin(input.email);
+          const schoolCode = target?.schoolCode ?? ctx.user.selectedSchoolCode ?? ctx.user.schoolCode;
+          if (schoolCode) await (await db.getDb())?.insert(adminActivityLogs).values(createAdministratorActivityRecord({ schoolCode, actorUserId: ctx.user.id, action: 'user_demoted_from_admin', targetType: 'user', targetId: target ? String(target.id) : input.email, details: { email: input.email } }));
           return result;
         } catch (error: any) {
           throw new Error(error.message);
@@ -1159,10 +1184,11 @@ export const appRouter = router({
         const [session] = await database.select().from(studySessions)
           .where(and(eq(studySessions.id, input.sessionId), eq(studySessions.userId, ctx.user.id))).limit(1);
         if (!session) throw new TRPCError({ code: 'NOT_FOUND', message: 'Mock exam not found' });
-        const rows = await database.select({ instructionalArea: questions.instructionalArea, performanceIndicatorFocus: questions.performanceIndicatorFocus, isCorrect: sessionQuestions.isCorrect })
+        const rows = await database.select({ instructionalArea: questions.instructionalArea, performanceIndicatorFocus: questions.performanceIndicatorFocus, userAnswer: sessionQuestions.userAnswer, isCorrect: sessionQuestions.isCorrect })
           .from(sessionQuestions).innerJoin(questions, eq(sessionQuestions.questionId, questions.id))
           .where(eq(sessionQuestions.sessionId, input.sessionId));
-        return { session, ...analyzeMockExamResults(rows.map(row => ({ ...row, isCorrect: Boolean(row.isCorrect) }))) };
+        const answeredRows = rows.filter(row => row.userAnswer !== null);
+        return { session, ...analyzeMockExamResults(answeredRows.map(row => ({ ...row, isCorrect: Boolean(row.isCorrect) }))) };
       }),
     submitAnswer: protectedProcedure
       .input(z.object({ sessionId: z.number().int().positive(), questionId: z.string(), selectedAnswer: z.string().length(1) }))
@@ -1182,9 +1208,10 @@ export const appRouter = router({
         if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
         await database.update(sessionQuestions).set({ userAnswer: input.selectedAnswer, isCorrect: isCorrect ? 1 : 0 }).where(eq(sessionQuestions.id, sessionQuestion.id));
         await db.recordUserAnswer(ctx.user.id, input.questionId, input.selectedAnswer, isCorrect, schoolCode);
-        const answered = await database.select({ id: sessionQuestions.id, isCorrect: sessionQuestions.isCorrect }).from(sessionQuestions).where(eq(sessionQuestions.sessionId, input.sessionId));
-        await database.update(studySessions).set({ questionsAnswered: answered.filter(item => item.id).length, correctAnswers: answered.filter(item => item.isCorrect === 1).length }).where(eq(studySessions.id, input.sessionId));
-        return { isCorrect, questionsAnswered: answered.length, correctAnswers: answered.filter(item => item.isCorrect === 1).length };
+        const answered = await database.select({ userAnswer: sessionQuestions.userAnswer, isCorrect: sessionQuestions.isCorrect }).from(sessionQuestions).where(eq(sessionQuestions.sessionId, input.sessionId));
+        const progress = calculateMockExamProgress(answered);
+        await database.update(studySessions).set(progress).where(eq(studySessions.id, input.sessionId));
+        return { isCorrect, ...progress };
       }),
   }),
 

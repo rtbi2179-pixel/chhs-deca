@@ -74,7 +74,7 @@
 - [ ] Implement market hours tracking (US Eastern Time)
 - [x] Add pending order system for after-hours trading
 - [ ] Create leaderboard for market performance
-- [ ] Add admin features for stock management
+- [x] Add admin features for stock management
 - [ ] Test market functionality end-to-end
 - [ ] Deploy Blue Blazer Market
 
@@ -94,7 +94,7 @@
 - [x] Fix stock price fetching with proper tRPC URL encoding
 - [x] Implement market hours tracking (US Eastern Time)
 - [x] Add pending order system for after-hours trading
-- [ ] Create admin features for stock management
+- [x] Create admin features for stock management
 - [x] Add portfolio snapshot history (placeholder for background job)
 - [ ] Test market functionality end-to-end
 
@@ -433,6 +433,9 @@
 - [x] Load supplied 2026–2027 PI-to-event mapping and verify zero uncovered modules
 - [x] Build 100-question unused-question Chapter Mock Exams with weak-area study recommendations
 - [x] Add secure super-admin stock-management controls and audit logging
+- [x] Log feedback-review and user-management administrator actions with focused coverage
+- [x] Expand the chapter backup export to include critical learning, administrative, economic, and market records
+- [x] Fix Chapter Mock Exam answered-count persistence and add submit/resume regression coverage
 
 ## Complete PI Quizlet Package Integration
 
