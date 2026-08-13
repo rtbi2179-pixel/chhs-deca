@@ -145,8 +145,10 @@ const Volunteer = () => {
   const { adminModeActive, setAdminModeActive, neonOverlayRef, setNeonOverlayRef, deactivateAdminMode } = useAdminMode()
   const { selectedSchoolCode } = useSchoolCode()
   
-  // Use selected school code for super admins, user's school code for regular users
-  const effectiveSchoolCode = user?.role === 'super_admin' ? selectedSchoolCode : user?.schoolCode
+  // Prefer the live chapter selection, then the persisted selection returned with auth.
+  const effectiveSchoolCode = user?.role === 'super_admin'
+    ? (selectedSchoolCode || user.selectedSchoolCode || user.schoolCode)
+    : user?.schoolCode
   const [expandedId, setExpandedId] = useState<number | null>(null)
   const [signedUpIds, setSignedUpIds] = useState<number[]>([])
   const [showSignups, setShowSignups] = useState<number | null>(null)
@@ -157,7 +159,10 @@ const Volunteer = () => {
   // Load all signups from database
   const { data: allSignups = [] } = trpc.volunteers.getAllSignups.useQuery()
   const utils = trpc.useUtils()
-  const { data: dbOpportunities = [] } = trpc.volunteers.getAll.useQuery({ schoolCode: effectiveSchoolCode || undefined })
+  const { data: dbOpportunities = [] } = trpc.volunteers.getAll.useQuery(
+    { schoolCode: effectiveSchoolCode || undefined },
+    { enabled: !!effectiveSchoolCode }
+  )
   const createOppMutation = trpc.volunteers.create.useMutation({
     onSuccess: () => { 
       utils.volunteers.getAll.invalidate()
