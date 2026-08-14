@@ -499,3 +499,6 @@
 - [x] Add a concise first-sign-in Blue Blazer onboarding tour covering the core study and practice tools
 - [x] Persist onboarding completion or skip per user so returning users are not interrupted
 - [x] Add focused tests and browser validation for onboarding display, progression, and completion behavior
+- [x] Add a clear visual progress indicator to each step of the first-sign-in onboarding tour
+- [x] Add a short, reduced-motion-aware Blue Blazer celebration animation before final onboarding completion persists
+- [x] Add focused tests and browser validation for onboarding progress and final-step celebration behavior
