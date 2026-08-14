@@ -493,3 +493,6 @@
 - [x] Add focused tests and browser validation for Blue’s News notifications and the three-hour event workflow
 - [x] Add four hover-lift Practice cluster cards for Marketing, Business, Finance, and Hospitality and Tourism
 - [x] Launch each Practice cluster card into the matching filtered question bank and verify the interaction with focused coverage
+- [x] Build a Blue Blazer signed-out welcome screen using the existing logo, platform overview, and dark blue brand theme
+- [x] Require authentication before signed-out visitors can access application routes beyond the welcome and login flows
+- [x] Add focused coverage and browser validation for the signed-out welcome gate and login routing

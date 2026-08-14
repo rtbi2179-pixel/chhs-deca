@@ -45,34 +45,16 @@ import MarketAnalytics from "./pages/MarketAnalytics";
 import Feedback from "./pages/Feedback";
 import StudyCards from "./pages/StudyCards";
 import BluesNews from "./pages/BluesNews";
+import { SignedOutWelcome } from "./components/SignedOutWelcome";
 import Footer from "./components/Footer";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { shouldShowSignedOutWelcome } from "./lib/signedOutWelcome";
 import { useState, useEffect } from "react";
 import { Toast, useToast } from "./components/Toast";
 import { useLocation } from "wouter";
 import { DirectMessagesPanel } from "./components/DirectMessagesPanel";
 
-function ProtectedRoute({ component: Component, ...rest }: any) {
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-foreground">Loading...</div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <Home />;
-  }
-
-  return <Component {...rest} />;
-}
-
-function Router({ isAuthenticated, showLoginRequired }: { isAuthenticated: boolean; showLoginRequired: () => void }) {
-  const [location] = useLocation();
-
+function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
@@ -128,17 +110,13 @@ function Router({ isAuthenticated, showLoginRequired }: { isAuthenticated: boole
 function App() {
   const { user, loading } = useAuth();
   const { toasts, addToast, removeToast } = useToast();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    if (!loading) {
-      setIsAuthenticated(!!user);
-    }
-  }, [user, loading]);
+  const [location] = useLocation();
 
   const handleLoginRequired = () => {
     addToast("Log in required", "warning", 3000);
   };
+
+  const showWelcomeGate = shouldShowSignedOutWelcome({ location, isAuthenticated: Boolean(user), isLoading: loading });
 
   return (
     <ErrorBoundary>
@@ -148,10 +126,12 @@ function App() {
             <TooltipProvider>
             <Toaster />
             <Toast toasts={toasts} onRemove={removeToast} />
-            <Navigation onLoginRequired={handleLoginRequired} />
-            <Router isAuthenticated={isAuthenticated} showLoginRequired={handleLoginRequired} />
-            <DirectMessagesPanel />
-            <Footer />
+            {loading ? <SignedOutWelcome isChecking /> : showWelcomeGate ? <SignedOutWelcome /> : <>
+              {user && <Navigation onLoginRequired={handleLoginRequired} />}
+              <Router />
+              {user && <DirectMessagesPanel />}
+              {user && <Footer />}
+            </>}
             </TooltipProvider>
           </SchoolCodeProvider>
         </AdminModeProvider>
