@@ -476,3 +476,6 @@
 - [x] Add PI Study Library search across indicator name, PI code, instructional area, and cluster
 - [x] Provide accessible search clear action and no-results guidance for the active study path
 - [x] Add regression coverage and browser validation for PI Study Library search
+- [x] Audit school-code error paths and designated-owner identity handling for Sahan and Ricardo
+- [x] Add a safe owner fallback that prevents school-code-required errors without weakening chapter isolation
+- [x] Add regression coverage for owner fallback and normal user school-code enforcement
