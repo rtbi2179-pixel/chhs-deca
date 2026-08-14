@@ -44,6 +44,7 @@ import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import MarketAnalytics from "./pages/MarketAnalytics";
 import Feedback from "./pages/Feedback";
 import StudyCards from "./pages/StudyCards";
+import BluesNews from "./pages/BluesNews";
 import Footer from "./components/Footer";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useState, useEffect } from "react";
@@ -86,6 +87,7 @@ function Router({ isAuthenticated, showLoginRequired }: { isAuthenticated: boole
       <Route path="/discussions" component={Discussions} />
       <Route path="/announcements" component={Announcements} />
       <Route path="/blue-market" component={BlueMarket} />
+      <Route path="/blues-news" component={BluesNews} />
       <Route path="/market/portfolio" component={BbxPortfolioPage} />
       <Route path="/market/news" component={BbxNewsPage} />
       <Route path="/market/learn" component={BbxLearnPage} />

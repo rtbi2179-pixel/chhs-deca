@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'wouter'
-import { Menu, X, Trophy, BookOpen, Calendar, Users, Home, LogOut, MessageSquare, MessageSquarePlus, Mic, Crown, Bell, DollarSign, TrendingUp, History, Building2, Zap, Sparkles, Brain, ClipboardCheck } from 'lucide-react'
+import { Menu, X, Trophy, BookOpen, Calendar, Users, Home, LogOut, MessageSquare, MessageSquarePlus, Mic, Crown, Bell, DollarSign, TrendingUp, History, Building2, Zap, Sparkles, Brain, ClipboardCheck, Newspaper, CheckCheck } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { trpc } from '@/lib/trpc'
@@ -21,6 +21,7 @@ const navLinks = [
 ]
 
 const adminLink = { href: '/admin', label: 'Admin', icon: Crown }
+const formatNewsTimestamp = (value: Date | string) => new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(value))
 
 interface NavigationProps {
   onLoginRequired?: () => void
@@ -32,9 +33,18 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
   const [scrolled, setScrolled] = useState(false)
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null)
   const [showFinancialMenu, setShowFinancialMenu] = useState(false)
+  const [showBluesNews, setShowBluesNews] = useState(false)
   const { user } = useAuth()
   const logoutMutation = trpc.auth.logout.useMutation()
+  const utils = trpc.useUtils()
   const { data: blueBucksData } = trpc.practice.getBlueBucksBalance.useQuery(undefined, { enabled: !!user })
+  const bluesNews = trpc.bbx.getBluesNews.useQuery({ limit: 8 }, { enabled: !!user, refetchInterval: 60_000 })
+  const unreadNews = trpc.bbx.getUnreadNewsCount.useQuery(undefined, { enabled: !!user, refetchInterval: 60_000 })
+  const markNewsRead = trpc.bbx.markNewsRead.useMutation({
+    onSuccess: async () => {
+      await Promise.all([utils.bbx.getBluesNews.invalidate(), utils.bbx.getUnreadNewsCount.invalidate()])
+    },
+  })
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20)
@@ -236,7 +246,10 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
                   {/* Financial Systems Menu */}
                   <div className="relative">
                     <button
-                      onClick={() => setShowFinancialMenu(!showFinancialMenu)}
+                      onClick={() => {
+                        setShowFinancialMenu(!showFinancialMenu)
+                        setShowBluesNews(false)
+                      }}
                       className="p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 rounded-lg transition-all duration-200"
                       title="Financial Systems"
                     >
@@ -303,6 +316,30 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
                           </div>
                         </motion.div>
                       )}
+                    </AnimatePresence>
+                  </div>
+
+                  <div className="relative">
+                    <button
+                      onClick={() => {
+                        setShowBluesNews(!showBluesNews)
+                        setShowFinancialMenu(false)
+                      }}
+                      className="relative p-2 text-blue-300 hover:text-blue-100 hover:bg-blue-500/10 rounded-lg transition-all duration-200"
+                      title="Blue's News"
+                      aria-label={`Blue's News${unreadNews.data?.count ? `, ${unreadNews.data.count} unread` : ''}`}
+                    >
+                      <Newspaper size={20} />
+                      {(unreadNews.data?.count ?? 0) > 0 && <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full border border-slate-950 bg-blue-500 px-1 text-[9px] font-bold leading-none text-white">{(unreadNews.data?.count ?? 0) > 99 ? '99+' : unreadNews.data?.count}</span>}
+                    </button>
+                    <AnimatePresence>
+                      {showBluesNews && <motion.div initial={{ opacity: 0, y: -8, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -8, scale: 0.98 }} transition={{ duration: 0.18, ease: 'easeOut' }} className="absolute right-0 z-[70] mt-2 w-[min(24rem,calc(100vw-2rem))] overflow-hidden rounded-xl border border-blue-400/25 bg-slate-950 shadow-2xl shadow-black/40">
+                        <div className="flex items-center justify-between border-b border-white/10 px-4 py-3"><div><p className="text-sm font-semibold text-white">Blue’s News</p><p className="mt-0.5 text-[10px] font-mono-data tracking-[0.12em] text-blue-300/70">FICTIONAL BBX REPORTING</p></div><button className="inline-flex items-center gap-1 text-xs text-blue-200 hover:text-white disabled:opacity-50" disabled={markNewsRead.isPending || (unreadNews.data?.count ?? 0) === 0} onClick={() => void markNewsRead.mutateAsync({ markAll: true })}><CheckCheck size={14} />Read all</button></div>
+                        <div className="max-h-[60vh] divide-y divide-white/7 overflow-y-auto">
+                          {bluesNews.isLoading ? <div className="px-4 py-8 text-center text-sm text-white/50">Loading Blue’s News…</div> : bluesNews.data?.length ? bluesNews.data.map((article) => <Link key={article.id} href="/blues-news"><button className={`w-full px-4 py-3.5 text-left transition-colors hover:bg-white/[0.045] ${article.isRead ? 'opacity-65' : 'bg-blue-500/[0.045]'}`} onClick={() => { if (!article.isRead) void markNewsRead.mutateAsync({ newsId: article.id }); setShowBluesNews(false) }}><div className="flex gap-3"><span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${article.isRead ? 'bg-transparent' : 'bg-blue-400 shadow-[0_0_8px_oklch(0.7_0.17_245/0.65)]'}`} /><div className="min-w-0"><div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.12em]"><span className="text-blue-200">Simulated</span><span className="text-white/40">{article.severity}</span></div><p className="mt-1 line-clamp-2 text-sm font-medium text-white">{article.headline}</p><p className="mt-1 text-xs text-white/45">{formatNewsTimestamp(article.publishedAt)}</p></div></div></button></Link>) : <div className="px-4 py-8 text-center text-sm text-white/50">The next fictional BBX event will appear here.</div>}
+                        </div>
+                        <Link href="/blues-news"><button onClick={() => setShowBluesNews(false)} className="flex w-full items-center justify-center gap-2 border-t border-white/10 px-4 py-3 text-sm font-medium text-blue-200 transition-colors hover:bg-blue-500/10 hover:text-white"><Newspaper size={15} />Open Blue’s News</button></Link>
+                      </motion.div>}
                     </AnimatePresence>
                   </div>
                   
@@ -375,6 +412,12 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
                     <div className="px-4 py-2 text-white/70 text-sm mb-2">
                       {user.name || user.username}
                     </div>
+                    <Link href="/blues-news">
+                      <button onClick={() => setMobileOpen(false)} className="mb-2 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-blue-200 hover:bg-blue-500/10">
+                        <span className="relative"><Newspaper size={18} />{(unreadNews.data?.count ?? 0) > 0 && <span className="absolute -right-2 -top-2 h-3.5 min-w-3.5 rounded-full bg-blue-500 px-1 text-center text-[8px] leading-[14px] text-white">{unreadNews.data?.count}</span>}</span>
+                        Blue’s News
+                      </button>
+                    </Link>
                     <button
                       onClick={() => {
                         handleLogout()

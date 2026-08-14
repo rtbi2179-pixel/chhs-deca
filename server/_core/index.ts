@@ -8,10 +8,14 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { sdk } from "./sdk";
-import { advanceBbxSimulation } from "../bbxSimulation";
+import { advanceBbxSimulation, createBbxEvent } from "../bbxSimulation";
 import { getDb } from "../db";
-import { bbxMarketState } from "../../drizzle/schema";
+import { bbxCompanies, bbxMarketState } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
+import bbxEventBank from "../bbxEventBank.json";
+import { blueNewsScheduleKey, chooseBlueNewsTemplate } from "../bbxScheduledNews";
+
+type BbxEventTemplate = (typeof bbxEventBank)[number];
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -71,6 +75,40 @@ async function startServer() {
       console.error("[BBX Heartbeat]", error);
       return res.status(500).json({
         error: error instanceof Error ? error.message : "Unable to advance BBX simulation",
+        context: { url: req.originalUrl },
+        timestamp: new Date().toISOString(),
+      });
+    }
+  });
+  app.post("/api/scheduled/blues-news", async (req, res) => {
+    try {
+      const caller = await sdk.authenticateRequest(req);
+      if (!caller.isCron || !caller.taskUid) return res.status(403).json({ error: "cron-only" });
+      const database = await getDb();
+      if (!database) throw new Error("BBX storage is unavailable");
+      const [marketState] = await database.select().from(bbxMarketState).where(eq(bbxMarketState.scheduleCronTaskUid, caller.taskUid)).limit(1);
+      if (!marketState) return res.json({ ok: true, skipped: "orphan" });
+      const scheduleKey = blueNewsScheduleKey();
+      if (marketState.lastBlueNewsScheduleKey === scheduleKey) return res.json({ ok: true, skipped: "duplicate", scheduleKey });
+
+      const companies = await database.select().from(bbxCompanies).where(eq(bbxCompanies.status, "active"));
+      if (companies.length === 0) throw new Error("No active BBX companies are available for the scheduled event");
+      const template = chooseBlueNewsTemplate(bbxEventBank as BbxEventTemplate[]);
+      const target = companies[Math.floor(Math.random() * companies.length)];
+      const event = await createBbxEvent({
+        templateId: template.id,
+        companyId: template.scope === "company" ? target.id : undefined,
+        sector: template.scope === "sector" ? target.sector : undefined,
+        createdBy: "system",
+        tickNumber: marketState.tickNumber,
+      });
+      await database.update(bbxMarketState).set({ lastBlueNewsScheduleKey: scheduleKey }).where(eq(bbxMarketState.id, marketState.id));
+      const tick = await advanceBbxSimulation();
+      return res.json({ ok: true, scheduleKey, event, tick, taskUid: caller.taskUid });
+    } catch (error) {
+      console.error("[Blue’s News Heartbeat]", error);
+      return res.status(500).json({
+        error: error instanceof Error ? error.message : "Unable to publish Blue’s News event",
         context: { url: req.originalUrl },
         timestamp: new Date().toISOString(),
       });

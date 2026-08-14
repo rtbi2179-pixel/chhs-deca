@@ -7,13 +7,6 @@ type EventTemplate = (typeof bbxEventBank)[number];
 
 const secondsPerSimulatedDay = 78; // 6.5 simulated hours at 5x real time.
 const dtYears = 1 / (252 * (secondsPerSimulatedDay / 15));
-const pickWeighted = (templates: EventTemplate[], rng: SeededRng) => {
-  const total = templates.reduce((sum, entry) => sum + entry.probabilityWeight, 0);
-  let roll = rng.next() * total;
-  for (const entry of templates) { roll -= entry.probabilityWeight; if (roll <= 0) return entry; }
-  return templates[templates.length - 1];
-};
-
 export async function createBbxEvent(params: { templateId: string; companyId?: number; sector?: string; createdBy: "system" | "admin"; tickNumber?: number }) {
   await ensureBbxSeeded();
   const db = await getDb();
@@ -85,15 +78,6 @@ export async function advanceBbxSimulation() {
     const sectorReturns = new Map<string, number>();
     const sectorNames = companies.map((company) => company.sector).filter((sector, index, all) => all.indexOf(sector) === index);
     sectorNames.forEach((sector) => sectorReturns.set(sector, sectorResidualLogReturn(state.marketRegime, dtYears, rng)));
-
-    // A low-frequency structured event keeps the exchange educational without making every headline dramatic.
-    if (events.length < 3 && nextTick % 24 === 0) {
-      const template = pickWeighted(bbxEventBank as EventTemplate[], rng);
-      const target = template.scope === "company" ? companies[Math.floor(rng.next() * companies.length)] : undefined;
-      const sector = template.scope === "sector" ? companies[Math.floor(rng.next() * companies.length)]?.sector : undefined;
-      await createBbxEvent({ templateId: template.id, companyId: target?.id, sector, createdBy: "system", tickNumber: state.tickNumber });
-      return { tickNumber: state.tickNumber, queuedEvent: template.id };
-    }
 
     const benchmarkFactor = benchmarkLogReturn(state.marketRegime, dtYears, rng);
     let marketEventFactor = 0;

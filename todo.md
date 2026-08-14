@@ -488,3 +488,6 @@
 - [x] Implement deterministic server-authoritative BBX ticks, event effects, order execution, idempotency, portfolio accounting, and admin controls
 - [x] Build BBX market, company, portfolio, news, and learning views within the existing visual system
 - [x] Add stability, direction, accounting, authorization, and browser regression coverage for the BBX release
+- [x] Add a Blue’s News notification tab with BBX event feed, unread counts, and member read-state tracking
+- [ ] Update the project-level BBX Heartbeat schedule to create one random fictional event every three hours and apply its market effects
+- [x] Add focused tests and browser validation for Blue’s News notifications and the three-hour event workflow

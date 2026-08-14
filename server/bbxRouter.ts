@@ -93,6 +93,48 @@ export const bbxRouter = router({
     return rows.filter((row) => (!input.ticker || row.ticker === input.ticker) && (!input.sector || row.sector === input.sector));
   }),
 
+  getBluesNews: protectedProcedure.input(z.object({ limit: z.number().min(1).max(25).default(10) })).query(async ({ ctx, input }) => {
+    await ensureBbxSeeded();
+    const db = await getDb();
+    if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "BBX storage is unavailable" });
+    const { bbxCompanies, bbxEvents, bbxNews, bbxNewsReads } = await import("../drizzle/schema");
+    const rows = await db.select({
+      id: bbxNews.id, headline: bbxNews.headline, body: bbxNews.body, whyItMatters: bbxNews.whyItMatters,
+      scopeLabel: bbxNews.scopeLabel, publishedAt: bbxNews.publishedAt, isSimulated: bbxNews.isSimulated,
+      severity: bbxEvents.severity, ticker: bbxCompanies.ticker, companyName: bbxCompanies.companyName,
+      sector: bbxEvents.sector, readAt: bbxNewsReads.readAt,
+    }).from(bbxNews)
+      .innerJoin(bbxEvents, eq(bbxNews.eventId, bbxEvents.id))
+      .leftJoin(bbxCompanies, eq(bbxEvents.companyId, bbxCompanies.id))
+      .leftJoin(bbxNewsReads, and(eq(bbxNewsReads.newsId, bbxNews.id), eq(bbxNewsReads.userId, ctx.user.id)))
+      .orderBy(desc(bbxNews.publishedAt)).limit(input.limit);
+    return rows.map((row) => ({ ...row, isRead: Boolean(row.readAt) }));
+  }),
+
+  getUnreadNewsCount: protectedProcedure.query(async ({ ctx }) => {
+    await ensureBbxSeeded();
+    const db = await getDb();
+    if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "BBX storage is unavailable" });
+    const { bbxNews, bbxNewsReads } = await import("../drizzle/schema");
+    const [result] = await db.select({ count: sql<number>`count(*)` }).from(bbxNews)
+      .leftJoin(bbxNewsReads, and(eq(bbxNewsReads.newsId, bbxNews.id), eq(bbxNewsReads.userId, ctx.user.id)))
+      .where(sql`${bbxNewsReads.id} IS NULL`);
+    return { count: Number(result?.count ?? 0) };
+  }),
+
+  markNewsRead: protectedProcedure.input(z.object({ newsId: z.number().int().positive().optional(), markAll: z.boolean().optional() }).refine((input) => Boolean(input.newsId) || input.markAll === true, { message: "Select an article or mark all articles as read." })).mutation(async ({ ctx, input }) => {
+    await ensureBbxSeeded();
+    const db = await getDb();
+    if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "BBX storage is unavailable" });
+    const { bbxNews, bbxNewsReads } = await import("../drizzle/schema");
+    const newsIds = input.markAll
+      ? (await db.select({ id: bbxNews.id }).from(bbxNews)).map((article) => article.id)
+      : [input.newsId!];
+    if (newsIds.length === 0) return { marked: 0 };
+    await db.insert(bbxNewsReads).values(newsIds.map((newsId) => ({ userId: ctx.user.id, newsId }))).onDuplicateKeyUpdate({ set: { newsId: sql`${bbxNewsReads.newsId}` } });
+    return { marked: newsIds.length };
+  }),
+
   getPortfolio: protectedProcedure.query(async ({ ctx }) => {
     await ensureBbxSeeded();
     const db = await getDb();

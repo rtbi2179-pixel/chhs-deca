@@ -1067,6 +1067,7 @@ export const bbxMarketState = mysqlTable("bbxMarketState", {
   tickNumber: int("tickNumber").notNull().default(0),
   simulationTimestamp: timestamp("simulationTimestamp").defaultNow().notNull(),
   lastTickAt: timestamp("lastTickAt"),
+  lastBlueNewsScheduleKey: varchar("lastBlueNewsScheduleKey", { length: 32 }),
   scheduleCronTaskUid: varchar("scheduleCronTaskUid", { length: 65 }),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 }, (table) => ({ scheduleTaskIndex: index("bbx_market_state_schedule_task_idx").on(table.scheduleCronTaskUid) }));
@@ -1109,6 +1110,16 @@ export const bbxNews = mysqlTable("bbxNews", {
   publishedAt: timestamp("publishedAt").defaultNow().notNull(),
   isSimulated: boolean("isSimulated").notNull().default(true),
 }, (table) => ({ publishedIndex: index("bbx_news_published_idx").on(table.publishedAt) }));
+
+export const bbxNewsReads = mysqlTable("bbxNewsReads", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  newsId: int("newsId").notNull().references(() => bbxNews.id, { onDelete: "cascade" }),
+  readAt: timestamp("readAt").defaultNow().notNull(),
+}, (table) => ({
+  userNewsUnique: uniqueIndex("bbx_news_read_user_news_unique").on(table.userId, table.newsId),
+  userReadIndex: index("bbx_news_read_user_read_idx").on(table.userId, table.readAt),
+}));
 
 export const bbxPriceHistory = mysqlTable("bbxPriceHistory", {
   id: int("id").autoincrement().primaryKey(),
