@@ -491,3 +491,5 @@
 - [x] Add a Blue’s News notification tab with BBX event feed, unread counts, and member read-state tracking
 - [x] Update the project-level BBX Heartbeat schedule to create one random fictional event every three hours and apply its market effects
 - [x] Add focused tests and browser validation for Blue’s News notifications and the three-hour event workflow
+- [x] Add four hover-lift Practice cluster cards for Marketing, Business, Finance, and Hospitality and Tourism
+- [x] Launch each Practice cluster card into the matching filtered question bank and verify the interaction with focused coverage

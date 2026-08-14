@@ -2,15 +2,15 @@
 
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
-import { Loader2, ChevronDown, CheckCircle2, Bookmark, Grid3x3, Save, Award, Clock, DollarSign, Info, TrendingUp } from "lucide-react";
+import { Loader2, ChevronDown, CheckCircle2, Bookmark, Grid3x3, Save, Award, Clock, DollarSign, Info, TrendingUp, ArrowUpRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import { PRACTICE_CLUSTERS } from "@/lib/practiceClusters";
 
 export default function Practice() {
   const [selectedCluster, setSelectedCluster] = useState<string | null>(null);
   const [showClusterModal, setShowClusterModal] = useState(true);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10000);
@@ -125,60 +125,13 @@ export default function Practice() {
     }
   }, [selectedCluster, showClusterModal]);
 
-  const clusters = [
-    { value: "Marketing", label: "Marketing", color: "from-blue-600 to-blue-500", icon: "chart", questions: "9,200+" },
-    { value: "Business Management & Administration", label: "Business Management", color: "from-cyan-500 to-blue-400", icon: "briefcase", questions: "9,500+" },
-    { value: "Finance", label: "Finance", color: "from-indigo-600 to-blue-500", icon: "dollar", questions: "9,100+" },
-    { value: "Hospitality & Tourism", label: "Hospitality & Tourism", color: "from-slate-600 to-slate-500", icon: "building", questions: "9,300+" },
-  ];
-
-  const renderClusterIcon = (iconType: string) => {
-    switch (iconType) {
-      case "chart":
-        return (
-          <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="12" y1="2" x2="12" y2="22" />
-            <path d="M17 5h-5v14h5V5z" />
-            <path d="M7 9h-2v10h2V9z" />
-          </svg>
-        );
-      case "briefcase":
-        return (
-          <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-            <line x1="2" y1="11" x2="22" y2="11" />
-          </svg>
-        );
-      case "dollar":
-        return (
-          <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="9" />
-            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-            <line x1="12" y1="17" x2="12.01" y2="17" />
-          </svg>
-        );
-      case "building":
-        return (
-          <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            <polyline points="9 22 9 12 15 12 15 22" />
-            <line x1="9" y1="5" x2="9" y2="9" />
-            <line x1="15" y1="5" x2="15" y2="9" />
-          </svg>
-        );
-      default:
-        return null;
-    }
-  };
-
   const handleSelectCluster = (cluster: string) => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setSelectedCluster(cluster);
-      setShowClusterModal(false);
-      setIsTransitioning(false);
-    }, 300);
+    setCurrentQuestionIndex(0);
+    setSelectedAnswer(null);
+    setShowResult(false);
+    setShowExplanation(false);
+    setSelectedCluster(cluster);
+    setShowClusterModal(false);
   };
 
   const getClusterProgress = (clusterValue: string) => {
@@ -344,52 +297,52 @@ export default function Practice() {
 
   if (showClusterModal) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex flex-col items-center justify-center mt-16 px-4 py-8">
-        <div className="max-w-6xl w-full">
-          <h1 className="text-4xl font-bold text-white mb-12">Question Bank</h1>
+      <main className="page-shell mt-16 min-h-[calc(100vh-4rem)]">
+        <div className="page-content max-w-6xl py-10 sm:py-14">
+          <header className="max-w-2xl">
+            <p className="page-eyebrow">Practice question bank</p>
+            <h1 className="page-title mt-2">Choose a cluster</h1>
+            <p className="page-intro mt-3">Open a focused question bank for the competitive area you want to strengthen.</p>
+          </header>
 
-          <p className="text-slate-300 text-lg mb-8">Select a cluster to practice:</p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {clusters.map((cluster: any) => {
+          <section className="mt-9 grid grid-cols-1 gap-5 md:grid-cols-2" aria-label="Practice clusters">
+            {PRACTICE_CLUSTERS.map((cluster) => {
               const progress = getClusterProgress(cluster.value);
               const answered = getTotalAnsweredByCluster(cluster.value);
+              const Icon = cluster.Icon;
               return (
                 <button
                   key={cluster.value}
                   onClick={() => handleSelectCluster(cluster.value)}
-                  className={`bg-gradient-to-br ${cluster.color} rounded-2xl p-8 text-white shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 relative overflow-hidden group border-2 border-white/0 hover:border-white/30`}
+                  aria-label={`Open ${cluster.label} practice question bank`}
+                  className={`group relative min-h-[250px] overflow-hidden rounded-2xl border bg-slate-900/85 p-6 text-left text-white shadow-[0_12px_28px_oklch(0_0_0/0.23)] transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_20px_40px_oklch(0_0_0/0.32)] active:translate-y-0 ${cluster.ring}`}
                 >
-                  <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className="relative z-10 text-left">
-                    <div className="mb-3 text-white transform transition-transform duration-300 group-hover:scale-110">{renderClusterIcon(cluster.icon)}</div>
-                    <h2 className="text-3xl font-bold mb-2">{cluster.label}</h2>
-                    <p className="text-white/90 mb-3 text-lg">{cluster.questions} questions</p>
-                    
-                    <div className="mb-4">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-xs text-white/80">Progress</span>
-                        <span className="text-xs font-semibold text-white/90">{answered} completed</span>
-                      </div>
-                      <div className="w-full bg-white/20 rounded-full h-3 overflow-hidden">
-                        <div 
-                          className="bg-gradient-to-r from-white to-white/80 h-full rounded-full transition-all duration-500 ease-out"
-                          style={{ width: `${progress}%`, minWidth: progress > 0 ? '4px' : '0px' }}
-                        ></div>
-                      </div>
+                  <div className="absolute inset-x-5 top-6 h-28 rounded-xl border border-white/[0.06] bg-slate-950/35 transition-transform duration-200 ease-out group-hover:-translate-y-1" />
+                  <div className={`absolute inset-x-4 top-4 h-28 rounded-xl border ${cluster.ring.split(' ')[0]} bg-slate-900/50 transition-transform duration-200 ease-out group-hover:-translate-y-2`} />
+                  <div className="relative flex h-full min-h-[200px] flex-col justify-between">
+                    <div className="flex items-start justify-between gap-5">
+                      <div className={`flex h-11 w-11 items-center justify-center rounded-xl border ${cluster.icon}`}><Icon className="h-5 w-5" /></div>
+                      <span className="data-label pt-1 text-foreground/45">{cluster.questions} questions</span>
                     </div>
-                    
-                    <div className="inline-flex items-center gap-2 bg-white text-slate-900 px-6 py-2 rounded-full font-semibold hover:bg-slate-100 transition">
-                      Open
-                      <span>→</span>
+                    <div>
+                      <p className="data-label text-foreground/45">Cluster study bank</p>
+                      <h2 className="mt-2 text-2xl font-semibold tracking-tight text-white sm:text-3xl">{cluster.label}</h2>
+                      <p className="mt-2 text-sm leading-6 text-foreground/60">{cluster.description}</p>
+                    </div>
+                    <div className="flex items-end justify-between gap-4 pt-5">
+                      <div className="min-w-0 flex-1">
+                        <div className="mb-2 flex items-center justify-between gap-3 text-xs"><span className="text-foreground/50">Progress</span><span className="font-medium text-foreground/75">{answered} completed</span></div>
+                        <div className="h-1.5 overflow-hidden rounded-full bg-white/10"><div className={`h-full rounded-full transition-[width] duration-300 ease-out ${cluster.bar}`} style={{ width: `${progress}%`, minWidth: progress > 0 ? '4px' : '0px' }} /></div>
+                      </div>
+                      <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border ${cluster.icon} transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5`}><ArrowUpRight className="h-4 w-4" /></span>
                     </div>
                   </div>
                 </button>
               );
             })}
-          </div>
+          </section>
         </div>
-      </div>
+      </main>
     );
   }
 
@@ -436,7 +389,7 @@ export default function Practice() {
               }}
               className="px-3 py-2 bg-background border border-border rounded-md text-foreground text-sm"
             >
-              {clusters.map((cluster) => (
+              {PRACTICE_CLUSTERS.map((cluster) => (
                 <option key={cluster.value} value={cluster.value}>
                   {cluster.label}
                 </option>
