@@ -7,10 +7,11 @@ import { Progress } from "@/components/ui/progress";
 import {
   ChevronLeft, ChevronRight, BookOpen, Loader2, RotateCw, Send, CheckCircle, XCircle,
   Brain, Lightbulb, Zap, Target, MessageSquare, Award, ArrowRight, AlertCircle,
-  GraduationCap, ListChecks, FlipHorizontal, ClipboardList, Layers, Link2, Map, SkipBack, SkipForward
+  GraduationCap, ListChecks, FlipHorizontal, ClipboardList, Layers, Link2, Map, SkipBack, SkipForward, Search, X
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { allEvents } from "@/pages/Events";
+import { filterPiStudyModules } from "@/lib/piSearch";
 
 const CLUSTERS = [
   "Marketing",
@@ -49,6 +50,7 @@ export default function PIQuizlet() {
   const [selectedEventCode, setSelectedEventCode] = useState("");
   const [selectedModuleId, setSelectedModuleId] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState("lesson");
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Flashcard state
   const [currentFlashcardIndex, setCurrentFlashcardIndex] = useState(0);
@@ -95,6 +97,11 @@ export default function PIQuizlet() {
   const activeModuleList = selectedEvent
     ? (eventStudyQuery.data?.instructionalAreas?.flatMap((area) => area.modules) ?? [])
     : (modules ?? []);
+  const filteredModules = filterPiStudyModules(modules ?? [], searchQuery);
+  const filteredEventStudyAreas = (eventStudyQuery.data?.instructionalAreas ?? [])
+    .map((area) => ({ ...area, modules: filterPiStudyModules(area.modules, searchQuery) }))
+    .filter((area) => area.modules.length > 0);
+  const isSearching = Boolean(searchQuery.trim());
   const currentModuleIndex = selectedModuleId === null ? -1 : activeModuleList.findIndex((module: any) => module.id === selectedModuleId);
   const currentModulePosition = currentModuleIndex >= 0 ? currentModuleIndex + 1 : 0;
   const visibleTabs = [...TABS, ...(showQuizResults ? [{ id: "quiz-results", label: "Results", icon: Award, color: "indigo" }] : [])];
@@ -347,6 +354,21 @@ export default function PIQuizlet() {
                 ))}
               </select>
             </div>
+            <div className="editorial-panel-muted mt-4 max-w-2xl p-3">
+              <label htmlFor="pi-study-search" className="data-label">Search this study path</label>
+              <div className="relative mt-2">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" aria-hidden="true" />
+                <input
+                  id="pi-study-search"
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  placeholder="Search by PI code, skill, instructional area, or cluster"
+                  className="w-full rounded-md border border-white/10 bg-black/20 py-2.5 pl-9 pr-10 text-sm text-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                />
+                {searchQuery && <button type="button" onClick={() => setSearchQuery("")} className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded text-slate-400 hover:bg-white/5 hover:text-white" aria-label="Clear PI search"><X className="h-4 w-4" /></button>}
+              </div>
+              <p className="mt-2 text-xs text-slate-500">Results update as you type and remain within the current cluster or selected event path.</p>
+            </div>
           </div>
 
           {/* Cluster Tabs */}
@@ -380,21 +402,22 @@ export default function PIQuizlet() {
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-300">Official 2026–2027 PI guide</p>
                 <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between"><div><h2 className="text-xl font-bold text-white">{selectedEvent.name}</h2><p className="mt-1 text-sm text-slate-400">Shared PI modules mapped to this event’s active performance-indicator list. Modules are grouped by instructional area; no content is duplicated.</p></div><span className="text-sm text-slate-400">{eventStudyQuery.data?.completedModules ?? 0} / {eventStudyQuery.data?.totalModules ?? 0} mastered</span></div>
               </div>
-              {eventStudyQuery.data?.instructionalAreas?.length ? eventStudyQuery.data.instructionalAreas.map((area) => (
+              {filteredEventStudyAreas.length ? filteredEventStudyAreas.map((area) => (
                 <div key={area.instructionalArea}>
                   <div className="mb-4 flex items-end justify-between gap-4 border-l-2 border-emerald-500 pl-4"><div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300">{area.modules[0]?.cluster === "Business Administration Core" ? "General business skills" : "Event-specific preparation"}</p><h3 className="mt-1 text-xl font-bold text-white">{area.instructionalArea}</h3></div><span className="text-sm text-slate-500">{area.modules.length} indicators</span></div>
                   <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">{area.modules.map(renderModuleCard)}</div>
                 </div>
-              )) : <p className="empty-state min-h-32 p-5 text-sm">No official PI mapping is available for this event.</p>}
+              )) : <div className="empty-state min-h-32 p-5 text-sm"><AlertCircle className="mb-3 h-5 w-5 text-slate-500" />{isSearching ? `No performance indicators match “${searchQuery.trim()}” in this event path.` : "No official PI mapping is available for this event."}</div>}
             </div>
-          ) : modules && modules.length > 0 ? (
+          ) : filteredModules.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {modules.map(renderModuleCard)}
+              {filteredModules.map(renderModuleCard)}
             </div>
           ) : (
             <div className="empty-state py-16">
               <AlertCircle className="w-14 h-14 text-slate-700 mx-auto mb-4" />
-              <p className="text-slate-400 font-medium">No modules available for this cluster yet</p>
+              <p className="text-slate-400 font-medium">{isSearching ? `No performance indicators match “${searchQuery.trim()}” in this cluster.` : "No modules available for this cluster yet"}</p>
+              {isSearching && <button type="button" onClick={() => setSearchQuery("")} className="mt-4 text-sm font-medium text-blue-300 hover:text-blue-200">Clear search</button>}
             </div>
           )}
         </div>

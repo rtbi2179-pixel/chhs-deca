@@ -473,3 +473,6 @@
 - [x] Require a DECA career-cluster selection before a Chapter Mock Exam is created
 - [x] Enforce cluster-only unanswered-question selection for every generated mock-exam session
 - [x] Add regression coverage and browser validation for cluster-specific mock exams
+- [x] Add PI Study Library search across indicator name, PI code, instructional area, and cluster
+- [x] Provide accessible search clear action and no-results guidance for the active study path
+- [x] Add regression coverage and browser validation for PI Study Library search
