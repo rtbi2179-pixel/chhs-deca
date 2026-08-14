@@ -507,3 +507,6 @@
 - [x] Add focused tests and browser validation for onboarding replay and early-skip behavior
 - [x] Add a smooth reduced-motion-aware fade-out transition when members select Skip Tour
 - [x] Add focused tests and preview validation for the Skip Tour exit animation
+- [x] Refine the signed-out Blue Blazer welcome page with a larger logo and stronger visual composition
+- [x] Polish the first-sign-in onboarding tour’s visual hierarchy and branded presentation without changing its behavior
+- [x] Add focused visual regression coverage and preview validation for the refined welcome and onboarding views
