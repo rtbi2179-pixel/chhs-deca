@@ -2,11 +2,11 @@ import { describe, expect, it } from "vitest";
 import { getOnboardingProgress, ONBOARDING_CELEBRATION_DURATION_MS, ONBOARDING_SKIP_FADE_DURATION_MS, ONBOARDING_TOUR_ACTIONS } from "../client/src/lib/onboardingTour";
 
 describe("onboarding progress and celebration", () => {
-  it("reports clear, clamped progress through the three tour steps", () => {
-    expect(getOnboardingProgress(0)).toEqual({ currentStep: 1, totalSteps: 3, percentage: 33, scale: 1 / 3 });
-    expect(getOnboardingProgress(1)).toEqual({ currentStep: 2, totalSteps: 3, percentage: 67, scale: 2 / 3 });
-    expect(getOnboardingProgress(2)).toEqual({ currentStep: 3, totalSteps: 3, percentage: 100, scale: 1 });
-    expect(getOnboardingProgress(99)).toMatchObject({ currentStep: 3, percentage: 100 });
+  it("reports clear, clamped progress through the six tour steps", () => {
+    expect(getOnboardingProgress(0)).toEqual({ currentStep: 1, totalSteps: 6, percentage: 17, scale: 1 / 6 });
+    expect(getOnboardingProgress(2)).toEqual({ currentStep: 3, totalSteps: 6, percentage: 50, scale: 1 / 2 });
+    expect(getOnboardingProgress(5)).toEqual({ currentStep: 6, totalSteps: 6, percentage: 100, scale: 1 });
+    expect(getOnboardingProgress(99)).toMatchObject({ currentStep: 6, percentage: 100 });
   });
 
   it("keeps the completion celebration brief", () => {

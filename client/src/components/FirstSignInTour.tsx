@@ -1,35 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, BarChart3, BookOpenCheck, Check, ClipboardCheck, Compass, Flag, PartyPopper, Sparkles, X } from "lucide-react";
+import { ArrowRight, BarChart3, BookOpenCheck, Check, ClipboardCheck, Coins, Compass, Flag, Home, PartyPopper, Sparkles, Trophy, Users, X } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { getOnboardingProgress, ONBOARDING_CELEBRATION_DURATION_MS, ONBOARDING_SKIP_FADE_DURATION_MS, ONBOARDING_TOUR_ACTIONS } from "@/lib/onboardingTour";
+import { ONBOARDING_WALKTHROUGH_STEPS } from "@/lib/onboardingWalkthrough";
 
-const TOUR_STEPS = [
-  {
-    eyebrow: "01 · Find your focus",
-    title: "Build your study lane",
-    body: "Start in the PI Study Library to turn performance indicators into practical lessons, review, and recall practice.",
-    icon: BookOpenCheck,
-    detail: "PI Study Library",
-  },
-  {
-    eyebrow: "02 · Practice deliberately",
-    title: "Strengthen one cluster at a time",
-    body: "Use the question bank to focus on Marketing, Business, Finance, or Hospitality & Tourism and track your progress as you go.",
-    icon: ClipboardCheck,
-    detail: "Practice Question Bank",
-  },
-  {
-    eyebrow: "03 · Check your readiness",
-    title: "Turn practice into a plan",
-    body: "Use Chapter Mock Exams and your progress views to see weak points, then return to the study tools that will move the needle.",
-    icon: BarChart3,
-    detail: "Mock Exams & Progress",
-  },
-] as const;
+const TOUR_STEPS = ONBOARDING_WALKTHROUGH_STEPS;
+const TOUR_STEP_ICONS = {
+  home: Home,
+  study: BookOpenCheck,
+  practice: ClipboardCheck,
+  community: Users,
+  blueBucks: Coins,
+  readiness: BarChart3,
+} as const;
 
 export function FirstSignInTour() {
   const [, setLocation] = useLocation();
@@ -43,7 +30,7 @@ export function FirstSignInTour() {
   const celebrationTimerRef = useRef<number | null>(null);
   const reduceMotion = useReducedMotion();
   const step = TOUR_STEPS[stepIndex];
-  const StepIcon = step.icon;
+  const StepIcon = TOUR_STEP_ICONS[step.icon];
   const progress = getOnboardingProgress(stepIndex, TOUR_STEPS.length);
 
   useEffect(() => {
@@ -117,7 +104,8 @@ export function FirstSignInTour() {
             <div className="flex items-center justify-between gap-3"><div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-300/80"><Compass className="h-3.5 w-3.5" />{step.eyebrow}</div><span className="font-mono-data text-[9px] tracking-[0.16em] text-white/35">YOUR FIRST MOVE</span></div>
             <DialogTitle className="mt-6 max-w-md font-display text-4xl leading-[0.88] tracking-tight text-white sm:text-5xl">{step.title}</DialogTitle>
             <DialogDescription className="mt-5 max-w-md text-[15px] leading-7 text-white/65">{step.body}</DialogDescription>
-            <div className="mt-7 inline-flex w-fit items-center gap-2 rounded-xl border border-blue-300/15 bg-blue-300/[0.055] px-3.5 py-2.5 text-xs font-medium text-blue-100"><Flag className="h-3.5 w-3.5 text-blue-300" />{step.detail}</div>
+            <div className="mt-7 flex w-fit items-center gap-3 rounded-xl border border-blue-300/15 bg-blue-300/[0.055] px-3.5 py-2.5"><span className="font-mono-data text-[9px] tracking-[0.13em] text-blue-200/55">NAVIGATION TAB</span><span className="h-3 w-px bg-blue-300/25" /><span className="text-xs font-semibold text-blue-100">{step.tabLabel}</span></div>
+            <div className="mt-3 inline-flex w-fit items-center gap-2 text-xs text-white/55"><Flag className="h-3.5 w-3.5 text-blue-300" />{step.detail}</div>
 
             <div className="mt-auto border-t border-white/10 pt-7">
               <div className="mb-4 flex items-center justify-between text-xs text-white/45"><span>Step {progress.currentStep} of {progress.totalSteps} · {progress.percentage}% complete</span><Button type="button" variant="outline" size="sm" onClick={startSkipExit} disabled={completeOnboarding.isPending || isCelebrating || isSkipping} className="h-8 border-white/15 bg-white/[0.03] px-3 text-xs text-white/80 hover:bg-white/[0.08] hover:text-white disabled:opacity-30">{ONBOARDING_TOUR_ACTIONS.skipLabel}</Button></div>

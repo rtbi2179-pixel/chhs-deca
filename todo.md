@@ -512,3 +512,6 @@
 - [x] Add focused visual regression coverage and preview validation for the refined welcome and onboarding views
 - [x] Restore the enlarged Blue Blazer logo as the signed-out welcome page’s central hero treatment
 - [x] Validate the revised logo-focused welcome composition with focused coverage and browser review
+- [x] Expand onboarding to introduce the primary Blue Blazer learning, practice, community, and financial navigation tabs
+- [x] Add a concise, accurate Blue Bucks explainer covering safe earning and in-app uses
+- [x] Add focused tests and preview validation for the expanded tab walkthrough and Blue Bucks guidance
