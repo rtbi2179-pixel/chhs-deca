@@ -66,4 +66,6 @@ export interface GetUserInfoWithJwtResponse {
   email?: string | null;
   platform?: string | null;
   loginMethod?: string | null;
+  /** Cron-only identifier provided by the platform for scheduled callbacks. */
+  taskUid?: string | null;
 }

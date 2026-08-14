@@ -7,7 +7,8 @@ import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
-import { initializeStockPriceRefresher } from "../stockPriceRefresher";
+import { sdk } from "./sdk";
+import { advanceBbxSimulation } from "../bbxSimulation";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -54,6 +55,21 @@ async function startServer() {
       createContext,
     })
   );
+  app.post("/api/scheduled/bbx-tick", async (req, res) => {
+    try {
+      const caller = await sdk.authenticateRequest(req);
+      if (!caller.isCron || !caller.taskUid) return res.status(403).json({ error: "cron-only" });
+      const result = await advanceBbxSimulation();
+      return res.json({ ok: true, result, taskUid: caller.taskUid });
+    } catch (error) {
+      console.error("[BBX Heartbeat]", error);
+      return res.status(500).json({
+        error: error instanceof Error ? error.message : "Unable to advance BBX simulation",
+        context: { url: req.originalUrl },
+        timestamp: new Date().toISOString(),
+      });
+    }
+  });
   // development mode uses Vite, production mode uses static files
   if (process.env.NODE_ENV === "development") {
     await setupVite(app, server);
@@ -76,8 +92,6 @@ async function startServer() {
 
   server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);
-    // Initialize background stock price refresher
-    initializeStockPriceRefresher();
   });
 }
 

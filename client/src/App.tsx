@@ -32,6 +32,7 @@ import PILearning from "./pages/PILearning";
 import PIQuizlet from "./pages/PIQuizlet";
 import ChapterMockExam from "./pages/ChapterMockExam";
 import BlueMarket from "./pages/BlueMarket";
+import { BbxCompanyPage, BbxLearnPage, BbxNewsPage, BbxPortfolioPage } from "./pages/BbxMarketViews";
 import PortfolioUpload from "./pages/PortfolioUpload";
 import AdminPortfolios from "./pages/AdminPortfolios";
 import TransactionHistory from "./pages/TransactionHistory";
@@ -85,6 +86,10 @@ function Router({ isAuthenticated, showLoginRequired }: { isAuthenticated: boole
       <Route path="/discussions" component={Discussions} />
       <Route path="/announcements" component={Announcements} />
       <Route path="/blue-market" component={BlueMarket} />
+      <Route path="/market/portfolio" component={BbxPortfolioPage} />
+      <Route path="/market/news" component={BbxNewsPage} />
+      <Route path="/market/learn" component={BbxLearnPage} />
+      <Route path="/market/:ticker" component={BbxCompanyPage} />
       <Route path="/market" component={BlueMarket} />
       <Route path="/speech-ai" component={SpeechAI} />
       <Route path="/ai/roleplay" component={RoleplayAI} />
@@ -96,7 +101,7 @@ function Router({ isAuthenticated, showLoginRequired }: { isAuthenticated: boole
       <Route path="/gacha" component={GachaShop} />
       <Route path="/spending-patterns" component={SpendingPatterns} />
       <Route path="/super-admin" component={SuperAdminDashboard} />
-      <Route path="/market-analytics" component={MarketAnalytics} />
+      <Route path="/market-analytics" component={BbxPortfolioPage} />
       <Route path="/feedback" component={Feedback} />
       <Route path="/study-cards" component={StudyCards} />
       <Route path="/debug/practice" component={PracticeDebug} />

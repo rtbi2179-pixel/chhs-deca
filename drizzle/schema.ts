@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean, decimal, date, unique, uniqueIndex, primaryKey } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean, decimal, date, unique, uniqueIndex, primaryKey, index } from "drizzle-orm/mysql-core";
 import { relations } from "drizzle-orm";
 import { json } from "drizzle-orm/mysql-core";
 
@@ -1016,6 +1016,167 @@ export const portfolioSnapshots = mysqlTable("portfolioSnapshots", {
 });
 export type PortfolioSnapshot = typeof portfolioSnapshots.$inferSelect;
 export type InsertPortfolioSnapshot = typeof portfolioSnapshots.$inferInsert;
+
+/**
+ * BlueBlazer Exchange (BBX) — a fully fictional, ring-fenced educational
+ * market simulation. These tables do not alter the canonical Blue Bucks wallet.
+ */
+export const bbxCompanies = mysqlTable("bbxCompanies", {
+  id: int("id").autoincrement().primaryKey(),
+  ticker: varchar("ticker", { length: 16 }).notNull().unique(),
+  symbol: varchar("symbol", { length: 8 }).notNull(),
+  companyName: varchar("companyName", { length: 120 }).notNull(),
+  sector: varchar("sector", { length: 64 }).notNull(),
+  description: text("description").notNull(),
+  startingPrice: decimal("startingPrice", { precision: 18, scale: 6 }).notNull(),
+  currentPrice: decimal("currentPrice", { precision: 18, scale: 6 }).notNull(),
+  previousClose: decimal("previousClose", { precision: 18, scale: 6 }).notNull(),
+  fundamentalValue: decimal("fundamentalValue", { precision: 18, scale: 6 }).notNull(),
+  sharesOutstanding: decimal("sharesOutstanding", { precision: 24, scale: 0 }).notNull(),
+  revenue: decimal("revenue", { precision: 24, scale: 2 }).notNull(),
+  netIncome: decimal("netIncome", { precision: 24, scale: 2 }).notNull(),
+  eps: decimal("eps", { precision: 18, scale: 6 }).notNull(),
+  debt: decimal("debt", { precision: 24, scale: 2 }).notNull(),
+  cash: decimal("cash", { precision: 24, scale: 2 }).notNull(),
+  revenueGrowth: decimal("revenueGrowth", { precision: 10, scale: 6 }).notNull(),
+  profitMargin: decimal("profitMargin", { precision: 10, scale: 6 }).notNull(),
+  baseVolatility: decimal("baseVolatility", { precision: 10, scale: 6 }).notNull(),
+  beta: decimal("beta", { precision: 10, scale: 6 }).notNull(),
+  liquidityScore: decimal("liquidityScore", { precision: 10, scale: 6 }).notNull(),
+  sentiment: decimal("sentiment", { precision: 10, scale: 6 }).notNull().default("0"),
+  temporaryOrderImpact: decimal("temporaryOrderImpact", { precision: 10, scale: 8 }).notNull().default("0"),
+  status: mysqlEnum("status", ["active", "halted", "inactive"]).notNull().default("active"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({ sectorIndex: index("bbx_companies_sector_idx").on(table.sector) }));
+export type BbxCompany = typeof bbxCompanies.$inferSelect;
+
+export const bbxMarketState = mysqlTable("bbxMarketState", {
+  id: int("id").primaryKey(),
+  marketRegime: mysqlEnum("marketRegime", ["bull", "neutral", "bear", "high_volatility"]).notNull().default("neutral"),
+  benchmarkLevel: decimal("benchmarkLevel", { precision: 18, scale: 6 }).notNull().default("100"),
+  previousBenchmarkLevel: decimal("previousBenchmarkLevel", { precision: 18, scale: 6 }).notNull().default("100"),
+  baseInterestRate: decimal("baseInterestRate", { precision: 10, scale: 6 }).notNull().default("0.04"),
+  inflationRate: decimal("inflationRate", { precision: 10, scale: 6 }).notNull().default("0.025"),
+  gdpGrowth: decimal("gdpGrowth", { precision: 10, scale: 6 }).notNull().default("0.02"),
+  oilPriceIndex: decimal("oilPriceIndex", { precision: 18, scale: 6 }).notNull().default("100"),
+  consumerConfidence: decimal("consumerConfidence", { precision: 18, scale: 6 }).notNull().default("100"),
+  volatilityIndex: decimal("volatilityIndex", { precision: 18, scale: 6 }).notNull().default("20"),
+  simulationSpeed: decimal("simulationSpeed", { precision: 10, scale: 4 }).notNull().default("5"),
+  marketOpen: boolean("marketOpen").notNull().default(true),
+  tickNumber: int("tickNumber").notNull().default(0),
+  simulationTimestamp: timestamp("simulationTimestamp").defaultNow().notNull(),
+  lastTickAt: timestamp("lastTickAt"),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export const bbxEvents = mysqlTable("bbxEvents", {
+  id: int("id").autoincrement().primaryKey(),
+  templateId: varchar("templateId", { length: 32 }).notNull(),
+  category: varchar("category", { length: 64 }).notNull(),
+  subtype: varchar("subtype", { length: 64 }).notNull(),
+  scope: mysqlEnum("scope", ["company", "sector", "market"]).notNull(),
+  companyId: int("companyId").references(() => bbxCompanies.id, { onDelete: "set null" }),
+  sector: varchar("sector", { length: 64 }),
+  severity: mysqlEnum("severity", ["low", "medium", "high", "severe"]).notNull(),
+  directCompanyTargetReturn: decimal("directCompanyTargetReturn", { precision: 10, scale: 6 }).notNull().default("0"),
+  sectorTargetMagnitude: decimal("sectorTargetMagnitude", { precision: 10, scale: 6 }).notNull().default("0"),
+  marketTargetReturn: decimal("marketTargetReturn", { precision: 10, scale: 6 }).notNull().default("0"),
+  fundamentalTargetChange: decimal("fundamentalTargetChange", { precision: 10, scale: 6 }).notNull().default("0"),
+  sentimentImpact: decimal("sentimentImpact", { precision: 10, scale: 6 }).notNull().default("0"),
+  volatilityMultiplier: decimal("volatilityMultiplier", { precision: 10, scale: 6 }).notNull().default("1"),
+  durationTicks: int("durationTicks").notNull(),
+  decayRate: decimal("decayRate", { precision: 10, scale: 6 }).notNull(),
+  sectorBias: json("sectorBias"),
+  facts: json("facts"),
+  expectedValue: decimal("expectedValue", { precision: 24, scale: 6 }),
+  actualValue: decimal("actualValue", { precision: 24, scale: 6 }),
+  surprisePercent: decimal("surprisePercent", { precision: 10, scale: 6 }),
+  startTick: int("startTick").notNull(),
+  status: mysqlEnum("status", ["active", "expired", "cancelled"]).notNull().default("active"),
+  createdBy: mysqlEnum("createdBy", ["system", "admin"]).notNull().default("system"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({ statusTickIndex: index("bbx_events_status_tick_idx").on(table.status, table.startTick), companyIndex: index("bbx_events_company_idx").on(table.companyId) }));
+
+export const bbxNews = mysqlTable("bbxNews", {
+  id: int("id").autoincrement().primaryKey(),
+  eventId: int("eventId").notNull().references(() => bbxEvents.id, { onDelete: "cascade" }).unique(),
+  headline: varchar("headline", { length: 220 }).notNull(),
+  body: text("body").notNull(),
+  whyItMatters: text("whyItMatters").notNull(),
+  scopeLabel: varchar("scopeLabel", { length: 16 }).notNull(),
+  publishedAt: timestamp("publishedAt").defaultNow().notNull(),
+  isSimulated: boolean("isSimulated").notNull().default(true),
+}, (table) => ({ publishedIndex: index("bbx_news_published_idx").on(table.publishedAt) }));
+
+export const bbxPriceHistory = mysqlTable("bbxPriceHistory", {
+  id: int("id").autoincrement().primaryKey(),
+  companyId: int("companyId").notNull().references(() => bbxCompanies.id, { onDelete: "cascade" }),
+  tickNumber: int("tickNumber").notNull(),
+  simulationTimestamp: timestamp("simulationTimestamp").notNull(),
+  price: decimal("price", { precision: 18, scale: 6 }).notNull(),
+  benchmarkFactor: decimal("benchmarkFactor", { precision: 12, scale: 8 }).notNull().default("0"),
+  sectorFactor: decimal("sectorFactor", { precision: 12, scale: 8 }).notNull().default("0"),
+  eventFactor: decimal("eventFactor", { precision: 12, scale: 8 }).notNull().default("0"),
+  userImpactFactor: decimal("userImpactFactor", { precision: 12, scale: 8 }).notNull().default("0"),
+  meanReversionFactor: decimal("meanReversionFactor", { precision: 12, scale: 8 }).notNull().default("0"),
+  noiseFactor: decimal("noiseFactor", { precision: 12, scale: 8 }).notNull().default("0"),
+  volume: int("volume").notNull().default(0),
+}, (table) => ({ companyTickUnique: uniqueIndex("bbx_price_company_tick_unique").on(table.companyId, table.tickNumber), timeIndex: index("bbx_price_time_idx").on(table.simulationTimestamp) }));
+
+export const bbxAccounts = mysqlTable("bbxAccounts", {
+  userId: int("userId").primaryKey().references(() => users.id, { onDelete: "cascade" }),
+  cashBalance: decimal("cashBalance", { precision: 20, scale: 4 }).notNull().default("10000"),
+  startingBalance: decimal("startingBalance", { precision: 20, scale: 4 }).notNull().default("10000"),
+  realizedPnl: decimal("realizedPnl", { precision: 20, scale: 4 }).notNull().default("0"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export const bbxPositions = mysqlTable("bbxPositions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  companyId: int("companyId").notNull().references(() => bbxCompanies.id, { onDelete: "cascade" }),
+  quantity: decimal("quantity", { precision: 20, scale: 6 }).notNull().default("0"),
+  averageCost: decimal("averageCost", { precision: 20, scale: 6 }).notNull().default("0"),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({ userCompanyUnique: uniqueIndex("bbx_position_user_company_unique").on(table.userId, table.companyId), userIndex: index("bbx_positions_user_idx").on(table.userId) }));
+
+export const bbxOrders = mysqlTable("bbxOrders", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  companyId: int("companyId").notNull().references(() => bbxCompanies.id, { onDelete: "cascade" }),
+  side: mysqlEnum("side", ["buy", "sell"]).notNull(),
+  requestedQuantity: decimal("requestedQuantity", { precision: 20, scale: 6 }).notNull(),
+  filledQuantity: decimal("filledQuantity", { precision: 20, scale: 6 }).notNull(),
+  fillPrice: decimal("fillPrice", { precision: 20, scale: 6 }).notNull(),
+  grossAmount: decimal("grossAmount", { precision: 20, scale: 4 }).notNull(),
+  spreadCost: decimal("spreadCost", { precision: 20, scale: 4 }).notNull(),
+  slippageCost: decimal("slippageCost", { precision: 20, scale: 4 }).notNull(),
+  status: mysqlEnum("status", ["filled", "rejected"]).notNull(),
+  idempotencyKey: varchar("idempotencyKey", { length: 80 }).notNull(),
+  rejectionReason: varchar("rejectionReason", { length: 255 }),
+  tickNumber: int("tickNumber").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({ userKeyUnique: uniqueIndex("bbx_order_user_key_unique").on(table.userId, table.idempotencyKey), userTimeIndex: index("bbx_order_user_time_idx").on(table.userId, table.createdAt) }));
+
+export const bbxLedger = mysqlTable("bbxLedger", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  orderId: int("orderId").references(() => bbxOrders.id, { onDelete: "set null" }),
+  amount: decimal("amount", { precision: 20, scale: 4 }).notNull(),
+  balanceAfter: decimal("balanceAfter", { precision: 20, scale: 4 }).notNull(),
+  reason: mysqlEnum("reason", ["initial_grant", "trade_buy", "trade_sell", "reset"]).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({ userTimeIndex: index("bbx_ledger_user_time_idx").on(table.userId, table.createdAt) }));
+
+export const bbxAdminAudit = mysqlTable("bbxAdminAudit", {
+  id: int("id").autoincrement().primaryKey(),
+  adminUserId: int("adminUserId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  action: varchar("action", { length: 80 }).notNull(),
+  payload: json("payload"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({ createdIndex: index("bbx_admin_audit_created_idx").on(table.createdAt) }));
 
 /**
  * Portfolio Uploads - User portfolio submissions

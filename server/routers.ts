@@ -22,6 +22,7 @@ import { initializeBanksForSchool, getBanksForSchool, getCreditCardsForBank } fr
 import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback, notificationPreferences, userProfileSettings, adminActivityLogs, studySessions, sessionQuestions, stocks, userPiProgress } from "../drizzle/schema";
 import { and, eq, sql, inArray, desc, asc, lte, gte } from "drizzle-orm";
 import { piLearningRouter } from "./piLearningRouter";
+import { bbxRouter } from "./bbxRouter";
 
 
 export const announcementsRouter = router({
@@ -436,6 +437,7 @@ export const appRouter = router({
   system: systemRouter,
   gacha: gachaRouter,
   piLearning: piLearningRouter,
+  bbx: bbxRouter,
   studyCards: router({
     catalog: protectedProcedure.query(async ({ ctx }) => ({
       cards: STUDY_CARD_CATALOG,
@@ -1545,56 +1547,14 @@ export const appRouter = router({
     
     buyStock: protectedProcedure
       .input(z.object({ stockId: z.number(), blueBucksAmount: z.string(), pricePerShare: z.string(), ticker: z.string() }))
-      .mutation(async ({ input, ctx }) => {
-        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
-        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
-        const amount = Number(input.blueBucksAmount);
-        const price = Number(input.pricePerShare);
-        if (!Number.isFinite(amount) || amount <= 0 || !Number.isFinite(price) || price <= 0) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Trade amount and price must be positive numbers' });
-        const database = await db.getDb();
-        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Market storage is unavailable' });
-        const [stock] = await database.select().from(stocks).where(and(eq(stocks.id, input.stockId), eq(stocks.schoolCode, schoolCode), eq(stocks.isActive, true))).limit(1);
-        if (!stock) throw new TRPCError({ code: 'NOT_FOUND', message: 'Active stock not found in this chapter' });
-        const cashAccount = await db.getOrCreatePortfolioCash(ctx.user.id, schoolCode);
-        const shares = (amount / price).toString();
-        const currentBalance = String(cashAccount.cashBalance);
-        
-        if (parseFloat(currentBalance) < parseFloat(input.blueBucksAmount)) {
-          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Insufficient Blue Bucks' });
-        }
-        
-        await db.recordMarketTransaction(ctx.user.id, input.stockId, 'buy', shares, price.toString(), schoolCode);
-        await db.addPortfolioHolding(ctx.user.id, input.stockId, shares, price.toString(), schoolCode);
-        const newBalance = (parseFloat(currentBalance) - amount).toString();
-        await db.updateCashBalance(ctx.user.id, newBalance);
-        await db.createPortfolioExecutionSnapshot(ctx.user.id, schoolCode);
-        
-        return { success: true, shares, newBalance };
+      .mutation(async () => {
+        throw new TRPCError({ code: 'PRECONDITION_FAILED', message: 'Legacy market orders are retired. Use the fictional BBX market order flow.' });
       }),
     
     sellStock: protectedProcedure
       .input(z.object({ stockId: z.number(), shares: z.string(), pricePerShare: z.string(), ticker: z.string() }))
-      .mutation(async ({ input, ctx }) => {
-        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
-        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
-        
-        const shares = Number(input.shares);
-        const price = Number(input.pricePerShare);
-        if (!Number.isFinite(shares) || shares <= 0 || !Number.isFinite(price) || price <= 0) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Shares and price must be positive numbers' });
-        const database = await db.getDb();
-        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Market storage is unavailable' });
-        const [stock] = await database.select().from(stocks).where(and(eq(stocks.id, input.stockId), eq(stocks.schoolCode, schoolCode))).limit(1);
-        if (!stock) throw new TRPCError({ code: 'NOT_FOUND', message: 'Stock not found in this chapter' });
-        try { await db.removePortfolioHolding(ctx.user.id, input.stockId, shares.toString()); } catch (error) { throw new TRPCError({ code: 'BAD_REQUEST', message: error instanceof Error ? error.message : 'Unable to sell this holding' }); }
-        const totalAmount = (shares * price).toString();
-        await db.recordMarketTransaction(ctx.user.id, input.stockId, 'sell', shares.toString(), price.toString(), schoolCode);
-        const cashAccount = await db.getOrCreatePortfolioCash(ctx.user.id, schoolCode);
-        const currentBalance = String(cashAccount.cashBalance);
-        const newBalance = (parseFloat(currentBalance) + parseFloat(totalAmount)).toString();
-        await db.updateCashBalance(ctx.user.id, newBalance);
-        await db.createPortfolioExecutionSnapshot(ctx.user.id, schoolCode);
-        
-        return { success: true, newBalance };
+      .mutation(async () => {
+        throw new TRPCError({ code: 'PRECONDITION_FAILED', message: 'Legacy market orders are retired. Use the fictional BBX market order flow.' });
       }),
     
     getLeaderboard: protectedProcedure
@@ -1626,7 +1586,7 @@ export const appRouter = router({
     getStockPriceData: publicProcedure
       .input(z.object({ ticker: z.string() }))
       .query(async ({ input }) => {
-        return await getStockPrice(input.ticker);
+        throw new TRPCError({ code: 'PRECONDITION_FAILED', message: 'External market quotes are retired. BBX uses fictional server-simulated prices.' });
       }),
 
     getCacheStatus: protectedProcedure.query(({ ctx }) => {
@@ -1661,32 +1621,8 @@ export const appRouter = router({
       }),
     
     initializeDefaultStocks: protectedProcedure
-      .mutation(async ({ ctx }) => {
-        if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
-          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only admins can initialize stocks' });
-        }
-        
-        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
-        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
-        
-        const defaultStocks = [
-          { ticker: 'AAPL', name: 'Apple Inc.' },
-          { ticker: 'MSFT', name: 'Microsoft Corporation' },
-          { ticker: 'GOOGL', name: 'Alphabet Inc.' },
-          { ticker: 'AMZN', name: 'Amazon.com Inc.' },
-          { ticker: 'TSLA', name: 'Tesla Inc.' },
-          { ticker: 'META', name: 'Meta Platforms Inc.' },
-          { ticker: 'NVDA', name: 'NVIDIA Corporation' },
-          { ticker: 'JPM', name: 'JPMorgan Chase & Co.' },
-          { ticker: 'V', name: 'Visa Inc.' },
-          { ticker: 'WMT', name: 'Walmart Inc.' },
-        ];
-        
-        for (const stock of defaultStocks) {
-          await db.getOrCreateStock(stock.ticker, stock.name, schoolCode);
-        }
-        
-        return { success: true, count: defaultStocks.length };
+      .mutation(async () => {
+        throw new TRPCError({ code: 'PRECONDITION_FAILED', message: 'Real-company listings are retired. BBX fictional listings initialize automatically.' });
       }),
 
     // Check if market is currently open (US Eastern Time 9:30 AM - 4:00 PM, Mon-Fri)

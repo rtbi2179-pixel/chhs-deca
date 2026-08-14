@@ -1,0 +1,2553 @@
+[
+  {
+    "id": "E001",
+    "category": "earnings",
+    "subType": "earnings_beat",
+    "scope": "company",
+    "probabilityWeight": 8,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        0.025,
+        0.09
+      ],
+      "targetSectorPct": [
+        0.0,
+        0.012
+      ],
+      "broadMarketPct": [
+        0.0,
+        0.004
+      ],
+      "fundamentalValuePct": [
+        0.01,
+        0.05
+      ],
+      "sentimentDelta": [
+        0.08,
+        0.25
+      ],
+      "volatilityMultiplier": [
+        1.1,
+        1.5
+      ]
+    },
+    "durationTicks": 90,
+    "decayRate": 0.03,
+    "sectorBias": {},
+    "headlineTemplate": "{company} reports results above expectations",
+    "explanationTemplate": "Results exceeded prior expectations, improving the market's outlook for the company.",
+    "simulated": true
+  },
+  {
+    "id": "E002",
+    "category": "earnings",
+    "subType": "earnings_miss",
+    "scope": "company",
+    "probabilityWeight": 8,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.11,
+        -0.03
+      ],
+      "targetSectorPct": [
+        -0.015,
+        0.0
+      ],
+      "broadMarketPct": [
+        -0.005,
+        0.0
+      ],
+      "fundamentalValuePct": [
+        -0.06,
+        -0.01
+      ],
+      "sentimentDelta": [
+        -0.28,
+        -0.08
+      ],
+      "volatilityMultiplier": [
+        1.15,
+        1.6
+      ]
+    },
+    "durationTicks": 100,
+    "decayRate": 0.028,
+    "sectorBias": {},
+    "headlineTemplate": "{company} falls short of earnings expectations",
+    "explanationTemplate": "Results came in below expectations, lowering projected profitability.",
+    "simulated": true
+  },
+  {
+    "id": "E003",
+    "category": "guidance",
+    "subType": "guidance_raise",
+    "scope": "company",
+    "probabilityWeight": 5,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        0.03,
+        0.085
+      ],
+      "targetSectorPct": [
+        0,
+        0.01
+      ],
+      "broadMarketPct": [
+        0,
+        0.003
+      ],
+      "fundamentalValuePct": [
+        0.02,
+        0.06
+      ],
+      "sentimentDelta": [
+        0.08,
+        0.22
+      ],
+      "volatilityMultiplier": [
+        1.05,
+        1.35
+      ]
+    },
+    "durationTicks": 140,
+    "decayRate": 0.02,
+    "sectorBias": {},
+    "headlineTemplate": "{company} raises full-year outlook",
+    "explanationTemplate": "Management increased its forecast, signaling stronger expected future performance.",
+    "simulated": true
+  },
+  {
+    "id": "E004",
+    "category": "guidance",
+    "subType": "guidance_cut",
+    "scope": "company",
+    "probabilityWeight": 5,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.1,
+        -0.035
+      ],
+      "targetSectorPct": [
+        -0.012,
+        0
+      ],
+      "broadMarketPct": [
+        -0.004,
+        0
+      ],
+      "fundamentalValuePct": [
+        -0.07,
+        -0.02
+      ],
+      "sentimentDelta": [
+        -0.25,
+        -0.08
+      ],
+      "volatilityMultiplier": [
+        1.1,
+        1.5
+      ]
+    },
+    "durationTicks": 150,
+    "decayRate": 0.02,
+    "sectorBias": {},
+    "headlineTemplate": "{company} lowers full-year outlook",
+    "explanationTemplate": "Management reduced its forecast, weakening expected future cash flows.",
+    "simulated": true
+  },
+  {
+    "id": "E005",
+    "category": "product",
+    "subType": "major_launch_success",
+    "scope": "company",
+    "probabilityWeight": 4,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        0.025,
+        0.08
+      ],
+      "targetSectorPct": [
+        0,
+        0.012
+      ],
+      "broadMarketPct": [
+        0,
+        0.003
+      ],
+      "fundamentalValuePct": [
+        0.01,
+        0.05
+      ],
+      "sentimentDelta": [
+        0.06,
+        0.22
+      ],
+      "volatilityMultiplier": [
+        1.05,
+        1.35
+      ]
+    },
+    "durationTicks": 120,
+    "decayRate": 0.023,
+    "sectorBias": {},
+    "headlineTemplate": "{company}'s new product sees strong early demand",
+    "explanationTemplate": "Strong demand can improve expected revenue growth and investor sentiment.",
+    "simulated": true
+  },
+  {
+    "id": "E006",
+    "category": "product",
+    "subType": "product_delay",
+    "scope": "company",
+    "probabilityWeight": 4,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.07,
+        -0.018
+      ],
+      "targetSectorPct": [
+        -0.008,
+        0
+      ],
+      "broadMarketPct": [
+        -0.002,
+        0
+      ],
+      "fundamentalValuePct": [
+        -0.04,
+        -0.005
+      ],
+      "sentimentDelta": [
+        -0.18,
+        -0.05
+      ],
+      "volatilityMultiplier": [
+        1.05,
+        1.4
+      ]
+    },
+    "durationTicks": 90,
+    "decayRate": 0.032,
+    "sectorBias": {},
+    "headlineTemplate": "{company} delays major product launch",
+    "explanationTemplate": "A delay may shift revenue later and raise execution concerns.",
+    "simulated": true
+  },
+  {
+    "id": "E007",
+    "category": "operations",
+    "subType": "supply_disruption",
+    "scope": "company",
+    "probabilityWeight": 4,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.085,
+        -0.025
+      ],
+      "targetSectorPct": [
+        -0.015,
+        -0.002
+      ],
+      "broadMarketPct": [
+        -0.004,
+        0
+      ],
+      "fundamentalValuePct": [
+        -0.05,
+        -0.01
+      ],
+      "sentimentDelta": [
+        -0.18,
+        -0.06
+      ],
+      "volatilityMultiplier": [
+        1.15,
+        1.5
+      ]
+    },
+    "durationTicks": 100,
+    "decayRate": 0.03,
+    "sectorBias": {},
+    "headlineTemplate": "Supply disruption pressures {company} operations",
+    "explanationTemplate": "Reduced near-term output can lower revenue and margins.",
+    "simulated": true
+  },
+  {
+    "id": "E008",
+    "category": "operations",
+    "subType": "efficiency_gain",
+    "scope": "company",
+    "probabilityWeight": 3,
+    "severity": "low",
+    "impactRanges": {
+      "directCompanyPct": [
+        0.012,
+        0.045
+      ],
+      "targetSectorPct": [
+        0,
+        0.005
+      ],
+      "broadMarketPct": [
+        0,
+        0.001
+      ],
+      "fundamentalValuePct": [
+        0.005,
+        0.025
+      ],
+      "sentimentDelta": [
+        0.03,
+        0.12
+      ],
+      "volatilityMultiplier": [
+        1.0,
+        1.15
+      ]
+    },
+    "durationTicks": 80,
+    "decayRate": 0.035,
+    "sectorBias": {},
+    "headlineTemplate": "{company} announces major efficiency improvement",
+    "explanationTemplate": "Lower operating costs can support margins and future earnings.",
+    "simulated": true
+  },
+  {
+    "id": "E009",
+    "category": "management",
+    "subType": "ceo_resignation",
+    "scope": "company",
+    "probabilityWeight": 2,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.08,
+        -0.02
+      ],
+      "targetSectorPct": [
+        -0.008,
+        0
+      ],
+      "broadMarketPct": [
+        -0.002,
+        0
+      ],
+      "fundamentalValuePct": [
+        -0.025,
+        0
+      ],
+      "sentimentDelta": [
+        -0.22,
+        -0.06
+      ],
+      "volatilityMultiplier": [
+        1.2,
+        1.55
+      ]
+    },
+    "durationTicks": 85,
+    "decayRate": 0.035,
+    "sectorBias": {},
+    "headlineTemplate": "{company} announces unexpected leadership change",
+    "explanationTemplate": "Unexpected leadership transitions can raise uncertainty even before fundamentals change.",
+    "simulated": true
+  },
+  {
+    "id": "E010",
+    "category": "management",
+    "subType": "respected_ceo_hired",
+    "scope": "company",
+    "probabilityWeight": 2,
+    "severity": "low",
+    "impactRanges": {
+      "directCompanyPct": [
+        0.01,
+        0.05
+      ],
+      "targetSectorPct": [
+        0,
+        0.004
+      ],
+      "broadMarketPct": [
+        0,
+        0.001
+      ],
+      "fundamentalValuePct": [
+        0,
+        0.015
+      ],
+      "sentimentDelta": [
+        0.04,
+        0.15
+      ],
+      "volatilityMultiplier": [
+        1.0,
+        1.2
+      ]
+    },
+    "durationTicks": 90,
+    "decayRate": 0.034,
+    "sectorBias": {},
+    "headlineTemplate": "{company} names new chief executive",
+    "explanationTemplate": "Investors may react positively if they expect stronger execution under new leadership.",
+    "simulated": true
+  },
+  {
+    "id": "E011",
+    "category": "cyber",
+    "subType": "data_breach",
+    "scope": "company",
+    "probabilityWeight": 3,
+    "severity": "high",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.14,
+        -0.045
+      ],
+      "targetSectorPct": [
+        -0.02,
+        -0.004
+      ],
+      "broadMarketPct": [
+        -0.004,
+        0
+      ],
+      "fundamentalValuePct": [
+        -0.07,
+        -0.01
+      ],
+      "sentimentDelta": [
+        -0.32,
+        -0.1
+      ],
+      "volatilityMultiplier": [
+        1.3,
+        1.9
+      ]
+    },
+    "durationTicks": 120,
+    "decayRate": 0.026,
+    "sectorBias": {},
+    "headlineTemplate": "{company} reports significant cybersecurity incident",
+    "explanationTemplate": "Potential costs, customer trust concerns, and operational disruption increase risk.",
+    "simulated": true
+  },
+  {
+    "id": "E012",
+    "category": "legal_regulatory",
+    "subType": "regulatory_investigation",
+    "scope": "company",
+    "probabilityWeight": 2,
+    "severity": "high",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.18,
+        -0.06
+      ],
+      "targetSectorPct": [
+        -0.02,
+        -0.004
+      ],
+      "broadMarketPct": [
+        -0.006,
+        0
+      ],
+      "fundamentalValuePct": [
+        -0.1,
+        -0.02
+      ],
+      "sentimentDelta": [
+        -0.35,
+        -0.12
+      ],
+      "volatilityMultiplier": [
+        1.3,
+        1.8
+      ]
+    },
+    "durationTicks": 180,
+    "decayRate": 0.018,
+    "sectorBias": {},
+    "headlineTemplate": "Regulators open investigation into {company}",
+    "explanationTemplate": "Regulatory uncertainty can reduce expected value and increase risk.",
+    "simulated": true
+  },
+  {
+    "id": "E013",
+    "category": "legal_regulatory",
+    "subType": "case_resolved_favorably",
+    "scope": "company",
+    "probabilityWeight": 2,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        0.02,
+        0.075
+      ],
+      "targetSectorPct": [
+        0,
+        0.006
+      ],
+      "broadMarketPct": [
+        0,
+        0.001
+      ],
+      "fundamentalValuePct": [
+        0.005,
+        0.03
+      ],
+      "sentimentDelta": [
+        0.06,
+        0.2
+      ],
+      "volatilityMultiplier": [
+        1.0,
+        1.25
+      ]
+    },
+    "durationTicks": 90,
+    "decayRate": 0.032,
+    "sectorBias": {},
+    "headlineTemplate": "{company} resolves major legal dispute",
+    "explanationTemplate": "Removing legal uncertainty can improve valuation and sentiment.",
+    "simulated": true
+  },
+  {
+    "id": "E014",
+    "category": "labor",
+    "subType": "strike",
+    "scope": "company",
+    "probabilityWeight": 2,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.08,
+        -0.025
+      ],
+      "targetSectorPct": [
+        -0.012,
+        -0.002
+      ],
+      "broadMarketPct": [
+        -0.003,
+        0
+      ],
+      "fundamentalValuePct": [
+        -0.04,
+        -0.008
+      ],
+      "sentimentDelta": [
+        -0.2,
+        -0.06
+      ],
+      "volatilityMultiplier": [
+        1.15,
+        1.55
+      ]
+    },
+    "durationTicks": 100,
+    "decayRate": 0.03,
+    "sectorBias": {},
+    "headlineTemplate": "Labor stoppage disrupts {company} operations",
+    "explanationTemplate": "Work interruptions can reduce output and raise near-term costs.",
+    "simulated": true
+  },
+  {
+    "id": "E015",
+    "category": "labor",
+    "subType": "labor_agreement",
+    "scope": "company",
+    "probabilityWeight": 2,
+    "severity": "low",
+    "impactRanges": {
+      "directCompanyPct": [
+        0.008,
+        0.035
+      ],
+      "targetSectorPct": [
+        0,
+        0.004
+      ],
+      "broadMarketPct": [
+        0,
+        0.001
+      ],
+      "fundamentalValuePct": [
+        0,
+        0.01
+      ],
+      "sentimentDelta": [
+        0.02,
+        0.1
+      ],
+      "volatilityMultiplier": [
+        1.0,
+        1.15
+      ]
+    },
+    "durationTicks": 70,
+    "decayRate": 0.04,
+    "sectorBias": {},
+    "headlineTemplate": "{company} reaches new labor agreement",
+    "explanationTemplate": "A labor agreement can reduce operational uncertainty.",
+    "simulated": true
+  },
+  {
+    "id": "E016",
+    "category": "merger_acquisition",
+    "subType": "acquisition_announced_target",
+    "scope": "company",
+    "probabilityWeight": 2,
+    "severity": "high",
+    "impactRanges": {
+      "directCompanyPct": [
+        0.08,
+        0.24
+      ],
+      "targetSectorPct": [
+        0.005,
+        0.02
+      ],
+      "broadMarketPct": [
+        0,
+        0.004
+      ],
+      "fundamentalValuePct": [
+        0.03,
+        0.12
+      ],
+      "sentimentDelta": [
+        0.15,
+        0.4
+      ],
+      "volatilityMultiplier": [
+        1.3,
+        1.8
+      ]
+    },
+    "durationTicks": 100,
+    "decayRate": 0.024,
+    "sectorBias": {},
+    "headlineTemplate": "{company} receives acquisition offer",
+    "explanationTemplate": "Acquisition premiums often lift the target's share price toward the proposed deal value.",
+    "simulated": true
+  },
+  {
+    "id": "E017",
+    "category": "merger_acquisition",
+    "subType": "acquisition_announced_buyer",
+    "scope": "company",
+    "probabilityWeight": 2,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.055,
+        0.025
+      ],
+      "targetSectorPct": [
+        -0.006,
+        0.006
+      ],
+      "broadMarketPct": [
+        -0.002,
+        0.002
+      ],
+      "fundamentalValuePct": [
+        -0.03,
+        0.02
+      ],
+      "sentimentDelta": [
+        -0.12,
+        0.08
+      ],
+      "volatilityMultiplier": [
+        1.15,
+        1.45
+      ]
+    },
+    "durationTicks": 90,
+    "decayRate": 0.03,
+    "sectorBias": {},
+    "headlineTemplate": "{company} announces major acquisition",
+    "explanationTemplate": "Acquisitions can create value but also introduce integration and financing risk.",
+    "simulated": true
+  },
+  {
+    "id": "E018",
+    "category": "financing",
+    "subType": "share_dilution",
+    "scope": "company",
+    "probabilityWeight": 3,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.1,
+        -0.035
+      ],
+      "targetSectorPct": [
+        -0.004,
+        0
+      ],
+      "broadMarketPct": [
+        0,
+        0
+      ],
+      "fundamentalValuePct": [
+        -0.06,
+        -0.015
+      ],
+      "sentimentDelta": [
+        -0.2,
+        -0.07
+      ],
+      "volatilityMultiplier": [
+        1.1,
+        1.4
+      ]
+    },
+    "durationTicks": 90,
+    "decayRate": 0.035,
+    "sectorBias": {},
+    "headlineTemplate": "{company} announces new share issuance",
+    "explanationTemplate": "Issuing additional shares dilutes existing ownership and can pressure per-share value.",
+    "simulated": true
+  },
+  {
+    "id": "E019",
+    "category": "financing",
+    "subType": "debt_reduction",
+    "scope": "company",
+    "probabilityWeight": 2,
+    "severity": "low",
+    "impactRanges": {
+      "directCompanyPct": [
+        0.01,
+        0.04
+      ],
+      "targetSectorPct": [
+        0,
+        0.003
+      ],
+      "broadMarketPct": [
+        0,
+        0
+      ],
+      "fundamentalValuePct": [
+        0.008,
+        0.025
+      ],
+      "sentimentDelta": [
+        0.03,
+        0.12
+      ],
+      "volatilityMultiplier": [
+        1.0,
+        1.15
+      ]
+    },
+    "durationTicks": 110,
+    "decayRate": 0.03,
+    "sectorBias": {},
+    "headlineTemplate": "{company} accelerates debt repayment",
+    "explanationTemplate": "Lower leverage can reduce financial risk.",
+    "simulated": true
+  },
+  {
+    "id": "E020",
+    "category": "dividend_buyback",
+    "subType": "buyback",
+    "scope": "company",
+    "probabilityWeight": 3,
+    "severity": "low",
+    "impactRanges": {
+      "directCompanyPct": [
+        0.01,
+        0.045
+      ],
+      "targetSectorPct": [
+        0,
+        0.003
+      ],
+      "broadMarketPct": [
+        0,
+        0.001
+      ],
+      "fundamentalValuePct": [
+        0,
+        0.015
+      ],
+      "sentimentDelta": [
+        0.04,
+        0.14
+      ],
+      "volatilityMultiplier": [
+        1.0,
+        1.2
+      ]
+    },
+    "durationTicks": 85,
+    "decayRate": 0.035,
+    "sectorBias": {},
+    "headlineTemplate": "{company} authorizes share repurchase",
+    "explanationTemplate": "A buyback can signal management confidence and reduce future share count.",
+    "simulated": true
+  },
+  {
+    "id": "E021",
+    "category": "dividend_buyback",
+    "subType": "dividend_cut",
+    "scope": "company",
+    "probabilityWeight": 2,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.075,
+        -0.02
+      ],
+      "targetSectorPct": [
+        -0.005,
+        0
+      ],
+      "broadMarketPct": [
+        0,
+        0
+      ],
+      "fundamentalValuePct": [
+        -0.025,
+        -0.005
+      ],
+      "sentimentDelta": [
+        -0.18,
+        -0.05
+      ],
+      "volatilityMultiplier": [
+        1.1,
+        1.4
+      ]
+    },
+    "durationTicks": 90,
+    "decayRate": 0.035,
+    "sectorBias": {},
+    "headlineTemplate": "{company} reduces dividend",
+    "explanationTemplate": "A dividend cut can signal cash-flow pressure or a shift in capital priorities.",
+    "simulated": true
+  },
+  {
+    "id": "E022",
+    "category": "analyst_sentiment",
+    "subType": "upgrade",
+    "scope": "company",
+    "probabilityWeight": 3,
+    "severity": "low",
+    "impactRanges": {
+      "directCompanyPct": [
+        0.008,
+        0.035
+      ],
+      "targetSectorPct": [
+        0,
+        0.003
+      ],
+      "broadMarketPct": [
+        0,
+        0.001
+      ],
+      "fundamentalValuePct": [
+        0,
+        0.005
+      ],
+      "sentimentDelta": [
+        0.03,
+        0.11
+      ],
+      "volatilityMultiplier": [
+        1.0,
+        1.15
+      ]
+    },
+    "durationTicks": 45,
+    "decayRate": 0.06,
+    "sectorBias": {},
+    "headlineTemplate": "Simulated analysts raise outlook for {company}",
+    "explanationTemplate": "Improved external expectations can temporarily strengthen sentiment.",
+    "simulated": true
+  },
+  {
+    "id": "E023",
+    "category": "analyst_sentiment",
+    "subType": "downgrade",
+    "scope": "company",
+    "probabilityWeight": 3,
+    "severity": "low",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.04,
+        -0.008
+      ],
+      "targetSectorPct": [
+        -0.003,
+        0
+      ],
+      "broadMarketPct": [
+        -0.001,
+        0
+      ],
+      "fundamentalValuePct": [
+        -0.008,
+        0
+      ],
+      "sentimentDelta": [
+        -0.12,
+        -0.03
+      ],
+      "volatilityMultiplier": [
+        1.0,
+        1.2
+      ]
+    },
+    "durationTicks": 45,
+    "decayRate": 0.06,
+    "sectorBias": {},
+    "headlineTemplate": "Simulated analysts lower outlook for {company}",
+    "explanationTemplate": "Weaker expectations can temporarily pressure sentiment.",
+    "simulated": true
+  },
+  {
+    "id": "E024",
+    "category": "macro_rates",
+    "subType": "rate_hike",
+    "scope": "market",
+    "probabilityWeight": 3,
+    "severity": "high",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.01,
+        0
+      ],
+      "targetSectorPct": [
+        -0.045,
+        -0.01
+      ],
+      "broadMarketPct": [
+        -0.028,
+        -0.008
+      ],
+      "fundamentalValuePct": [
+        -0.02,
+        -0.004
+      ],
+      "sentimentDelta": [
+        -0.18,
+        -0.05
+      ],
+      "volatilityMultiplier": [
+        1.2,
+        1.55
+      ]
+    },
+    "durationTicks": 130,
+    "decayRate": 0.022,
+    "sectorBias": {
+      "Technology": -1.4,
+      "Financials": 0.3,
+      "Consumer": -0.9,
+      "Industrials": -0.7,
+      "Healthcare": -0.4,
+      "Energy": -0.2,
+      "Communications": -0.8,
+      "Transportation": -0.8
+    },
+    "headlineTemplate": "Central bank raises simulated policy rate",
+    "explanationTemplate": "Higher rates increase discount rates and financing costs.",
+    "simulated": true
+  },
+  {
+    "id": "E025",
+    "category": "macro_rates",
+    "subType": "rate_cut",
+    "scope": "market",
+    "probabilityWeight": 3,
+    "severity": "high",
+    "impactRanges": {
+      "directCompanyPct": [
+        0,
+        0.01
+      ],
+      "targetSectorPct": [
+        0.01,
+        0.045
+      ],
+      "broadMarketPct": [
+        0.008,
+        0.028
+      ],
+      "fundamentalValuePct": [
+        0.004,
+        0.025
+      ],
+      "sentimentDelta": [
+        0.05,
+        0.18
+      ],
+      "volatilityMultiplier": [
+        1.1,
+        1.4
+      ]
+    },
+    "durationTicks": 130,
+    "decayRate": 0.022,
+    "sectorBias": {
+      "Technology": 1.4,
+      "Financials": -0.2,
+      "Consumer": 1.0,
+      "Industrials": 0.8,
+      "Healthcare": 0.5,
+      "Energy": 0.3,
+      "Communications": 0.9,
+      "Transportation": 0.8
+    },
+    "headlineTemplate": "Central bank cuts simulated policy rate",
+    "explanationTemplate": "Lower rates can support valuations and reduce financing costs.",
+    "simulated": true
+  },
+  {
+    "id": "E026",
+    "category": "macro_inflation",
+    "subType": "inflation_hot",
+    "scope": "market",
+    "probabilityWeight": 3,
+    "severity": "high",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.006,
+        0
+      ],
+      "targetSectorPct": [
+        -0.035,
+        -0.008
+      ],
+      "broadMarketPct": [
+        -0.025,
+        -0.007
+      ],
+      "fundamentalValuePct": [
+        -0.018,
+        -0.003
+      ],
+      "sentimentDelta": [
+        -0.16,
+        -0.04
+      ],
+      "volatilityMultiplier": [
+        1.2,
+        1.6
+      ]
+    },
+    "durationTicks": 120,
+    "decayRate": 0.025,
+    "sectorBias": {
+      "Technology": -1.2,
+      "Financials": -0.2,
+      "Consumer": -1.0,
+      "Industrials": -0.8,
+      "Healthcare": -0.4,
+      "Energy": 0.6,
+      "Communications": -0.7,
+      "Transportation": -0.9
+    },
+    "headlineTemplate": "Simulated inflation comes in above expectations",
+    "explanationTemplate": "Higher inflation can raise input costs and the likelihood of tighter monetary policy.",
+    "simulated": true
+  },
+  {
+    "id": "E027",
+    "category": "macro_inflation",
+    "subType": "inflation_cools",
+    "scope": "market",
+    "probabilityWeight": 3,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        0,
+        0.006
+      ],
+      "targetSectorPct": [
+        0.006,
+        0.028
+      ],
+      "broadMarketPct": [
+        0.006,
+        0.02
+      ],
+      "fundamentalValuePct": [
+        0.002,
+        0.014
+      ],
+      "sentimentDelta": [
+        0.03,
+        0.13
+      ],
+      "volatilityMultiplier": [
+        1.05,
+        1.3
+      ]
+    },
+    "durationTicks": 100,
+    "decayRate": 0.03,
+    "sectorBias": {
+      "Technology": 1.3,
+      "Financials": 0.1,
+      "Consumer": 0.9,
+      "Industrials": 0.7,
+      "Healthcare": 0.4,
+      "Energy": -0.2,
+      "Communications": 0.8,
+      "Transportation": 0.7
+    },
+    "headlineTemplate": "Simulated inflation cools more than expected",
+    "explanationTemplate": "Cooling inflation can improve rate expectations and support valuations.",
+    "simulated": true
+  },
+  {
+    "id": "E028",
+    "category": "macro_growth",
+    "subType": "gdp_strong",
+    "scope": "market",
+    "probabilityWeight": 3,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        0,
+        0.006
+      ],
+      "targetSectorPct": [
+        0.005,
+        0.026
+      ],
+      "broadMarketPct": [
+        0.005,
+        0.018
+      ],
+      "fundamentalValuePct": [
+        0.002,
+        0.012
+      ],
+      "sentimentDelta": [
+        0.03,
+        0.12
+      ],
+      "volatilityMultiplier": [
+        1.05,
+        1.25
+      ]
+    },
+    "durationTicks": 100,
+    "decayRate": 0.03,
+    "sectorBias": {
+      "Technology": 0.7,
+      "Financials": 0.8,
+      "Consumer": 1.1,
+      "Industrials": 1.2,
+      "Healthcare": 0.3,
+      "Energy": 0.8,
+      "Communications": 0.7,
+      "Transportation": 1.2
+    },
+    "headlineTemplate": "Simulated economic growth exceeds expectations",
+    "explanationTemplate": "Stronger growth can lift revenue expectations for cyclical businesses.",
+    "simulated": true
+  },
+  {
+    "id": "E029",
+    "category": "macro_growth",
+    "subType": "recession_fears",
+    "scope": "market",
+    "probabilityWeight": 2,
+    "severity": "high",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.01,
+        0
+      ],
+      "targetSectorPct": [
+        -0.06,
+        -0.015
+      ],
+      "broadMarketPct": [
+        -0.055,
+        -0.015
+      ],
+      "fundamentalValuePct": [
+        -0.035,
+        -0.008
+      ],
+      "sentimentDelta": [
+        -0.28,
+        -0.08
+      ],
+      "volatilityMultiplier": [
+        1.4,
+        2.0
+      ]
+    },
+    "durationTicks": 160,
+    "decayRate": 0.018,
+    "sectorBias": {
+      "Technology": -1.0,
+      "Financials": -1.2,
+      "Consumer": -1.3,
+      "Industrials": -1.4,
+      "Healthcare": -0.5,
+      "Energy": -1.3,
+      "Communications": -0.8,
+      "Transportation": -1.5
+    },
+    "headlineTemplate": "Simulated recession concerns intensify",
+    "explanationTemplate": "Lower expected economic activity can pressure earnings and increase risk aversion.",
+    "simulated": true
+  },
+  {
+    "id": "E030",
+    "category": "macro_growth",
+    "subType": "jobs_strong",
+    "scope": "market",
+    "probabilityWeight": 3,
+    "severity": "low",
+    "impactRanges": {
+      "directCompanyPct": [
+        0,
+        0.003
+      ],
+      "targetSectorPct": [
+        0.003,
+        0.016
+      ],
+      "broadMarketPct": [
+        0.002,
+        0.012
+      ],
+      "fundamentalValuePct": [
+        0,
+        0.006
+      ],
+      "sentimentDelta": [
+        0.01,
+        0.07
+      ],
+      "volatilityMultiplier": [
+        1.0,
+        1.15
+      ]
+    },
+    "durationTicks": 70,
+    "decayRate": 0.04,
+    "sectorBias": {},
+    "headlineTemplate": "Simulated labor market remains strong",
+    "explanationTemplate": "Strong employment can support demand, though rate expectations may offset part of the benefit.",
+    "simulated": true
+  },
+  {
+    "id": "E031",
+    "category": "consumer_demand",
+    "subType": "confidence_surge",
+    "scope": "market",
+    "probabilityWeight": 3,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        0,
+        0.004
+      ],
+      "targetSectorPct": [
+        0.004,
+        0.022
+      ],
+      "broadMarketPct": [
+        0.003,
+        0.014
+      ],
+      "fundamentalValuePct": [
+        0.001,
+        0.008
+      ],
+      "sentimentDelta": [
+        0.02,
+        0.09
+      ],
+      "volatilityMultiplier": [
+        1.0,
+        1.2
+      ]
+    },
+    "durationTicks": 80,
+    "decayRate": 0.037,
+    "sectorBias": {
+      "Consumer": 1.5,
+      "Transportation": 1.1,
+      "Financials": 0.5,
+      "Technology": 0.5,
+      "Industrials": 0.6,
+      "Healthcare": 0.1,
+      "Energy": 0.2,
+      "Communications": 0.6
+    },
+    "headlineTemplate": "Simulated consumer confidence rises sharply",
+    "explanationTemplate": "Higher confidence can support discretionary spending.",
+    "simulated": true
+  },
+  {
+    "id": "E032",
+    "category": "consumer_demand",
+    "subType": "confidence_drop",
+    "scope": "market",
+    "probabilityWeight": 3,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.004,
+        0
+      ],
+      "targetSectorPct": [
+        -0.025,
+        -0.004
+      ],
+      "broadMarketPct": [
+        -0.016,
+        -0.003
+      ],
+      "fundamentalValuePct": [
+        -0.009,
+        -0.001
+      ],
+      "sentimentDelta": [
+        -0.11,
+        -0.02
+      ],
+      "volatilityMultiplier": [
+        1.1,
+        1.35
+      ]
+    },
+    "durationTicks": 85,
+    "decayRate": 0.035,
+    "sectorBias": {
+      "Consumer": -1.5,
+      "Transportation": -1.1,
+      "Financials": -0.5,
+      "Technology": -0.5,
+      "Industrials": -0.6,
+      "Healthcare": -0.1,
+      "Energy": -0.2,
+      "Communications": -0.6
+    },
+    "headlineTemplate": "Simulated consumer confidence falls",
+    "explanationTemplate": "Weaker confidence can reduce expected consumer spending.",
+    "simulated": true
+  },
+  {
+    "id": "E033",
+    "category": "commodity",
+    "subType": "oil_spike",
+    "scope": "market",
+    "probabilityWeight": 3,
+    "severity": "high",
+    "impactRanges": {
+      "directCompanyPct": [
+        0,
+        0.004
+      ],
+      "targetSectorPct": [
+        -0.045,
+        0.05
+      ],
+      "broadMarketPct": [
+        -0.018,
+        -0.002
+      ],
+      "fundamentalValuePct": [
+        -0.012,
+        0.02
+      ],
+      "sentimentDelta": [
+        -0.12,
+        0.12
+      ],
+      "volatilityMultiplier": [
+        1.2,
+        1.6
+      ]
+    },
+    "durationTicks": 110,
+    "decayRate": 0.026,
+    "sectorBias": {
+      "Energy": 1.8,
+      "Transportation": -1.8,
+      "Consumer": -0.6,
+      "Industrials": -0.6,
+      "Technology": -0.2,
+      "Financials": -0.1,
+      "Healthcare": -0.1,
+      "Communications": -0.2
+    },
+    "headlineTemplate": "Simulated oil prices jump",
+    "explanationTemplate": "Higher energy prices benefit producers but raise costs for fuel-intensive industries.",
+    "simulated": true
+  },
+  {
+    "id": "E034",
+    "category": "commodity",
+    "subType": "oil_drop",
+    "scope": "market",
+    "probabilityWeight": 3,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.002,
+        0.002
+      ],
+      "targetSectorPct": [
+        -0.04,
+        0.035
+      ],
+      "broadMarketPct": [
+        -0.008,
+        0.01
+      ],
+      "fundamentalValuePct": [
+        -0.015,
+        0.012
+      ],
+      "sentimentDelta": [
+        -0.08,
+        0.08
+      ],
+      "volatilityMultiplier": [
+        1.05,
+        1.3
+      ]
+    },
+    "durationTicks": 100,
+    "decayRate": 0.03,
+    "sectorBias": {
+      "Energy": -1.7,
+      "Transportation": 1.5,
+      "Consumer": 0.5,
+      "Industrials": 0.4,
+      "Technology": 0.1,
+      "Financials": 0.1,
+      "Healthcare": 0.1,
+      "Communications": 0.1
+    },
+    "headlineTemplate": "Simulated oil prices fall sharply",
+    "explanationTemplate": "Lower fuel costs help users of energy while reducing producer revenue expectations.",
+    "simulated": true
+  },
+  {
+    "id": "E035",
+    "category": "supply_chain",
+    "subType": "global_shipping_disruption",
+    "scope": "market",
+    "probabilityWeight": 2,
+    "severity": "high",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.006,
+        0
+      ],
+      "targetSectorPct": [
+        -0.05,
+        -0.008
+      ],
+      "broadMarketPct": [
+        -0.025,
+        -0.006
+      ],
+      "fundamentalValuePct": [
+        -0.02,
+        -0.003
+      ],
+      "sentimentDelta": [
+        -0.18,
+        -0.04
+      ],
+      "volatilityMultiplier": [
+        1.3,
+        1.8
+      ]
+    },
+    "durationTicks": 140,
+    "decayRate": 0.022,
+    "sectorBias": {
+      "Transportation": -1.4,
+      "Consumer": -1.2,
+      "Industrials": -1.2,
+      "Technology": -1.0,
+      "Energy": 0.2,
+      "Healthcare": -0.5,
+      "Financials": -0.2,
+      "Communications": -0.3
+    },
+    "headlineTemplate": "Simulated global shipping disruption raises supply concerns",
+    "explanationTemplate": "Delays and higher shipping costs can pressure inventories and margins.",
+    "simulated": true
+  },
+  {
+    "id": "E036",
+    "category": "supply_chain",
+    "subType": "supply_chain_normalizes",
+    "scope": "market",
+    "probabilityWeight": 2,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        0,
+        0.004
+      ],
+      "targetSectorPct": [
+        0.004,
+        0.024
+      ],
+      "broadMarketPct": [
+        0.003,
+        0.014
+      ],
+      "fundamentalValuePct": [
+        0.002,
+        0.012
+      ],
+      "sentimentDelta": [
+        0.02,
+        0.09
+      ],
+      "volatilityMultiplier": [
+        1.0,
+        1.2
+      ]
+    },
+    "durationTicks": 95,
+    "decayRate": 0.033,
+    "sectorBias": {
+      "Transportation": 0.7,
+      "Consumer": 1.0,
+      "Industrials": 1.0,
+      "Technology": 0.8,
+      "Healthcare": 0.4,
+      "Energy": 0.0,
+      "Financials": 0.2,
+      "Communications": 0.3
+    },
+    "headlineTemplate": "Simulated supply conditions improve",
+    "explanationTemplate": "Better availability and lower logistics costs can support margins.",
+    "simulated": true
+  },
+  {
+    "id": "E037",
+    "category": "geopolitical",
+    "subType": "trade_tensions",
+    "scope": "market",
+    "probabilityWeight": 2,
+    "severity": "high",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.006,
+        0
+      ],
+      "targetSectorPct": [
+        -0.04,
+        -0.007
+      ],
+      "broadMarketPct": [
+        -0.026,
+        -0.006
+      ],
+      "fundamentalValuePct": [
+        -0.018,
+        -0.003
+      ],
+      "sentimentDelta": [
+        -0.18,
+        -0.04
+      ],
+      "volatilityMultiplier": [
+        1.25,
+        1.7
+      ]
+    },
+    "durationTicks": 130,
+    "decayRate": 0.023,
+    "sectorBias": {
+      "Technology": -1.2,
+      "Industrials": -1.3,
+      "Transportation": -1.0,
+      "Consumer": -0.7,
+      "Energy": -0.4,
+      "Financials": -0.4,
+      "Healthcare": -0.3,
+      "Communications": -0.4
+    },
+    "headlineTemplate": "Simulated trade tensions rise",
+    "explanationTemplate": "Potential restrictions and uncertainty can pressure globally exposed businesses.",
+    "simulated": true
+  },
+  {
+    "id": "E038",
+    "category": "geopolitical",
+    "subType": "trade_agreement",
+    "scope": "market",
+    "probabilityWeight": 2,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        0,
+        0.004
+      ],
+      "targetSectorPct": [
+        0.004,
+        0.026
+      ],
+      "broadMarketPct": [
+        0.004,
+        0.016
+      ],
+      "fundamentalValuePct": [
+        0.002,
+        0.012
+      ],
+      "sentimentDelta": [
+        0.03,
+        0.1
+      ],
+      "volatilityMultiplier": [
+        1.0,
+        1.2
+      ]
+    },
+    "durationTicks": 95,
+    "decayRate": 0.033,
+    "sectorBias": {
+      "Technology": 1.0,
+      "Industrials": 1.2,
+      "Transportation": 1.1,
+      "Consumer": 0.7,
+      "Energy": 0.4,
+      "Financials": 0.4,
+      "Healthcare": 0.3,
+      "Communications": 0.4
+    },
+    "headlineTemplate": "Simulated trade agreement reduces uncertainty",
+    "explanationTemplate": "Lower trade barriers can improve expected commerce and supply reliability.",
+    "simulated": true
+  },
+  {
+    "id": "E039",
+    "category": "sector_rotation",
+    "subType": "tech_rotation_in",
+    "scope": "sector",
+    "probabilityWeight": 2,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        0,
+        0.004
+      ],
+      "targetSectorPct": [
+        0.015,
+        0.045
+      ],
+      "broadMarketPct": [
+        0,
+        0.006
+      ],
+      "fundamentalValuePct": [
+        0,
+        0.006
+      ],
+      "sentimentDelta": [
+        0.05,
+        0.15
+      ],
+      "volatilityMultiplier": [
+        1.05,
+        1.3
+      ]
+    },
+    "durationTicks": 70,
+    "decayRate": 0.045,
+    "sectorBias": {
+      "Technology": 1.0
+    },
+    "headlineTemplate": "Investors rotate into simulated technology shares",
+    "explanationTemplate": "Sector rotations can move related companies even without company-specific news.",
+    "simulated": true
+  },
+  {
+    "id": "E040",
+    "category": "sector_rotation",
+    "subType": "tech_rotation_out",
+    "scope": "sector",
+    "probabilityWeight": 2,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.004,
+        0
+      ],
+      "targetSectorPct": [
+        -0.045,
+        -0.015
+      ],
+      "broadMarketPct": [
+        -0.006,
+        0
+      ],
+      "fundamentalValuePct": [
+        -0.006,
+        0
+      ],
+      "sentimentDelta": [
+        -0.15,
+        -0.05
+      ],
+      "volatilityMultiplier": [
+        1.05,
+        1.3
+      ]
+    },
+    "durationTicks": 70,
+    "decayRate": 0.045,
+    "sectorBias": {
+      "Technology": -1.0
+    },
+    "headlineTemplate": "Investors rotate out of simulated technology shares",
+    "explanationTemplate": "Sector rotations can pressure related companies without changing their underlying businesses.",
+    "simulated": true
+  },
+  {
+    "id": "E041",
+    "category": "sector_rotation",
+    "subType": "healthcare_rotation_in",
+    "scope": "sector",
+    "probabilityWeight": 2,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        0,
+        0.003
+      ],
+      "targetSectorPct": [
+        0.012,
+        0.035
+      ],
+      "broadMarketPct": [
+        0,
+        0.004
+      ],
+      "fundamentalValuePct": [
+        0,
+        0.004
+      ],
+      "sentimentDelta": [
+        0.04,
+        0.12
+      ],
+      "volatilityMultiplier": [
+        1.0,
+        1.2
+      ]
+    },
+    "durationTicks": 70,
+    "decayRate": 0.045,
+    "sectorBias": {
+      "Healthcare": 1.0
+    },
+    "headlineTemplate": "Investors rotate into simulated healthcare shares",
+    "explanationTemplate": "Defensive or sector-specific demand can lift related stocks.",
+    "simulated": true
+  },
+  {
+    "id": "E042",
+    "category": "sector_rotation",
+    "subType": "financials_rotation_out",
+    "scope": "sector",
+    "probabilityWeight": 2,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.003,
+        0
+      ],
+      "targetSectorPct": [
+        -0.035,
+        -0.012
+      ],
+      "broadMarketPct": [
+        -0.004,
+        0
+      ],
+      "fundamentalValuePct": [
+        -0.004,
+        0
+      ],
+      "sentimentDelta": [
+        -0.12,
+        -0.04
+      ],
+      "volatilityMultiplier": [
+        1.0,
+        1.25
+      ]
+    },
+    "durationTicks": 70,
+    "decayRate": 0.045,
+    "sectorBias": {
+      "Financials": -1.0
+    },
+    "headlineTemplate": "Investors reduce exposure to simulated financial shares",
+    "explanationTemplate": "Changing risk preferences can pressure an entire sector.",
+    "simulated": true
+  },
+  {
+    "id": "E043",
+    "category": "unexpected_shock",
+    "subType": "broad_risk_off",
+    "scope": "market",
+    "probabilityWeight": 1,
+    "severity": "severe",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.01,
+        0
+      ],
+      "targetSectorPct": [
+        -0.08,
+        -0.025
+      ],
+      "broadMarketPct": [
+        -0.07,
+        -0.025
+      ],
+      "fundamentalValuePct": [
+        -0.03,
+        -0.006
+      ],
+      "sentimentDelta": [
+        -0.35,
+        -0.12
+      ],
+      "volatilityMultiplier": [
+        1.6,
+        2.4
+      ]
+    },
+    "durationTicks": 150,
+    "decayRate": 0.018,
+    "sectorBias": {},
+    "headlineTemplate": "Simulated markets enter sudden risk-off move",
+    "explanationTemplate": "A sharp increase in uncertainty can raise correlations and pressure most risky assets.",
+    "simulated": true
+  },
+  {
+    "id": "E044",
+    "category": "unexpected_shock",
+    "subType": "broad_relief_rally",
+    "scope": "market",
+    "probabilityWeight": 1,
+    "severity": "high",
+    "impactRanges": {
+      "directCompanyPct": [
+        0,
+        0.008
+      ],
+      "targetSectorPct": [
+        0.02,
+        0.06
+      ],
+      "broadMarketPct": [
+        0.018,
+        0.05
+      ],
+      "fundamentalValuePct": [
+        0.004,
+        0.018
+      ],
+      "sentimentDelta": [
+        0.08,
+        0.25
+      ],
+      "volatilityMultiplier": [
+        1.3,
+        1.8
+      ]
+    },
+    "durationTicks": 100,
+    "decayRate": 0.025,
+    "sectorBias": {},
+    "headlineTemplate": "Simulated markets stage broad relief rally",
+    "explanationTemplate": "Reduced uncertainty can produce rapid repricing across many sectors.",
+    "simulated": true
+  },
+  {
+    "id": "E045",
+    "category": "sector_rotation",
+    "subType": "energy_demand_boom",
+    "scope": "sector",
+    "probabilityWeight": 2,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        0,
+        0.004
+      ],
+      "targetSectorPct": [
+        0.018,
+        0.05
+      ],
+      "broadMarketPct": [
+        0,
+        0.006
+      ],
+      "fundamentalValuePct": [
+        0.008,
+        0.025
+      ],
+      "sentimentDelta": [
+        0.05,
+        0.16
+      ],
+      "volatilityMultiplier": [
+        1.05,
+        1.3
+      ]
+    },
+    "durationTicks": 100,
+    "decayRate": 0.032,
+    "sectorBias": {
+      "Energy": 1.0
+    },
+    "headlineTemplate": "Simulated energy demand forecast rises",
+    "explanationTemplate": "Higher expected demand can improve producer revenue expectations.",
+    "simulated": true
+  },
+  {
+    "id": "E046",
+    "category": "legal_regulatory",
+    "subType": "sector_regulation_tightens",
+    "scope": "sector",
+    "probabilityWeight": 2,
+    "severity": "high",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.004,
+        0
+      ],
+      "targetSectorPct": [
+        -0.06,
+        -0.018
+      ],
+      "broadMarketPct": [
+        -0.01,
+        -0.002
+      ],
+      "fundamentalValuePct": [
+        -0.035,
+        -0.008
+      ],
+      "sentimentDelta": [
+        -0.22,
+        -0.06
+      ],
+      "volatilityMultiplier": [
+        1.2,
+        1.6
+      ]
+    },
+    "durationTicks": 140,
+    "decayRate": 0.022,
+    "sectorBias": {},
+    "headlineTemplate": "New simulated rules raise costs for {sector} companies",
+    "explanationTemplate": "Tighter rules may reduce margins or increase compliance costs.",
+    "simulated": true
+  },
+  {
+    "id": "E047",
+    "category": "legal_regulatory",
+    "subType": "sector_regulation_eases",
+    "scope": "sector",
+    "probabilityWeight": 2,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        0,
+        0.003
+      ],
+      "targetSectorPct": [
+        0.01,
+        0.04
+      ],
+      "broadMarketPct": [
+        0,
+        0.005
+      ],
+      "fundamentalValuePct": [
+        0.005,
+        0.02
+      ],
+      "sentimentDelta": [
+        0.04,
+        0.14
+      ],
+      "volatilityMultiplier": [
+        1.0,
+        1.2
+      ]
+    },
+    "durationTicks": 110,
+    "decayRate": 0.03,
+    "sectorBias": {},
+    "headlineTemplate": "Simulated rules ease for {sector} companies",
+    "explanationTemplate": "Lower compliance burdens can improve expected profitability.",
+    "simulated": true
+  },
+  {
+    "id": "E048",
+    "category": "macro_growth",
+    "subType": "productivity_boom",
+    "scope": "market",
+    "probabilityWeight": 1,
+    "severity": "high",
+    "impactRanges": {
+      "directCompanyPct": [
+        0,
+        0.006
+      ],
+      "targetSectorPct": [
+        0.008,
+        0.035
+      ],
+      "broadMarketPct": [
+        0.008,
+        0.026
+      ],
+      "fundamentalValuePct": [
+        0.006,
+        0.02
+      ],
+      "sentimentDelta": [
+        0.05,
+        0.18
+      ],
+      "volatilityMultiplier": [
+        1.1,
+        1.4
+      ]
+    },
+    "durationTicks": 160,
+    "decayRate": 0.02,
+    "sectorBias": {},
+    "headlineTemplate": "Simulated productivity data surprises to the upside",
+    "explanationTemplate": "Higher productivity can support growth without increasing costs as quickly.",
+    "simulated": true
+  },
+  {
+    "id": "E049",
+    "category": "macro_rates",
+    "subType": "credit_conditions_tighten",
+    "scope": "market",
+    "probabilityWeight": 2,
+    "severity": "high",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.006,
+        0
+      ],
+      "targetSectorPct": [
+        -0.04,
+        -0.009
+      ],
+      "broadMarketPct": [
+        -0.025,
+        -0.007
+      ],
+      "fundamentalValuePct": [
+        -0.022,
+        -0.004
+      ],
+      "sentimentDelta": [
+        -0.18,
+        -0.05
+      ],
+      "volatilityMultiplier": [
+        1.25,
+        1.7
+      ]
+    },
+    "durationTicks": 130,
+    "decayRate": 0.022,
+    "sectorBias": {
+      "Financials": -0.8,
+      "Technology": -1.1,
+      "Consumer": -0.8,
+      "Industrials": -0.8,
+      "Healthcare": -0.4,
+      "Energy": -0.5,
+      "Communications": -0.7,
+      "Transportation": -0.8
+    },
+    "headlineTemplate": "Simulated credit conditions tighten",
+    "explanationTemplate": "Harder access to financing can pressure leveraged and growth-dependent companies.",
+    "simulated": true
+  },
+  {
+    "id": "E050",
+    "category": "macro_rates",
+    "subType": "credit_conditions_ease",
+    "scope": "market",
+    "probabilityWeight": 2,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        0,
+        0.004
+      ],
+      "targetSectorPct": [
+        0.006,
+        0.028
+      ],
+      "broadMarketPct": [
+        0.004,
+        0.018
+      ],
+      "fundamentalValuePct": [
+        0.004,
+        0.014
+      ],
+      "sentimentDelta": [
+        0.03,
+        0.12
+      ],
+      "volatilityMultiplier": [
+        1.0,
+        1.25
+      ]
+    },
+    "durationTicks": 110,
+    "decayRate": 0.03,
+    "sectorBias": {},
+    "headlineTemplate": "Simulated credit conditions ease",
+    "explanationTemplate": "Improved access to financing can support investment and valuations.",
+    "simulated": true
+  },
+  {
+    "id": "E051",
+    "category": "consumer_demand",
+    "subType": "holiday_sales_strong",
+    "scope": "sector",
+    "probabilityWeight": 2,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        0,
+        0.003
+      ],
+      "targetSectorPct": [
+        0.015,
+        0.045
+      ],
+      "broadMarketPct": [
+        0,
+        0.004
+      ],
+      "fundamentalValuePct": [
+        0.007,
+        0.02
+      ],
+      "sentimentDelta": [
+        0.05,
+        0.14
+      ],
+      "volatilityMultiplier": [
+        1.0,
+        1.2
+      ]
+    },
+    "durationTicks": 90,
+    "decayRate": 0.035,
+    "sectorBias": {
+      "Consumer": 1.0,
+      "Transportation": 0.4
+    },
+    "headlineTemplate": "Simulated holiday sales exceed expectations",
+    "explanationTemplate": "Stronger sales can improve near-term revenue estimates.",
+    "simulated": true
+  },
+  {
+    "id": "E052",
+    "category": "consumer_demand",
+    "subType": "holiday_sales_weak",
+    "scope": "sector",
+    "probabilityWeight": 2,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.003,
+        0
+      ],
+      "targetSectorPct": [
+        -0.05,
+        -0.015
+      ],
+      "broadMarketPct": [
+        -0.005,
+        0
+      ],
+      "fundamentalValuePct": [
+        -0.024,
+        -0.007
+      ],
+      "sentimentDelta": [
+        -0.15,
+        -0.05
+      ],
+      "volatilityMultiplier": [
+        1.1,
+        1.35
+      ]
+    },
+    "durationTicks": 95,
+    "decayRate": 0.033,
+    "sectorBias": {
+      "Consumer": -1.0,
+      "Transportation": -0.3
+    },
+    "headlineTemplate": "Simulated holiday sales disappoint",
+    "explanationTemplate": "Weaker sales can lower expected revenue and inventory efficiency.",
+    "simulated": true
+  },
+  {
+    "id": "E053",
+    "category": "operations",
+    "subType": "major_contract_win",
+    "scope": "company",
+    "probabilityWeight": 3,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        0.02,
+        0.075
+      ],
+      "targetSectorPct": [
+        0,
+        0.008
+      ],
+      "broadMarketPct": [
+        0,
+        0.002
+      ],
+      "fundamentalValuePct": [
+        0.01,
+        0.04
+      ],
+      "sentimentDelta": [
+        0.05,
+        0.18
+      ],
+      "volatilityMultiplier": [
+        1.0,
+        1.25
+      ]
+    },
+    "durationTicks": 120,
+    "decayRate": 0.028,
+    "sectorBias": {},
+    "headlineTemplate": "{company} wins major customer contract",
+    "explanationTemplate": "A large contract can improve expected future revenue.",
+    "simulated": true
+  },
+  {
+    "id": "E054",
+    "category": "operations",
+    "subType": "major_contract_lost",
+    "scope": "company",
+    "probabilityWeight": 3,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.085,
+        -0.02
+      ],
+      "targetSectorPct": [
+        -0.008,
+        0
+      ],
+      "broadMarketPct": [
+        -0.002,
+        0
+      ],
+      "fundamentalValuePct": [
+        -0.05,
+        -0.01
+      ],
+      "sentimentDelta": [
+        -0.19,
+        -0.05
+      ],
+      "volatilityMultiplier": [
+        1.1,
+        1.4
+      ]
+    },
+    "durationTicks": 120,
+    "decayRate": 0.028,
+    "sectorBias": {},
+    "headlineTemplate": "{company} loses major customer contract",
+    "explanationTemplate": "Losing a significant customer can reduce future revenue expectations.",
+    "simulated": true
+  },
+  {
+    "id": "E055",
+    "category": "product",
+    "subType": "product_recall",
+    "scope": "company",
+    "probabilityWeight": 2,
+    "severity": "high",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.16,
+        -0.05
+      ],
+      "targetSectorPct": [
+        -0.018,
+        -0.003
+      ],
+      "broadMarketPct": [
+        -0.004,
+        0
+      ],
+      "fundamentalValuePct": [
+        -0.08,
+        -0.015
+      ],
+      "sentimentDelta": [
+        -0.3,
+        -0.1
+      ],
+      "volatilityMultiplier": [
+        1.25,
+        1.8
+      ]
+    },
+    "durationTicks": 130,
+    "decayRate": 0.025,
+    "sectorBias": {},
+    "headlineTemplate": "{company} announces major product recall",
+    "explanationTemplate": "Recall costs and reputational damage can pressure expected profits.",
+    "simulated": true
+  },
+  {
+    "id": "E056",
+    "category": "operations",
+    "subType": "factory_expansion",
+    "scope": "company",
+    "probabilityWeight": 2,
+    "severity": "low",
+    "impactRanges": {
+      "directCompanyPct": [
+        0.006,
+        0.03
+      ],
+      "targetSectorPct": [
+        0,
+        0.004
+      ],
+      "broadMarketPct": [
+        0,
+        0.001
+      ],
+      "fundamentalValuePct": [
+        0.005,
+        0.02
+      ],
+      "sentimentDelta": [
+        0.02,
+        0.09
+      ],
+      "volatilityMultiplier": [
+        1.0,
+        1.15
+      ]
+    },
+    "durationTicks": 120,
+    "decayRate": 0.03,
+    "sectorBias": {},
+    "headlineTemplate": "{company} expands production capacity",
+    "explanationTemplate": "Additional capacity can support future growth if demand remains strong.",
+    "simulated": true
+  },
+  {
+    "id": "E057",
+    "category": "financing",
+    "subType": "liquidity_concern",
+    "scope": "company",
+    "probabilityWeight": 1,
+    "severity": "severe",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.35,
+        -0.12
+      ],
+      "targetSectorPct": [
+        -0.03,
+        -0.005
+      ],
+      "broadMarketPct": [
+        -0.008,
+        0
+      ],
+      "fundamentalValuePct": [
+        -0.25,
+        -0.06
+      ],
+      "sentimentDelta": [
+        -0.5,
+        -0.18
+      ],
+      "volatilityMultiplier": [
+        1.7,
+        2.7
+      ]
+    },
+    "durationTicks": 160,
+    "decayRate": 0.018,
+    "sectorBias": {},
+    "headlineTemplate": "{company} faces simulated liquidity concerns",
+    "explanationTemplate": "Concerns about access to cash can sharply increase the risk of financial distress.",
+    "simulated": true
+  },
+  {
+    "id": "E058",
+    "category": "financing",
+    "subType": "emergency_financing_secured",
+    "scope": "company",
+    "probabilityWeight": 1,
+    "severity": "high",
+    "impactRanges": {
+      "directCompanyPct": [
+        0.04,
+        0.16
+      ],
+      "targetSectorPct": [
+        0,
+        0.01
+      ],
+      "broadMarketPct": [
+        0,
+        0.003
+      ],
+      "fundamentalValuePct": [
+        0.03,
+        0.1
+      ],
+      "sentimentDelta": [
+        0.1,
+        0.3
+      ],
+      "volatilityMultiplier": [
+        1.3,
+        1.8
+      ]
+    },
+    "durationTicks": 120,
+    "decayRate": 0.026,
+    "sectorBias": {},
+    "headlineTemplate": "{company} secures emergency financing",
+    "explanationTemplate": "New financing can reduce immediate distress risk, though long-term costs may remain.",
+    "simulated": true
+  },
+  {
+    "id": "E059",
+    "category": "product",
+    "subType": "patent_win",
+    "scope": "company",
+    "probabilityWeight": 2,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        0.015,
+        0.06
+      ],
+      "targetSectorPct": [
+        0,
+        0.006
+      ],
+      "broadMarketPct": [
+        0,
+        0.001
+      ],
+      "fundamentalValuePct": [
+        0.008,
+        0.03
+      ],
+      "sentimentDelta": [
+        0.04,
+        0.15
+      ],
+      "volatilityMultiplier": [
+        1.0,
+        1.25
+      ]
+    },
+    "durationTicks": 110,
+    "decayRate": 0.03,
+    "sectorBias": {},
+    "headlineTemplate": "{company} wins important simulated patent decision",
+    "explanationTemplate": "Stronger intellectual-property protection can improve future competitive expectations.",
+    "simulated": true
+  },
+  {
+    "id": "E060",
+    "category": "product",
+    "subType": "patent_loss",
+    "scope": "company",
+    "probabilityWeight": 2,
+    "severity": "medium",
+    "impactRanges": {
+      "directCompanyPct": [
+        -0.07,
+        -0.015
+      ],
+      "targetSectorPct": [
+        -0.006,
+        0
+      ],
+      "broadMarketPct": [
+        -0.001,
+        0
+      ],
+      "fundamentalValuePct": [
+        -0.04,
+        -0.006
+      ],
+      "sentimentDelta": [
+        -0.17,
+        -0.04
+      ],
+      "volatilityMultiplier": [
+        1.05,
+        1.35
+      ]
+    },
+    "durationTicks": 100,
+    "decayRate": 0.032,
+    "sectorBias": {},
+    "headlineTemplate": "{company} loses important simulated patent decision",
+    "explanationTemplate": "Reduced intellectual-property protection can weaken expected competitive advantages.",
+    "simulated": true
+  }
+]

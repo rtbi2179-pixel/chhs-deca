@@ -1,0 +1,1044 @@
+{
+  "earnings_beat": {
+    "variables": {
+      "expectedRevenueGrowthPct": [
+        -8,
+        30
+      ],
+      "actualRevenueGrowthPct": [
+        -12,
+        36
+      ],
+      "expectedEps": [
+        0.1,
+        4.5
+      ],
+      "actualEps": [
+        -0.5,
+        5.2
+      ]
+    },
+    "factsTemplate": [
+      "Simulated quarterly revenue growth was {actualRevenueGrowthPct}% versus {expectedRevenueGrowthPct}% expected.",
+      "Simulated EPS was {actualEps} BB per share versus {expectedEps} expected."
+    ],
+    "expectationsRequired": true,
+    "directionalConstraint": "actualEps > expectedEps AND/OR actualRevenueGrowthPct > expectedRevenueGrowthPct",
+    "economicDirection": "positive"
+  },
+  "earnings_miss": {
+    "variables": {
+      "expectedRevenueGrowthPct": [
+        -8,
+        30
+      ],
+      "actualRevenueGrowthPct": [
+        -12,
+        36
+      ],
+      "expectedEps": [
+        0.1,
+        4.5
+      ],
+      "actualEps": [
+        -0.5,
+        5.2
+      ]
+    },
+    "factsTemplate": [
+      "Simulated quarterly revenue growth was {actualRevenueGrowthPct}% versus {expectedRevenueGrowthPct}% expected.",
+      "Simulated EPS was {actualEps} BB per share versus {expectedEps} expected."
+    ],
+    "expectationsRequired": true,
+    "directionalConstraint": "actualEps < expectedEps AND/OR actualRevenueGrowthPct < expectedRevenueGrowthPct",
+    "economicDirection": "negative"
+  },
+  "guidance_raise": {
+    "variables": {
+      "oldGrowthGuidePct": [
+        2,
+        22
+      ],
+      "newGrowthGuidePct": [
+        0,
+        28
+      ]
+    },
+    "factsTemplate": [
+      "Management changed its simulated full-year revenue-growth outlook from {oldGrowthGuidePct}% to {newGrowthGuidePct}%."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "newGrowthGuidePct > oldGrowthGuidePct",
+    "economicDirection": "positive"
+  },
+  "guidance_cut": {
+    "variables": {
+      "oldGrowthGuidePct": [
+        2,
+        22
+      ],
+      "newGrowthGuidePct": [
+        0,
+        28
+      ]
+    },
+    "factsTemplate": [
+      "Management changed its simulated full-year revenue-growth outlook from {oldGrowthGuidePct}% to {newGrowthGuidePct}%."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "newGrowthGuidePct < oldGrowthGuidePct",
+    "economicDirection": "negative"
+  },
+  "major_launch_success": {
+    "variables": {
+      "estimatedRevenueExposurePct": [
+        3,
+        24
+      ]
+    },
+    "factsTemplate": [
+      "The affected product represents an estimated {estimatedRevenueExposurePct}% of the company\u2019s simulated near-term revenue opportunity."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "product_delay": {
+    "variables": {
+      "estimatedRevenueExposurePct": [
+        3,
+        24
+      ]
+    },
+    "factsTemplate": [
+      "The affected product represents an estimated {estimatedRevenueExposurePct}% of the company\u2019s simulated near-term revenue opportunity."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "supply_disruption": {
+    "variables": {
+      "estimatedRevenueExposurePct": [
+        2,
+        20
+      ],
+      "estimatedDurationDays": [
+        5,
+        90
+      ]
+    },
+    "factsTemplate": [
+      "The operational change affects an estimated {estimatedRevenueExposurePct}% of simulated near-term revenue and may persist for about {estimatedDurationDays} simulated days."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "efficiency_gain": {
+    "variables": {
+      "estimatedRevenueExposurePct": [
+        2,
+        20
+      ],
+      "estimatedDurationDays": [
+        5,
+        90
+      ]
+    },
+    "factsTemplate": [
+      "The operational change affects an estimated {estimatedRevenueExposurePct}% of simulated near-term revenue and may persist for about {estimatedDurationDays} simulated days."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "ceo_resignation": {
+    "variables": {
+      "uncertaintyIndexChangePct": [
+        10,
+        60
+      ]
+    },
+    "factsTemplate": [
+      "The simulated uncertainty index changed by about {uncertaintyIndexChangePct}% following the event."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "respected_ceo_hired": {
+    "variables": {
+      "uncertaintyIndexChangePct": [
+        10,
+        60
+      ]
+    },
+    "factsTemplate": [
+      "The simulated uncertainty index changed by about {uncertaintyIndexChangePct}% following the event."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "data_breach": {
+    "variables": {
+      "customersAffectedThousands": [
+        25,
+        2500
+      ],
+      "estimatedCostMillions": [
+        2,
+        180
+      ]
+    },
+    "factsTemplate": [
+      "The fictional incident may affect about {customersAffectedThousands} thousand customer records, with preliminary simulated costs near {estimatedCostMillions} million BlueBucks."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "regulatory_investigation": {
+    "variables": {
+      "estimatedCostMillions": [
+        5,
+        900
+      ],
+      "revenueExposurePct": [
+        2,
+        25
+      ]
+    },
+    "factsTemplate": [
+      "The simulated matter could affect about {revenueExposurePct}% of relevant operations, with estimated costs near {estimatedCostMillions} million BlueBucks."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "case_resolved_favorably": {
+    "variables": {
+      "estimatedCostMillions": [
+        5,
+        900
+      ],
+      "revenueExposurePct": [
+        2,
+        25
+      ]
+    },
+    "factsTemplate": [
+      "The simulated matter could affect about {revenueExposurePct}% of relevant operations, with estimated costs near {estimatedCostMillions} million BlueBucks."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "strike": {
+    "variables": {
+      "workforceAffectedPct": [
+        5,
+        55
+      ],
+      "estimatedDurationDays": [
+        2,
+        45
+      ]
+    },
+    "factsTemplate": [
+      "About {workforceAffectedPct}% of the fictional workforce is affected for an estimated {estimatedDurationDays} simulated days."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "labor_agreement": {
+    "variables": {
+      "workforceAffectedPct": [
+        5,
+        55
+      ],
+      "estimatedDurationDays": [
+        2,
+        45
+      ]
+    },
+    "factsTemplate": [
+      "About {workforceAffectedPct}% of the fictional workforce is affected for an estimated {estimatedDurationDays} simulated days."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "acquisition_announced_target": {
+    "variables": {
+      "dealPremiumPct": [
+        8,
+        40
+      ],
+      "dealValueMillions": [
+        150,
+        8500
+      ]
+    },
+    "factsTemplate": [
+      "The fictional transaction is valued near {dealValueMillions} million BlueBucks and implies a potential premium of about {dealPremiumPct}%."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "acquisition_announced_buyer": {
+    "variables": {
+      "dealPremiumPct": [
+        8,
+        40
+      ],
+      "dealValueMillions": [
+        150,
+        8500
+      ]
+    },
+    "factsTemplate": [
+      "The fictional transaction is valued near {dealValueMillions} million BlueBucks and implies a potential premium of about {dealPremiumPct}%."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "share_dilution": {
+    "variables": {
+      "financingMillions": [
+        50,
+        3500
+      ],
+      "shareCountChangePct": [
+        2,
+        22
+      ]
+    },
+    "factsTemplate": [
+      "The simulated financing totals about {financingMillions} million BlueBucks; estimated share-count impact is {shareCountChangePct}%."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "debt_reduction": {
+    "variables": {
+      "financingMillions": [
+        50,
+        3500
+      ],
+      "shareCountChangePct": [
+        2,
+        22
+      ]
+    },
+    "factsTemplate": [
+      "The simulated financing totals about {financingMillions} million BlueBucks; estimated share-count impact is {shareCountChangePct}%."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "buyback": {
+    "variables": {
+      "capitalReturnMillions": [
+        20,
+        2500
+      ],
+      "capitalReturnChangePct": [
+        5,
+        60
+      ]
+    },
+    "factsTemplate": [
+      "The fictional capital-return action is worth about {capitalReturnMillions} million BlueBucks, a change of roughly {capitalReturnChangePct}% from the prior plan."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "dividend_cut": {
+    "variables": {
+      "capitalReturnMillions": [
+        20,
+        2500
+      ],
+      "capitalReturnChangePct": [
+        5,
+        60
+      ]
+    },
+    "factsTemplate": [
+      "The fictional capital-return action is worth about {capitalReturnMillions} million BlueBucks, a change of roughly {capitalReturnChangePct}% from the prior plan."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "upgrade": {
+    "variables": {
+      "oldFairValue": [
+        20,
+        140
+      ],
+      "newFairValue": [
+        18,
+        160
+      ]
+    },
+    "factsTemplate": [
+      "Fictional analysts changed their modeled fair value from {oldFairValue} BB to {newFairValue} BB per share."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "downgrade": {
+    "variables": {
+      "oldFairValue": [
+        20,
+        140
+      ],
+      "newFairValue": [
+        18,
+        160
+      ]
+    },
+    "factsTemplate": [
+      "Fictional analysts changed their modeled fair value from {oldFairValue} BB to {newFairValue} BB per share."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "rate_hike": {
+    "variables": {
+      "oldRatePct": [
+        1.5,
+        6.5
+      ],
+      "newRatePct": [
+        1.25,
+        7.0
+      ],
+      "expectedRatePct": [
+        1.25,
+        7.0
+      ]
+    },
+    "factsTemplate": [
+      "The simulated policy rate moved from {oldRatePct}% to {newRatePct}%; the market had expected about {expectedRatePct}%."
+    ],
+    "expectationsRequired": true,
+    "directionalConstraint": "newRatePct > oldRatePct",
+    "economicDirection": "negative_market"
+  },
+  "rate_cut": {
+    "variables": {
+      "oldRatePct": [
+        1.5,
+        6.5
+      ],
+      "newRatePct": [
+        1.25,
+        7.0
+      ],
+      "expectedRatePct": [
+        1.25,
+        7.0
+      ]
+    },
+    "factsTemplate": [
+      "The simulated policy rate moved from {oldRatePct}% to {newRatePct}%; the market had expected about {expectedRatePct}%."
+    ],
+    "expectationsRequired": true,
+    "directionalConstraint": "newRatePct < oldRatePct",
+    "economicDirection": "positive_market"
+  },
+  "inflation_hot": {
+    "variables": {
+      "expectedInflationPct": [
+        1.5,
+        7.0
+      ],
+      "actualInflationPct": [
+        1.0,
+        8.0
+      ]
+    },
+    "factsTemplate": [
+      "Simulated inflation was {actualInflationPct}% versus {expectedInflationPct}% expected."
+    ],
+    "expectationsRequired": true,
+    "directionalConstraint": "actualInflationPct > expectedInflationPct",
+    "economicDirection": "negative_market"
+  },
+  "inflation_cools": {
+    "variables": {
+      "expectedInflationPct": [
+        1.5,
+        7.0
+      ],
+      "actualInflationPct": [
+        1.0,
+        8.0
+      ]
+    },
+    "factsTemplate": [
+      "Simulated inflation was {actualInflationPct}% versus {expectedInflationPct}% expected."
+    ],
+    "expectationsRequired": true,
+    "directionalConstraint": "actualInflationPct < expectedInflationPct",
+    "economicDirection": "positive_market"
+  },
+  "gdp_strong": {
+    "variables": {
+      "expectedGrowthPct": [
+        -2,
+        5
+      ],
+      "actualGrowthPct": [
+        -4,
+        7
+      ]
+    },
+    "factsTemplate": [
+      "Simulated growth was {actualGrowthPct}% versus {expectedGrowthPct}% expected."
+    ],
+    "expectationsRequired": true,
+    "directionalConstraint": "actualGrowthPct > expectedGrowthPct",
+    "economicDirection": "positive_market"
+  },
+  "recession_fears": {
+    "variables": {
+      "expectedGrowthPct": [
+        -2,
+        5
+      ],
+      "actualGrowthPct": [
+        -4,
+        7
+      ]
+    },
+    "factsTemplate": [
+      "Simulated growth was {actualGrowthPct}% versus {expectedGrowthPct}% expected."
+    ],
+    "expectationsRequired": true,
+    "directionalConstraint": "actualGrowthPct < expectedGrowthPct OR expectedGrowthPct is revised materially downward",
+    "economicDirection": "negative_market"
+  },
+  "jobs_strong": {
+    "variables": {
+      "expectedGrowthPct": [
+        -2,
+        5
+      ],
+      "actualGrowthPct": [
+        -4,
+        7
+      ]
+    },
+    "factsTemplate": [
+      "Simulated growth was {actualGrowthPct}% versus {expectedGrowthPct}% expected."
+    ],
+    "expectationsRequired": true,
+    "directionalConstraint": "actualGrowthPct >= expectedGrowthPct OR supporting labor metric exceeds expectation",
+    "economicDirection": "mixed_positive_growth"
+  },
+  "confidence_surge": {
+    "variables": {
+      "expectedIndex": [
+        80,
+        120
+      ],
+      "actualIndex": [
+        72,
+        130
+      ]
+    },
+    "factsTemplate": [
+      "The simulated demand/confidence index was {actualIndex} versus {expectedIndex} expected."
+    ],
+    "expectationsRequired": true,
+    "directionalConstraint": "actualIndex > expectedIndex",
+    "economicDirection": "positive_consumer"
+  },
+  "confidence_drop": {
+    "variables": {
+      "expectedIndex": [
+        80,
+        120
+      ],
+      "actualIndex": [
+        72,
+        130
+      ]
+    },
+    "factsTemplate": [
+      "The simulated demand/confidence index was {actualIndex} versus {expectedIndex} expected."
+    ],
+    "expectationsRequired": true,
+    "directionalConstraint": "actualIndex < expectedIndex",
+    "economicDirection": "negative_consumer"
+  },
+  "oil_spike": {
+    "variables": {
+      "commodityMovePct": [
+        4,
+        28
+      ]
+    },
+    "factsTemplate": [
+      "The simulated energy-price index changed by approximately {commodityMovePct}% over the latest period."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "commodityMovePct > 0 and article language says prices rose",
+    "economicDirection": "mixed_by_sector"
+  },
+  "oil_drop": {
+    "variables": {
+      "commodityMovePct": [
+        4,
+        28
+      ]
+    },
+    "factsTemplate": [
+      "The simulated energy-price index changed by approximately {commodityMovePct}% over the latest period."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "commodityMovePct > 0 and article language says prices fell by this magnitude",
+    "economicDirection": "mixed_by_sector"
+  },
+  "global_shipping_disruption": {
+    "variables": {
+      "delayDays": [
+        3,
+        60
+      ],
+      "costChangePct": [
+        2,
+        25
+      ]
+    },
+    "factsTemplate": [
+      "The simulated supply change could alter delivery times by about {delayDays} days and costs by roughly {costChangePct}%."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "supply_chain_normalizes": {
+    "variables": {
+      "delayDays": [
+        3,
+        60
+      ],
+      "costChangePct": [
+        2,
+        25
+      ]
+    },
+    "factsTemplate": [
+      "The simulated supply change could alter delivery times by about {delayDays} days and costs by roughly {costChangePct}%."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "trade_tensions": {
+    "variables": {
+      "revenueExposurePct": [
+        4,
+        35
+      ]
+    },
+    "factsTemplate": [
+      "About {revenueExposurePct}% of the affected fictional companies\u2019 revenue is exposed to the simulated trade region."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "trade_agreement": {
+    "variables": {
+      "revenueExposurePct": [
+        4,
+        35
+      ]
+    },
+    "factsTemplate": [
+      "About {revenueExposurePct}% of the affected fictional companies\u2019 revenue is exposed to the simulated trade region."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "tech_rotation_in": {
+    "variables": {
+      "flowIndexChangePct": [
+        3,
+        18
+      ]
+    },
+    "factsTemplate": [
+      "The simulated sector-flow index shifted by approximately {flowIndexChangePct}% as investors changed exposure."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "tech_rotation_out": {
+    "variables": {
+      "flowIndexChangePct": [
+        3,
+        18
+      ]
+    },
+    "factsTemplate": [
+      "The simulated sector-flow index shifted by approximately {flowIndexChangePct}% as investors changed exposure."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "healthcare_rotation_in": {
+    "variables": {
+      "flowIndexChangePct": [
+        3,
+        18
+      ]
+    },
+    "factsTemplate": [
+      "The simulated sector-flow index shifted by approximately {flowIndexChangePct}% as investors changed exposure."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "financials_rotation_out": {
+    "variables": {
+      "flowIndexChangePct": [
+        3,
+        18
+      ]
+    },
+    "factsTemplate": [
+      "The simulated sector-flow index shifted by approximately {flowIndexChangePct}% as investors changed exposure."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "broad_risk_off": {
+    "variables": {
+      "uncertaintyIndexChangePct": [
+        10,
+        60
+      ]
+    },
+    "factsTemplate": [
+      "The simulated uncertainty index changed by about {uncertaintyIndexChangePct}% following the event."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "broad_relief_rally": {
+    "variables": {
+      "uncertaintyIndexChangePct": [
+        10,
+        60
+      ]
+    },
+    "factsTemplate": [
+      "The simulated uncertainty index changed by about {uncertaintyIndexChangePct}% following the event."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "energy_demand_boom": {
+    "variables": {
+      "flowIndexChangePct": [
+        3,
+        18
+      ]
+    },
+    "factsTemplate": [
+      "The simulated sector-flow index shifted by approximately {flowIndexChangePct}% as investors changed exposure."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "sector_regulation_tightens": {
+    "variables": {
+      "estimatedCostMillions": [
+        5,
+        900
+      ],
+      "revenueExposurePct": [
+        2,
+        25
+      ]
+    },
+    "factsTemplate": [
+      "The simulated matter could affect about {revenueExposurePct}% of relevant operations, with estimated costs near {estimatedCostMillions} million BlueBucks."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "sector_regulation_eases": {
+    "variables": {
+      "estimatedCostMillions": [
+        5,
+        900
+      ],
+      "revenueExposurePct": [
+        2,
+        25
+      ]
+    },
+    "factsTemplate": [
+      "The simulated matter could affect about {revenueExposurePct}% of relevant operations, with estimated costs near {estimatedCostMillions} million BlueBucks."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "productivity_boom": {
+    "variables": {
+      "expectedGrowthPct": [
+        -2,
+        5
+      ],
+      "actualGrowthPct": [
+        -4,
+        7
+      ]
+    },
+    "factsTemplate": [
+      "Simulated growth was {actualGrowthPct}% versus {expectedGrowthPct}% expected."
+    ],
+    "expectationsRequired": true,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "credit_conditions_tighten": {
+    "variables": {
+      "oldRatePct": [
+        1.5,
+        6.5
+      ],
+      "newRatePct": [
+        1.25,
+        7.0
+      ],
+      "expectedRatePct": [
+        1.25,
+        7.0
+      ]
+    },
+    "factsTemplate": [
+      "The simulated policy rate moved from {oldRatePct}% to {newRatePct}%; the market had expected about {expectedRatePct}%."
+    ],
+    "expectationsRequired": true,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "credit_conditions_ease": {
+    "variables": {
+      "oldRatePct": [
+        1.5,
+        6.5
+      ],
+      "newRatePct": [
+        1.25,
+        7.0
+      ],
+      "expectedRatePct": [
+        1.25,
+        7.0
+      ]
+    },
+    "factsTemplate": [
+      "The simulated policy rate moved from {oldRatePct}% to {newRatePct}%; the market had expected about {expectedRatePct}%."
+    ],
+    "expectationsRequired": true,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "holiday_sales_strong": {
+    "variables": {
+      "expectedIndex": [
+        80,
+        120
+      ],
+      "actualIndex": [
+        72,
+        130
+      ]
+    },
+    "factsTemplate": [
+      "The simulated demand/confidence index was {actualIndex} versus {expectedIndex} expected."
+    ],
+    "expectationsRequired": true,
+    "directionalConstraint": "actualIndex > expectedIndex",
+    "economicDirection": "positive_consumer"
+  },
+  "holiday_sales_weak": {
+    "variables": {
+      "expectedIndex": [
+        80,
+        120
+      ],
+      "actualIndex": [
+        72,
+        130
+      ]
+    },
+    "factsTemplate": [
+      "The simulated demand/confidence index was {actualIndex} versus {expectedIndex} expected."
+    ],
+    "expectationsRequired": true,
+    "directionalConstraint": "actualIndex < expectedIndex",
+    "economicDirection": "negative_consumer"
+  },
+  "major_contract_win": {
+    "variables": {
+      "estimatedRevenueExposurePct": [
+        2,
+        20
+      ],
+      "estimatedDurationDays": [
+        5,
+        90
+      ]
+    },
+    "factsTemplate": [
+      "The operational change affects an estimated {estimatedRevenueExposurePct}% of simulated near-term revenue and may persist for about {estimatedDurationDays} simulated days."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "major_contract_lost": {
+    "variables": {
+      "estimatedRevenueExposurePct": [
+        2,
+        20
+      ],
+      "estimatedDurationDays": [
+        5,
+        90
+      ]
+    },
+    "factsTemplate": [
+      "The operational change affects an estimated {estimatedRevenueExposurePct}% of simulated near-term revenue and may persist for about {estimatedDurationDays} simulated days."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "product_recall": {
+    "variables": {
+      "estimatedRevenueExposurePct": [
+        3,
+        24
+      ]
+    },
+    "factsTemplate": [
+      "The affected product represents an estimated {estimatedRevenueExposurePct}% of the company\u2019s simulated near-term revenue opportunity."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "factory_expansion": {
+    "variables": {
+      "estimatedRevenueExposurePct": [
+        2,
+        20
+      ],
+      "estimatedDurationDays": [
+        5,
+        90
+      ]
+    },
+    "factsTemplate": [
+      "The operational change affects an estimated {estimatedRevenueExposurePct}% of simulated near-term revenue and may persist for about {estimatedDurationDays} simulated days."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "liquidity_concern": {
+    "variables": {
+      "financingMillions": [
+        50,
+        3500
+      ],
+      "shareCountChangePct": [
+        2,
+        22
+      ]
+    },
+    "factsTemplate": [
+      "The simulated financing totals about {financingMillions} million BlueBucks; estimated share-count impact is {shareCountChangePct}%."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "emergency_financing_secured": {
+    "variables": {
+      "financingMillions": [
+        50,
+        3500
+      ],
+      "shareCountChangePct": [
+        2,
+        22
+      ]
+    },
+    "factsTemplate": [
+      "The simulated financing totals about {financingMillions} million BlueBucks; estimated share-count impact is {shareCountChangePct}%."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "patent_win": {
+    "variables": {
+      "estimatedRevenueExposurePct": [
+        3,
+        24
+      ]
+    },
+    "factsTemplate": [
+      "The affected product represents an estimated {estimatedRevenueExposurePct}% of the company\u2019s simulated near-term revenue opportunity."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  },
+  "patent_loss": {
+    "variables": {
+      "estimatedRevenueExposurePct": [
+        3,
+        24
+      ]
+    },
+    "factsTemplate": [
+      "The affected product represents an estimated {estimatedRevenueExposurePct}% of the company\u2019s simulated near-term revenue opportunity."
+    ],
+    "expectationsRequired": false,
+    "directionalConstraint": "Generate facts consistent with the sampled structured event and subtype; never create a fact that reverses the stored event meaning.",
+    "economicDirection": "derive_from_sampled_event"
+  }
+}

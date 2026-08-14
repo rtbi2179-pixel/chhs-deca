@@ -5,6 +5,7 @@ import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussion
 import { ENV } from './_core/env';
 import bcrypt from 'bcryptjs';
 import { calculateStudyCardLevel, type StudyCardKey } from "./studyCardEngine";
+import bbxCompanySeed from "./bbxCompanies.json";
 
 const ADMIN_EMAILS = ['rtbi2179@gmail.com', 'sahan.mallampati@gmail.com'];
 
@@ -1825,6 +1826,72 @@ export async function hasUserAnsweredQuestion(userId: number, questionId: string
 // ============================================
 // BLUE BLAZER MARKET FUNCTIONS
 // ============================================
+
+// ============================================
+// BLUEBLAZER EXCHANGE (BBX) — FICTIONAL, RING-FENCED SIMULATION
+// ============================================
+
+type BbxSeedCompany = (typeof bbxCompanySeed)[number];
+
+export async function ensureBbxSeeded() {
+  const db = await getDb();
+  if (!db) throw new Error("BBX storage is unavailable");
+  const { bbxCompanies, bbxMarketState } = await import("../drizzle/schema");
+  const existing = await db.select({ id: bbxCompanies.id }).from(bbxCompanies).limit(1);
+  if (existing.length === 0) {
+    for (const company of bbxCompanySeed as BbxSeedCompany[]) {
+      await db.insert(bbxCompanies).values({
+        ticker: company.ticker,
+        symbol: company.symbol,
+        companyName: company.companyName,
+        sector: company.sector,
+        description: company.description,
+        startingPrice: String(company.startingPrice),
+        currentPrice: String(company.currentPrice),
+        previousClose: String(company.previousClose),
+        fundamentalValue: String(company.fundamentalValue),
+        sharesOutstanding: String(company.sharesOutstanding),
+        revenue: String(company.revenue),
+        netIncome: String(company.netIncome),
+        eps: String(company.eps),
+        debt: String(company.debt),
+        cash: String(company.cash),
+        revenueGrowth: String(company.revenueGrowth),
+        profitMargin: String(company.profitMargin),
+        baseVolatility: String(company.baseVolatility),
+        beta: String(company.beta),
+        liquidityScore: String(company.liquidityScore),
+        sentiment: String(company.sentiment),
+        status: "active",
+      });
+    }
+  }
+  const [state] = await db.select().from(bbxMarketState).where(eq(bbxMarketState.id, 1)).limit(1);
+  if (!state) await db.insert(bbxMarketState).values({ id: 1, simulationTimestamp: new Date() });
+}
+
+export async function getOrCreateBbxAccount(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("BBX storage is unavailable");
+  const { bbxAccounts, bbxLedger } = await import("../drizzle/schema");
+  const [existing] = await db.select().from(bbxAccounts).where(eq(bbxAccounts.userId, userId)).limit(1);
+  if (existing) return existing;
+  await db.insert(bbxAccounts).values({ userId, cashBalance: "10000", startingBalance: "10000", realizedPnl: "0" });
+  await db.insert(bbxLedger).values({ userId, amount: "10000", balanceAfter: "10000", reason: "initial_grant" });
+  const [created] = await db.select().from(bbxAccounts).where(eq(bbxAccounts.userId, userId)).limit(1);
+  if (!created) throw new Error("Unable to initialize BBX account");
+  return created;
+}
+
+export async function getBbxMarketState() {
+  await ensureBbxSeeded();
+  const db = await getDb();
+  if (!db) throw new Error("BBX storage is unavailable");
+  const { bbxMarketState } = await import("../drizzle/schema");
+  const [state] = await db.select().from(bbxMarketState).where(eq(bbxMarketState.id, 1)).limit(1);
+  if (!state) throw new Error("BBX state is unavailable");
+  return state;
+}
 
 /**
  * Get or create user's portfolio cash balance
