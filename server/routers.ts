@@ -553,6 +553,13 @@ export const appRouter = router({
       return { success: true };
     }),
 
+    restartOnboarding: protectedProcedure.mutation(async ({ ctx }) => {
+      const database = await db.getDb();
+      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Onboarding storage is unavailable' });
+      await database.update(users).set({ onboardingCompletedAt: null }).where(eq(users.id, ctx.user.id));
+      return { success: true };
+    }),
+
     getNotificationPreferences: protectedProcedure.query(async ({ ctx }) => {
       const database = await db.getDb();
       if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Preferences storage is unavailable' });

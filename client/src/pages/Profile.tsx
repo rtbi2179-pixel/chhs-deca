@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { trpc } from '@/lib/trpc'
-import { ArrowLeft, Flame, BookOpen, CheckCircle, Target, TrendingUp, Medal, Plus, Trash2, Edit2, FileText, Sparkles, Bell, Download } from 'lucide-react'
+import { ArrowLeft, Flame, BookOpen, CheckCircle, Target, TrendingUp, Medal, Plus, Trash2, Edit2, FileText, Sparkles, Bell, Download, RotateCcw } from 'lucide-react'
 import { useLocation } from 'wouter'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
@@ -43,6 +43,7 @@ const ACCENT_STYLES = {
 
 export default function Profile() {
   const { user } = useAuth()
+  const utils = trpc.useUtils()
   const [, setLocation] = useLocation()
   const [studyStreak, setStudyStreak] = useState(0)
   const [showAddPortfolioDialog, setShowAddPortfolioDialog] = useState(false)
@@ -123,6 +124,13 @@ export default function Profile() {
     onSuccess: () => {
       profileSettingsQuery.refetch()
       toast.success('Profile customization saved')
+    },
+    onError: (error) => toast.error(error.message),
+  })
+  const restartOnboarding = trpc.preferences.restartOnboarding.useMutation({
+    onSuccess: async () => {
+      await utils.preferences.getOnboardingStatus.invalidate()
+      toast.success('Onboarding tour restarted')
     },
     onError: (error) => toast.error(error.message),
   })
@@ -399,6 +407,16 @@ export default function Profile() {
             Show my customized profile on chapter leaderboards
           </label>
           <div className="mt-5 flex justify-end"><Button disabled={updateProfileSettings.isPending} onClick={() => updateProfileSettings.mutate({ displayName: profileCustomization.displayName.trim() || null, bio: profileCustomization.bio.trim() || null, accentColor: profileCustomization.accentColor, showOnLeaderboard: profileCustomization.showOnLeaderboard })}>Save customization</Button></div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.11, duration: 0.6 }}
+          className="mb-12 flex flex-col gap-4 rounded-2xl border border-blue-500/20 bg-blue-500/5 p-5 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <div><h2 className="text-xl font-bold text-white">Replay Blue Blazer Onboarding</h2><p className="mt-1 max-w-2xl text-sm text-white/60">Revisit the short tour of PI study, cluster practice, and mock-exam preparation whenever you need a refresher.</p></div>
+          <Button variant="outline" className="shrink-0 border-blue-500/40 text-blue-300 hover:bg-blue-500/10" disabled={restartOnboarding.isPending} onClick={() => restartOnboarding.mutate()}><RotateCcw className="mr-2 h-4 w-4" />{restartOnboarding.isPending ? 'Starting…' : 'Replay Tour'}</Button>
         </motion.div>
 
         <motion.div

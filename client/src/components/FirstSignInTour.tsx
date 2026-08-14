@@ -5,7 +5,7 @@ import { ArrowRight, BarChart3, BookOpenCheck, Check, ClipboardCheck, Compass, F
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
-import { getOnboardingProgress, ONBOARDING_CELEBRATION_DURATION_MS } from "@/lib/onboardingTour";
+import { getOnboardingProgress, ONBOARDING_CELEBRATION_DURATION_MS, ONBOARDING_TOUR_ACTIONS } from "@/lib/onboardingTour";
 
 const TOUR_STEPS = [
   {
@@ -94,7 +94,7 @@ export function FirstSignInTour() {
             <div className="absolute inset-5 rounded-2xl border border-blue-300/15 bg-blue-300/[0.025]" />
             <div className="absolute inset-x-8 top-16 h-28 rounded-2xl border border-blue-300/15 bg-slate-950/25" />
             <div className="relative flex h-full min-h-[140px] flex-col justify-between">
-              <div className="flex items-center justify-between"><span className="font-mono-data text-[10px] tracking-[0.19em] text-blue-200/60">BLUE BLAZER START</span><button type="button" aria-label="Skip onboarding tour" onClick={() => finishTour()} disabled={completeOnboarding.isPending || isCelebrating} className="text-white/45 transition-colors hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:opacity-30"><X className="h-4 w-4" /></button></div>
+              <div className="flex items-center justify-between"><span className="font-mono-data text-[10px] tracking-[0.19em] text-blue-200/60">BLUE BLAZER START</span><button type="button" aria-label={ONBOARDING_TOUR_ACTIONS.skipLabel} onClick={() => finishTour()} disabled={completeOnboarding.isPending || isCelebrating} className="text-white/45 transition-colors hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:opacity-30"><X className="h-4 w-4" /></button></div>
               <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-blue-300/25 bg-blue-400/[0.09] text-blue-200 shadow-[0_0_40px_oklch(0.55_0.16_250/0.28)]"><StepIcon className="h-9 w-9" /></div>
               <div><div className="mb-2 flex items-center justify-between text-[10px] font-medium uppercase tracking-[0.12em] text-blue-100/65"><span>Tour progress</span><span>{progress.percentage}%</span></div><div role="progressbar" aria-label="Onboarding tour progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress.percentage} className="h-2 overflow-hidden rounded-full bg-white/10"><div className="h-full origin-left rounded-full bg-blue-300 transition-transform duration-200 ease-out motion-reduce:transition-none" style={{ transform: `scaleX(${progress.scale})` }} /></div><div className="mt-3 flex gap-2">{TOUR_STEPS.map((item, index) => <span key={item.title} className={`h-1.5 rounded-full transition-[width,background-color] duration-200 ${index === stepIndex ? "w-9 bg-blue-300" : index < stepIndex ? "w-4 bg-blue-300/50" : "w-4 bg-white/15"}`} />)}</div></div>
             </div>
@@ -107,7 +107,7 @@ export function FirstSignInTour() {
             <div className="mt-6 inline-flex w-fit items-center gap-2 rounded-full border border-blue-300/15 bg-blue-300/[0.06] px-3 py-2 text-xs font-medium text-blue-100"><Flag className="h-3.5 w-3.5 text-blue-300" />{step.detail}</div>
 
             <div className="mt-auto border-t border-white/10 pt-6">
-              <div className="mb-4 flex items-center justify-between text-xs text-white/45"><span>Step {progress.currentStep} of {progress.totalSteps} · {progress.percentage}% complete</span><button type="button" onClick={() => finishTour()} disabled={completeOnboarding.isPending || isCelebrating} className="transition-colors hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:opacity-30">Skip tour</button></div>
+              <div className="mb-4 flex items-center justify-between text-xs text-white/45"><span>Step {progress.currentStep} of {progress.totalSteps} · {progress.percentage}% complete</span><Button type="button" variant="outline" size="sm" onClick={() => finishTour()} disabled={completeOnboarding.isPending || isCelebrating} className="h-8 border-white/15 bg-white/[0.03] px-3 text-xs text-white/80 hover:bg-white/[0.08] hover:text-white disabled:opacity-30">{ONBOARDING_TOUR_ACTIONS.skipLabel}</Button></div>
               <Button type="button" onClick={() => isFinalStep ? startCelebration() : setStepIndex((current) => current + 1)} disabled={completeOnboarding.isPending || isCelebrating} className="h-11 w-full bg-blue-600 text-white hover:bg-blue-500 active:scale-[0.98]">{isFinalStep ? <><Check className="mr-2 h-4 w-4" />Start my study plan</> : <>Continue <ArrowRight className="ml-2 h-4 w-4" /></>}</Button>
             </div>
           </div>

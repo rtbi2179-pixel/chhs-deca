@@ -32,4 +32,12 @@ describe("first-sign-in onboarding", () => {
     await expect(caller.preferences.completeOnboarding()).resolves.toEqual({ success: true });
     await expect(caller.preferences.getOnboardingStatus()).resolves.toEqual({ shouldShow: false });
   });
+
+  it("lets a member restart the completed tour from Profile settings", async () => {
+    const caller = appRouter.createCaller(context({ id: userId, openId: `onboarding-user-${userId}`, name: "Onboarding User", schoolCode: "TEST-ONBOARDING", loginMethod: "custom", role: "user", createdAt: new Date(), updatedAt: new Date(), lastSignedIn: new Date() }));
+    await caller.preferences.completeOnboarding();
+    await expect(caller.preferences.getOnboardingStatus()).resolves.toEqual({ shouldShow: false });
+    await expect(caller.preferences.restartOnboarding()).resolves.toEqual({ success: true });
+    await expect(caller.preferences.getOnboardingStatus()).resolves.toEqual({ shouldShow: true });
+  });
 });

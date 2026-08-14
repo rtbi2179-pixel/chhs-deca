@@ -502,3 +502,6 @@
 - [x] Add a clear visual progress indicator to each step of the first-sign-in onboarding tour
 - [x] Add a short, reduced-motion-aware Blue Blazer celebration animation before final onboarding completion persists
 - [x] Add focused tests and browser validation for onboarding progress and final-step celebration behavior
+- [x] Add a Profile settings control that lets members restart the Blue Blazer onboarding tour
+- [x] Provide an explicit Skip Tour button on every onboarding step and preserve per-user completion state
+- [x] Add focused tests and browser validation for onboarding replay and early-skip behavior
