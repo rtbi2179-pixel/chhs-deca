@@ -467,3 +467,6 @@
 - [x] Standardize panels, typography, spacing, buttons, and loading states across priority pages
 - [x] Refine PI Quizlet, banking, mock-exam, market, and super-admin interfaces to reduce overly futuristic styling
 - [x] Validate the visual consistency update with tests, build checks, and browser review
+- [x] Audit feedback submission, chapter storage, super-admin review, and error states end to end
+- [x] Repair feedback workflow gaps and add focused regression coverage
+- [x] Validate member submission and reviewer status-management flows in the browser

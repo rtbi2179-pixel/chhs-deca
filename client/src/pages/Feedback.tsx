@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { type FormEvent, useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,8 @@ import { Loader2, MessageSquarePlus, ShieldCheck } from "lucide-react";
 
 const categories = ["bug", "feature", "content", "other"] as const;
 const reviewStatuses = ["new", "reviewing", "resolved", "dismissed"] as const;
+type ReviewStatus = (typeof reviewStatuses)[number];
+type ReviewDraft = { status: ReviewStatus; adminResponse: string };
 
 export default function Feedback() {
   const { user } = useAuth();
@@ -15,7 +17,8 @@ export default function Feedback() {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [notice, setNotice] = useState<string | null>(null);
-  const [responses, setResponses] = useState<Record<number, string>>({});
+  const [noticeType, setNoticeType] = useState<"success" | "error">("success");
+  const [reviewDrafts, setReviewDrafts] = useState<Record<number, ReviewDraft>>({});
   const isAdmin = user?.role === "admin" || user?.role === "super_admin";
   const mineQuery = trpc.feedback.listMine.useQuery(undefined, { enabled: !!user });
   const schoolQuery = trpc.feedback.listForSchool.useQuery(undefined, { enabled: !!user && isAdmin });
@@ -24,16 +27,40 @@ export default function Feedback() {
       setSubject("");
       setMessage("");
       setNotice("Thank you. Your feedback has been sent to the chapter team.");
+      setNoticeType("success");
       await utils.feedback.listMine.invalidate();
       await utils.feedback.listForSchool.invalidate();
     },
-    onError: (error) => setNotice(error.message),
-  });
-  const review = trpc.feedback.review.useMutation({
-    onSuccess: async () => {
-      await Promise.all([utils.feedback.listMine.invalidate(), utils.feedback.listForSchool.invalidate()]);
+    onError: (error) => {
+      setNotice(error.message);
+      setNoticeType("error");
     },
   });
+  const review = trpc.feedback.review.useMutation({
+    onSuccess: async (_result, input) => {
+      setNotice("Feedback review saved.");
+      setNoticeType("success");
+      setReviewDrafts((current) => {
+        const next = { ...current };
+        delete next[input.feedbackId];
+        return next;
+      });
+      await Promise.all([utils.feedback.listMine.invalidate(), utils.feedback.listForSchool.invalidate()]);
+    },
+    onError: (error) => {
+      setNotice(error.message);
+      setNoticeType("error");
+    },
+  });
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setNotice(null);
+    submit.mutate({ category, subject: subject.trim(), message: message.trim() });
+  };
+
+  const getReviewDraft = (entry: { id: number; status: string; adminResponse: string | null }): ReviewDraft =>
+    reviewDrafts[entry.id] ?? { status: entry.status as ReviewStatus, adminResponse: entry.adminResponse ?? "" };
 
   if (!user) {
     return <div className="min-h-screen bg-background pt-28 text-center text-foreground">Sign in to submit feedback.</div>;
@@ -48,9 +75,10 @@ export default function Feedback() {
         </header>
 
         <div className="grid gap-8 lg:grid-cols-2">
-          <Card>
+          <Card className="editorial-panel">
             <CardHeader><CardTitle>Send feedback</CardTitle><CardDescription>Be specific so the team can review it effectively.</CardDescription></CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent>
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <label className="block text-sm font-medium text-foreground">Category
                 <select value={category} onChange={(event) => setCategory(event.target.value as typeof category)} className="mt-1 w-full rounded-md border border-border bg-background p-2 text-foreground">
                   {categories.map((item) => <option key={item} value={item}>{item[0].toUpperCase() + item.slice(1)}</option>)}
@@ -62,14 +90,15 @@ export default function Feedback() {
               <label className="block text-sm font-medium text-foreground">Details
                 <textarea value={message} onChange={(event) => setMessage(event.target.value)} maxLength={4000} rows={6} placeholder="Include the page or feature involved, what happened, and what you expected." className="mt-1 w-full resize-y rounded-md border border-border bg-background p-2 text-foreground" />
               </label>
-              {notice && <p className="text-sm text-foreground/70">{notice}</p>}
-              <Button className="w-full" disabled={subject.trim().length < 3 || message.trim().length < 10 || submit.isPending} onClick={() => submit.mutate({ category, subject, message })}>
+              {notice && <p aria-live="polite" className={`text-sm ${noticeType === "error" ? "text-red-300" : "text-emerald-300"}`}>{notice}</p>}
+              <Button type="submit" className="w-full" disabled={subject.trim().length < 3 || message.trim().length < 10 || submit.isPending}>
                 {submit.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Submit feedback
               </Button>
+            </form>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="editorial-panel">
             <CardHeader><CardTitle>Your feedback</CardTitle><CardDescription>Responses from your chapter team appear here.</CardDescription></CardHeader>
             <CardContent className="space-y-3 max-h-[560px] overflow-y-auto">
               {mineQuery.isLoading ? <Loader2 className="h-5 w-5 animate-spin text-blue-500" /> : mineQuery.data?.length ? mineQuery.data.map((entry) => (
@@ -83,22 +112,23 @@ export default function Feedback() {
           </Card>
         </div>
 
-        {isAdmin && <Card>
+        {isAdmin && <Card className="editorial-panel">
           <CardHeader><CardTitle className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-emerald-500" />Chapter feedback queue</CardTitle><CardDescription>Review feedback submitted by members of this chapter.</CardDescription></CardHeader>
           <CardContent className="space-y-4">
-            {schoolQuery.isLoading ? <Loader2 className="h-5 w-5 animate-spin text-blue-500" /> : schoolQuery.data?.length ? schoolQuery.data.map((entry) => (
-              <article key={entry.id} className="rounded-lg border border-border p-4 space-y-3">
+            {schoolQuery.isLoading ? <Loader2 className="h-5 w-5 animate-spin text-blue-500" /> : schoolQuery.data?.length ? schoolQuery.data.map((entry) => {
+              const draft = getReviewDraft(entry);
+              return <article key={entry.id} className="rounded-lg border border-border p-4 space-y-3">
                 <div className="flex flex-wrap justify-between gap-3"><div><strong className="text-foreground">{entry.subject}</strong><p className="text-xs text-foreground/60">{entry.category} · {new Date(entry.createdAt).toLocaleString()}</p></div><span className="text-xs uppercase text-blue-400">{entry.status}</span></div>
                 <p className="text-sm text-foreground/80 whitespace-pre-wrap">{entry.message}</p>
                 <div className="grid gap-2 md:grid-cols-[180px_1fr_auto]">
-                  <select defaultValue={entry.status} onChange={(event) => review.mutate({ feedbackId: entry.id, status: event.target.value as typeof reviewStatuses[number], adminResponse: responses[entry.id] || entry.adminResponse || undefined })} className="rounded-md border border-border bg-background p-2 text-sm text-foreground">
+                  <select value={draft.status} onChange={(event) => setReviewDrafts((current) => ({ ...current, [entry.id]: { ...draft, status: event.target.value as ReviewStatus } }))} className="rounded-md border border-border bg-background p-2 text-sm text-foreground">
                     {reviewStatuses.map((status) => <option key={status} value={status}>{status}</option>)}
                   </select>
-                  <input value={responses[entry.id] ?? entry.adminResponse ?? ""} onChange={(event) => setResponses((current) => ({ ...current, [entry.id]: event.target.value }))} placeholder="Optional response for the member" className="rounded-md border border-border bg-background p-2 text-sm text-foreground" />
-                  <Button variant="outline" disabled={review.isPending} onClick={() => review.mutate({ feedbackId: entry.id, status: entry.status, adminResponse: responses[entry.id] ?? entry.adminResponse ?? undefined })}>Save response</Button>
+                  <input value={draft.adminResponse} onChange={(event) => setReviewDrafts((current) => ({ ...current, [entry.id]: { ...draft, adminResponse: event.target.value } }))} placeholder="Optional response for the member" className="rounded-md border border-border bg-background p-2 text-sm text-foreground" />
+                  <Button variant="outline" disabled={review.isPending} onClick={() => review.mutate({ feedbackId: entry.id, status: draft.status, adminResponse: draft.adminResponse.trim() || undefined })}>{review.isPending ? "Saving…" : "Save review"}</Button>
                 </div>
               </article>
-            )) : <p className="text-sm text-foreground/60">No feedback is waiting for review.</p>}
+            }) : <p className="text-sm text-foreground/60">No feedback is waiting for review.</p>}
           </CardContent>
         </Card>}
       </div>

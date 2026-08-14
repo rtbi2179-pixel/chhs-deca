@@ -60,5 +60,9 @@ describe("user feedback workflow", () => {
 
     const mine = await reporter.feedback.listMine();
     expect(mine[0]).toMatchObject({ status: "reviewing", adminResponse: "Thank you; the chapter team is reviewing this.", reviewedBy: adminId });
+
+    await expect(admin.feedback.review({ feedbackId: created.feedbackId, status: "resolved" })).resolves.toEqual({ success: true });
+    const resolved = await reporter.feedback.listMine();
+    expect(resolved[0]).toMatchObject({ status: "resolved", adminResponse: "Thank you; the chapter team is reviewing this.", reviewedBy: adminId });
   });
 });
