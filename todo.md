@@ -470,3 +470,6 @@
 - [x] Audit feedback submission, chapter storage, super-admin review, and error states end to end
 - [x] Repair feedback workflow gaps and add focused regression coverage
 - [x] Validate member submission and reviewer status-management flows in the browser
+- [x] Require a DECA career-cluster selection before a Chapter Mock Exam is created
+- [x] Enforce cluster-only unanswered-question selection for every generated mock-exam session
+- [x] Add regression coverage and browser validation for cluster-specific mock exams

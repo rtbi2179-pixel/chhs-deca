@@ -417,13 +417,14 @@ export async function getBookmarkedQuestionsWithDetails(userId: number) {
   return questionsData;
 }
 
-export async function createStudySession(userId: number, name: string, questionIds: string[]) {
+export async function createStudySession(userId: number, name: string, questionIds: string[], cluster?: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
   const session = await db.insert(studySessions).values({
     userId,
     title: name,
+    cluster,
     totalQuestions: questionIds.length,
   });
   

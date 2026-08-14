@@ -1,4 +1,5 @@
 export type MockExamQuestion = { id: string; difficulty: string };
+export type ClusteredMockExamQuestion = MockExamQuestion & { cluster: string };
 
 const targetByDifficulty: Array<[string, number]> = [["Easy", 25], ["Medium", 50], ["Hard", 25]];
 
@@ -24,4 +25,8 @@ export function selectBalancedMockExam<T extends MockExamQuestion>(questions: T[
     }
   }
   return selected.slice(0, count);
+}
+
+export function selectClusterMockExam<T extends ClusteredMockExamQuestion>(questions: T[], cluster: string, count = 100): T[] {
+  return selectBalancedMockExam(questions.filter((question) => question.cluster === cluster), count);
 }

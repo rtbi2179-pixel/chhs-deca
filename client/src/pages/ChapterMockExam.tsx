@@ -3,11 +3,20 @@ import { ClipboardCheck, Loader2, Target } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 
+const MOCK_EXAM_CLUSTERS = [
+  { value: "Marketing", label: "Marketing" },
+  { value: "Business Management & Administration", label: "Business Management" },
+  { value: "Finance", label: "Finance" },
+  { value: "Hospitality & Tourism", label: "Hospitality & Tourism" },
+] as const;
+type MockExamCluster = (typeof MOCK_EXAM_CLUSTERS)[number]["value"];
+
 export default function ChapterMockExam() {
   const [exam, setExam] = useState<any | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [finished, setFinished] = useState(false);
+  const [selectedCluster, setSelectedCluster] = useState<MockExamCluster | null>(null);
   const createMock = trpc.mockExams.createChapterMock.useMutation({
     onSuccess: (result) => {
       setExam(result);
@@ -38,14 +47,26 @@ export default function ChapterMockExam() {
           <div>
             <p className="page-eyebrow">Chapter preparation</p>
             <h1 className="page-title mt-2">Chapter Mock Exam</h1>
-            <p className="page-intro mt-3">A fresh 100-question practice exam built from questions you have not answered. The exam targets 25 easy, 50 medium, and 25 hard questions to reflect a balanced DECA-style challenge.</p>
+            <p className="page-intro mt-3">Choose one career cluster for a fresh 100-question practice exam. Every question is unanswered and comes only from your selected cluster, with a 25 easy, 50 medium, and 25 hard target.</p>
           </div>
         </div>
         {!exam ? (
-          <button onClick={() => createMock.mutate()} disabled={createMock.isPending} className="mt-8 inline-flex items-center gap-2 rounded-md bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-500 disabled:opacity-60">
+          <div className="mt-8">
+            <fieldset>
+              <legend className="data-label">Choose a career cluster</legend>
+              <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                {MOCK_EXAM_CLUSTERS.map((cluster) => (
+                  <button key={cluster.value} type="button" onClick={() => setSelectedCluster(cluster.value)} className={`editorial-tab px-4 py-3 text-left text-sm font-medium ${selectedCluster === cluster.value ? "editorial-tab-active" : "bg-white/[0.02]"}`}>
+                    {cluster.label}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+            <button onClick={() => selectedCluster && createMock.mutate({ cluster: selectedCluster })} disabled={!selectedCluster || createMock.isPending} className="mt-5 inline-flex items-center gap-2 rounded-md bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-500 disabled:opacity-60">
             {createMock.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Target className="h-4 w-4" />}
-            Build My Mock Exam
-          </button>
+            {selectedCluster ? `Build ${MOCK_EXAM_CLUSTERS.find((cluster) => cluster.value === selectedCluster)?.label} Mock Exam` : "Choose a cluster to continue"}
+            </button>
+          </div>
         ) : finished ? (
           <div className="mt-8 space-y-5">
             <div className="editorial-panel border-emerald-500/25 bg-emerald-500/[0.045] p-5">
@@ -62,8 +83,8 @@ export default function ChapterMockExam() {
             )}
           </div>
         ) : (
-          <div className="editorial-panel mt-8 border-emerald-500/25 bg-emerald-500/[0.035] p-5">
-            <div className="flex items-center justify-between gap-4"><p className="font-semibold text-emerald-200">Question {currentIndex + 1} of {exam.totalQuestions}</p><p className="text-xs text-slate-400">Saved session #{exam.sessionId}</p></div>
+            <div className="editorial-panel mt-8 border-emerald-500/25 bg-emerald-500/[0.035] p-5">
+            <div className="flex items-center justify-between gap-4"><p className="font-semibold text-emerald-200">{exam.cluster} · Question {currentIndex + 1} of {exam.totalQuestions}</p><p className="text-xs text-slate-400">Saved session #{exam.sessionId}</p></div>
             <p className="mt-5 text-lg font-medium leading-relaxed text-white">{question?.stem}</p>
             <div className="mt-5 grid gap-3">
               {(["A", "B", "C", "D"] as const).map((choice) => (

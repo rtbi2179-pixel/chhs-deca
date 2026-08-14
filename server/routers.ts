@@ -4,7 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { membersRouter } from "./membersRouter";
 import { TRPCError } from '@trpc/server';
-import { selectBalancedMockExam } from './mockExamSelection';
+import { selectClusterMockExam } from './mockExamSelection';
 import { analyzeMockExamResults } from './mockExamAnalysis';
 import { calculateMockExamProgress } from './mockExamProgress';
 import { createAdministratorActivityRecord } from './adminActivity';
@@ -1242,18 +1242,21 @@ export const appRouter = router({
   }),
 
   mockExams: router({
-    createChapterMock: protectedProcedure.mutation(async ({ ctx }) => {
+    createChapterMock: protectedProcedure
+      .input(z.object({ cluster: z.enum(['Marketing', 'Business Management & Administration', 'Finance', 'Hospitality & Tourism']) }))
+      .mutation(async ({ ctx, input }) => {
       const database = await db.getDb();
       if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Question bank is unavailable' });
       const answeredIds = new Set(await db.getUserAnsweredQuestions(ctx.user.id));
-      const bank = (await database.select().from(questions)).filter(question => !answeredIds.has(question.id));
-      const selected = selectBalancedMockExam(bank, 100);
+      const unansweredBank = (await database.select().from(questions)).filter(question => !answeredIds.has(question.id));
+      const selected = selectClusterMockExam(unansweredBank, input.cluster, 100);
       if (selected.length < 100) {
-        throw new TRPCError({ code: 'PRECONDITION_FAILED', message: `A 100-question mock exam needs 100 unanswered questions; ${selected.length} are currently available.` });
+        throw new TRPCError({ code: 'PRECONDITION_FAILED', message: `A 100-question ${input.cluster} mock exam needs 100 unanswered questions in that cluster; ${selected.length} are currently available.` });
       }
-      const session = await db.createStudySession(ctx.user.id, 'Chapter Mock Exam', selected.map(question => question.id));
+      const session = await db.createStudySession(ctx.user.id, `Chapter Mock Exam — ${input.cluster}`, selected.map(question => question.id), input.cluster);
       return {
         sessionId: Number(session[0].insertId),
+        cluster: input.cluster,
         totalQuestions: 100,
         difficultyPlan: { easy: selected.filter(question => question.difficulty === 'Easy').length, medium: selected.filter(question => question.difficulty === 'Medium').length, hard: selected.filter(question => question.difficulty === 'Hard').length },
         questions: selected.map(({ correctAnswer, rationale, distractorRationaleA, distractorRationaleB, distractorRationaleC, distractorRationaleD, ...question }) => question),
