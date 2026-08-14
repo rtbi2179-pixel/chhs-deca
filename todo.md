@@ -515,3 +515,5 @@
 - [x] Expand onboarding to introduce the primary Blue Blazer learning, practice, community, and financial navigation tabs
 - [x] Add a concise, accurate Blue Bucks explainer covering safe earning and in-app uses
 - [x] Add focused tests and preview validation for the expanded tab walkthrough and Blue Bucks guidance
+- [x] Restore the signed-out welcome page logo treatment to the immediately preceding version
+- [x] Validate the restored logo treatment with focused coverage and a signed-out browser review
