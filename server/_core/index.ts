@@ -9,6 +9,9 @@ import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { sdk } from "./sdk";
 import { advanceBbxSimulation } from "../bbxSimulation";
+import { getDb } from "../db";
+import { bbxMarketState } from "../../drizzle/schema";
+import { eq } from "drizzle-orm";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -59,6 +62,9 @@ async function startServer() {
     try {
       const caller = await sdk.authenticateRequest(req);
       if (!caller.isCron || !caller.taskUid) return res.status(403).json({ error: "cron-only" });
+      const database = await getDb();
+      const [marketState] = await database?.select().from(bbxMarketState).where(eq(bbxMarketState.scheduleCronTaskUid, caller.taskUid)).limit(1) ?? [];
+      if (!marketState) return res.json({ ok: true, skipped: "orphan" });
       const result = await advanceBbxSimulation();
       return res.json({ ok: true, result, taskUid: caller.taskUid });
     } catch (error) {

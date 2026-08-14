@@ -1067,8 +1067,9 @@ export const bbxMarketState = mysqlTable("bbxMarketState", {
   tickNumber: int("tickNumber").notNull().default(0),
   simulationTimestamp: timestamp("simulationTimestamp").defaultNow().notNull(),
   lastTickAt: timestamp("lastTickAt"),
+  scheduleCronTaskUid: varchar("scheduleCronTaskUid", { length: 65 }),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-});
+}, (table) => ({ scheduleTaskIndex: index("bbx_market_state_schedule_task_idx").on(table.scheduleCronTaskUid) }));
 
 export const bbxEvents = mysqlTable("bbxEvents", {
   id: int("id").autoincrement().primaryKey(),
