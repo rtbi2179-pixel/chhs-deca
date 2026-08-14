@@ -485,6 +485,6 @@
 - [x] Add focused tests and browser validation for virtual card specialization safeguards and rewards
 - [x] Map the reviewed BBX package onto Blue Blazer’s existing market, Blue Bucks, auth, schema, UI, and scheduling architecture
 - [x] Replace external real-price dependencies with 24 fictional BBX companies, persistent simulation state, events, news, attribution, and ring-fenced BBX accounting
-- [ ] Implement deterministic server-authoritative BBX ticks, event effects, order execution, idempotency, portfolio accounting, and admin controls
+- [x] Implement deterministic server-authoritative BBX ticks, event effects, order execution, idempotency, portfolio accounting, and admin controls
 - [x] Build BBX market, company, portfolio, news, and learning views within the existing visual system
 - [x] Add stability, direction, accounting, authorization, and browser regression coverage for the BBX release
