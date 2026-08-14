@@ -230,7 +230,7 @@ export default function Practice() {
       });
 
       if (result.blueBucksAwarded > 0) {
-        toast.success(`${result.message}`);
+        toast.success(`${result.message}${result.studyCardBonus > 0 ? ` Study Card bonus: +${result.studyCardBonus}.` : ""}`);
         setBlueBucksChange({
           amount: result.blueBucksAwarded,
           timestamp: Date.now()

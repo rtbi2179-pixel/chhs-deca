@@ -16,6 +16,7 @@ import { getStockPrice, getStockPriceCacheStatus } from "./stockPriceService";
 import { getGachaRarityCost, selectGachaRarity, type GachaRarity } from "./gachaRarity";
 import { applyCreditCardCharge, applyCreditCardPayment, calculateCashback, summarizeSpending } from "./creditCardMath";
 import { calculateMonetaryPressure, calculateBlueBucksInflationIndex } from "./economicMonitoring";
+import { calculateStudyCardQuestionReward, getMaverickDailyFocus, STUDY_CARD_CATALOG, STUDY_CARD_KEYS, type StudyCardKey } from "./studyCardEngine";
 
 import { initializeBanksForSchool, getBanksForSchool, getCreditCardsForBank } from './bankInitializer';
 import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback, notificationPreferences, userProfileSettings, adminActivityLogs, studySessions, sessionQuestions, stocks, userPiProgress } from "../drizzle/schema";
@@ -435,6 +436,24 @@ export const appRouter = router({
   system: systemRouter,
   gacha: gachaRouter,
   piLearning: piLearningRouter,
+  studyCards: router({
+    catalog: protectedProcedure.query(async ({ ctx }) => ({
+      cards: STUDY_CARD_CATALOG,
+      maverickDailyFocus: getMaverickDailyFocus(ctx.user.id),
+      virtualOnly: true,
+    })),
+    mine: protectedProcedure.query(async ({ ctx }) => {
+      const current = await db.getUserStudyCard(ctx.user.id);
+      return current ?? { cardKey: "blazer" as StudyCardKey, level: 1, practiceProgress: 0, bonusBlueBucks: 0, selectedAt: null };
+    }),
+    select: protectedProcedure
+      .input(z.object({ cardKey: z.enum(STUDY_CARD_KEYS) }))
+      .mutation(async ({ ctx, input }) => {
+        const selected = await db.selectUserStudyCard(ctx.user.id, input.cardKey);
+        if (!selected) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Study-card selection could not be saved" });
+        return selected;
+      }),
+  }),
   feedback: router({
     submit: protectedProcedure
       .input(z.object({
@@ -1431,7 +1450,7 @@ export const appRouter = router({
 
         const database = await db.getDb();
         if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database unavailable' });
-        const question = await database.select({ correctAnswer: questions.correctAnswer })
+        const question = await database.select({ correctAnswer: questions.correctAnswer, difficulty: questions.difficulty })
           .from(questions)
           .where(eq(questions.id, input.questionId))
           .limit(1);
@@ -1445,11 +1464,17 @@ export const appRouter = router({
         // Award Blue Bucks if correct (100 points for correct answer)
         // Use a hash of the question ID as the relatedId for tracking duplicate rewards
         let blueBucksAwarded = 0;
+        let studyCardBonus = 0;
         if (isCorrect) {
           const questionHash = Math.abs(input.questionId.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % 1000000;
-          const awarded = await db.awardBlueBucks(ctx.user.id, 100, 'correct_first_attempt', schoolCode, questionHash);
+          const activeStudyCard = await db.getUserStudyCard(ctx.user.id);
+          const cardKey = (activeStudyCard?.cardKey ?? "blazer") as StudyCardKey;
+          const reward = calculateStudyCardQuestionReward(100, cardKey, question[0].difficulty, ctx.user.id);
+          const awarded = await db.awardBlueBucks(ctx.user.id, reward.amount, 'correct_first_attempt', schoolCode, questionHash);
           if (awarded) {
-            blueBucksAwarded = 100;
+            blueBucksAwarded = reward.amount;
+            studyCardBonus = reward.bonus;
+            await db.recordStudyCardPracticeProgress(ctx.user.id, reward.bonus);
           }
         }
         
@@ -1459,6 +1484,7 @@ export const appRouter = router({
         return {
           isCorrect,
           blueBucksAwarded,
+          studyCardBonus,
           newBalance: balance,
           message: isCorrect ? `Correct! You earned ${blueBucksAwarded} Blue Bucks! (Total: ${balance})` : 'Incorrect answer.',
         };

@@ -743,6 +743,23 @@ export type BlueBucksTransaction = typeof blueBucksTransactions.$inferSelect;
 export type InsertBlueBucksTransaction = typeof blueBucksTransactions.$inferInsert;
 
 /**
+ * Active virtual learning specialization. This is distinct from all banking and
+ * credit-card simulation products and has no real-world cash or wagering value.
+ */
+export const userStudyCards = mysqlTable("userStudyCards", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }).unique(),
+  cardKey: mysqlEnum("cardKey", ["scholar", "scholar_pro", "investor", "entrepreneur", "social", "leader", "collector", "competitor", "blazer", "maverick"]).notNull().default("blazer"),
+  level: int("level").notNull().default(1),
+  practiceProgress: int("practiceProgress").notNull().default(0),
+  bonusBlueBucks: int("bonusBlueBucks").notNull().default(0),
+  selectedAt: timestamp("selectedAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type UserStudyCard = typeof userStudyCards.$inferSelect;
+export type InsertUserStudyCard = typeof userStudyCards.$inferInsert;
+
+/**
  * User Answers - Practice question responses
  */
 export const userAnswers = mysqlTable("userAnswers", {

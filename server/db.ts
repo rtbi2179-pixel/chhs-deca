@@ -1,9 +1,10 @@
 import { eq, and, or, inArray, desc, count, asc, ne, like, sql } from "drizzle-orm";
 import { randomBytes } from "crypto";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, userAnswers, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments, calendarEvents, CalendarEvent, InsertCalendarEvent, portfolioItems, portfolioUploads, adminMemberNotes, directMessages, blueBucks, blueBucksTransactions } from "../drizzle/schema";
+import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, userAnswers, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments, calendarEvents, CalendarEvent, InsertCalendarEvent, portfolioItems, portfolioUploads, adminMemberNotes, directMessages, blueBucks, blueBucksTransactions, userStudyCards } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import bcrypt from 'bcryptjs';
+import { calculateStudyCardLevel, type StudyCardKey } from "./studyCardEngine";
 
 const ADMIN_EMAILS = ['rtbi2179@gmail.com', 'sahan.mallampati@gmail.com'];
 
@@ -1652,6 +1653,42 @@ export async function getBlueBucksBalance(userId: number): Promise<number> {
     console.error('[Blue Bucks] Error getting balance:', error);
     return 0;
   }
+}
+
+export async function getUserStudyCard(userId: number) {
+  const database = await getDb();
+  if (!database) return null;
+  const cards = await database.select().from(userStudyCards).where(eq(userStudyCards.userId, userId)).limit(1);
+  return cards[0] ?? null;
+}
+
+export async function selectUserStudyCard(userId: number, cardKey: StudyCardKey) {
+  const database = await getDb();
+  if (!database) throw new Error("Study-card storage is unavailable");
+  const current = await getUserStudyCard(userId);
+  if (!current) {
+    await database.insert(userStudyCards).values({ userId, cardKey, selectedAt: new Date() });
+  } else {
+    await database.update(userStudyCards).set({ cardKey, selectedAt: new Date() }).where(eq(userStudyCards.userId, userId));
+  }
+  return getUserStudyCard(userId);
+}
+
+export async function recordStudyCardPracticeProgress(userId: number, bonusBlueBucks: number) {
+  const database = await getDb();
+  if (!database) return null;
+  const current = await getUserStudyCard(userId);
+  if (!current) {
+    await database.insert(userStudyCards).values({ userId, cardKey: "blazer", practiceProgress: 1, level: 1, bonusBlueBucks: Math.max(0, bonusBlueBucks) });
+    return getUserStudyCard(userId);
+  }
+  const practiceProgress = current.practiceProgress + 1;
+  await database.update(userStudyCards).set({
+    practiceProgress,
+    level: calculateStudyCardLevel(practiceProgress),
+    bonusBlueBucks: current.bonusBlueBucks + Math.max(0, bonusBlueBucks),
+  }).where(eq(userStudyCards.userId, userId));
+  return getUserStudyCard(userId);
 }
 
 export async function getBlueBucksLeaderboard(schoolCode: string, limit: number = 10): Promise<any[]> {

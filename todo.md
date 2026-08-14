@@ -479,3 +479,7 @@
 - [x] Audit school-code error paths and designated-owner identity handling for Sahan and Ricardo
 - [x] Add a safe owner fallback that prevents school-code-required errors without weakening chapter isolation
 - [x] Add regression coverage for owner fallback and normal user school-code enforcement
+- [x] Audit the existing Blue Bucks, rewards, banking, and card-product architecture for specialization integration points
+- [x] Design and implement safe virtual card-specialization profiles with clear tradeoffs and no real-money or wagering mechanics
+- [x] Build member card selection, progression foundations, and eligible educational reward integration
+- [x] Add focused tests and browser validation for virtual card specialization safeguards and rewards
