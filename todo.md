@@ -505,3 +505,5 @@
 - [x] Add a Profile settings control that lets members restart the Blue Blazer onboarding tour
 - [x] Provide an explicit Skip Tour button on every onboarding step and preserve per-user completion state
 - [x] Add focused tests and browser validation for onboarding replay and early-skip behavior
+- [x] Add a smooth reduced-motion-aware fade-out transition when members select Skip Tour
+- [x] Add focused tests and preview validation for the Skip Tour exit animation

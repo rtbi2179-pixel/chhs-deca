@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getOnboardingProgress, ONBOARDING_CELEBRATION_DURATION_MS, ONBOARDING_TOUR_ACTIONS } from "../client/src/lib/onboardingTour";
+import { getOnboardingProgress, ONBOARDING_CELEBRATION_DURATION_MS, ONBOARDING_SKIP_FADE_DURATION_MS, ONBOARDING_TOUR_ACTIONS } from "../client/src/lib/onboardingTour";
 
 describe("onboarding progress and celebration", () => {
   it("reports clear, clamped progress through the three tour steps", () => {
@@ -12,6 +12,11 @@ describe("onboarding progress and celebration", () => {
   it("keeps the completion celebration brief", () => {
     expect(ONBOARDING_CELEBRATION_DURATION_MS).toBeGreaterThanOrEqual(600);
     expect(ONBOARDING_CELEBRATION_DURATION_MS).toBeLessThanOrEqual(1200);
+  });
+
+  it("keeps the Skip Tour fade-out brief and perceptible", () => {
+    expect(ONBOARDING_SKIP_FADE_DURATION_MS).toBeGreaterThanOrEqual(160);
+    expect(ONBOARDING_SKIP_FADE_DURATION_MS).toBeLessThanOrEqual(400);
   });
 
   it("defines a visible early-exit label shared by every onboarding step", () => {

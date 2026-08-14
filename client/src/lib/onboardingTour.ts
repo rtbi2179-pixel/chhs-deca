@@ -1,5 +1,6 @@
 export const ONBOARDING_STEP_COUNT = 3;
 export const ONBOARDING_CELEBRATION_DURATION_MS = 900;
+export const ONBOARDING_SKIP_FADE_DURATION_MS = 240;
 export const ONBOARDING_TOUR_ACTIONS = {
   replayLabel: "Replay onboarding tour",
   skipLabel: "Skip Tour",
