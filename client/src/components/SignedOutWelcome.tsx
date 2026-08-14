@@ -26,7 +26,7 @@ export function SignedOutWelcome({ isChecking = false }: { isChecking?: boolean 
             <div className="absolute inset-x-16 top-20 h-48 rounded-[1.65rem] border border-blue-300/25 bg-slate-950/45 shadow-[0_22px_55px_oklch(0.04_0.03_260/0.5)]" />
             <div className="relative flex h-full flex-col justify-between">
               <div className="inline-flex items-center gap-3 self-start rounded-full border border-blue-300/15 bg-slate-950/40 px-3.5 py-2.5">
-                <img src="/manus-storage/Untitleddesign_c1fb0d88.png" alt="Blue Blazer logo" className="h-8 w-8 object-contain" />
+                <img src="/manus-storage/blue-blazer-logo_d8b42460.png" alt="Blue Blazer logo" className="h-8 w-8 object-contain" />
                 <span className="font-display text-sm tracking-[0.18em] text-white">BLUE BLAZER</span>
                 <span className="h-1 w-1 rounded-full bg-blue-300" />
                 <span className="font-mono-data text-[9px] tracking-[0.15em] text-blue-200/65">ROAD TO ICDC</span>
@@ -34,8 +34,7 @@ export function SignedOutWelcome({ isChecking = false }: { isChecking?: boolean 
 
               <div className="relative mx-auto flex h-52 w-52 items-center justify-center overflow-hidden rounded-[2.4rem] border border-blue-300/30 bg-[linear-gradient(145deg,oklch(0.3_0.13_250/0.3),oklch(0.11_0.04_260/0.75))] shadow-[0_0_0_18px_oklch(0.55_0.17_250/0.05),0_0_95px_oklch(0.55_0.17_250/0.3)] sm:h-60 sm:w-60">
                 <div className="absolute inset-3 rounded-[1.8rem] border border-white/10" />
-                <img src="/manus-storage/Untitleddesign_c1fb0d88.png" alt="" aria-hidden="true" className="absolute h-40 w-40 scale-[1.45] object-contain opacity-45 sm:h-48 sm:w-48" />
-                <div className="relative text-center"><p className="font-mono-data text-[9px] tracking-[0.24em] text-blue-100/65">CHAPTER MARK</p><p className="mt-3 font-display text-4xl leading-[0.78] tracking-tight text-white sm:text-5xl">BLUE<br /><span className="text-blue-200">BLAZER</span></p></div>
+                <img src="/manus-storage/blue-blazer-logo_d8b42460.png" alt="Blue Blazer logo" className="relative h-44 w-44 object-contain sm:h-52 sm:w-52" />
               </div>
 
               <div className="relative mt-14 border-t border-white/10 pt-5"><p className="font-mono-data text-[10px] tracking-[0.22em] text-blue-200/65">CHAPTER COMPETITIVE PREPARATION</p><p className="mt-2 max-w-xs text-sm leading-6 text-white/60">A considered launchpad for steady practice, sharper feedback, and confident performance.</p></div>

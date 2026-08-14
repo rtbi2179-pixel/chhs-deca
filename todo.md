@@ -510,3 +510,5 @@
 - [x] Refine the signed-out Blue Blazer welcome page with a larger logo and stronger visual composition
 - [x] Polish the first-sign-in onboarding tour’s visual hierarchy and branded presentation without changing its behavior
 - [x] Add focused visual regression coverage and preview validation for the refined welcome and onboarding views
+- [x] Restore the enlarged Blue Blazer logo as the signed-out welcome page’s central hero treatment
+- [x] Validate the revised logo-focused welcome composition with focused coverage and browser review

@@ -81,7 +81,7 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
               <div className="flex items-center gap-2 group">
                 <div className="relative">
                   <img
-                    src="/manus-storage/Untitleddesign_c1fb0d88.png"
+                    src="/manus-storage/blue-blazer-logo_d8b42460.png"
                     alt="Blue Blazer Logo"
                     className="w-8 h-8 transition-opacity duration-200 group-hover:opacity-85"
                   />

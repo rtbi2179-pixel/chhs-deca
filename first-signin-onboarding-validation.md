@@ -11,3 +11,5 @@ The latest authenticated preview confirms the dedicated **Skip Tour** button is 
 The Skip Tour exit now removes the complete tour panel with a 240 ms opacity-and-position fade before the completion mutation runs. Members using reduced-motion preferences skip the visual delay and exit directly. Focused tests enforce that the fade stays brief and perceptible, while full regression coverage confirms existing onboarding completion and replay behavior remains intact.
 
 The signed-out welcome page was reviewed in the browser after the visual refinement. The left-side hero plaque now carries a much larger, readable Blue Blazer wordmark paired with the existing logo asset, while the right side uses a clearer editorial hierarchy, numbered capability cards, restrained blue lighting, and a focused secure sign-in action.
+
+The logo-focused revision was also reviewed in the signed-out browser after the project storage proxy was added. The original Blue Blazer book emblem now loads from the uploaded project asset and is the large, centered focal point of the welcome hero plaque; the temporary replacement wordmark has been removed.
