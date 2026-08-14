@@ -9,7 +9,8 @@ describe("welcome and onboarding visual hierarchy", () => {
   it("keeps a prominent branded mark on the signed-out welcome experience", () => {
     const source = readSource("components", "SignedOutWelcome.tsx");
     expect(source).toContain('h-52 w-52');
-    expect(source).toContain('CHAPTER MARK');
+    expect(source).toContain('/manus-storage/Untitleddesign_c1fb0d88.png');
+    expect(source).not.toContain('CHAPTER MARK');
     expect(source).toContain('BLUE BLAZER');
     expect(source).toContain('ROAD TO ICDC');
   });

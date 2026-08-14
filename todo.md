@@ -517,3 +517,5 @@
 - [x] Add focused tests and preview validation for the expanded tab walkthrough and Blue Bucks guidance
 - [x] Restore the signed-out welcome page logo treatment to the immediately preceding version
 - [x] Validate the restored logo treatment with focused coverage and a signed-out browser review
+- [x] Remove the book-style background graphic from the welcome hero and show the actual Blue Blazer logo prominently
+- [x] Validate the corrected logo-only welcome hero with focused coverage and a signed-out browser review
