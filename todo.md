@@ -496,3 +496,6 @@
 - [x] Build a Blue Blazer signed-out welcome screen using the existing logo, platform overview, and dark blue brand theme
 - [x] Require authentication before signed-out visitors can access application routes beyond the welcome and login flows
 - [x] Add focused coverage and browser validation for the signed-out welcome gate and login routing
+- [x] Add a concise first-sign-in Blue Blazer onboarding tour covering the core study and practice tools
+- [x] Persist onboarding completion or skip per user so returning users are not interrupted
+- [x] Add focused tests and browser validation for onboarding display, progression, and completion behavior

@@ -46,6 +46,7 @@ import Feedback from "./pages/Feedback";
 import StudyCards from "./pages/StudyCards";
 import BluesNews from "./pages/BluesNews";
 import { SignedOutWelcome } from "./components/SignedOutWelcome";
+import { FirstSignInTour } from "./components/FirstSignInTour";
 import Footer from "./components/Footer";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { shouldShowSignedOutWelcome } from "./lib/signedOutWelcome";
@@ -131,6 +132,7 @@ function App() {
               <Router />
               {user && <DirectMessagesPanel />}
               {user && <Footer />}
+              {user && <FirstSignInTour />}
             </>}
             </TooltipProvider>
           </SchoolCodeProvider>

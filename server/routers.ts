@@ -538,6 +538,21 @@ export const appRouter = router({
       }),
   }),
   preferences: router({
+    getOnboardingStatus: protectedProcedure.query(async ({ ctx }) => {
+      const database = await db.getDb();
+      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Onboarding storage is unavailable' });
+      const [user] = await database.select({ onboardingCompletedAt: users.onboardingCompletedAt })
+        .from(users).where(eq(users.id, ctx.user.id)).limit(1);
+      return { shouldShow: !user?.onboardingCompletedAt };
+    }),
+
+    completeOnboarding: protectedProcedure.mutation(async ({ ctx }) => {
+      const database = await db.getDb();
+      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Onboarding storage is unavailable' });
+      await database.update(users).set({ onboardingCompletedAt: new Date() }).where(eq(users.id, ctx.user.id));
+      return { success: true };
+    }),
+
     getNotificationPreferences: protectedProcedure.query(async ({ ctx }) => {
       const database = await db.getDb();
       if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Preferences storage is unavailable' });
