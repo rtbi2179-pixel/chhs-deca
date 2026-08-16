@@ -1660,7 +1660,13 @@ export const appRouter = router({
         
         // Market is closed on weekends (0 = Sunday, 6 = Saturday)
         if (dayOfWeek === 0 || dayOfWeek === 6) {
-          return { isOpen: false, reason: 'Market closed on weekends' };
+          return {
+            isOpen: false,
+            reason: 'Market closed on weekends',
+            currentTime: estTime.toLocaleTimeString('en-US', { timeZone: 'America/New_York' }),
+            marketOpenTime: '9:30 AM EST',
+            marketCloseTime: '4:00 PM EST',
+          };
         }
         
         // Market hours: 9:30 AM - 4:00 PM EST

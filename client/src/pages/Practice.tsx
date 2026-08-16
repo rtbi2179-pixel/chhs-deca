@@ -317,8 +317,6 @@ export default function Practice() {
                   aria-label={`Open ${cluster.label} practice question bank`}
                   className={`group relative min-h-[250px] overflow-hidden rounded-2xl border bg-slate-900/85 p-6 text-left text-white shadow-[0_12px_28px_oklch(0_0_0/0.23)] transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_20px_40px_oklch(0_0_0/0.32)] active:translate-y-0 ${cluster.ring}`}
                 >
-                  <div className="absolute inset-x-5 top-6 h-28 rounded-xl border border-white/[0.06] bg-slate-950/35 transition-transform duration-200 ease-out group-hover:-translate-y-1" />
-                  <div className={`absolute inset-x-4 top-4 h-28 rounded-xl border ${cluster.ring.split(' ')[0]} bg-slate-900/50 transition-transform duration-200 ease-out group-hover:-translate-y-2`} />
                   <div className="relative flex h-full min-h-[200px] flex-col justify-between">
                     <div className="flex items-start justify-between gap-5">
                       <div className={`flex h-11 w-11 items-center justify-center rounded-xl border ${cluster.icon}`}><Icon className="h-5 w-5" /></div>

@@ -519,3 +519,5 @@
 - [x] Validate the restored logo treatment with focused coverage and a signed-out browser review
 - [x] Remove the book-style background graphic from the welcome hero and show the actual Blue Blazer logo prominently
 - [x] Validate the corrected logo-only welcome hero with focused coverage and a signed-out browser review
+- [x] Remove the smaller inset outline from all Practice cluster cards while preserving their primary border and hover lift
+- [x] Add focused coverage and preview validation for the simplified Practice cluster-card treatment
