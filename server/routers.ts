@@ -1313,11 +1313,33 @@ export const appRouter = router({
         const [session] = await database.select().from(studySessions)
           .where(and(eq(studySessions.id, input.sessionId), eq(studySessions.userId, ctx.user.id))).limit(1);
         if (!session) throw new TRPCError({ code: 'NOT_FOUND', message: 'Mock exam not found' });
-        const rows = await database.select({ instructionalArea: questions.instructionalArea, performanceIndicatorFocus: questions.performanceIndicatorFocus, userAnswer: sessionQuestions.userAnswer, isCorrect: sessionQuestions.isCorrect })
+        const rows = await database.select({ questionId: questions.id, instructionalArea: questions.instructionalArea, performanceIndicatorFocus: questions.performanceIndicatorFocus, userAnswer: sessionQuestions.userAnswer, isCorrect: sessionQuestions.isCorrect })
           .from(sessionQuestions).innerJoin(questions, eq(sessionQuestions.questionId, questions.id))
           .where(eq(sessionQuestions.sessionId, input.sessionId));
         const answeredRows = rows.filter(row => row.userAnswer !== null);
-        return { session, ...analyzeMockExamResults(answeredRows.map(row => ({ ...row, isCorrect: Boolean(row.isCorrect) }))) };
+        const analysis = analyzeMockExamResults(answeredRows.map(row => ({ ...row, isCorrect: Boolean(row.isCorrect) })));
+        const piNames = analysis.underperformingPIs.map((pi) => pi.performanceIndicator);
+        const sessionQuestionIds = new Set(rows.map((row) => row.questionId));
+        const relatedQuestions = piNames.length && session.cluster
+          ? await database.select({
+            id: questions.id,
+            stem: questions.stem,
+            optionA: questions.optionA,
+            optionB: questions.optionB,
+            optionC: questions.optionC,
+            optionD: questions.optionD,
+            difficulty: questions.difficulty,
+            instructionalArea: questions.instructionalArea,
+            performanceIndicatorFocus: questions.performanceIndicatorFocus,
+          }).from(questions).where(and(eq(questions.cluster, session.cluster), inArray(questions.performanceIndicatorFocus, piNames)))
+          : [];
+        const studyGuide = analysis.underperformingPIs.map((pi) => ({
+          ...pi,
+          questions: relatedQuestions
+            .filter((question) => question.performanceIndicatorFocus === pi.performanceIndicator && !sessionQuestionIds.has(question.id))
+            .slice(0, 3),
+        })).filter((section) => section.questions.length > 0);
+        return { session, ...analysis, studyGuide };
       }),
     submitAnswer: protectedProcedure
       .input(z.object({ sessionId: z.number().int().positive(), questionId: z.string(), selectedAnswer: z.string().length(1) }))

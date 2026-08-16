@@ -521,3 +521,8 @@
 - [x] Validate the corrected logo-only welcome hero with focused coverage and a signed-out browser review
 - [x] Remove the smaller inset outline from all Practice cluster cards while preserving their primary border and hover lift
 - [x] Add focused coverage and preview validation for the simplified Practice cluster-card treatment
+- [x] Display all 100 generated Chapter Mock Exam questions with clear question navigation
+- [x] Show a transparent loading-progress indicator while a Chapter Mock Exam is prepared
+- [x] Report completed mock-exam accuracy by instructional area and its performance indicators
+- [x] Compile a targeted study guide from questions related to underperforming performance indicators
+- [x] Add focused tests and browser validation for complete mock exams, performance breakdowns, and study recommendations
