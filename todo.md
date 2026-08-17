@@ -526,3 +526,6 @@
 - [x] Report completed mock-exam accuracy by instructional area and its performance indicators
 - [x] Compile a targeted study guide from questions related to underperforming performance indicators
 - [x] Add focused tests and browser validation for complete mock exams, performance breakdowns, and study recommendations
+- [x] Audit the Blue Blazer source for every remaining Decademy button, link, and user-facing reference
+- [x] Remove all Decademy links and preserve the surrounding Blue Blazer layout
+- [x] Add focused coverage confirming no Decademy reference remains in user-facing source
