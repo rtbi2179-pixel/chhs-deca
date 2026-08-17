@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { and, asc, desc, eq, gte, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gte, inArray, sql } from "drizzle-orm";
 import { z } from "zod";
 import { protectedProcedure, router } from "./_core/trpc";
 import { ensureBbxSeeded, getDb, getOrCreateBbxAccount } from "./db";
@@ -9,6 +9,7 @@ import { advanceBbxSimulation, createBbxEvent } from "./bbxSimulation";
 const decimalQuantity = z.string().regex(/^\d+(\.\d{1,6})?$/, "Enter a valid quantity with up to six decimals.");
 const isAdmin = (role: string) => role === "super_admin";
 const number = (value: unknown) => Number(value ?? 0);
+const BLUE_NEWS_READ_REWARD = 25;
 
 async function getCompanyByTicker(ticker: string) {
   await ensureBbxSeeded();
@@ -48,7 +49,7 @@ export const bbxRouter = router({
     await ensureBbxSeeded();
     const db = await getDb();
     if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "BBX storage is unavailable" });
-    const { bbxCompanies, bbxMarketState, bbxNews } = await import("../drizzle/schema");
+    const { bbxCompanies, bbxEvents, bbxMarketState, bbxNews, bbxPriceHistory } = await import("../drizzle/schema");
     const state = await getState();
     const account = await getOrCreateBbxAccount(ctx.user.id);
     const companies = await db.select().from(bbxCompanies).where(eq(bbxCompanies.status, "active"));
@@ -58,7 +59,19 @@ export const bbxRouter = router({
       const entries = companies.filter((company) => company.sector === sector).map(serializeCompany);
       return { sector, changePercent: entries.reduce((sum, entry) => sum + entry.changePercent, 0) / Math.max(entries.length, 1), volatility: entries.reduce((sum, entry) => sum + entry.baseVolatility, 0) / Math.max(entries.length, 1) };
     });
-    return { state: { marketOpen: state.marketOpen, marketRegime: state.marketRegime, tickNumber: state.tickNumber, simulationTimestamp: state.simulationTimestamp, benchmarkLevel: number(state.benchmarkLevel), benchmarkChangePercent: ((number(state.benchmarkLevel) - number(state.previousBenchmarkLevel)) / Math.max(number(state.previousBenchmarkLevel), 0.01)) * 100 }, cash: number(account.cashBalance), companies: companies.map(serializeCompany), movers: { gainers: sorted.slice(0, 5), losers: sorted.slice(-5).reverse() }, sectors, news };
+    const historyRows = await db.select({ tickNumber: bbxPriceHistory.tickNumber, timestamp: bbxPriceHistory.simulationTimestamp, price: bbxPriceHistory.price, sector: bbxCompanies.sector })
+      .from(bbxPriceHistory).innerJoin(bbxCompanies, eq(bbxPriceHistory.companyId, bbxCompanies.id)).orderBy(desc(bbxPriceHistory.tickNumber)).limit(4800);
+    const buildPerformance = (rows: typeof historyRows) => {
+      const byTick = new Map<number, { total: number; count: number; timestamp: Date }>();
+      rows.forEach((row) => { const current = byTick.get(row.tickNumber) ?? { total: 0, count: 0, timestamp: row.timestamp }; current.total += number(row.price); current.count += 1; byTick.set(row.tickNumber, current); });
+      const averages = Array.from(byTick.entries()).sort(([left], [right]) => left - right).map(([tickNumber, value]) => ({ tickNumber, timestamp: value.timestamp, value: value.total / value.count }));
+      const base = averages[0]?.value ?? 1;
+      return averages.map((point) => ({ tickNumber: point.tickNumber, timestamp: point.timestamp, index: (point.value / Math.max(base, 0.01)) * 100, changePercent: ((point.value / Math.max(base, 0.01)) - 1) * 100 }));
+    };
+    const recentAffectedRows = await db.select({ sector: bbxEvents.sector, headline: bbxNews.headline, eventId: bbxEvents.id, publishedAt: bbxNews.publishedAt })
+      .from(bbxEvents).innerJoin(bbxNews, eq(bbxNews.eventId, bbxEvents.id)).where(sql`${bbxEvents.sector} IS NOT NULL`).orderBy(desc(bbxNews.publishedAt)).limit(12);
+    const affectedSectors = Array.from(new Map(recentAffectedRows.filter((row) => row.sector).map((row) => [row.sector!, row])).values()).slice(0, 3).map((event) => ({ sector: event.sector!, eventId: event.eventId, headline: event.headline, publishedAt: event.publishedAt, series: buildPerformance(historyRows.filter((row) => row.sector === event.sector)) }));
+    return { state: { marketOpen: state.marketOpen, marketRegime: state.marketRegime, tickNumber: state.tickNumber, simulationTimestamp: state.simulationTimestamp, benchmarkLevel: number(state.benchmarkLevel), benchmarkChangePercent: ((number(state.benchmarkLevel) - number(state.previousBenchmarkLevel)) / Math.max(number(state.previousBenchmarkLevel), 0.01)) * 100 }, cash: number(account.cashBalance), companies: companies.map(serializeCompany), movers: { gainers: sorted.slice(0, 5), losers: sorted.slice(-5).reverse() }, sectors, news, performance: { market: buildPerformance(historyRows), affectedSectors } };
   }),
 
   getQuote: protectedProcedure.input(z.object({ ticker: z.string().min(5).max(16) })).query(async ({ ctx, input }) => {
@@ -126,13 +139,27 @@ export const bbxRouter = router({
     await ensureBbxSeeded();
     const db = await getDb();
     if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "BBX storage is unavailable" });
-    const { bbxNews, bbxNewsReads } = await import("../drizzle/schema");
+    const { bbxAccounts, bbxLedger, bbxNews, bbxNewsReads } = await import("../drizzle/schema");
     const newsIds = input.markAll
       ? (await db.select({ id: bbxNews.id }).from(bbxNews)).map((article) => article.id)
       : [input.newsId!];
-    if (newsIds.length === 0) return { marked: 0 };
-    await db.insert(bbxNewsReads).values(newsIds.map((newsId) => ({ userId: ctx.user.id, newsId }))).onDuplicateKeyUpdate({ set: { newsId: sql`${bbxNewsReads.newsId}` } });
-    return { marked: newsIds.length };
+    if (newsIds.length === 0) return { marked: 0, rewarded: 0, rewardPerArticle: BLUE_NEWS_READ_REWARD };
+    await getOrCreateBbxAccount(ctx.user.id);
+    return db.transaction(async (tx) => {
+      const existing = await tx.select({ newsId: bbxNewsReads.newsId, rewardedAt: bbxNewsReads.rewardedAt }).from(bbxNewsReads).where(and(eq(bbxNewsReads.userId, ctx.user.id), inArray(bbxNewsReads.newsId, newsIds)));
+      const existingById = new Map(existing.map((row) => [row.newsId, row]));
+      const unreadIds = newsIds.filter((newsId) => !existingById.has(newsId));
+      if (unreadIds.length) await tx.insert(bbxNewsReads).values(unreadIds.map((newsId) => ({ userId: ctx.user.id, newsId, rewardedAt: new Date() })));
+      const legacyUnrewardedIds = existing.filter((row) => !row.rewardedAt).map((row) => row.newsId);
+      if (legacyUnrewardedIds.length) await tx.update(bbxNewsReads).set({ rewardedAt: new Date() }).where(and(eq(bbxNewsReads.userId, ctx.user.id), inArray(bbxNewsReads.newsId, legacyUnrewardedIds)));
+      const rewardCount = unreadIds.length + legacyUnrewardedIds.length;
+      if (!rewardCount) return { marked: 0, rewarded: 0, rewardPerArticle: BLUE_NEWS_READ_REWARD };
+      const [account] = await tx.select().from(bbxAccounts).where(eq(bbxAccounts.userId, ctx.user.id)).limit(1);
+      const nextBalance = number(account?.cashBalance) + rewardCount * BLUE_NEWS_READ_REWARD;
+      await tx.update(bbxAccounts).set({ cashBalance: nextBalance.toFixed(4) }).where(eq(bbxAccounts.userId, ctx.user.id));
+      await tx.insert(bbxLedger).values({ userId: ctx.user.id, amount: String(rewardCount * BLUE_NEWS_READ_REWARD), balanceAfter: nextBalance.toFixed(4), reason: "news_read_reward" });
+      return { marked: unreadIds.length, rewarded: rewardCount * BLUE_NEWS_READ_REWARD, rewardPerArticle: BLUE_NEWS_READ_REWARD };
+    });
   }),
 
   getPortfolio: protectedProcedure.query(async ({ ctx }) => {

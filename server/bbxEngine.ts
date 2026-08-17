@@ -1,5 +1,7 @@
 export type BbxRegime = "bull" | "neutral" | "bear" | "high_volatility";
 export type BbxSeverity = "low" | "medium" | "high" | "severe";
+export const BBX_TARGET_MONTHLY_GROWTH = 0.10;
+export const BBX_TARGET_ANNUAL_LOG_DRIFT = 12 * Math.log1p(BBX_TARGET_MONTHLY_GROWTH);
 
 export class SeededRng {
   private state: number;
@@ -31,10 +33,10 @@ export const sampleMagnitude = (range: readonly number[], rng: SeededRng) => {
 };
 
 export function regimeParams(regime: BbxRegime) {
-  if (regime === "bull") return { marketDrift: 0.1, marketVolatility: 0.14, correlationBoost: 0.95, meanReversion: 1.5 };
-  if (regime === "bear") return { marketDrift: -0.1, marketVolatility: 0.24, correlationBoost: 1.15, meanReversion: 1.1 };
-  if (regime === "high_volatility") return { marketDrift: 0, marketVolatility: 0.34, correlationBoost: 1.3, meanReversion: 0.75 };
-  return { marketDrift: 0.06, marketVolatility: 0.18, correlationBoost: 1, meanReversion: 1.5 };
+  if (regime === "bull") return { marketDrift: BBX_TARGET_ANNUAL_LOG_DRIFT * 1.35, marketVolatility: 0.14, correlationBoost: 0.95, meanReversion: 1.5 };
+  if (regime === "bear") return { marketDrift: BBX_TARGET_ANNUAL_LOG_DRIFT * 0.45, marketVolatility: 0.24, correlationBoost: 1.15, meanReversion: 1.1 };
+  if (regime === "high_volatility") return { marketDrift: BBX_TARGET_ANNUAL_LOG_DRIFT * 0.75, marketVolatility: 0.34, correlationBoost: 1.3, meanReversion: 0.75 };
+  return { marketDrift: BBX_TARGET_ANNUAL_LOG_DRIFT, marketVolatility: 0.18, correlationBoost: 1, meanReversion: 1.5 };
 }
 
 export function benchmarkLogReturn(regime: BbxRegime, dtYears: number, rng: SeededRng) {

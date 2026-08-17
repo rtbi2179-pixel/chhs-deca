@@ -1186,6 +1186,7 @@ export const bbxNewsReads = mysqlTable("bbxNewsReads", {
   userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
   newsId: int("newsId").notNull().references(() => bbxNews.id, { onDelete: "cascade" }),
   readAt: timestamp("readAt").defaultNow().notNull(),
+  rewardedAt: timestamp("rewardedAt"),
 }, (table) => ({
   userNewsUnique: uniqueIndex("bbx_news_read_user_news_unique").on(table.userId, table.newsId),
   userReadIndex: index("bbx_news_read_user_read_idx").on(table.userId, table.readAt),
@@ -1248,7 +1249,7 @@ export const bbxLedger = mysqlTable("bbxLedger", {
   orderId: int("orderId").references(() => bbxOrders.id, { onDelete: "set null" }),
   amount: decimal("amount", { precision: 20, scale: 4 }).notNull(),
   balanceAfter: decimal("balanceAfter", { precision: 20, scale: 4 }).notNull(),
-  reason: mysqlEnum("reason", ["initial_grant", "trade_buy", "trade_sell", "reset"]).notNull(),
+  reason: mysqlEnum("reason", ["initial_grant", "trade_buy", "trade_sell", "news_read_reward", "reset"]).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 }, (table) => ({ userTimeIndex: index("bbx_ledger_user_time_idx").on(table.userId, table.createdAt) }));
 

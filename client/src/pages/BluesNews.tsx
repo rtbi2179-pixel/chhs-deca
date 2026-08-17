@@ -19,16 +19,17 @@ export default function BluesNews() {
   const utils = trpc.useUtils();
   const news = trpc.bbx.getBluesNews.useQuery({ limit: 25 });
   const markRead = trpc.bbx.markNewsRead.useMutation({
-    onSuccess: async () => {
+    onSuccess: async (result) => {
       await Promise.all([utils.bbx.getBluesNews.invalidate(), utils.bbx.getUnreadNewsCount.invalidate()]);
+      if (result.rewarded > 0) toast.success(`+${result.rewarded} BBX BlueBucks for reading Blue’s News.`);
     },
     onError: (error) => toast.error(error.message || "Unable to update the article read state."),
   });
 
   const markAll = async () => {
     try {
-      await markRead.mutateAsync({ markAll: true });
-      toast.success("All Blue’s News articles are marked as read.");
+      const result = await markRead.mutateAsync({ markAll: true });
+      if (result.rewarded === 0) toast.success("All Blue’s News articles are marked as read.");
     } catch {
       // The mutation's configured error handler provides the user-facing message.
     }

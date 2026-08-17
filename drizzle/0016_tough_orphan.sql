@@ -1,0 +1,2 @@
+ALTER TABLE `bbxLedger` MODIFY COLUMN `reason` enum('initial_grant','trade_buy','trade_sell','news_read_reward','reset') NOT NULL;--> statement-breakpoint
+ALTER TABLE `bbxNewsReads` ADD `rewardedAt` timestamp;

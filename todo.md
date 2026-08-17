@@ -540,3 +540,7 @@
 - [x] Display individual mock-exam history beside assessment options with date and total accuracy
 - [x] Show each historical exam’s PI accuracy and targeted study-guide recommendations on demand
 - [x] Add focused history, result-detail, and interface regression coverage
+- [x] Add BBX market-wide and news-affected sector performance graph data and interface
+- [x] Calibrate fictional BBX long-run monthly growth toward a 10% average target
+- [x] Reward members once for reading each Blue’s News item with server-authoritative tracking
+- [x] Add focused simulation, graph-data, and news-reading reward regression coverage

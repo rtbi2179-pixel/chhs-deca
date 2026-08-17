@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { SeededRng, cumulativeEventTickLogReturn, executionPrice, fallbackNews, priceTick, slippagePct, spreadPct } from "./bbxEngine";
+import { BBX_TARGET_ANNUAL_LOG_DRIFT, BBX_TARGET_MONTHLY_GROWTH, SeededRng, cumulativeEventTickLogReturn, executionPrice, fallbackNews, priceTick, regimeParams, slippagePct, spreadPct } from "./bbxEngine";
 
 describe("BBX deterministic market engine", () => {
   it("distributes an event target cumulatively instead of compounding it each tick", () => {
@@ -33,5 +33,11 @@ describe("BBX deterministic market engine", () => {
   it("labels fallback financial news as simulated and fictional", () => {
     const news = fallbackNews({ companyName: "NovaGrid Systems", ticker: "BBX:NVG1", sector: "Technology", scope: "company", headlineTemplate: "{company} reports fictional update", explanationTemplate: "The simulated update affects expectations.", facts: ["Simulated EPS beat the fictional expectation."] });
     expect(news.headline).toMatch(/^SIMULATED:/); expect(news.body).toContain("fictional BBX event");
+  });
+
+  it("uses a neutral fictional benchmark drift calibrated to the stated 10% monthly target", () => {
+    expect(BBX_TARGET_MONTHLY_GROWTH).toBe(0.10);
+    expect(Math.expm1(BBX_TARGET_ANNUAL_LOG_DRIFT / 12)).toBeCloseTo(0.10, 10);
+    expect(regimeParams("neutral").marketDrift).toBe(BBX_TARGET_ANNUAL_LOG_DRIFT);
   });
 });

@@ -6,6 +6,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
+import { BbxPerformanceGraphs } from "@/components/BbxPerformanceGraphs";
 
 const bb = (value: number) => `${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BB`;
 const pct = (value: number) => `${value >= 0 ? "+" : ""}${value.toFixed(2)}%`;
@@ -63,6 +64,8 @@ export default function BlueMarket() {
         <Card className="editorial-panel p-5"><p className="data-label">Market regime</p><p className="mt-3 text-2xl font-semibold capitalize text-foreground">{data.state.marketRegime.replace("_", " ")}</p><p className="mt-1 text-xs text-foreground/55">Structured events drive the largest moves</p></Card>
         <Card className="editorial-panel p-5"><p className="data-label">Simulation state</p><p className={`mt-3 text-2xl font-semibold ${data.state.marketOpen ? "text-emerald-300" : "text-amber-300"}`}>{data.state.marketOpen ? "Open" : "Paused"}</p><p className="mt-1 text-xs text-foreground/55">Tick {data.state.tickNumber} · server-authoritative</p></Card>
       </section>
+
+      <BbxPerformanceGraphs performance={data.performance} />
 
       <section className="mt-8 grid gap-6 xl:grid-cols-[1.45fr_0.85fr]">
         <Card className="editorial-panel overflow-hidden p-0"><div className="border-b border-white/10 px-6 py-5"><h2 className="section-heading">Fictional company listings</h2><p className="mt-1 text-sm text-foreground/60">Displayed prices are BBX simulation marks. Final fills include a small, disclosed simulated spread and slippage.</p></div><div className="divide-y divide-white/8">{companies.map((company) => <div key={company.ticker} className="grid gap-3 px-6 py-4 sm:grid-cols-[1.2fr_0.65fr_0.75fr_auto] sm:items-center"><button className="min-w-0 text-left" onClick={() => setLocation(`/market/${company.ticker}`)}><p className="font-semibold text-foreground">{company.ticker}</p><p className="truncate text-sm text-foreground/60">{company.companyName} · {company.sector}</p></button><div><p className="font-semibold text-foreground">{bb(company.price)}</p><Change value={company.changePercent} /></div><span className="w-fit rounded-full border border-white/10 bg-white/[0.035] px-2 py-1 text-xs text-foreground/65">{company.status}</span><div className="flex gap-2"><Button size="sm" onClick={() => { setTrade({ ticker: company.ticker, side: "buy", price: company.price }); setQuantity("1"); }}>Buy</Button><Button size="sm" variant="outline" onClick={() => { setTrade({ ticker: company.ticker, side: "sell", price: company.price }); setQuantity("1"); }}>Sell</Button></div></div>)}</div></Card>
