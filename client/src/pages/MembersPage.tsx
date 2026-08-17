@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/card';
 import { Users, Search, ChevronRight } from 'lucide-react';
 import { useLocation } from 'wouter';
 import MemberDetailPanel from '@/components/MemberDetailPanel';
+import { ChapterExamAdminControls } from '@/components/ChapterExamAdminControls';
 
 export default function MembersPage() {
   const { user } = useAuth();
@@ -104,6 +105,7 @@ export default function MembersPage() {
         </div>
 
         {/* Search */}
+        <ChapterExamAdminControls />
         <div className="bg-slate-800 rounded-lg border border-slate-700 p-6 mb-6">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-3 w-5 h-5 text-gray-500" />

@@ -75,9 +75,9 @@ describe("cluster-focused Chapter Mock Exams", () => {
     if (userId) await database.delete(users).where(eq(users.id, userId));
   });
 
-  it("persists a 100-question session using only unanswered questions in the selected cluster", async () => {
+  it("persists a 100-question individual session using only unanswered questions in the selected cluster", async () => {
     const caller = appRouter.createCaller(context(testUser()));
-    const created = await caller.mockExams.createChapterMock({ cluster: "Marketing" });
+    const created = await caller.mockExams.createIndividualMock({ cluster: "Marketing" });
     sessionId = created.sessionId;
 
     expect(created).toMatchObject({ cluster: "Marketing", totalQuestions: 100, difficultyPlan: { easy: 25, medium: 50, hard: 25 } });

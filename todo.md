@@ -529,3 +529,10 @@
 - [x] Audit the Blue Blazer source for every remaining Decademy button, link, and user-facing reference
 - [x] Remove all Decademy links and preserve the surrounding Blue Blazer layout
 - [x] Add focused coverage confirming no Decademy reference remains in user-facing source
+- [x] Separate always-available individual mock exams from administrator-permitted chapter mock exams
+- [x] Persist chapter-exam controls for permission, question count, extra time, score visibility, and availability windows
+- [x] Enforce chapter-exam availability and configuration server-side while preserving individual exam access at any time
+- [x] Record chapter-exam scores with completion dates in member management
+- [x] Flag rapid-answer and tab-visibility activity during chapter exams for administrator review
+- [x] Build administrator controls and member-facing chapter-exam states for the two-mode workflow
+- [x] Add focused authorization, availability, monitoring, score-record, and interface regression coverage

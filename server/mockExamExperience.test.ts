@@ -17,10 +17,10 @@ describe("Chapter Mock Exam enhanced experience", () => {
 
   it("communicates preparation progress while the complete question set is created", () => {
     const page = mockExamPage();
-    expect(page).toContain("Preparing your 100-question exam");
+    expect(page).toContain("Preparing your {preparationCount");
     expect(page).toContain("Question set preparation");
     expect(page).toContain("setPreparationProgress");
-    expect(page).toContain("The exam opens once the complete, balanced 100-question session is ready.");
+    expect(page).toContain("The exam opens only after the complete, balanced question set is ready.");
   });
 
   it("shows hierarchical concept and PI results plus the targeted study guide", () => {
@@ -37,6 +37,6 @@ describe("Chapter Mock Exam enhanced experience", () => {
     expect(router).toContain("eq(questions.cluster, session.cluster)");
     expect(router).toContain("inArray(questions.performanceIndicatorFocus, piNames)");
     expect(router).toContain("!sessionQuestionIds.has(question.id)");
-    expect(router).toContain("return { session, ...analysis, studyGuide }");
+    expect(router).toContain("buildMockExamResults");
   });
 });

@@ -168,6 +168,75 @@ export const sessionQuestions = mysqlTable("sessionQuestions", {
 });
 export type SessionQuestion = typeof sessionQuestions.$inferSelect;
 export type InsertSessionQuestion = typeof sessionQuestions.$inferInsert;
+
+/**
+ * One administrator-managed chapter-exam policy per chapter. Individual mock
+ * exams remain independent of this table and are always available to members.
+ */
+export const chapterExamConfigs = mysqlTable("chapterExamConfigs", {
+  id: int("id").autoincrement().primaryKey(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  isEnabled: boolean("isEnabled").default(false).notNull(),
+  cluster: varchar("cluster", { length: 255 }).notNull().default("Marketing"),
+  questionCount: int("questionCount").default(100).notNull(),
+  extraTimeMinutes: int("extraTimeMinutes").default(0).notNull(),
+  scoreVisible: boolean("scoreVisible").default(true).notNull(),
+  availableFrom: timestamp("availableFrom"),
+  availableUntil: timestamp("availableUntil"),
+  createdBy: int("createdBy"),
+  updatedBy: int("updatedBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  oneConfigPerSchool: uniqueIndex("chapter_exam_config_school_unique").on(table.schoolCode),
+}));
+export type ChapterExamConfig = typeof chapterExamConfigs.$inferSelect;
+export type InsertChapterExamConfig = typeof chapterExamConfigs.$inferInsert;
+
+/**
+ * A scored, time-bounded member attempt attached to a specific chapter-exam
+ * configuration. Score visibility is snapshotted to preserve the policy that
+ * applied when the member began the assessment.
+ */
+export const chapterExamAttempts = mysqlTable("chapterExamAttempts", {
+  id: int("id").autoincrement().primaryKey(),
+  configId: int("configId").notNull(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  userId: int("userId").notNull(),
+  sessionId: int("sessionId").notNull(),
+  cluster: varchar("cluster", { length: 255 }).notNull(),
+  questionCount: int("questionCount").notNull(),
+  scoreVisible: boolean("scoreVisible").notNull(),
+  startedAt: timestamp("startedAt").defaultNow().notNull(),
+  expiresAt: timestamp("expiresAt").notNull(),
+  completedAt: timestamp("completedAt"),
+  score: int("score"),
+  accuracy: int("accuracy"),
+  suspiciousActivityCount: int("suspiciousActivityCount").default(0).notNull(),
+}, (table) => ({
+  oneAttemptPerMemberExam: uniqueIndex("chapter_exam_attempt_member_config_unique").on(table.configId, table.userId),
+  memberRecords: index("chapter_exam_attempt_member_idx").on(table.schoolCode, table.userId, table.completedAt),
+}));
+export type ChapterExamAttempt = typeof chapterExamAttempts.$inferSelect;
+export type InsertChapterExamAttempt = typeof chapterExamAttempts.$inferInsert;
+
+/**
+ * Audit events help chapter staff review potentially irregular behavior. A
+ * flag is evidence for review, not an automatic misconduct determination.
+ */
+export const chapterExamActivity = mysqlTable("chapterExamActivity", {
+  id: int("id").autoincrement().primaryKey(),
+  attemptId: int("attemptId").notNull(),
+  userId: int("userId").notNull(),
+  eventType: mysqlEnum("eventType", ["rapid_answer", "tab_hidden"]).notNull(),
+  questionId: varchar("questionId", { length: 50 }),
+  elapsedSeconds: int("elapsedSeconds"),
+  occurredAt: timestamp("occurredAt").defaultNow().notNull(),
+}, (table) => ({
+  attemptActivity: index("chapter_exam_activity_attempt_idx").on(table.attemptId, table.occurredAt),
+}));
+export type ChapterExamActivity = typeof chapterExamActivity.$inferSelect;
+export type InsertChapterExamActivity = typeof chapterExamActivity.$inferInsert;
 /**
  * Leaderboard data (aggregated performance metrics)
  */

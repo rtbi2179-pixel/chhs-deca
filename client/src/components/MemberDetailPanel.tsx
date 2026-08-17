@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Card } from '@/components/ui/card';
-import { X, Mail, FileText, MessageSquare, Plus, Trash2 } from 'lucide-react';
+import { X, Mail, FileText, MessageSquare, Plus, Trash2, ClipboardCheck, ShieldAlert } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface MemberDetailPanelProps {
@@ -16,7 +16,7 @@ interface MemberDetailPanelProps {
 
 export default function MemberDetailPanel({ member, isOpen, onClose }: MemberDetailPanelProps) {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<'profile' | 'portfolio' | 'notes' | 'messages'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'portfolio' | 'exams' | 'notes' | 'messages'>('profile');
   const [adminNote, setAdminNote] = useState('');
   const [messageBody, setMessageBody] = useState('');
 
@@ -33,6 +33,10 @@ export default function MemberDetailPanel({ member, isOpen, onClose }: MemberDet
   const { data: messages = [] } = trpc.members.getMessages.useQuery(
     { otherUserId: member.id },
     { enabled: isOpen }
+  );
+  const { data: chapterExamRecords = [] } = trpc.mockExams.getMemberChapterRecords.useQuery(
+    { memberId: member.id },
+    { enabled: isOpen && (user?.role === 'admin' || user?.role === 'super_admin') }
   );
 
   const createNoteMutation = trpc.members.createAdminNote.useMutation({
@@ -80,7 +84,7 @@ export default function MemberDetailPanel({ member, isOpen, onClose }: MemberDet
 
         {/* Tabs */}
         <div className="flex gap-2 border-b border-slate-700 mb-6">
-          {['profile', 'portfolio', 'notes', 'messages'].map((tab) => (
+          {['profile', 'portfolio', 'exams', 'notes', 'messages'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab as any)}
@@ -156,6 +160,17 @@ export default function MemberDetailPanel({ member, isOpen, onClose }: MemberDet
                 </Card>
               ))
             )}
+          </div>
+        )}
+
+        {activeTab === 'exams' && (user?.role === 'admin' || user?.role === 'super_admin') && (
+          <div className="space-y-3">
+            {chapterExamRecords.length === 0 ? <p className="py-8 text-center text-gray-400">No chapter mock exams recorded for this member.</p> : chapterExamRecords.map((record: any) => (
+              <Card key={record.id} className="border-slate-600 bg-slate-700 p-4">
+                <div className="flex flex-wrap items-start justify-between gap-3"><div><div className="flex items-center gap-2 text-white"><ClipboardCheck className="h-4 w-4 text-blue-300" /><span className="font-semibold">{record.cluster} chapter exam</span></div><p className="mt-1 text-sm text-gray-400">Taken {record.completedAt ? new Date(record.completedAt).toLocaleString() : `Started ${new Date(record.startedAt).toLocaleString()}`} · {record.questionCount} questions</p></div><div className="text-right"><p className="font-mono text-lg font-semibold text-white">{record.score ?? '—'}{record.score !== null ? ` / ${record.questionCount}` : ''}</p><p className="text-xs text-gray-400">{record.accuracy ?? 'Pending'}{record.accuracy !== null ? '% accuracy' : ''}</p></div></div>
+                {record.suspiciousActivityCount > 0 && <p className="mt-3 flex items-center gap-2 rounded-md border border-amber-400/25 bg-amber-500/10 px-3 py-2 text-xs text-amber-100"><ShieldAlert className="h-4 w-4" />{record.suspiciousActivityCount} activity flag{record.suspiciousActivityCount === 1 ? '' : 's'} for review</p>}
+              </Card>
+            ))}
           </div>
         )}
 

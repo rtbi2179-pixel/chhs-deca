@@ -7,6 +7,7 @@ import { TRPCError } from '@trpc/server';
 import { selectClusterMockExam } from './mockExamSelection';
 import { analyzeMockExamResults } from './mockExamAnalysis';
 import { calculateMockExamProgress } from './mockExamProgress';
+import { CHAPTER_EXAM_CLUSTERS, CHAPTER_EXAM_QUESTION_COUNTS, getChapterExamAvailability, getChapterExamExpiresAt, isRapidChapterExamAnswer } from './chapterExam';
 import { createAdministratorActivityRecord } from './adminActivity';
 import { z } from "zod";
 import * as db from "./db";
@@ -19,10 +20,73 @@ import { calculateMonetaryPressure, calculateBlueBucksInflationIndex } from "./e
 import { calculateStudyCardQuestionReward, getMaverickDailyFocus, STUDY_CARD_CATALOG, STUDY_CARD_KEYS, type StudyCardKey } from "./studyCardEngine";
 
 import { initializeBanksForSchool, getBanksForSchool, getCreditCardsForBank } from './bankInitializer';
-import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback, notificationPreferences, userProfileSettings, adminActivityLogs, studySessions, sessionQuestions, stocks, userPiProgress } from "../drizzle/schema";
+import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback, notificationPreferences, userProfileSettings, adminActivityLogs, studySessions, sessionQuestions, stocks, userPiProgress, chapterExamConfigs, chapterExamAttempts, chapterExamActivity } from "../drizzle/schema";
 import { and, eq, sql, inArray, desc, asc, lte, gte } from "drizzle-orm";
 import { piLearningRouter } from "./piLearningRouter";
 import { bbxRouter } from "./bbxRouter";
+
+const mockExamClusterSchema = z.enum(CHAPTER_EXAM_CLUSTERS);
+const chapterExamQuestionCountSchema = z.union(CHAPTER_EXAM_QUESTION_COUNTS.map((count) => z.literal(count)) as [z.ZodLiteral<25>, z.ZodLiteral<50>, z.ZodLiteral<75>, z.ZodLiteral<100>]);
+
+function getMockExamSchoolCode(user: { role: string; schoolCode?: string | null; selectedSchoolCode?: string | null }) {
+  return user.role === "super_admin" ? user.selectedSchoolCode || user.schoolCode : user.schoolCode;
+}
+
+function assertMockExamAdmin(user: { role: string }) {
+  if (user.role !== "admin" && user.role !== "super_admin") {
+    throw new TRPCError({ code: "FORBIDDEN", message: "Only chapter administrators can manage chapter mock exams." });
+  }
+}
+
+async function buildIndividualMockExam(userId: number, cluster: (typeof CHAPTER_EXAM_CLUSTERS)[number], count = 100, sessionTitle = "Individual Mock Exam") {
+  const database = await db.getDb();
+  if (!database) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Question bank is unavailable" });
+  const answeredIds = new Set(await db.getUserAnsweredQuestions(userId));
+  const unansweredBank = (await database.select().from(questions)).filter(question => !answeredIds.has(question.id));
+  const selected = selectClusterMockExam(unansweredBank, cluster, count);
+  if (selected.length < count) {
+    throw new TRPCError({ code: "PRECONDITION_FAILED", message: `A ${count}-question ${cluster} mock exam needs ${count} unanswered questions in that cluster; ${selected.length} are currently available.` });
+  }
+  const session = await db.createStudySession(userId, `${sessionTitle} — ${cluster}`, selected.map(question => question.id), cluster);
+  return {
+    sessionId: Number(session[0].insertId),
+    mode: "individual" as const,
+    cluster,
+    totalQuestions: count,
+    difficultyPlan: { easy: selected.filter(question => question.difficulty === 'Easy').length, medium: selected.filter(question => question.difficulty === 'Medium').length, hard: selected.filter(question => question.difficulty === 'Hard').length },
+    questions: selected.map(({ correctAnswer, rationale, distractorRationaleA, distractorRationaleB, distractorRationaleC, distractorRationaleD, ...question }) => question),
+  };
+}
+
+async function buildMockExamResults(database: any, session: typeof studySessions.$inferSelect) {
+  const rows = await database.select({ questionId: questions.id, instructionalArea: questions.instructionalArea, performanceIndicatorFocus: questions.performanceIndicatorFocus, userAnswer: sessionQuestions.userAnswer, isCorrect: sessionQuestions.isCorrect })
+    .from(sessionQuestions).innerJoin(questions, eq(sessionQuestions.questionId, questions.id))
+    .where(eq(sessionQuestions.sessionId, session.id));
+  const answeredRows = rows.filter((row: { userAnswer: string | null }) => row.userAnswer !== null);
+  const analysis = analyzeMockExamResults(answeredRows.map((row: any) => ({ ...row, isCorrect: Boolean(row.isCorrect) })));
+  const piNames = analysis.underperformingPIs.map((pi) => pi.performanceIndicator);
+  const sessionQuestionIds = new Set(rows.map((row: { questionId: string }) => row.questionId));
+  const relatedQuestions = piNames.length && session.cluster
+    ? await database.select({
+      id: questions.id,
+      stem: questions.stem,
+      optionA: questions.optionA,
+      optionB: questions.optionB,
+      optionC: questions.optionC,
+      optionD: questions.optionD,
+      difficulty: questions.difficulty,
+      instructionalArea: questions.instructionalArea,
+      performanceIndicatorFocus: questions.performanceIndicatorFocus,
+    }).from(questions).where(and(eq(questions.cluster, session.cluster), inArray(questions.performanceIndicatorFocus, piNames)))
+    : [];
+  const studyGuide = analysis.underperformingPIs.map((pi) => ({
+    ...pi,
+    questions: relatedQuestions
+      .filter((question: { performanceIndicatorFocus: string | null; id: string }) => question.performanceIndicatorFocus === pi.performanceIndicator && !sessionQuestionIds.has(question.id))
+      .slice(0, 3),
+  })).filter((section) => section.questions.length > 0);
+  return { ...analysis, studyGuide };
+}
 
 
 export const announcementsRouter = router({
@@ -1285,26 +1349,86 @@ export const appRouter = router({
   }),
 
   mockExams: router({
-    createChapterMock: protectedProcedure
-      .input(z.object({ cluster: z.enum(['Marketing', 'Business Management & Administration', 'Finance', 'Hospitality & Tourism']) }))
+    getChapterAvailability: protectedProcedure
+      .query(async ({ ctx }) => {
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Chapter exam settings are unavailable" });
+        const schoolCode = getMockExamSchoolCode(ctx.user);
+        if (!schoolCode) return { isAvailable: false, reason: "A chapter code is required before a chapter mock exam can be assigned.", config: null };
+        const [config] = await database.select().from(chapterExamConfigs).where(eq(chapterExamConfigs.schoolCode, schoolCode)).limit(1);
+        return { ...getChapterExamAvailability(config), config: config ?? null };
+      }),
+    getChapterConfig: protectedProcedure
+      .query(async ({ ctx }) => {
+        assertMockExamAdmin(ctx.user);
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Chapter exam settings are unavailable" });
+        const schoolCode = getMockExamSchoolCode(ctx.user);
+        if (!schoolCode) throw new TRPCError({ code: "BAD_REQUEST", message: "A chapter code is required" });
+        const [config] = await database.select().from(chapterExamConfigs).where(eq(chapterExamConfigs.schoolCode, schoolCode)).limit(1);
+        return config ?? null;
+      }),
+    updateChapterConfig: protectedProcedure
+      .input(z.object({
+        isEnabled: z.boolean(),
+        cluster: mockExamClusterSchema,
+        questionCount: chapterExamQuestionCountSchema,
+        extraTimeMinutes: z.number().int().min(0).max(120),
+        scoreVisible: z.boolean(),
+        availableFrom: z.date().nullable(),
+        availableUntil: z.date().nullable(),
+      }).refine((input) => !input.availableFrom || !input.availableUntil || input.availableUntil > input.availableFrom, {
+        message: "The close time must be after the open time.",
+        path: ["availableUntil"],
+      }))
       .mutation(async ({ ctx, input }) => {
-      const database = await db.getDb();
-      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Question bank is unavailable' });
-      const answeredIds = new Set(await db.getUserAnsweredQuestions(ctx.user.id));
-      const unansweredBank = (await database.select().from(questions)).filter(question => !answeredIds.has(question.id));
-      const selected = selectClusterMockExam(unansweredBank, input.cluster, 100);
-      if (selected.length < 100) {
-        throw new TRPCError({ code: 'PRECONDITION_FAILED', message: `A 100-question ${input.cluster} mock exam needs 100 unanswered questions in that cluster; ${selected.length} are currently available.` });
-      }
-      const session = await db.createStudySession(ctx.user.id, `Chapter Mock Exam — ${input.cluster}`, selected.map(question => question.id), input.cluster);
-      return {
-        sessionId: Number(session[0].insertId),
-        cluster: input.cluster,
-        totalQuestions: 100,
-        difficultyPlan: { easy: selected.filter(question => question.difficulty === 'Easy').length, medium: selected.filter(question => question.difficulty === 'Medium').length, hard: selected.filter(question => question.difficulty === 'Hard').length },
-        questions: selected.map(({ correctAnswer, rationale, distractorRationaleA, distractorRationaleB, distractorRationaleC, distractorRationaleD, ...question }) => question),
-      };
-    }),
+        assertMockExamAdmin(ctx.user);
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Chapter exam settings are unavailable" });
+        const schoolCode = getMockExamSchoolCode(ctx.user);
+        if (!schoolCode) throw new TRPCError({ code: "BAD_REQUEST", message: "A chapter code is required" });
+        const [existing] = await database.select({ id: chapterExamConfigs.id }).from(chapterExamConfigs).where(eq(chapterExamConfigs.schoolCode, schoolCode)).limit(1);
+        const values = { ...input, schoolCode, updatedBy: ctx.user.id };
+        if (existing) {
+          await database.update(chapterExamConfigs).set(values).where(eq(chapterExamConfigs.id, existing.id));
+        } else {
+          await database.insert(chapterExamConfigs).values({ ...values, createdBy: ctx.user.id });
+        }
+        const [config] = await database.select().from(chapterExamConfigs).where(eq(chapterExamConfigs.schoolCode, schoolCode)).limit(1);
+        return config!;
+      }),
+    createIndividualMock: protectedProcedure
+      .input(z.object({ cluster: mockExamClusterSchema }))
+      .mutation(async ({ ctx, input }) => buildIndividualMockExam(ctx.user.id, input.cluster, 100)),
+    createChapterMock: protectedProcedure
+      .input(z.object({}))
+      .mutation(async ({ ctx, input }) => {
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Chapter exam settings are unavailable" });
+        const schoolCode = getMockExamSchoolCode(ctx.user);
+        if (!schoolCode) throw new TRPCError({ code: "BAD_REQUEST", message: "A chapter code is required before a chapter mock exam can be assigned." });
+        const [config] = await database.select().from(chapterExamConfigs).where(eq(chapterExamConfigs.schoolCode, schoolCode)).limit(1);
+        const availability = getChapterExamAvailability(config);
+        if (!availability.isAvailable || !config) throw new TRPCError({ code: "PRECONDITION_FAILED", message: availability.reason });
+        const [previousAttempt] = await database.select({ id: chapterExamAttempts.id }).from(chapterExamAttempts)
+          .where(and(eq(chapterExamAttempts.configId, config.id), eq(chapterExamAttempts.userId, ctx.user.id))).limit(1);
+        if (previousAttempt) throw new TRPCError({ code: "CONFLICT", message: "You have already started this chapter mock exam. Ask a chapter administrator if you need assistance." });
+        const startedAt = new Date();
+        const exam = await buildIndividualMockExam(ctx.user.id, config.cluster as (typeof CHAPTER_EXAM_CLUSTERS)[number], config.questionCount, "Chapter Mock Exam");
+        const expiresAt = getChapterExamExpiresAt(startedAt, config.questionCount, config.extraTimeMinutes);
+        const insertedAttempt = await database.insert(chapterExamAttempts).values({
+          configId: config.id,
+          schoolCode,
+          userId: ctx.user.id,
+          sessionId: exam.sessionId,
+          cluster: config.cluster,
+          questionCount: config.questionCount,
+          scoreVisible: config.scoreVisible,
+          startedAt,
+          expiresAt,
+        });
+        return { ...exam, mode: "chapter" as const, attemptId: Number(insertedAttempt[0].insertId), expiresAt, scoreVisible: config.scoreVisible };
+      }),
     getResults: protectedProcedure
       .input(z.object({ sessionId: z.number().int().positive() }))
       .query(async ({ ctx, input }) => {
@@ -1313,56 +1437,110 @@ export const appRouter = router({
         const [session] = await database.select().from(studySessions)
           .where(and(eq(studySessions.id, input.sessionId), eq(studySessions.userId, ctx.user.id))).limit(1);
         if (!session) throw new TRPCError({ code: 'NOT_FOUND', message: 'Mock exam not found' });
-        const rows = await database.select({ questionId: questions.id, instructionalArea: questions.instructionalArea, performanceIndicatorFocus: questions.performanceIndicatorFocus, userAnswer: sessionQuestions.userAnswer, isCorrect: sessionQuestions.isCorrect })
-          .from(sessionQuestions).innerJoin(questions, eq(sessionQuestions.questionId, questions.id))
-          .where(eq(sessionQuestions.sessionId, input.sessionId));
-        const answeredRows = rows.filter(row => row.userAnswer !== null);
-        const analysis = analyzeMockExamResults(answeredRows.map(row => ({ ...row, isCorrect: Boolean(row.isCorrect) })));
-        const piNames = analysis.underperformingPIs.map((pi) => pi.performanceIndicator);
-        const sessionQuestionIds = new Set(rows.map((row) => row.questionId));
-        const relatedQuestions = piNames.length && session.cluster
-          ? await database.select({
-            id: questions.id,
-            stem: questions.stem,
-            optionA: questions.optionA,
-            optionB: questions.optionB,
-            optionC: questions.optionC,
-            optionD: questions.optionD,
-            difficulty: questions.difficulty,
-            instructionalArea: questions.instructionalArea,
-            performanceIndicatorFocus: questions.performanceIndicatorFocus,
-          }).from(questions).where(and(eq(questions.cluster, session.cluster), inArray(questions.performanceIndicatorFocus, piNames)))
-          : [];
-        const studyGuide = analysis.underperformingPIs.map((pi) => ({
-          ...pi,
-          questions: relatedQuestions
-            .filter((question) => question.performanceIndicatorFocus === pi.performanceIndicator && !sessionQuestionIds.has(question.id))
-            .slice(0, 3),
-        })).filter((section) => section.questions.length > 0);
-        return { session, ...analysis, studyGuide };
+        const [chapterAttempt] = await database.select().from(chapterExamAttempts)
+          .where(and(eq(chapterExamAttempts.sessionId, session.id), eq(chapterExamAttempts.userId, ctx.user.id))).limit(1);
+        if (chapterAttempt && !chapterAttempt.scoreVisible) {
+          return {
+            session,
+            mode: "chapter" as const,
+            scoreVisible: false,
+            completedAt: chapterAttempt.completedAt,
+            message: "Your chapter has withheld scores for this exam. Your chapter advisor will share results when appropriate.",
+            score: 0,
+            total: 0,
+            accuracy: 0,
+            instructionalAreas: [],
+            underperformingPIs: [],
+            studyGuide: [],
+          };
+        }
+        return { session, mode: chapterAttempt ? "chapter" as const : "individual" as const, scoreVisible: true, ...(await buildMockExamResults(database, session)) };
+      }),
+    getMemberChapterRecords: protectedProcedure
+      .input(z.object({ memberId: z.number().int().positive() }))
+      .query(async ({ ctx, input }) => {
+        assertMockExamAdmin(ctx.user);
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Chapter exam records are unavailable" });
+        const schoolCode = getMockExamSchoolCode(ctx.user);
+        if (!schoolCode) throw new TRPCError({ code: "BAD_REQUEST", message: "A chapter code is required" });
+        return database.select({
+          id: chapterExamAttempts.id,
+          cluster: chapterExamAttempts.cluster,
+          questionCount: chapterExamAttempts.questionCount,
+          score: chapterExamAttempts.score,
+          accuracy: chapterExamAttempts.accuracy,
+          startedAt: chapterExamAttempts.startedAt,
+          completedAt: chapterExamAttempts.completedAt,
+          suspiciousActivityCount: chapterExamAttempts.suspiciousActivityCount,
+          scoreVisible: chapterExamAttempts.scoreVisible,
+        }).from(chapterExamAttempts).where(and(eq(chapterExamAttempts.schoolCode, schoolCode), eq(chapterExamAttempts.userId, input.memberId))).orderBy(desc(chapterExamAttempts.startedAt));
+      }),
+    getAttemptActivity: protectedProcedure
+      .input(z.object({ attemptId: z.number().int().positive() }))
+      .query(async ({ ctx, input }) => {
+        assertMockExamAdmin(ctx.user);
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Chapter exam activity is unavailable" });
+        const schoolCode = getMockExamSchoolCode(ctx.user);
+        if (!schoolCode) throw new TRPCError({ code: "BAD_REQUEST", message: "A chapter code is required" });
+        const [attempt] = await database.select({ id: chapterExamAttempts.id }).from(chapterExamAttempts)
+          .where(and(eq(chapterExamAttempts.id, input.attemptId), eq(chapterExamAttempts.schoolCode, schoolCode))).limit(1);
+        if (!attempt) throw new TRPCError({ code: "NOT_FOUND", message: "Chapter exam attempt not found" });
+        return database.select().from(chapterExamActivity).where(eq(chapterExamActivity.attemptId, attempt.id)).orderBy(desc(chapterExamActivity.occurredAt));
+      }),
+    reportChapterActivity: protectedProcedure
+      .input(z.object({
+        attemptId: z.number().int().positive(),
+        eventType: z.enum(["rapid_answer", "tab_hidden"]),
+        questionId: z.string().optional(),
+        elapsedSeconds: z.number().int().nonnegative().optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Chapter exam activity is unavailable" });
+        const [attempt] = await database.select().from(chapterExamAttempts)
+          .where(and(eq(chapterExamAttempts.id, input.attemptId), eq(chapterExamAttempts.userId, ctx.user.id))).limit(1);
+        if (!attempt || attempt.completedAt || new Date() > attempt.expiresAt) return { flagged: false };
+        if (input.eventType === "rapid_answer" && (input.elapsedSeconds === undefined || !isRapidChapterExamAnswer(input.elapsedSeconds))) return { flagged: false };
+        await database.insert(chapterExamActivity).values({ ...input, userId: ctx.user.id });
+        await database.update(chapterExamAttempts).set({ suspiciousActivityCount: attempt.suspiciousActivityCount + 1 }).where(eq(chapterExamAttempts.id, attempt.id));
+        return { flagged: true };
       }),
     submitAnswer: protectedProcedure
-      .input(z.object({ sessionId: z.number().int().positive(), questionId: z.string(), selectedAnswer: z.string().length(1) }))
+      .input(z.object({ sessionId: z.number().int().positive(), questionId: z.string(), selectedAnswer: z.string().length(1), elapsedSeconds: z.number().int().nonnegative().optional() }))
       .mutation(async ({ ctx, input }) => {
         const database = await db.getDb();
         if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Question bank is unavailable' });
         const [session] = await database.select().from(studySessions)
           .where(and(eq(studySessions.id, input.sessionId), eq(studySessions.userId, ctx.user.id))).limit(1);
         if (!session) throw new TRPCError({ code: 'NOT_FOUND', message: 'Mock exam not found' });
+        const [chapterAttempt] = await database.select().from(chapterExamAttempts)
+          .where(and(eq(chapterExamAttempts.sessionId, session.id), eq(chapterExamAttempts.userId, ctx.user.id))).limit(1);
+        if (chapterAttempt?.completedAt) throw new TRPCError({ code: 'CONFLICT', message: 'This chapter mock exam has already been completed.' });
+        if (chapterAttempt && new Date() > chapterAttempt.expiresAt) throw new TRPCError({ code: 'PRECONDITION_FAILED', message: 'Your chapter mock exam time has expired.' });
         const [question] = await database.select({ correctAnswer: questions.correctAnswer }).from(questions).where(eq(questions.id, input.questionId)).limit(1);
         if (!question) throw new TRPCError({ code: 'NOT_FOUND', message: 'Question not found' });
         const [sessionQuestion] = await database.select().from(sessionQuestions)
           .where(and(eq(sessionQuestions.sessionId, input.sessionId), eq(sessionQuestions.questionId, input.questionId))).limit(1);
         if (!sessionQuestion) throw new TRPCError({ code: 'FORBIDDEN', message: 'Question is not in this mock exam' });
         const isCorrect = input.selectedAnswer === question.correctAnswer;
-        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
+        const schoolCode = getMockExamSchoolCode(ctx.user);
         if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
+        if (chapterAttempt && input.elapsedSeconds !== undefined && isRapidChapterExamAnswer(input.elapsedSeconds)) {
+          await database.insert(chapterExamActivity).values({ attemptId: chapterAttempt.id, userId: ctx.user.id, eventType: 'rapid_answer', questionId: input.questionId, elapsedSeconds: input.elapsedSeconds });
+          await database.update(chapterExamAttempts).set({ suspiciousActivityCount: chapterAttempt.suspiciousActivityCount + 1 }).where(eq(chapterExamAttempts.id, chapterAttempt.id));
+        }
         await database.update(sessionQuestions).set({ userAnswer: input.selectedAnswer, isCorrect: isCorrect ? 1 : 0 }).where(eq(sessionQuestions.id, sessionQuestion.id));
         await db.recordUserAnswer(ctx.user.id, input.questionId, input.selectedAnswer, isCorrect, schoolCode);
         const answered = await database.select({ userAnswer: sessionQuestions.userAnswer, isCorrect: sessionQuestions.isCorrect }).from(sessionQuestions).where(eq(sessionQuestions.sessionId, input.sessionId));
         const progress = calculateMockExamProgress(answered);
         await database.update(studySessions).set(progress).where(eq(studySessions.id, input.sessionId));
-        return { isCorrect, ...progress };
+        if (chapterAttempt && progress.questionsAnswered >= chapterAttempt.questionCount) {
+          const accuracy = progress.questionsAnswered ? Math.round((progress.correctAnswers / progress.questionsAnswered) * 100) : 0;
+          await database.update(chapterExamAttempts).set({ completedAt: new Date(), score: progress.correctAnswers, accuracy }).where(eq(chapterExamAttempts.id, chapterAttempt.id));
+        }
+        return { isCorrect, ...progress, chapterExamExpiresAt: chapterAttempt?.expiresAt ?? null };
       }),
   }),
 

@@ -1,12 +1,16 @@
 export type MockExamQuestion = { id: string; difficulty: string };
 export type ClusteredMockExamQuestion = MockExamQuestion & { cluster: string };
 
-const targetByDifficulty: Array<[string, number]> = [["Easy", 25], ["Medium", 50], ["Hard", 25]];
+function targetByDifficulty(count: number): Array<[string, number]> {
+  const easy = Math.round(count * 0.25);
+  const hard = Math.round(count * 0.25);
+  return [["Easy", easy], ["Medium", count - easy - hard], ["Hard", hard]];
+}
 
 export function selectBalancedMockExam<T extends MockExamQuestion>(questions: T[], count = 100): T[] {
   const selected: T[] = [];
   const selectedIds = new Set<string>();
-  for (const [difficulty, target] of targetByDifficulty) {
+  for (const [difficulty, target] of targetByDifficulty(count)) {
     let selectedForDifficulty = 0;
     for (const question of questions) {
       if (question.difficulty === difficulty && !selectedIds.has(question.id)) {
