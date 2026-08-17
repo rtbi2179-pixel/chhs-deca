@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { blueNewsScheduleKey, chooseBlueNewsTemplate } from "./bbxScheduledNews";
+import { BLUE_NEWS_RETENTION_MS, blueNewsRetentionCutoff, blueNewsScheduleKey, chooseBlueNewsTemplate } from "./bbxScheduledNews";
 
 describe("BBX Blue’s News schedule", () => {
   it("uses one stable UTC idempotency key for a three-hour schedule window", () => {
@@ -16,5 +16,11 @@ describe("BBX Blue’s News schedule", () => {
 
   it("refuses an invalid empty event-bank configuration", () => {
     expect(() => chooseBlueNewsTemplate([], () => 0.5)).toThrow("At least one BBX event template is required");
+  });
+
+  it("uses a strict four-day retention cutoff so only older articles are removed", () => {
+    const now = new Date("2026-08-17T12:00:00.000Z");
+    expect(blueNewsRetentionCutoff(now).toISOString()).toBe("2026-08-13T12:00:00.000Z");
+    expect(BLUE_NEWS_RETENTION_MS).toBe(4 * 24 * 60 * 60 * 1000);
   });
 });

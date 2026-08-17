@@ -547,3 +547,5 @@
 - [x] Remove explicit stock-change magnitudes from Blue’s News content and presentation
 - [x] Add automatic BBX market data refresh with a visible countdown to the next update
 - [x] Add focused disclosure and refresh-timing regression coverage
+- [x] Delete Blue’s News articles older than four days through the existing scheduled news workflow
+- [x] Add retention-boundary and scheduled cleanup regression coverage

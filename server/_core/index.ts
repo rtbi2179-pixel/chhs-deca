@@ -11,10 +11,10 @@ import { serveStatic, setupVite } from "./vite";
 import { sdk } from "./sdk";
 import { advanceBbxSimulation, createBbxEvent } from "../bbxSimulation";
 import { getDb } from "../db";
-import { bbxCompanies, bbxMarketState } from "../../drizzle/schema";
-import { eq } from "drizzle-orm";
+import { bbxCompanies, bbxMarketState, bbxNews } from "../../drizzle/schema";
+import { eq, lt } from "drizzle-orm";
 import bbxEventBank from "../bbxEventBank.json";
-import { blueNewsScheduleKey, chooseBlueNewsTemplate } from "../bbxScheduledNews";
+import { blueNewsRetentionCutoff, blueNewsScheduleKey, chooseBlueNewsTemplate } from "../bbxScheduledNews";
 
 type BbxEventTemplate = (typeof bbxEventBank)[number];
 
@@ -90,8 +90,10 @@ async function startServer() {
       if (!database) throw new Error("BBX storage is unavailable");
       const [marketState] = await database.select().from(bbxMarketState).where(eq(bbxMarketState.scheduleCronTaskUid, caller.taskUid)).limit(1);
       if (!marketState) return res.json({ ok: true, skipped: "orphan" });
+      const retention = await database.delete(bbxNews).where(lt(bbxNews.publishedAt, blueNewsRetentionCutoff()));
+      const deletedArticles = Number((retention as any)[0]?.affectedRows ?? 0);
       const scheduleKey = blueNewsScheduleKey();
-      if (marketState.lastBlueNewsScheduleKey === scheduleKey) return res.json({ ok: true, skipped: "duplicate", scheduleKey });
+      if (marketState.lastBlueNewsScheduleKey === scheduleKey) return res.json({ ok: true, skipped: "duplicate", scheduleKey, deletedArticles });
 
       const companies = await database.select().from(bbxCompanies).where(eq(bbxCompanies.status, "active"));
       if (companies.length === 0) throw new Error("No active BBX companies are available for the scheduled event");
@@ -106,7 +108,7 @@ async function startServer() {
       });
       await database.update(bbxMarketState).set({ lastBlueNewsScheduleKey: scheduleKey }).where(eq(bbxMarketState.id, marketState.id));
       const tick = await advanceBbxSimulation();
-      return res.json({ ok: true, scheduleKey, event, tick, taskUid: caller.taskUid });
+      return res.json({ ok: true, scheduleKey, event, tick, deletedArticles, taskUid: caller.taskUid });
     } catch (error) {
       console.error("[Blue’s News Heartbeat]", error);
       return res.status(500).json({
