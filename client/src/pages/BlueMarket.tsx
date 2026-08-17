@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { ArrowDownRight, ArrowUpRight, BookOpen, Landmark, Loader2, Newspaper, ShieldCheck, TrendingUp, X } from "lucide-react";
 import { toast } from "sonner";
@@ -10,6 +11,7 @@ import { BbxPerformanceGraphs } from "@/components/BbxPerformanceGraphs";
 
 const bb = (value: number) => `${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BB`;
 const pct = (value: number) => `${value >= 0 ? "+" : ""}${value.toFixed(2)}%`;
+const MARKET_REFRESH_MS = 20_000;
 
 function Change({ value }: { value: number }) {
   const positive = value >= 0;
@@ -22,7 +24,8 @@ export default function BlueMarket() {
   const utils = trpc.useUtils();
   const { user } = useAuth();
   const canAdmin = user?.role === "super_admin";
-  const { data, isLoading, error } = trpc.bbx.getOverview.useQuery(undefined, { refetchInterval: 20_000 });
+  const overview = trpc.bbx.getOverview.useQuery(undefined, { refetchInterval: MARKET_REFRESH_MS });
+  const { data, isLoading, error } = overview;
   const order = trpc.bbx.placeMarketOrder.useMutation();
   const advance = trpc.bbx.advanceNow.useMutation({ onSuccess: () => void utils.bbx.getOverview.invalidate() });
   const adminOptions = trpc.bbx.getAdminOptions.useQuery(undefined, { enabled: canAdmin });
@@ -33,10 +36,17 @@ export default function BlueMarket() {
   const [quantity, setQuantity] = useState("1");
   const [eventTemplate, setEventTemplate] = useState("");
   const [eventTicker, setEventTicker] = useState("");
+  const [clockNow, setClockNow] = useState(() => Date.now());
   const benchmarkChange = data?.state.benchmarkChangePercent ?? 0;
   const news = data?.news ?? [];
   const companies = data?.companies ?? [];
   const selectedCompany = useMemo(() => companies.find((company) => company.ticker === trade?.ticker), [companies, trade?.ticker]);
+  const refreshRemaining = Math.max(0, Math.ceil((MARKET_REFRESH_MS - (clockNow - overview.dataUpdatedAt)) / 1000));
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setClockNow(Date.now()), 1_000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   const submitOrder = async () => {
     if (!trade) return;
@@ -62,7 +72,7 @@ export default function BlueMarket() {
         <Card className="editorial-panel p-5"><p className="data-label">BBX BlueBucks available</p><p className="mt-3 text-2xl font-semibold text-blue-300">{bb(data.cash)}</p><p className="mt-1 text-xs text-foreground/55">Ring-fenced simulation balance</p></Card>
         <Card className="editorial-panel p-5"><p className="data-label">Exchange benchmark</p><p className="mt-3 text-2xl font-semibold text-foreground">{data.state.benchmarkLevel.toFixed(2)}</p><div className="mt-1"><Change value={benchmarkChange} /></div></Card>
         <Card className="editorial-panel p-5"><p className="data-label">Market regime</p><p className="mt-3 text-2xl font-semibold capitalize text-foreground">{data.state.marketRegime.replace("_", " ")}</p><p className="mt-1 text-xs text-foreground/55">Structured events drive the largest moves</p></Card>
-        <Card className="editorial-panel p-5"><p className="data-label">Simulation state</p><p className={`mt-3 text-2xl font-semibold ${data.state.marketOpen ? "text-emerald-300" : "text-amber-300"}`}>{data.state.marketOpen ? "Open" : "Paused"}</p><p className="mt-1 text-xs text-foreground/55">Tick {data.state.tickNumber} · server-authoritative</p></Card>
+        <Card className="editorial-panel p-5"><p className="data-label">Simulation state</p><p className={`mt-3 text-2xl font-semibold ${data.state.marketOpen ? "text-emerald-300" : "text-amber-300"}`}>{data.state.marketOpen ? "Open" : "Paused"}</p><p className="mt-1 text-xs text-foreground/55">Tick {data.state.tickNumber} · server-authoritative</p><p className="mt-2 font-mono text-xs text-blue-200">Auto-refresh in {refreshRemaining}s</p></Card>
       </section>
 
       <BbxPerformanceGraphs performance={data.performance} />

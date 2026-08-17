@@ -113,9 +113,8 @@ export function constrainedFacts(subtype: string, rng: SeededRng) {
     const actual = subtype === "inflation_hot" ? round(expected + delta) : round(Math.max(0.1, expected - delta));
     return { expectedValue: expected, actualValue: actual, surprisePercent: round((actual - expected) / Math.max(expected, 0.01), 4), facts: [`Simulated inflation was ${actual}% versus ${expected}% expected.`] };
   }
-  const magnitude = round(sampleRange([3, 24], rng));
   const direction = /miss|cut|drop|lost|recall|concern|tension|disruption|out|tighten|fear|risk_off|loss/.test(subtype) ? "lower" : "higher";
-  return { expectedValue: null, actualValue: null, surprisePercent: null, facts: [`The structured simulated event points to ${direction} near-term expectations, with a sampled magnitude of ${magnitude}%.`] };
+  return { expectedValue: null, actualValue: null, surprisePercent: null, facts: [`The structured simulated event points to ${direction} near-term expectations.`] };
 }
 
 export function fallbackNews(input: { companyName?: string | null; ticker?: string | null; sector?: string | null; scope: string; headlineTemplate: string; explanationTemplate: string; facts: string[] }) {

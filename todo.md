@@ -544,3 +544,6 @@
 - [x] Calibrate fictional BBX long-run monthly growth toward a 10% average target
 - [x] Reward members once for reading each Blue’s News item with server-authoritative tracking
 - [x] Add focused simulation, graph-data, and news-reading reward regression coverage
+- [x] Remove explicit stock-change magnitudes from Blue’s News content and presentation
+- [x] Add automatic BBX market data refresh with a visible countdown to the next update
+- [x] Add focused disclosure and refresh-timing regression coverage

@@ -15,4 +15,12 @@ describe("BBX graph and Blue’s News rewards", () => {
     expect(router).toContain("news_read_reward");
     expect(router).toContain("rewardedAt");
   });
+  it("keeps fictional news impact qualitative and displays the automatic market refresh countdown", () => {
+    const engine = readFileSync(join(process.cwd(), "server/bbxEngine.ts"), "utf8");
+    const market = readFileSync(join(process.cwd(), "client/src/pages/BlueMarket.tsx"), "utf8");
+    expect(engine).toContain("points to ${direction} near-term expectations.");
+    expect(engine).not.toContain("sampled magnitude of ${magnitude}%");
+    expect(market).toContain("MARKET_REFRESH_MS");
+    expect(market).toContain("Auto-refresh in {refreshRemaining}s");
+  });
 });
