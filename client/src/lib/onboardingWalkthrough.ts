@@ -6,6 +6,8 @@ export const ONBOARDING_WALKTHROUGH_STEPS = [
     icon: "home",
     tabLabel: "Home",
     detail: "Your daily Blue Blazer launchpad",
+    path: "/",
+    action: "Look around your home base, then continue when you are ready.",
   },
   {
     eyebrow: "02 · Learn the standard",
@@ -14,6 +16,8 @@ export const ONBOARDING_WALKTHROUGH_STEPS = [
     icon: "study",
     tabLabel: "PI Study Library",
     detail: "Learn each performance indicator in context",
+    path: "/pi-quizlet",
+    action: "Open a PI module or use search while this guide stays with you.",
   },
   {
     eyebrow: "03 · Practice deliberately",
@@ -22,6 +26,8 @@ export const ONBOARDING_WALKTHROUGH_STEPS = [
     icon: "practice",
     tabLabel: "Practice",
     detail: "Question banks organized by career cluster",
+    path: "/practice",
+    action: "Choose a cluster card or browse questions, then return here to continue.",
   },
   {
     eyebrow: "04 · Connect your preparation",
@@ -30,6 +36,8 @@ export const ONBOARDING_WALKTHROUGH_STEPS = [
     icon: "community",
     tabLabel: "Events & Community",
     detail: "Resources, chapter activity, and collaboration",
+    path: "/events",
+    action: "Explore an event resource while the tour remains available in the corner.",
   },
   {
     eyebrow: "05 · Earn as you learn",
@@ -38,6 +46,8 @@ export const ONBOARDING_WALKTHROUGH_STEPS = [
     icon: "blueBucks",
     tabLabel: "Blue Bucks",
     detail: "Virtual rewards for consistent, honest practice",
+    path: "/study-cards",
+    action: "Try a Study Card or open a Blue Bucks feature while you remain in the walkthrough.",
   },
   {
     eyebrow: "06 · Check your readiness",
@@ -46,6 +56,8 @@ export const ONBOARDING_WALKTHROUGH_STEPS = [
     icon: "readiness",
     tabLabel: "Mock Exams & Progress",
     detail: "Measure readiness and choose your next move",
+    path: "/chapter-mock-exam",
+    action: "Review the two exam options and your progress history before finishing your tour.",
   },
 ] as const;
 

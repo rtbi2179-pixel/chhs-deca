@@ -549,3 +549,7 @@
 - [x] Add focused disclosure and refresh-timing regression coverage
 - [x] Delete Blue’s News articles older than four days through the existing scheduled news workflow
 - [x] Add retention-boundary and scheduled cleanup regression coverage
+- [x] Navigate members to the relevant tab at each onboarding tour step
+- [x] Keep the interactive tour available while members try guided features on each tab
+- [x] Preserve skip, completion, replay, and reduced-motion behavior in the route-aware tour
+- [x] Add focused routing and interactive-tour regression coverage

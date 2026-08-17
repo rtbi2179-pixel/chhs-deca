@@ -93,10 +93,12 @@ function DialogContent({
   className,
   children,
   showCloseButton = true,
+  allowBackgroundInteraction = false,
   onEscapeKeyDown,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean;
+  allowBackgroundInteraction?: boolean;
 }) {
   const { isComposing } = useDialogComposition();
 
@@ -120,7 +122,7 @@ function DialogContent({
 
   return (
     <DialogPortal data-slot="dialog-portal">
-      <DialogOverlay />
+      {!allowBackgroundInteraction && <DialogOverlay />}
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
@@ -206,4 +208,3 @@ export {
   DialogTitle,
   DialogTrigger
 };
-
