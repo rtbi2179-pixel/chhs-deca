@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, Building2, CalendarClock, Check, ClipboardCheck, Clock3, EyeOff, ListChecks, Loader2, LockKeyhole, ShieldAlert, Target, Timer, UserRound } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+import { IndividualMockExamHistory } from "@/components/IndividualMockExamHistory";
 
 const MOCK_EXAM_CLUSTERS = [
   { value: "Marketing", label: "Marketing" },
@@ -173,6 +174,8 @@ export default function ChapterMockExam() {
               <p className="page-intro mt-3">Choose an individual readiness check at any time, or complete a chapter exam only when your chapter administrator has opened one for you.</p>
             </div>
           </div>
+
+          {!exam && !isPreparing && <IndividualMockExamHistory />}
 
           {!exam && isPreparing ? (
             <div className="mx-auto mt-10 max-w-xl rounded-lg border border-blue-500/25 bg-blue-500/[0.045] p-6 sm:p-8" role="status" aria-live="polite">

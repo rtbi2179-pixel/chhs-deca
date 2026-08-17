@@ -1456,6 +1456,32 @@ export const appRouter = router({
         }
         return { session, mode: chapterAttempt ? "chapter" as const : "individual" as const, scoreVisible: true, ...(await buildMockExamResults(database, session)) };
       }),
+    getIndividualHistory: protectedProcedure
+      .query(async ({ ctx }) => {
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Mock exam history is unavailable" });
+        const sessions = await database.select().from(studySessions)
+          .where(and(eq(studySessions.userId, ctx.user.id), sql`${studySessions.title} like ${"Individual Mock Exam —%"}`))
+          .orderBy(desc(studySessions.createdAt));
+        return sessions.filter((session) => session.questionsAnswered >= session.totalQuestions).map((session) => ({
+          id: session.id,
+          cluster: session.cluster,
+          completedAt: session.updatedAt,
+          totalQuestions: session.totalQuestions,
+          correctAnswers: session.correctAnswers,
+          accuracy: session.totalQuestions ? Math.round((session.correctAnswers / session.totalQuestions) * 100) : 0,
+        }));
+      }),
+    getIndividualHistoryDetail: protectedProcedure
+      .input(z.object({ sessionId: z.number().int().positive() }))
+      .query(async ({ ctx, input }) => {
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Mock exam history is unavailable" });
+        const [session] = await database.select().from(studySessions)
+          .where(and(eq(studySessions.id, input.sessionId), eq(studySessions.userId, ctx.user.id), sql`${studySessions.title} like ${"Individual Mock Exam —%"}`)).limit(1);
+        if (!session) throw new TRPCError({ code: "NOT_FOUND", message: "Individual mock exam history item not found" });
+        return { session, ...(await buildMockExamResults(database, session)) };
+      }),
     getMemberChapterRecords: protectedProcedure
       .input(z.object({ memberId: z.number().int().positive() }))
       .query(async ({ ctx, input }) => {

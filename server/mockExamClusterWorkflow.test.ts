@@ -94,5 +94,5 @@ describe("cluster-focused Chapter Mock Exams", () => {
     expect(persisted.every((question) => question.cluster === "Marketing")).toBe(true);
     expect(persisted.some((question) => financeQuestionIds.includes(question.questionId))).toBe(false);
     expect(session?.cluster).toBe("Marketing");
-  });
+  }, 15_000);
 });

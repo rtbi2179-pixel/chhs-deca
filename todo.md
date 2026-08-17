@@ -536,3 +536,7 @@
 - [x] Flag rapid-answer and tab-visibility activity during chapter exams for administrator review
 - [x] Build administrator controls and member-facing chapter-exam states for the two-mode workflow
 - [x] Add focused authorization, availability, monitoring, score-record, and interface regression coverage
+- [x] Add authenticated history retrieval for completed individual mock exams and their result analyses
+- [x] Display individual mock-exam history beside assessment options with date and total accuracy
+- [x] Show each historical exam’s PI accuracy and targeted study-guide recommendations on demand
+- [x] Add focused history, result-detail, and interface regression coverage
