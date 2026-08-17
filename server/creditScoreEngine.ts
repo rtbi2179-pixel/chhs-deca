@@ -1,6 +1,6 @@
 import { getDb } from './db';
-import { creditScores, creditHistory, userBankAccounts, creditCardPayments, financialProfiles, economicConfig } from '../drizzle/schema';
-import { eq, and } from 'drizzle-orm';
+import { creditScores, creditHistory, dailyPracticeStats, userBankAccounts, creditCardPayments, financialProfiles, economicConfig } from '../drizzle/schema';
+import { eq, and, desc } from 'drizzle-orm';
 
 const MIN_CREDIT_SCORE = 300;
 const MAX_CREDIT_SCORE = 850;
@@ -28,6 +28,15 @@ interface CreditScoreRuleConfig {
 
 type CreditScoreConfig = CreditScoreWeights & CreditScoreRuleConfig;
 export const MAX_SCORE_CHANGE_PER_UPDATE = 50;
+
+export function practiceConsistencyForInactiveDays(daysSinceActivity: number | null): number {
+  if (daysSinceActivity === null) return 50;
+  if (daysSinceActivity <= 7) return 100;
+  if (daysSinceActivity <= 14) return 75;
+  if (daysSinceActivity <= 30) return 50;
+  if (daysSinceActivity <= 60) return 30;
+  return 10;
+}
 
 export function calculatePaymentReliabilityFromCounts(
   counts: { onTime: number; late: number; missed: number },
@@ -116,10 +125,16 @@ async function calculateAccountHistory(userId: number, schoolCode: string): Prom
  */
 async function calculatePracticeConsistency(userId: number, schoolCode: string): Promise<number> {
   try {
-    // TODO: Integrate with practice streak system
-    // For now, return neutral score
-    // This will be updated when practice streak data is available
-    return 50;
+    const db = await getDb();
+    if (!db) return 50;
+    const [latestPractice] = await db.select({ date: dailyPracticeStats.practiceDate, questionsAnswered: dailyPracticeStats.questionsCompleted })
+      .from(dailyPracticeStats)
+      .where(and(eq(dailyPracticeStats.userId, userId), eq(dailyPracticeStats.schoolCode, schoolCode)))
+      .orderBy(desc(dailyPracticeStats.practiceDate))
+      .limit(1);
+    if (!latestPractice || latestPractice.questionsAnswered <= 0) return 50;
+    const daysSinceActivity = Math.max(0, Math.floor((Date.now() - new Date(latestPractice.date).getTime()) / (24 * 60 * 60 * 1000)));
+    return practiceConsistencyForInactiveDays(daysSinceActivity);
   } catch (error) {
     console.error('[Credit Score] Error calculating practice consistency:', error);
     return 50;
@@ -283,7 +298,7 @@ export function calculateFinalScore(factors: CreditScoreFactors, weights: Credit
 /**
  * Update user's credit score (called monthly)
  */
-export async function updateCreditScore(userId: number, schoolCode: string): Promise<number> {
+export async function updateCreditScore(userId: number, schoolCode: string, reason = 'Credit score recalculated from persisted activity'): Promise<number> {
   try {
     console.log(`[Credit Score] Updating credit score for user ${userId}`);
 
@@ -347,7 +362,7 @@ export async function updateCreditScore(userId: number, schoolCode: string): Pro
       newScore,
       scoreChange,
       factors: JSON.stringify(factors),
-      reason: 'Monthly update',
+      reason,
       schoolCode,
     });
 
@@ -379,6 +394,7 @@ export async function getUserCreditScore(userId: number, schoolCode: string): Pr
         score: 500,
         schoolCode,
       });
+      await db.insert(creditHistory).values({ userId, previousScore: 500, newScore: 500, scoreChange: 0, factors: JSON.stringify({ baseline: true }), reason: 'Initial credit score baseline', schoolCode });
       return 500;
     }
 

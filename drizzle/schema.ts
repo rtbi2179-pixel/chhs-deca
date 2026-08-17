@@ -865,11 +865,16 @@ export type InsertUserStreak = typeof userStreaks.$inferInsert;
 export const dailyPracticeStats = mysqlTable("dailyPracticeStats", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
-  date: timestamp("date").notNull(),
-  questionsAnswered: int("questionsAnswered").default(0).notNull(),
+  practiceDate: date("practiceDate").notNull(),
+  questionsCompleted: int("questionsCompleted").default(0).notNull(),
   correctAnswers: int("correctAnswers").default(0).notNull(),
-  blueBucksEarned: decimal("blueBucksEarned", { precision: 10, scale: 2 }).default("0").notNull(),
+  totalAnswered: int("totalAnswered").default(0).notNull(),
+  accuracy: decimal("accuracy", { precision: 5, scale: 2 }).default("0").notNull(),
+  blueBucksEarned: int("blueBucksEarned").default(0).notNull(),
+  streakQualified: boolean("streakQualified").default(false).notNull(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 export type DailyPracticeStat = typeof dailyPracticeStats.$inferSelect;
 export type InsertDailyPracticeStat = typeof dailyPracticeStats.$inferInsert;
@@ -1330,6 +1335,16 @@ export const creditHistory = mysqlTable("creditHistory", {
 });
 export type CreditHistory = typeof creditHistory.$inferSelect;
 export type InsertCreditHistory = typeof creditHistory.$inferInsert;
+
+/**
+ * Project-level Heartbeat ownership for daily, deterministic credit-score refreshes.
+ */
+export const creditScoreUpdateSchedule = mysqlTable("creditScoreUpdateSchedule", {
+  id: int("id").autoincrement().primaryKey(),
+  taskUid: varchar("taskUid", { length: 65 }).notNull(),
+  lastRunAt: timestamp("lastRunAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({ taskUidUnique: uniqueIndex("credit_score_schedule_task_uid_unique").on(table.taskUid) }));
 
 /**
  * Credit Card Products - Available credit card products

@@ -553,3 +553,8 @@
 - [x] Keep the interactive tour available while members try guided features on each tab
 - [x] Preserve skip, completion, replay, and reduced-motion behavior in the route-aware tour
 - [x] Add focused routing and interactive-tour regression coverage
+- [x] Audit and remove fabricated stock portfolio performance values in favor of authoritative stored calculations
+- [x] Ensure credit-score history is persisted and displayed from actual credit-score records
+- [x] Apply deterministic credit-score history updates that reflect verified inactivity over time
+- [ ] Add or extend scheduled processing for ongoing credit-score inactivity updates
+- [ ] Add focused portfolio, credit-history, inactivity, and schedule regression coverage

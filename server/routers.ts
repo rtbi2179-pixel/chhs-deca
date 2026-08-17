@@ -1773,8 +1773,10 @@ export const appRouter = router({
             shares: String(holding.shares ?? "0"),
             averageBuyPrice: String(holding.averageBuyPrice ?? "0"),
             totalInvested: String(holding.totalInvested ?? "0"),
-            currentValue: totalInvested,
-            gain: 0,
+            costBasis: totalInvested,
+            currentValue: null,
+            gain: null,
+            valuationStatus: "unavailable",
           };
         });
       }),
@@ -1788,9 +1790,7 @@ export const appRouter = router({
         const investedValue = holdings.reduce((sum: number, entry: any) => sum + Number((entry.portfolioHoldings ?? entry).totalInvested ?? 0), 0);
         const cashBalance = Number(cashAccount.cashBalance);
         const initialAllocation = Number(cashAccount.initialAllocation);
-        const totalValue = cashBalance + investedValue;
-        const totalProfit = totalValue - initialAllocation;
-        return { cashBalance, investedValue, initialAllocation, totalValue, totalProfit, percentageReturn: initialAllocation > 0 ? (totalProfit / initialAllocation) * 100 : 0 };
+        return { cashBalance, costBasis: investedValue, initialAllocation, valuationStatus: "unavailable" as const };
       }),
     
     buyStock: protectedProcedure
@@ -1809,7 +1809,7 @@ export const appRouter = router({
       .query(async ({ ctx }) => {
         const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode;
         if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
-        return await db.getMarketLeaderboard(schoolCode, 50);
+        return [];
       }),
     
     getTransactionHistory: protectedProcedure
@@ -1919,14 +1919,7 @@ export const appRouter = router({
     getPortfolioSnapshots: protectedProcedure
       .input(z.object({ limit: z.number().default(30) }))
       .query(async ({ ctx, input }) => {
-        const snapshots = await db.getPortfolioSnapshotHistory(ctx.user.id, input.limit);
-        return snapshots.map(s => ({
-          snapshotDate: s.snapshotDate,
-          date: new Date(s.snapshotDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-          value: parseFloat(s.totalValue.toString()),
-          gain: parseFloat(s.totalProfit.toString()),
-          percentageReturn: parseFloat(s.percentageReturn.toString()),
-        }));
+        return [];
       }),
   }),
 
@@ -2023,7 +2016,7 @@ export const appRouter = router({
       .input(z.object({ limit: z.number().default(30) }))
       .query(async ({ ctx, input }) => {
         const history = await db.getCreditHistory(ctx.user.id, input.limit);
-        return history.map(h => ({
+        return history.slice().reverse().map(h => ({
           date: new Date(h.calculatedAt ?? new Date()).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
           score: h.newScore,
           change: h.scoreChange,

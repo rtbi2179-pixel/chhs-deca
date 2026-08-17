@@ -6,11 +6,13 @@ import { ArrowDownLeft, ArrowUpRight, CreditCard, ReceiptText, Send, ShoppingBag
 import { useState } from "react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { toast } from "sonner";
+import { CreditScoreChart } from "@/components/CreditScoreChart";
 
 export function BankingDashboard() {
   const { user } = useAuth();
   const utils = trpc.useUtils();
   const creditScoreQuery = trpc.banking.getCreditScore.useQuery();
+  const creditHistoryQuery = trpc.banking.getCreditScoreHistory.useQuery({ limit: 30 });
   const bankAccountQuery = trpc.banking.getBankAccount.useQuery();
   const transferMutation = trpc.banking.transferFunds.useMutation();
   const availableCardsQuery = trpc.banking.getAvailableCards.useQuery();
@@ -261,6 +263,10 @@ export function BankingDashboard() {
               <p className="text-slate-400">Loading account data...</p>
             )}
           </Card>
+        </div>
+
+        <div className="mb-8">
+          <CreditScoreChart data={creditHistoryQuery.data ?? []} isLoading={creditHistoryQuery.isLoading} currentScore={creditScore} />
         </div>
 
         {/* Credit Cards Section */}

@@ -10,8 +10,9 @@ import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { sdk } from "./sdk";
 import { advanceBbxSimulation, createBbxEvent } from "../bbxSimulation";
+import { updateAllCreditScores } from "../creditScoreUpdater";
 import { getDb } from "../db";
-import { bbxCompanies, bbxMarketState, bbxNews } from "../../drizzle/schema";
+import { bbxCompanies, bbxMarketState, bbxNews, creditScoreUpdateSchedule } from "../../drizzle/schema";
 import { eq, lt } from "drizzle-orm";
 import bbxEventBank from "../bbxEventBank.json";
 import { blueNewsRetentionCutoff, blueNewsScheduleKey, chooseBlueNewsTemplate } from "../bbxScheduledNews";
@@ -116,6 +117,23 @@ async function startServer() {
         context: { url: req.originalUrl },
         timestamp: new Date().toISOString(),
       });
+    }
+  });
+  app.post("/api/scheduled/credit-score-update", async (req, res) => {
+    try {
+      const caller = await sdk.authenticateRequest(req);
+      if (!caller.isCron || !caller.taskUid) return res.status(403).json({ error: "cron-only" });
+      const database = await getDb();
+      if (!database) throw new Error("Credit-score storage is unavailable");
+      const [schedule] = await database.select().from(creditScoreUpdateSchedule).where(eq(creditScoreUpdateSchedule.taskUid, caller.taskUid)).limit(1);
+      if (!schedule) return res.json({ ok: true, skipped: "orphan" });
+      await updateAllCreditScores();
+      const ranAt = new Date();
+      await database.update(creditScoreUpdateSchedule).set({ lastRunAt: ranAt }).where(eq(creditScoreUpdateSchedule.id, schedule.id));
+      return res.json({ ok: true, taskUid: caller.taskUid, ranAt: ranAt.toISOString() });
+    } catch (error) {
+      console.error("[Credit Score Heartbeat]", error);
+      return res.status(500).json({ error: error instanceof Error ? error.message : "Unable to refresh credit scores", context: { url: req.originalUrl }, timestamp: new Date().toISOString() });
     }
   });
   // development mode uses Vite, production mode uses static files

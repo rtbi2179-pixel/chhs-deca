@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { eq } from "drizzle-orm";
-import { calculateFinalScore, calculatePaymentReliabilityFromCounts, MAX_SCORE_CHANGE_PER_UPDATE, updateCreditScore } from "./creditScoreEngine";
+import { calculateFinalScore, calculatePaymentReliabilityFromCounts, MAX_SCORE_CHANGE_PER_UPDATE, practiceConsistencyForInactiveDays, updateCreditScore } from "./creditScoreEngine";
 import { getDb } from "./db";
-import { banks, creditCardPayments, creditCards, creditHistory, creditScores, economicConfig, userCreditCards, users } from "../drizzle/schema";
+import { banks, creditCardPayments, creditCards, creditHistory, creditScores, dailyPracticeStats, economicConfig, userCreditCards, users } from "../drizzle/schema";
 
 describe("credit score engine", () => {
   it("applies configurable payment rules, weights, and final-score bounds deterministically", () => {
@@ -11,6 +11,14 @@ describe("credit score engine", () => {
     expect(calculatePaymentReliabilityFromCounts({ onTime: 0, late: 0, missed: 1 }, { onTimePaymentPoints: 2, missedPaymentPenalty: 5 })).toBeCloseTo(16.67, 2);
     expect(calculateFinalScore({ paymentReliability: 100, accountHistory: 100, practiceConsistency: 100, netWorth: 100, spendingBehavior: 100 }, { paymentReliability: 25, accountHistory: 25, practiceConsistency: 20, netWorth: 20, spendingBehavior: 10 })).toBe(850);
     expect(calculateFinalScore({ paymentReliability: 0, accountHistory: 0, practiceConsistency: 0, netWorth: 0, spendingBehavior: 0 }, { paymentReliability: 25, accountHistory: 25, practiceConsistency: 20, netWorth: 20, spendingBehavior: 10 })).toBe(300);
+  });
+
+  it("reduces the practice-consistency factor only after recorded inactivity thresholds", () => {
+    expect(practiceConsistencyForInactiveDays(null)).toBe(50);
+    expect(practiceConsistencyForInactiveDays(3)).toBe(100);
+    expect(practiceConsistencyForInactiveDays(14)).toBe(75);
+    expect(practiceConsistencyForInactiveDays(31)).toBe(30);
+    expect(practiceConsistencyForInactiveDays(61)).toBe(10);
   });
 
   describe("persisted chapter rule effect", () => {
@@ -54,6 +62,14 @@ describe("credit score engine", () => {
       const secondScore = await updateCreditScore(userId, schoolCode);
       expect(secondScore).toBe(575);
       expect(Math.abs(secondScore - firstScore)).toBeLessThanOrEqual(MAX_SCORE_CHANGE_PER_UPDATE);
+    });
+
+    it("uses the most recent persisted practice date when inactivity affects the score", async () => {
+      const database = await getDb();
+      if (!database) throw new Error("Database unavailable");
+      await database.insert(dailyPracticeStats).values({ userId, practiceDate: new Date(Date.now() - 31 * 24 * 60 * 60 * 1000), questionsCompleted: 10, correctAnswers: 8, totalAnswered: 10, accuracy: "80.00", blueBucksEarned: 0, streakQualified: false, schoolCode });
+      await database.update(economicConfig).set({ paymentReliabilityWeight: "0.00", accountHistoryWeight: "0.00", practiceConsistencyWeight: "100.00", netWorthWeight: "0.00", spendingBehaviorWeight: "0.00" }).where(eq(economicConfig.schoolCode, schoolCode));
+      expect(await updateCreditScore(userId, schoolCode)).toBe(465);
     });
   });
 });
