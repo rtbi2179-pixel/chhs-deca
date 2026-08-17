@@ -556,5 +556,5 @@
 - [x] Audit and remove fabricated stock portfolio performance values in favor of authoritative stored calculations
 - [x] Ensure credit-score history is persisted and displayed from actual credit-score records
 - [x] Apply deterministic credit-score history updates that reflect verified inactivity over time
-- [ ] Add or extend scheduled processing for ongoing credit-score inactivity updates
-- [ ] Add focused portfolio, credit-history, inactivity, and schedule regression coverage
+- [x] Add or extend scheduled processing for ongoing credit-score inactivity updates
+- [x] Add focused portfolio, credit-history, inactivity, and schedule regression coverage
