@@ -1818,4 +1818,4 @@
 - [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
 - [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
 - [x] Add regression coverage for the new market dashboard structure and data-preservation contract
-- [ ] Run full validation and save
+- [x] Run full validation and save
