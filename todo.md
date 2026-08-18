@@ -8705,3 +8705,6 @@
 - [x] Audit all chapter-management destinations and define their Chapter navigation grouping
 - [x] Organize chapter-management tools into a dedicated Chapter section across desktop and mobile navigation
 - [x] Add regression coverage, validate navigation visibility and routes, and checkpoint the update
+- [x] Audit every event-to-PI mapping and identify current panel truncation or fallback behavior
+- [x] Display every applicable PI in each event’s PI Study Library panel with accurate totals
+- [x] Add regression coverage, validate complete PI retrieval, and checkpoint the update

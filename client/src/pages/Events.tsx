@@ -538,7 +538,7 @@ function EventPiStudyDialog({ event, open, onOpenChange }: EventPiStudyDialogPro
   const officialModules = officialAreas.flatMap((area) => area.modules)
   const usesClusterFallback = !eventStudyQuery.isLoading && officialModules.length === 0 && Boolean(piCluster)
   const displayedModules = usesClusterFallback ? (clusterModulesQuery.data ?? []) : officialModules
-  const shownModules = displayedModules.slice(0, 24)
+  const shownModules = displayedModules
   const totalModules = usesClusterFallback ? displayedModules.length : eventStudyQuery.data?.totalModules ?? 0
   const studyPathHref = `/pi-quizlet?event=${encodeURIComponent(event.code)}`
 
@@ -600,7 +600,7 @@ function EventPiStudyDialog({ event, open, onOpenChange }: EventPiStudyDialogPro
                   </a>
                 ))}
               </div>
-              {totalModules > shownModules.length && <p className="mt-4 text-center text-xs text-slate-500">Showing the first {shownModules.length} of {totalModules} indicators. Open the full study path to browse every PI.</p>}
+              <p className="mt-5 text-center text-xs text-slate-500">Showing all {totalModules} applicable performance indicators for this event.</p>
             </>
           )}
         </div>

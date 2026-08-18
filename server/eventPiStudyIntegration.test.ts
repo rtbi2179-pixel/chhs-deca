@@ -1,8 +1,11 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { inArray, sql } from "drizzle-orm";
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
+import { getDb } from "./db";
+import { eventPerformanceIndicators } from "../drizzle/schema";
 
 type AuthenticatedUser = NonNullable<TrpcContext["user"]>;
 
@@ -44,8 +47,25 @@ describe("event-linked PI Study Library", () => {
     expect(eventsPage).toContain("getEventStudyGuide.useQuery");
     expect(eventsPage).toContain("View {event.code} PIs");
     expect(eventsPage).toContain("/pi-quizlet?event=${encodeURIComponent(event.code)}");
+    expect(eventsPage).not.toContain("displayedModules.slice(0, 24)");
+    expect(eventsPage).toContain("Showing all {totalModules} applicable performance indicators for this event.");
     expect(piQuizletPage).toContain("getRequestedEventStudyPath");
     expect(piQuizletPage).toContain("query.get(\"event\")");
     expect(piQuizletPage).toContain("query.get(\"module\")");
+  });
+
+  it("maps every catalog event to a complete PI pathway", async () => {
+    const eventsPage = readFileSync(join(process.cwd(), "client/src/pages/Events.tsx"), "utf8");
+    const eventCodes = [...eventsPage.matchAll(/code:\s*'([A-Z0-9]+)'/g)].map((match) => match[1]!);
+    const database = await getDb();
+    if (!database) throw new Error("Database unavailable");
+    const coverage = await database
+      .select({ eventCode: eventPerformanceIndicators.eventCode, piCount: sql<number>`count(*)` })
+      .from(eventPerformanceIndicators)
+      .where(inArray(eventPerformanceIndicators.eventCode, eventCodes))
+      .groupBy(eventPerformanceIndicators.eventCode);
+
+    expect(coverage).toHaveLength(eventCodes.length);
+    expect(coverage.every((item) => Number(item.piCount) > 0)).toBe(true);
   });
 });
