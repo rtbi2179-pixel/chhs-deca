@@ -24,7 +24,7 @@ describe("Practice cluster-card launcher", () => {
   });
 
   it("uses the primary card frame without the former nested inset-outline decoration", () => {
-    const practicePage = readFileSync(join(process.cwd(), "client/src/pages/Practice.tsx"), "utf8");
+    const practicePage = readFileSync(join(process.cwd(), "client/src/pages/PracticeQuestions.tsx"), "utf8");
     expect(practicePage).not.toContain("absolute inset-x-5 top-6 h-28 rounded-xl border");
     expect(practicePage).not.toContain("absolute inset-x-4 top-4 h-28 rounded-xl border");
     expect(practicePage).toContain("hover:-translate-y-1");

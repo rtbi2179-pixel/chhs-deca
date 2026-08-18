@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 describe('Practice Toolbar and Question Reporting Regression', () => {
-  const practicePagePath = path.resolve(__dirname, '../client/src/pages/Practice.tsx');
+  const practicePagePath = path.resolve(__dirname, '../client/src/pages/PracticeQuestions.tsx');
   const pageContent = fs.readFileSync(practicePagePath, 'utf-8');
 
   it('removes Highlight, Calculator, Reference, and Clipboard interactive buttons from the question toolbar', () => {

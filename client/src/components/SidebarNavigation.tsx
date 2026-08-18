@@ -18,7 +18,6 @@ import {
   ChevronRight,
   Menu,
   X,
-  Sparkles,
   MessageSquare,
   Bell,
   Zap,
@@ -29,8 +28,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const mainNavLinks = [
   { href: '/', label: 'Overview', icon: Home, group: 'MAIN' },
   { href: '/pi-quizlet', label: 'PI Study Library', icon: BookOpen, group: 'MAIN' },
-  { href: '/practice', label: 'Practice Questions', icon: Target, group: 'MAIN' },
-  { href: '/chapter-mock-exam', label: 'Mock Exams', icon: Sparkles, group: 'MAIN' },
+  { href: '/practice', label: 'Practice', icon: Target, group: 'MAIN' },
   { href: '/leaderboard', label: 'Leaderboard', icon: TrendingUp, group: 'MAIN' },
   { href: '/events', label: 'Events & Community', icon: Calendar, group: 'MAIN' },
   { href: '/discussions', label: 'Discussion Posts', icon: MessageSquare, group: 'MAIN' },
@@ -114,7 +112,9 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
             )}
             <div className="space-y-1">
               {mainNavLinks.map(({ href, label, icon: Icon }) => {
-                const isActive = location === href;
+                const isActive = href === '/practice'
+                  ? location === '/practice' || location.startsWith('/practice/questions')
+                  : location === href;
                 return (
                   <Link key={href} href={href}>
                     <a
@@ -287,7 +287,11 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                       <a
                         onClick={() => setMobileOpen(false)}
                         className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium ${
-                          location === href ? 'bg-blue-600 text-white' : 'text-white/70 hover:bg-white/5'
+                          (href === '/practice'
+                            ? location === '/practice' || location.startsWith('/practice/questions')
+                            : location === href)
+                            ? 'bg-blue-600 text-white'
+                            : 'text-white/70 hover:bg-white/5'
                         }`}
                       >
                         <Icon size={18} className="text-blue-400" />

@@ -6147,3 +6147,2492 @@
 - [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
 - [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
 - [ ] Restore administrator Members access for both admin and
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve direct routes and existing practice/exam flows
+- [ ] Add regression coverage for the unified Practice navigation and buttons
+- [ ] Run validation and save a checkpoint for the unified Practice tab
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
+- [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
+- [ ] Preserve

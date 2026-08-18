@@ -10,6 +10,7 @@ import { SidebarNavigation } from "./components/SidebarNavigation";
 import Home from "./pages/Home";
 import Events from "./pages/Events";
 import Practice from "./pages/Practice";
+import PracticeQuestions from "./pages/PracticeQuestions";
 import CalendarPage from "./pages/CalendarPage";
 import MembersPage from "./pages/MembersPage";
 
@@ -61,6 +62,7 @@ function Router() {
       <Route path="/login" component={LoginSignup} />
       <Route path="/events" component={Events} />
       <Route path="/practice" component={Practice} />
+      <Route path="/practice/questions" component={PracticeQuestions} />
       <Route path="/leaderboard" component={Leaderboard} />
           <Route path="/calendar" component={CalendarPage} />
           <Route path="/chapter/members" component={MembersPage} />
