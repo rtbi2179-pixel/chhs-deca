@@ -28,7 +28,7 @@ describe("onboarding progress and celebration", () => {
   });
 
   it("routes each walkthrough step to an interactive destination", () => {
-    expect(ONBOARDING_WALKTHROUGH_STEPS.map((step) => step.path)).toEqual(["/", "/pi-quizlet", "/practice", "/events", "/study-cards", "/chapter-mock-exam"]);
+    expect(ONBOARDING_WALKTHROUGH_STEPS.map((step) => step.path)).toEqual(["/", "/pi-quizlet", "/practice", "/events", "/banking", "/chapter-mock-exam"]);
     expect(ONBOARDING_WALKTHROUGH_STEPS.every((step) => step.action.length > 0)).toBe(true);
   });
 

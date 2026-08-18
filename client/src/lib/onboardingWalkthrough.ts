@@ -46,8 +46,8 @@ export const ONBOARDING_WALKTHROUGH_STEPS = [
     icon: "blueBucks",
     tabLabel: "Blue Bucks",
     detail: "Virtual rewards for consistent, honest practice",
-    path: "/study-cards",
-    action: "Try a Study Card or open a Blue Bucks feature while you remain in the walkthrough.",
+    path: "/banking",
+    action: "Open Banking to choose a Study Card or explore a Blue Bucks feature while you remain in the walkthrough.",
   },
   {
     eyebrow: "06 · Check your readiness",

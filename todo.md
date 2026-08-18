@@ -571,3 +571,7 @@
 - [x] Review the project TODO history and consolidate any stale or duplicate pending items before final delivery
 
 - [x] Confirm all current TODO items are complete before final delivery
+- [x] Make Study Cards replace credit-card options in Banking and remove the separate Study Card navigation tab
+- [x] Add regression coverage for the Banking-only Study Card flow and removed tab
+- [x] Run full validation and save a checkpoint for the Banking consolidation
+- [x] Confirm all current TODO items are complete before final delivery

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'wouter'
-import { Menu, X, Trophy, BookOpen, Calendar, Users, Home, LogOut, MessageSquare, MessageSquarePlus, Mic, Crown, Bell, DollarSign, TrendingUp, History, Building2, Zap, Sparkles, Brain, ClipboardCheck, Newspaper, CheckCheck } from 'lucide-react'
+import { Menu, X, Trophy, BookOpen, Calendar, Users, Home, LogOut, MessageSquare, MessageSquarePlus, Mic, Crown, Bell, DollarSign, TrendingUp, History, Building2, Zap, Brain, ClipboardCheck, Newspaper, CheckCheck } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { trpc } from '@/lib/trpc'
@@ -271,16 +271,6 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
                               <DollarSign size={16} className="text-blue-400" />
                               <span className="text-sm font-semibold text-white">{blueBucksData?.balance || 0} Blue Bucks</span>
                             </div>
-                            <Link href="/study-cards">
-                              <button
-                                onClick={() => setShowFinancialMenu(false)}
-                                className="w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-blue-500/10 transition-colors text-sm text-white/80 hover:text-white border-b border-blue-500/20"
-                              >
-                                <Sparkles size={18} className="text-blue-300" />
-                                <span className="font-medium">Study Cards</span>
-                              </button>
-                            </Link>
-                            
                             {/* Banking Option */}
                             <Link href="/banking">
                               <button
