@@ -6,7 +6,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AdminModeProvider } from "./contexts/AdminModeContext";
 import { SchoolCodeProvider } from "./contexts/SchoolCodeContext";
-import Navigation from "./components/Navigation";
+import { SidebarNavigation } from "./components/SidebarNavigation";
 import Home from "./pages/Home";
 import Events from "./pages/Events";
 import Practice from "./pages/Practice";
@@ -126,11 +126,18 @@ function App() {
             <Toaster />
             <Toast toasts={toasts} onRemove={removeToast} />
             {loading ? <SignedOutWelcome isChecking /> : showWelcomeGate ? <SignedOutWelcome /> : <>
-              {user && <Navigation onLoginRequired={handleLoginRequired} />}
-              <Router />
-              {user && <DirectMessagesPanel />}
-              {user && <Footer />}
-              {user && <FirstSignInTour />}
+              {user ? (
+                <SidebarNavigation>
+                  <Router />
+                  <DirectMessagesPanel />
+                  <Footer />
+                  <FirstSignInTour />
+                </SidebarNavigation>
+              ) : (
+                <>
+                  <Router />
+                </>
+              )}
             </>}
             </TooltipProvider>
           </SchoolCodeProvider>
