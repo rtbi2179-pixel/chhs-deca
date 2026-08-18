@@ -5,11 +5,11 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 describe("onboarding progress and celebration", () => {
-  it("reports clear, clamped progress through the six tour steps", () => {
-    expect(getOnboardingProgress(0)).toEqual({ currentStep: 1, totalSteps: 6, percentage: 17, scale: 1 / 6 });
-    expect(getOnboardingProgress(2)).toEqual({ currentStep: 3, totalSteps: 6, percentage: 50, scale: 1 / 2 });
-    expect(getOnboardingProgress(5)).toEqual({ currentStep: 6, totalSteps: 6, percentage: 100, scale: 1 });
-    expect(getOnboardingProgress(99)).toMatchObject({ currentStep: 6, percentage: 100 });
+  it("reports clear, clamped progress through the seven tour steps", () => {
+    expect(getOnboardingProgress(0, 7)).toEqual({ currentStep: 1, totalSteps: 7, percentage: 14, scale: 1 / 7 });
+    expect(getOnboardingProgress(3, 7)).toEqual({ currentStep: 4, totalSteps: 7, percentage: 57, scale: 4 / 7 });
+    expect(getOnboardingProgress(6, 7)).toEqual({ currentStep: 7, totalSteps: 7, percentage: 100, scale: 1 });
+    expect(getOnboardingProgress(99, 7)).toMatchObject({ currentStep: 7, percentage: 100 });
   });
 
   it("keeps the completion celebration brief", () => {
@@ -28,7 +28,7 @@ describe("onboarding progress and celebration", () => {
   });
 
   it("routes each walkthrough step to an interactive destination", () => {
-    expect(ONBOARDING_WALKTHROUGH_STEPS.map((step) => step.path)).toEqual(["/", "/pi-quizlet", "/practice", "/events", "/banking", "/chapter-mock-exam"]);
+    expect(ONBOARDING_WALKTHROUGH_STEPS.map((step) => step.path)).toEqual(["/", "/pi-quizlet", "/practice", "/events", "/calendar", "/banking", "/chapter-mock-exam"]);
     expect(ONBOARDING_WALKTHROUGH_STEPS.every((step) => step.action.length > 0)).toBe(true);
   });
 
@@ -44,5 +44,8 @@ describe("onboarding progress and celebration", () => {
     expect(source).toContain("blueblazer:restart-tour");
     expect(source).toContain("setStepIndex(0)");
     expect(source).toContain("(!onboarding?.shouldShow && !isOpen)");
+    expect(source).toContain("tourOpenVersion");
+    expect(source).toContain("scale: 0.985");
+    expect(source).toContain("TOUR_PARTS");
   });
 });

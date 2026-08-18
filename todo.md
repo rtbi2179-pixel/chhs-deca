@@ -8711,3 +8711,10 @@
 - [x] Make the Blue Blazer logo reopen the onboarding tour from desktop and mobile navigation
 - [x] Apply a black top-left brand background while preserving sidebar controls and accessibility
 - [x] Add regression coverage, validate logo interactions, and checkpoint the update
+- [ ] Audit Blue Bucks, Banking, savings interest, BBX growth, and recurring simulation update paths
+- [ ] Make checking the authoritative displayed balance, route earned Blue Bucks to checking, and align investment-account visibility
+- [ ] Set simulated savings to 7% monthly and BBX to approximately 10% monthly average growth using the existing update mechanism
+- [ ] Add regression coverage, validate accounting and growth rules, and checkpoint the update
+- [x] Reorganize the logo-triggered tour into current Main Practice Tools, Chapter Tools, and Blue Bucks sections
+- [x] Add subtle tour-opening motion and eliminate grey from the desktop and mobile logo backgrounds
+- [x] Add regression coverage, validate the three-part tour, and checkpoint the update
