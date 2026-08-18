@@ -17,6 +17,7 @@
 - [x] Make Study Cards replace credit-card options in Banking and remove the separate Study Card navigation tab
 - [x] Reorganize the authenticated app shell into a responsive left sidebar with grouped tabs, profile controls, active states, matching Lucide icons, and a minimize/expand control
 - [x] Archive the Gacha system and cosmetics from user-facing navigation and pages while preserving implementation and stored data
+- [x] Remove every remaining user-facing Cosmetics section, panels, Customize buttons, inventory messaging, and cosmetics references
 - [x] Add regression coverage preventing archived Gacha and cosmetics entry points from returning
 - [x] Run full validation and save a checkpoint for the archived feature state
 - [x] Confirm all current TODO items are complete before final delivery
