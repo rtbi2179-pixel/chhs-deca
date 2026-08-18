@@ -116,18 +116,18 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                   ? location === '/practice' || location.startsWith('/practice/questions')
                   : location === href;
                 return (
-                  <Link key={href} href={href}>
-                    <a
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group relative ${
-                        isActive
-                          ? 'bg-blue-600 text-white shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)]'
-                          : 'text-white/70 hover:text-white hover:bg-white/[0.06]'
-                      }`}
-                      title={collapsed ? label : undefined}
-                    >
-                      <Icon size={20} className={isActive ? 'text-white' : 'text-blue-400 group-hover:text-blue-300'} />
-                      {!collapsed && <span className="truncate">{label}</span>}
-                    </a>
+                  <Link
+                    key={href}
+                    href={href}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group relative ${
+                      isActive
+                        ? 'bg-blue-600 text-white shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)]'
+                        : 'text-white/70 hover:text-white hover:bg-white/[0.06]'
+                    }`}
+                    title={collapsed ? label : undefined}
+                  >
+                    <Icon size={20} className={isActive ? 'text-white' : 'text-blue-400 group-hover:text-blue-300'} />
+                    {!collapsed && <span className="truncate">{label}</span>}
                   </Link>
                 );
               })}
@@ -145,23 +145,23 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                   ? location === '/banking' || location === '/transaction-history'
                   : location === href;
                 return (
-                  <Link key={href} href={href}>
-                    <a
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group relative ${
-                        isActive
-                          ? 'bg-blue-600 text-white shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)]'
-                          : 'text-white/70 hover:text-white hover:bg-white/[0.06]'
-                      }`}
-                      title={collapsed ? label : undefined}
-                    >
-                      <Icon size={20} className={isActive ? 'text-white' : 'text-green-400 group-hover:text-green-300'} />
-                      {!collapsed && <span className="truncate">{label}</span>}
-                      {href === '/blues-news' && (unreadNews.data?.count ?? 0) > 0 && (
-                        <span className={`absolute ${collapsed ? 'top-1 right-1' : 'right-3'} px-1.5 py-0.5 text-[10px] font-bold bg-blue-500 text-white rounded-full`}>
-                          {unreadNews.data?.count}
-                        </span>
-                      )}
-                    </a>
+                  <Link
+                    key={href}
+                    href={href}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group relative ${
+                      isActive
+                        ? 'bg-blue-600 text-white shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)]'
+                        : 'text-white/70 hover:text-white hover:bg-white/[0.06]'
+                    }`}
+                    title={collapsed ? label : undefined}
+                  >
+                    <Icon size={20} className={isActive ? 'text-white' : 'text-green-400 group-hover:text-green-300'} />
+                    {!collapsed && <span className="truncate">{label}</span>}
+                    {href === '/blues-news' && (unreadNews.data?.count ?? 0) > 0 && (
+                      <span className={`absolute ${collapsed ? 'top-1 right-1' : 'right-3'} px-1.5 py-0.5 text-[10px] font-bold bg-blue-500 text-white rounded-full`}>
+                        {unreadNews.data?.count}
+                      </span>
+                    )}
                   </Link>
                 );
               })}
@@ -178,18 +178,18 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                 {adminNavLinks.map(({ href, label, icon: Icon }) => {
                   const isActive = location === href;
                   return (
-                    <Link key={href} href={href}>
-                      <a
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group relative ${
-                          isActive
-                            ? 'bg-blue-600 text-white shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)]'
-                            : 'text-white/70 hover:text-white hover:bg-white/[0.06]'
-                        }`}
-                        title={collapsed ? label : undefined}
-                      >
-                        <Icon size={20} className={isActive ? 'text-white' : 'text-amber-400 group-hover:text-amber-300'} />
-                        {!collapsed && <span className="truncate">{label}</span>}
-                      </a>
+                    <Link
+                      key={href}
+                      href={href}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group relative ${
+                        isActive
+                          ? 'bg-blue-600 text-white shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)]'
+                          : 'text-white/70 hover:text-white hover:bg-white/[0.06]'
+                      }`}
+                      title={collapsed ? label : undefined}
+                    >
+                      <Icon size={20} className={isActive ? 'text-white' : 'text-amber-400 group-hover:text-amber-300'} />
+                      {!collapsed && <span className="truncate">{label}</span>}
                     </Link>
                   );
                 })}
@@ -222,10 +222,8 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                       <LogOut size={16} />
                     </button>
                   </div>
-                  <Link href="/profile">
-                    <a className="block w-full mt-1 py-1.5 px-3 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium text-center rounded-lg transition-colors shadow-sm">
-                      View Profile & Stats
-                    </a>
+                  <Link href="/profile" className="block w-full mt-1 py-1.5 px-3 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium text-center rounded-lg transition-colors shadow-sm">
+                    View Profile & Stats
                   </Link>
                 </div>
               ) : (
@@ -246,10 +244,8 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
               )}
             </div>
           ) : (
-            <Link href="/login">
-              <a className="block w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium text-center rounded-xl transition-colors shadow-md">
-                {!collapsed ? 'Sign In to Blue Blazer' : 'Login'}
-              </a>
+            <Link href="/login" className="block w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium text-center rounded-xl transition-colors shadow-md">
+              {!collapsed ? 'Sign In to Blue Blazer' : 'Login'}
             </Link>
           )}
         </div>
@@ -285,20 +281,20 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                 <p className="text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">MAIN NAVIGATION</p>
                 <div className="space-y-1">
                   {mainNavLinks.map(({ href, label, icon: Icon }) => (
-                    <Link key={href} href={href}>
-                      <a
-                        onClick={() => setMobileOpen(false)}
-                        className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium ${
-                          (href === '/practice'
-                            ? location === '/practice' || location.startsWith('/practice/questions')
-                            : location === href)
-                            ? 'bg-blue-600 text-white'
-                            : 'text-white/70 hover:bg-white/5'
-                        }`}
-                      >
-                        <Icon size={18} className="text-blue-400" />
-                        {label}
-                      </a>
+                    <Link
+                      key={href}
+                      href={href}
+                      onClick={() => setMobileOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium ${
+                        (href === '/practice'
+                          ? location === '/practice' || location.startsWith('/practice/questions')
+                          : location === href)
+                          ? 'bg-blue-600 text-white'
+                          : 'text-white/70 hover:bg-white/5'
+                      }`}
+                    >
+                      <Icon size={18} className="text-blue-400" />
+                      {label}
                     </Link>
                   ))}
                 </div>
@@ -308,19 +304,19 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                 <p className="text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">FINANCIAL SYSTEMS</p>
                 <div className="space-y-1">
                   {financialNavLinks.map(({ href, label, icon: Icon }) => (
-                    <Link key={href} href={href}>
-                      <a
-                        onClick={() => setMobileOpen(false)}
-                        className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium ${
-                          (href === '/banking'
-                            ? location === '/banking' || location === '/transaction-history'
-                            : location === href)
-                            ? 'bg-blue-600 text-white' : 'text-white/70 hover:bg-white/5'
-                        }`}
-                      >
-                        <Icon size={18} className="text-green-400" />
-                        {label}
-                      </a>
+                    <Link
+                      key={href}
+                      href={href}
+                      onClick={() => setMobileOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium ${
+                        (href === '/banking'
+                          ? location === '/banking' || location === '/transaction-history'
+                          : location === href)
+                          ? 'bg-blue-600 text-white' : 'text-white/70 hover:bg-white/5'
+                      }`}
+                    >
+                      <Icon size={18} className="text-green-400" />
+                      {label}
                     </Link>
                   ))}
                 </div>
@@ -331,16 +327,16 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                   <p className="text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">ADMINISTRATION</p>
                   <div className="space-y-1">
                     {adminNavLinks.map(({ href, label, icon: Icon }) => (
-                      <Link key={href} href={href}>
-                        <a
-                          onClick={() => setMobileOpen(false)}
-                          className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium ${
-                            location === href ? 'bg-blue-600 text-white' : 'text-white/70 hover:bg-white/5'
-                          }`}
-                        >
-                          <Icon size={18} className="text-amber-400" />
-                          {label}
-                        </a>
+                      <Link
+                        key={href}
+                        href={href}
+                        onClick={() => setMobileOpen(false)}
+                        className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium ${
+                          location === href ? 'bg-blue-600 text-white' : 'text-white/70 hover:bg-white/5'
+                        }`}
+                      >
+                        <Icon size={18} className="text-amber-400" />
+                        {label}
                       </Link>
                     ))}
                   </div>
@@ -365,13 +361,12 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                     </button>
                   </div>
                 ) : (
-                  <Link href="/login">
-                    <a
-                      onClick={() => setMobileOpen(false)}
-                      className="w-full py-3 bg-blue-600 text-white text-sm font-medium text-center rounded-xl block shadow-md"
-                    >
-                      Sign In
-                    </a>
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileOpen(false)}
+                    className="w-full py-3 bg-blue-600 text-white text-sm font-medium text-center rounded-xl block shadow-md"
+                  >
+                    Sign In
                   </Link>
                 )}
               </div>

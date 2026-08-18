@@ -8684,3 +8684,5 @@
 - [x] Make the selected Study Card the functional Banking card while preserving current banking-card functions
 - [x] Retain Study Card specializations, progress, and card selection behavior in the unified Banking card experience
 - [x] Add regression coverage, validate, and checkpoint the unified Banking Study Card update
+- [x] Fix invalid nested anchor markup on the Home-page render path
+- [x] Add regression coverage and validate Home-page link composition
