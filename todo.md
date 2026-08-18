@@ -21,3 +21,1801 @@
 - [x] Add regression coverage preventing archived Gacha and cosmetics entry points from returning
 - [x] Run full validation and save a checkpoint for the archived feature state
 - [x] Confirm all current TODO items are complete before final delivery
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [x] Run full validation and save a checkpoint for the redesigned market dashboard
+- [x] Confirm all current TODO items are complete before final delivery
+
+- [x] Reorganize the Stock Market/BBX page into the provided dashboard format without adding, deleting, or changing market information
+- [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
+- [x] Add regression coverage for the new market dashboard structure and data-preservation contract
+- [ ] Run full validation and save
