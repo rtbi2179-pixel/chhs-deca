@@ -19,6 +19,10 @@ import {
   Menu,
   X,
   Sparkles,
+  MessageSquare,
+  Bell,
+  Zap,
+  MessageSquarePlus,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -26,9 +30,14 @@ const mainNavLinks = [
   { href: '/', label: 'Overview', icon: Home, group: 'MAIN' },
   { href: '/pi-quizlet', label: 'PI Study Library', icon: BookOpen, group: 'MAIN' },
   { href: '/practice', label: 'Practice Questions', icon: Target, group: 'MAIN' },
-  { href: '/mock-exams', label: 'Mock Exams', icon: Sparkles, group: 'MAIN' },
+  { href: '/chapter-mock-exam', label: 'Mock Exams', icon: Sparkles, group: 'MAIN' },
+  { href: '/leaderboard', label: 'Leaderboard', icon: TrendingUp, group: 'MAIN' },
   { href: '/events', label: 'Events & Community', icon: Calendar, group: 'MAIN' },
+  { href: '/discussions', label: 'Discussion Posts', icon: MessageSquare, group: 'MAIN' },
+  { href: '/announcements', label: 'Announcements', icon: Bell, group: 'MAIN' },
   { href: '/volunteer', label: 'Volunteer Sign-Ups', icon: Users, group: 'MAIN' },
+  { href: '/speech-ai', label: 'AI Study & Roleplay', icon: Zap, group: 'MAIN' },
+  { href: '/feedback', label: 'Feedback', icon: MessageSquarePlus, group: 'MAIN' },
 ];
 
 const financialNavLinks = [
@@ -39,6 +48,7 @@ const financialNavLinks = [
 ];
 
 const adminNavLinks = [
+  { href: '/chapter/members', label: 'Member Management', icon: Users, group: 'ADMIN' },
   { href: '/admin', label: 'Chapter Management', icon: ShieldAlert, group: 'ADMIN' },
 ];
 
@@ -157,7 +167,7 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
           </div>
 
           {/* Admin Section if applicable */}
-          {user?.role === 'admin' && (
+          {user && (user.role === 'admin' || user.role === 'super_admin' || user.email === 'rtbi2179@gmail.com' || user.email === 'sahan.mallampati@gmail.com') && (
             <div>
               {!collapsed && (
                 <p className="px-3 text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">ADMINISTRATION</p>
@@ -307,7 +317,7 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                 </div>
               </div>
 
-              {user?.role === 'admin' && (
+              {user && (user.role === 'admin' || user.role === 'super_admin' || user.email === 'rtbi2179@gmail.com' || user.email === 'sahan.mallampati@gmail.com') && (
                 <div>
                   <p className="text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">ADMINISTRATION</p>
                   <div className="space-y-1">

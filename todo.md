@@ -4176,3 +4176,1974 @@
 - [ ] Confirm all current TODO items are complete before final delivery
 
 - [ ] Remove Highlight, Calculator
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and super_admin roles
+- [ ] Add regression coverage proving restored tabs/routes are present while archived Gacha/Cosmetics remain absent
+- [ ] Run validation and save a checkpoint for restored navigation
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Restore legacy user-facing tabs removed by the sidebar redesign, including Leaderboard, Calendar, Discussions, Announcements, Feedback, and AI Tools
+- [ ] Restore the legacy Mock Exam navigation route without breaking the current chapter-exam flow
+- [ ] Restore administrator Members access for both admin and
