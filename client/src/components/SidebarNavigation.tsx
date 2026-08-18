@@ -10,7 +10,6 @@ import {
   Users,
   Building2,
   TrendingUp,
-  History,
   Newspaper,
   ShieldAlert,
   LogOut,
@@ -43,7 +42,6 @@ const mainNavLinks = [
 const financialNavLinks = [
   { href: '/banking', label: 'Banking & Cards', icon: Building2, group: 'FINANCIAL' },
   { href: '/blue-market', label: 'Stock Market (BBX)', icon: TrendingUp, group: 'FINANCIAL' },
-  { href: '/transaction-history', label: 'Transactions', icon: History, group: 'FINANCIAL' },
   { href: '/blues-news', label: "Blue's News", icon: Newspaper, group: 'FINANCIAL' },
 ];
 
@@ -143,7 +141,9 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
             )}
             <div className="space-y-1">
               {financialNavLinks.map(({ href, label, icon: Icon }) => {
-                const isActive = location === href;
+                const isActive = href === '/banking'
+                  ? location === '/banking' || location === '/transaction-history'
+                  : location === href;
                 return (
                   <Link key={href} href={href}>
                     <a
@@ -312,7 +312,10 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                       <a
                         onClick={() => setMobileOpen(false)}
                         className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium ${
-                          location === href ? 'bg-blue-600 text-white' : 'text-white/70 hover:bg-white/5'
+                          (href === '/banking'
+                            ? location === '/banking' || location === '/transaction-history'
+                            : location === href)
+                            ? 'bg-blue-600 text-white' : 'text-white/70 hover:bg-white/5'
                         }`}
                       >
                         <Icon size={18} className="text-green-400" />

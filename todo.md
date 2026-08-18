@@ -8659,8 +8659,13 @@
 - [x] Improve mobile Profile navigation and add a quick-jump control
 - [x] Add regression coverage for the new Profile interactions
 - [x] Validate and checkpoint the Profile interaction update
-- [ ] Reorganize the Stock Market overview into a reference-inspired dashboard hierarchy without changing information
-- [ ] Add clearer in-page market navigation for overview, listings, movers, sectors, news, and guidance
-- [ ] Preserve all existing BBX charts, values, controls, trading, and admin actions
-- [ ] Add regression coverage for Stock Market layout and navigation
-- [ ] Validate the Stock Market update and save a checkpoint
+- [x] Reorganize the Stock Market overview into a reference-inspired dashboard hierarchy without changing information
+- [x] Add clearer in-page market navigation for overview, listings, movers, sectors, news, and guidance
+- [x] Preserve all existing BBX charts, values, controls, trading, and admin actions
+- [x] Add regression coverage for Stock Market layout and navigation
+- [x] Validate the Stock Market update and save a checkpoint
+- [x] Move the transaction history experience into Banking & Cards without changing transaction data or actions
+- [x] Remove the standalone Transactions item from desktop and mobile navigation
+- [x] Preserve direct transaction route compatibility while Banking becomes the primary destination
+- [x] Add regression coverage for Banking and Transactions consolidation
+- [x] Validate and checkpoint the Banking consolidation

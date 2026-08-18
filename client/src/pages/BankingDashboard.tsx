@@ -7,6 +7,7 @@ import { useState } from "react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { toast } from "sonner";
 import { CreditScoreChart } from "@/components/CreditScoreChart";
+import TransactionHistory from "./TransactionHistory";
 
 export function BankingDashboard() {
   const { user } = useAuth();
@@ -601,6 +602,8 @@ export function BankingDashboard() {
             </div>
           </Card>
         </div>
+
+        <TransactionHistory embedded />
       </div>
     </div>
   );

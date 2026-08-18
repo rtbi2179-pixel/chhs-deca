@@ -3,7 +3,12 @@ import { trpc } from "@/lib/trpc";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight, ArrowDownLeft, Loader2, TrendingUp, TrendingDown } from "lucide-react";
-export default function TransactionHistory() {
+export interface TransactionHistoryProps {
+  embedded?: boolean;
+  params?: Record<number, string | undefined>;
+}
+
+export default function TransactionHistory({ embedded = false }: TransactionHistoryProps) {
   const [limit] = useState(50);
   const [offset, setOffset] = useState(0);
   const [showBlueBucksBreakdown, setShowBlueBucksBreakdown] = useState(false);
@@ -42,12 +47,22 @@ export default function TransactionHistory() {
   };
 
   return (
-    <div className="min-h-screen bg-background py-8">
-      <div className="container max-w-6xl mx-auto px-4">
+    <section id={embedded ? "transactions" : undefined} className={embedded ? "mt-10 scroll-mt-24" : "min-h-screen bg-background py-8"}>
+      <div className={embedded ? "" : "container max-w-6xl mx-auto px-4"}>
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2">Transaction History</h1>
-          <p className="text-foreground/70">View all your past trades with execution prices and timestamps</p>
+          {embedded ? (
+            <>
+              <p className="page-eyebrow">Banking activity</p>
+              <h2 className="mt-2 text-2xl font-semibold text-foreground">Transaction History</h2>
+              <p className="mt-2 text-foreground/70">View all your past trades with execution prices and timestamps.</p>
+            </>
+          ) : (
+            <>
+              <h1 className="text-4xl font-bold text-foreground mb-2">Transaction History</h1>
+              <p className="text-foreground/70">View all your past trades with execution prices and timestamps</p>
+            </>
+          )}
           
           {/* Filters */}
           <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -222,6 +237,6 @@ export default function TransactionHistory() {
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }
