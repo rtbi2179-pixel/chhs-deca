@@ -25,6 +25,17 @@ export function BankingDashboard() {
   const accrueSavingsInterestMutation = trpc.banking.accrueSavingsInterest.useMutation();
   const blueBucksQuery = trpc.practice.getBlueBucksBalance.useQuery();
   const depositBlueBucksMutation = trpc.banking.depositBlueBucksToChecking.useMutation();
+  const studyCardCatalogQuery = trpc.studyCards.catalog.useQuery(undefined, { enabled: Boolean(user) });
+  const studyCardMineQuery = trpc.studyCards.mine.useQuery(undefined, { enabled: Boolean(user) });
+  const selectStudyCardMutation = trpc.studyCards.select.useMutation({
+    onSuccess: (data) => {
+      utils.studyCards.mine.invalidate();
+      toast.success(`Switched active Study Card to ${data.cardKey}!`);
+    },
+    onError: (err) => {
+      toast.error(err.message || "Failed to switch Study Card");
+    }
+  });
   
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [transferData, setTransferData] = useState({
@@ -366,36 +377,87 @@ export function BankingDashboard() {
               )}
             </Card>
 
-            {/* Available Cards to Apply */}
+            {/* Available Cards & Study Card Options */}
             <Card className="editorial-panel p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Available Cards</h3>
-              {availableCardsQuery.isLoading ? (
-                <p className="text-slate-400">Loading available cards...</p>
-              ) : availableCardsQuery.data && availableCardsQuery.data.length > 0 ? (
-                <div className="space-y-3">
-                  {availableCardsQuery.data.map((card: any) => (
-                    <div key={card.id} className="p-3 bg-slate-700 rounded-lg border border-slate-600">
-                      <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <p className="text-white font-semibold">{card.name}</p>
-                          <p className="text-slate-300 text-sm capitalize">{card.tier} Tier</p>
+              <h3 className="text-lg font-semibold text-white mb-4">Available Cards & Study Specializations</h3>
+              
+              {/* Credit Cards Section */}
+              <div className="mb-6">
+                <p className="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-3">Credit Cards</p>
+                {availableCardsQuery.isLoading ? (
+                  <p className="text-slate-400 text-sm">Loading available cards...</p>
+                ) : availableCardsQuery.data && availableCardsQuery.data.length > 0 ? (
+                  <div className="space-y-3">
+                    {availableCardsQuery.data.map((card: any) => (
+                      <div key={card.id} className="p-3 bg-slate-800/80 rounded-lg border border-slate-700">
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <p className="text-white font-semibold text-sm">{card.name}</p>
+                            <p className="text-slate-400 text-xs capitalize">{card.tier} Tier</p>
+                          </div>
+                          <p className="text-blue-400 font-semibold text-sm">{parseFloat(card.rewardsPercentage)}% Rewards</p>
                         </div>
-                        <p className="text-blue-400 font-semibold">{parseFloat(card.rewardsPercentage)}% Rewards</p>
+                        <Button
+                          onClick={() => handleApplyCard(card.id)}
+                          disabled={applyCreditCardMutation.isPending}
+                          size="sm"
+                          className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs mt-1"
+                        >
+                          {applyCreditCardMutation.isPending ? "Applying..." : "Apply"}
+                        </Button>
                       </div>
-                      <Button
-                        onClick={() => handleApplyCard(card.id)}
-                        disabled={applyCreditCardMutation.isPending}
-                        size="sm"
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs mt-2"
-                      >
-                        {applyCreditCardMutation.isPending ? "Applying..." : "Apply"}
-                      </Button>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-slate-400 text-sm">No additional credit cards available for your credit score.</p>
+                )}
+              </div>
+
+              {/* Study Cards Section */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Study Cards (Virtual Learning)</p>
+                  {studyCardMineQuery.data && (
+                    <span className="text-xs text-blue-400 font-medium bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/25">
+                      Active: {studyCardMineQuery.data.cardKey}
+                    </span>
+                  )}
                 </div>
-              ) : (
-                <p className="text-slate-400">No additional cards available for your credit score.</p>
-              )}
+                {studyCardCatalogQuery.isLoading ? (
+                  <p className="text-slate-400 text-sm">Loading study cards...</p>
+                ) : studyCardCatalogQuery.data?.cards ? (
+                  <div className="space-y-3 max-h-[360px] overflow-y-auto pr-1">
+                    {studyCardCatalogQuery.data.cards.map((sc) => {
+                      const isActive = studyCardMineQuery.data?.cardKey === sc.key;
+                      return (
+                        <div key={sc.key} className={`p-3 rounded-lg border transition ${isActive ? "bg-blue-600/15 border-blue-400/50" : "bg-slate-800/80 border-slate-700 hover:border-slate-600"}`}>
+                          <div className="flex justify-between items-start mb-1">
+                            <div>
+                              <p className="text-white font-semibold text-sm flex items-center gap-1.5">
+                                {sc.name}
+                                {isActive && <span className="text-[10px] bg-blue-500 text-white px-1.5 py-0.2 rounded font-bold uppercase">Active</span>}
+                              </p>
+                              <p className="text-slate-300 text-xs">{sc.title} · <span className="text-blue-300">{sc.focus}</span></p>
+                            </div>
+                          </div>
+                          <p className="text-slate-400 text-xs mt-1 italic">{sc.liveBenefit}</p>
+                          <Button
+                            onClick={() => selectStudyCardMutation.mutate({ cardKey: sc.key })}
+                            disabled={isActive || selectStudyCardMutation.isPending}
+                            size="sm"
+                            variant={isActive ? "outline" : "default"}
+                            className={`w-full text-xs mt-2.5 ${isActive ? "border-blue-400/30 text-blue-300 bg-transparent" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
+                          >
+                            {isActive ? "Currently Active" : selectStudyCardMutation.isPending ? "Switching..." : "Activate Study Card"}
+                          </Button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="text-slate-400 text-sm">Study cards catalog unavailable.</p>
+                )}
+              </div>
             </Card>
           </div>
 

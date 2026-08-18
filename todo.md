@@ -558,3 +558,5 @@
 - [x] Apply deterministic credit-score history updates that reflect verified inactivity over time
 - [x] Add or extend scheduled processing for ongoing credit-score inactivity updates
 - [x] Add focused portfolio, credit-history, inactivity, and schedule regression coverage
+- [ ] Integrate Study Card options into the Banking tab's Available Cards section
+- [x] Integrate Study Card options into the Banking tab's 'Available Cards' section with server-authoritative switching and professional dark-theme UI
