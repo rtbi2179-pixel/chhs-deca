@@ -11,7 +11,7 @@ describe('Unified Practice navigation', () => {
   it('offers exactly two labeled entry buttons for questions and mock exams', () => {
     expect(landingPage).toContain("href: '/practice/questions'");
     expect(landingPage).toContain("title: 'Practice Questions'");
-    expect(landingPage).toContain("href: '/chapter-mock-exam'");
+    expect(landingPage).toContain("href: '/mock-exams'");
     expect(landingPage).toContain("title: 'Mock Exams'");
     expect(landingPage).toContain('Open {card.title}');
   });
@@ -19,6 +19,7 @@ describe('Unified Practice navigation', () => {
   it('registers the question-bank sub-route while preserving the mock-exam route', () => {
     expect(app).toContain('<Route path="/practice" component={Practice} />');
     expect(app).toContain('<Route path="/practice/questions" component={PracticeQuestions} />');
+    expect(app).toContain('<Route path="/mock-exams" component={ChapterMockExam} />');
     expect(app).toContain('<Route path="/chapter-mock-exam" component={ChapterMockExam} />');
   });
 

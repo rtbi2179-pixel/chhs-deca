@@ -99,6 +99,7 @@ function Router() {
       <Route path="/pi-learning" component={PILearning} />
       <Route path="/pi-quizlet" component={PIQuizlet} />
       <Route path="/study-guide" component={PIQuizlet} />
+      <Route path="/mock-exams" component={ChapterMockExam} />
       <Route path="/chapter-mock-exam" component={ChapterMockExam} />
 
       <Route path="/404" component={NotFound} />

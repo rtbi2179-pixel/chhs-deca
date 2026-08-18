@@ -18,7 +18,7 @@ const entryCards = [
     ],
   },
   {
-    href: '/chapter-mock-exam',
+    href: '/mock-exams',
     eyebrow: 'EXAM SIMULATION',
     title: 'Mock Exams',
     description: 'Test your readiness with balanced DECA-style exams, detailed results, weak-point analysis, and a targeted study guide.',

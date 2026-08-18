@@ -8642,3 +8642,8 @@
 - [ ] Preserve existing logo references on the welcome screen and Home footer
 - [ ] Add logo regression coverage and validate the restored branded surfaces
 - [ ] Save a checkpoint for the restored Blue Blazer logos
+
+- [ ] Restore the Mock Exams page route that currently shows Page Not Found
+- [ ] Connect the Practice hub Mock Exams button to the restored route
+- [ ] Add regression coverage for Mock Exams route registration and navigation
+- [ ] Validate the restored Mock Exams page and save a checkpoint
