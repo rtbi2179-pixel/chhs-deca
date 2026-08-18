@@ -37,7 +37,7 @@ import PortfolioUpload from "./pages/PortfolioUpload";
 import AdminPortfolios from "./pages/AdminPortfolios";
 import TransactionHistory from "./pages/TransactionHistory";
 import { BankingDashboard } from "./pages/BankingDashboard";
-import GachaShop from "./pages/GachaShop";
+
 import PracticeDebug from "./pages/PracticeDebug";
 import SpendingPatterns from "./pages/SpendingPatterns";
 import SuperAdminDashboard from "./pages/SuperAdminDashboard";
@@ -82,7 +82,6 @@ function Router() {
       <Route path="/admin-portfolios" component={AdminPortfolios} />
       <Route path="/transaction-history" component={TransactionHistory} />
       <Route path="/banking" component={BankingDashboard} />
-      <Route path="/gacha" component={GachaShop} />
       <Route path="/spending-patterns" component={SpendingPatterns} />
       <Route path="/super-admin" component={SuperAdminDashboard} />
       <Route path="/market-analytics" component={BbxPortfolioPage} />

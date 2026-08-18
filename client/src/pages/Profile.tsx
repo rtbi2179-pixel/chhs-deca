@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { toast } from 'sonner'
-import { ProfileCosmeticsDisplay } from '@/components/ProfileCosmeticsDisplay'
+
 import { CreditScoreChart } from '@/components/CreditScoreChart'
 import { PortfolioChart } from '@/components/PortfolioChart'
 
@@ -81,11 +81,7 @@ export default function Profile() {
     { enabled: !!user?.id }
   )
 
-  // Fetch user cosmetics
-  const { data: userCosmetics = [] } = trpc.gacha.getUserCosmetics.useQuery(
-    undefined,
-    { enabled: !!user?.id }
-  )
+
 
   // Fetch credit score for chart
   const { data: creditScoreData } = trpc.banking.getCreditScore.useQuery(
@@ -761,21 +757,7 @@ export default function Profile() {
             />
           </motion.div>
         </div>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          className="relative overflow-hidden rounded-2xl border border-blue-500/20 bg-gradient-to-br from-blue-600/10 via-slate-900/50 to-slate-950 p-8 backdrop-blur-sm mb-12"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-transparent to-purple-500/5 pointer-events-none" />
-          <div className="relative">
-            <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3 font-['Bebas_Neue'] tracking-wide">
-              <Sparkles className="text-yellow-400" size={32} />
-              Cosmetics
-            </h2>
-            <ProfileCosmeticsDisplay userCosmetics={userCosmetics} />
-          </div>
-        </motion.div>
+
 
         {/* Achievements Section */}
         <motion.div

@@ -42,7 +42,7 @@ export const ONBOARDING_WALKTHROUGH_STEPS = [
   {
     eyebrow: "05 · Earn as you learn",
     title: "Meet Blue Bucks",
-    body: "Blue Bucks are virtual in-app rewards for correct first attempts and follow-up corrections; each question can reward you only once. Use them only in Blue Blazer’s simulation features, such as Study Cards, cosmetics, banking, and BBX. They have no cash value and cannot be purchased, withdrawn, or used for real money.",
+    body: "Blue Bucks are virtual in-app rewards for correct first attempts and follow-up corrections; each question can reward you only once. Use them only in Blue Blazer’s simulation features, such as Study Cards, banking, and BBX. They have no cash value and cannot be purchased, withdrawn, or used for real money.",
     icon: "blueBucks",
     tabLabel: "Blue Bucks",
     detail: "Virtual rewards for consistent, honest practice",
