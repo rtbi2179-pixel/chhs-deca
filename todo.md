@@ -558,5 +558,16 @@
 - [x] Apply deterministic credit-score history updates that reflect verified inactivity over time
 - [x] Add or extend scheduled processing for ongoing credit-score inactivity updates
 - [x] Add focused portfolio, credit-history, inactivity, and schedule regression coverage
-- [ ] Integrate Study Card options into the Banking tab's Available Cards section
+- [x] Integrate Study Card options into the Banking tab's Available Cards section
 - [x] Integrate Study Card options into the Banking tab's 'Available Cards' section with server-authoritative switching and professional dark-theme UI
+- [x] Add explicit time axes and exact timestamp plus performance-value hover details to every BBX market performance graph
+
+- [x] Add focused regression coverage for BBX graph time labels and hover data formatting
+
+- [x] Run full validation and confirm the market graph change in a saved checkpoint
+
+- [x] Verify the existing external PI learning-package test is not silently skipped in the committed project state
+
+- [x] Review the project TODO history and consolidate any stale or duplicate pending items before final delivery
+
+- [x] Confirm all current TODO items are complete before final delivery
