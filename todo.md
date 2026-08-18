@@ -8695,3 +8695,6 @@
 - [x] Remove nested anchor markup from the Calendar page render path
 - [x] Prevent Calendar from querying before an effective school code is available
 - [x] Add Calendar-specific nested-link regression coverage and validate the fix
+- [x] Map each Events tab event to its required performance indicators
+- [x] Add an event-linked PI Study Library pop-up panel with module access
+- [x] Add regression coverage, validate event PI interactions, and checkpoint the integration

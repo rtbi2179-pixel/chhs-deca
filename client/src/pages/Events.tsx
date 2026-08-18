@@ -6,7 +6,9 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { ExternalLink, Search, ChevronDown, ChevronUp, BookOpen, FileText, Video, Globe, Target } from 'lucide-react'
+import { ExternalLink, Search, ChevronDown, ChevronUp, BookOpen, FileText, Video, Globe, Target, Loader2, ArrowUpRight, LibraryBig, CheckCircle2 } from 'lucide-react'
+import { trpc } from '@/lib/trpc'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
 const EVENTS_BG = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/deca-events-bg-F7GzUTZoYD495mEMhM979L.webp'
 
@@ -504,8 +506,119 @@ const resourceColors = {
   external: 'text-purple-400',
 }
 
+const EVENT_CLUSTER_TO_PI_CLUSTER = {
+  'Marketing': 'Marketing',
+  'Finance': 'Finance',
+  'Hospitality & Tourism': 'Hospitality & Tourism',
+  'Business Management': 'Business Management & Administration',
+  'Entrepreneurship': 'Entrepreneurship',
+  'Personal Finance': 'Personal Financial Literacy',
+} as const
+
+type PiCluster = (typeof EVENT_CLUSTER_TO_PI_CLUSTER)[keyof typeof EVENT_CLUSTER_TO_PI_CLUSTER]
+
+type EventPiStudyDialogProps = {
+  event: DECAEvent
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+function EventPiStudyDialog({ event, open, onOpenChange }: EventPiStudyDialogProps) {
+  const piCluster = EVENT_CLUSTER_TO_PI_CLUSTER[event.cluster as Exclude<Cluster, 'All'>] as PiCluster | undefined
+  const eventStudyQuery = trpc.piLearning.getEventStudyGuide.useQuery(
+    { eventCode: event.code },
+    { enabled: open },
+  )
+  const clusterModulesQuery = trpc.piLearning.getModulesByCluster.useQuery(
+    { cluster: piCluster || 'Marketing' },
+    { enabled: open && !eventStudyQuery.isLoading && eventStudyQuery.data?.totalModules === 0 && Boolean(piCluster) },
+  )
+
+  const officialAreas = eventStudyQuery.data?.instructionalAreas ?? []
+  const officialModules = officialAreas.flatMap((area) => area.modules)
+  const usesClusterFallback = !eventStudyQuery.isLoading && officialModules.length === 0 && Boolean(piCluster)
+  const displayedModules = usesClusterFallback ? (clusterModulesQuery.data ?? []) : officialModules
+  const shownModules = displayedModules.slice(0, 24)
+  const totalModules = usesClusterFallback ? displayedModules.length : eventStudyQuery.data?.totalModules ?? 0
+  const studyPathHref = `/pi-quizlet?event=${encodeURIComponent(event.code)}`
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[86vh] max-w-4xl overflow-hidden border-blue-400/25 bg-[oklch(0.09_0.014_265)] p-0 text-white shadow-[0_24px_80px_oklch(0.02_0.04_265/0.75)]">
+        <div className="border-b border-white/10 bg-[radial-gradient(circle_at_top_right,oklch(0.35_0.13_255/0.28),transparent_45%)] px-6 py-6 pr-14">
+          <DialogHeader className="gap-2 text-left">
+            <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.16em] text-blue-300">
+              <LibraryBig className="h-4 w-4" /> Event PI Study Path
+            </div>
+            <DialogTitle className="font-display text-3xl tracking-wide text-white">{event.code} — Required Performance Indicators</DialogTitle>
+            <DialogDescription className="max-w-2xl text-sm leading-6 text-slate-300">
+              Review the performance indicators aligned with {event.name}, then open a complete lesson, flashcard set, review, quiz, scenarios, and teach-back activity in the PI Study Library.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
+            <span className={`rounded-full border px-2.5 py-1 ${clusterColors[event.cluster]}`}>{event.cluster}</span>
+            <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-slate-300">{event.type}</span>
+            {!eventStudyQuery.isLoading && totalModules > 0 && <span className="rounded-full border border-blue-400/20 bg-blue-500/10 px-2.5 py-1 text-blue-200">{totalModules} study modules</span>}
+          </div>
+        </div>
+
+        <div className="max-h-[calc(86vh-210px)] overflow-y-auto px-6 py-5">
+          {eventStudyQuery.isLoading || clusterModulesQuery.isLoading ? (
+            <div className="flex min-h-52 items-center justify-center gap-3 text-sm text-slate-300">
+              <Loader2 className="h-5 w-5 animate-spin text-blue-300" /> Loading the PI study path…
+            </div>
+          ) : totalModules === 0 ? (
+            <div className="rounded-xl border border-white/10 bg-white/[0.03] px-5 py-8 text-center">
+              <BookOpen className="mx-auto h-6 w-6 text-blue-300" />
+              <p className="mt-3 font-medium text-white">This event’s PI study path is being prepared.</p>
+              <p className="mt-1 text-sm text-slate-400">You can still browse the full PI Study Library for related competitive-event preparation.</p>
+            </div>
+          ) : (
+            <>
+              {usesClusterFallback && (
+                <div className="mb-5 flex items-start gap-3 rounded-lg border border-amber-400/20 bg-amber-400/[0.07] px-4 py-3 text-sm text-amber-100">
+                  <LibraryBig className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" />
+                  <p>This event uses the complete <strong>{event.cluster}</strong> PI pathway while its event-specific list is finalized.</p>
+                </div>
+              )}
+              <div className="grid gap-3 sm:grid-cols-2">
+                {shownModules.map((module: any) => (
+                  <a
+                    key={module.id}
+                    href={`${studyPathHref}&module=${module.id}`}
+                    className="group rounded-xl border border-white/10 bg-white/[0.025] p-4 transition hover:border-blue-400/40 hover:bg-blue-500/[0.08] focus:outline-none focus:ring-2 focus:ring-blue-400/60"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="text-[11px] font-mono uppercase tracking-[0.12em] text-blue-300">{module.piId}</p>
+                        <h3 className="mt-2 line-clamp-2 text-sm font-semibold leading-5 text-white group-hover:text-blue-100">{module.performanceIndicator}</h3>
+                      </div>
+                      <ArrowUpRight className="h-4 w-4 shrink-0 text-slate-500 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-blue-300" />
+                    </div>
+                    <p className="mt-3 truncate text-xs text-slate-400">{module.instructionalArea}</p>
+                    {module.progress && <div className="mt-3 flex items-center gap-1.5 text-xs text-emerald-300"><CheckCircle2 className="h-3.5 w-3.5" /> {module.progress.masteryScore}% mastery</div>}
+                  </a>
+                ))}
+              </div>
+              {totalModules > shownModules.length && <p className="mt-4 text-center text-xs text-slate-500">Showing the first {shownModules.length} of {totalModules} indicators. Open the full study path to browse every PI.</p>}
+            </>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-3 border-t border-white/10 bg-black/10 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-xs text-slate-400">Every PI opens as a complete learning module.</p>
+          <a href={studyPathHref} className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-500">
+            Open full {event.code} PI Library <ArrowUpRight className="h-4 w-4" />
+          </a>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
 function EventCard({ event }: { event: DECAEvent }) {
   const [expanded, setExpanded] = useState(false)
+  const [piDialogOpen, setPiDialogOpen] = useState(false)
   const clusterColor = clusterColors[event.cluster]
 
   return (
@@ -539,6 +652,15 @@ function EventCard({ event }: { event: DECAEvent }) {
       <AnimatedExpand expanded={expanded}>
         <div className="px-5 pb-5 border-t border-white/5">
           <p className="text-white/60 text-sm mt-4 mb-4">{event.description}</p>
+          <div className="mb-4 rounded-xl border border-blue-400/20 bg-blue-500/[0.06] p-3 sm:flex sm:items-center sm:justify-between sm:gap-4">
+            <div>
+              <p className="text-sm font-semibold text-blue-100">Event-linked PI Study Library</p>
+              <p className="mt-0.5 text-xs leading-5 text-slate-400">View the performance indicators required for {event.code} and open any complete PI learning module.</p>
+            </div>
+            <button type="button" onClick={() => setPiDialogOpen(true)} className="mt-3 inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-lg border border-blue-400/30 bg-blue-500/10 px-3.5 py-2 text-xs font-semibold text-blue-100 transition hover:border-blue-300/60 hover:bg-blue-500/20 sm:mt-0 sm:w-auto">
+              <LibraryBig className="h-4 w-4" /> View {event.code} PIs
+            </button>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {event.resources.map((res, idx) => {
               const Icon = resourceIcons[res.type]
@@ -560,6 +682,7 @@ function EventCard({ event }: { event: DECAEvent }) {
           </div>
         </div>
       </AnimatedExpand>
+      <EventPiStudyDialog event={event} open={piDialogOpen} onOpenChange={setPiDialogOpen} />
     </motion.div>
   )
 }

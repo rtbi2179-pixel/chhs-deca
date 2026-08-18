@@ -43,12 +43,22 @@ const EVENT_CLUSTER_TO_PI_CLUSTER: Record<string, (typeof CLUSTERS)[number]> = {
   "Entrepreneurship": "Entrepreneurship",
 };
 
+function getRequestedEventStudyPath() {
+  if (typeof window === "undefined") return { eventCode: "", moduleId: null };
+  const query = new URLSearchParams(window.location.search);
+  const requestedEventCode = query.get("event")?.trim().toUpperCase() ?? "";
+  const eventCode = allEvents.some((event) => event.code === requestedEventCode) ? requestedEventCode : "";
+  const parsedModuleId = Number(query.get("module"));
+  return { eventCode, moduleId: Number.isInteger(parsedModuleId) && parsedModuleId > 0 ? parsedModuleId : null };
+}
+
 export default function PIQuizlet() {
   const { user } = useAuth();
   const utils = trpc.useUtils();
   const [selectedCluster, setSelectedCluster] = useState<(typeof CLUSTERS)[number]>(CLUSTERS[0]);
-  const [selectedEventCode, setSelectedEventCode] = useState("");
-  const [selectedModuleId, setSelectedModuleId] = useState<number | null>(null);
+  const [requestedStudyPath] = useState(getRequestedEventStudyPath);
+  const [selectedEventCode, setSelectedEventCode] = useState(requestedStudyPath.eventCode);
+  const [selectedModuleId, setSelectedModuleId] = useState<number | null>(requestedStudyPath.moduleId);
   const [activeTab, setActiveTab] = useState("lesson");
   const [searchQuery, setSearchQuery] = useState("");
 
