@@ -8702,3 +8702,6 @@
 - [x] Add the Event Match Quiz to onboarding, selected-event settings, and the existing primary-event workflow
 - [x] Persist useful quiz results and provide top-three recommendations, explanations, browse, skip, and retake actions
 - [x] Add regression coverage, validate all quiz handoffs, and checkpoint the feature
+- [x] Audit all chapter-management destinations and define their Chapter navigation grouping
+- [x] Organize chapter-management tools into a dedicated Chapter section across desktop and mobile navigation
+- [x] Add regression coverage, validate navigation visibility and routes, and checkpoint the update

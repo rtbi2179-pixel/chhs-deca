@@ -8,11 +8,18 @@ describe('Sidebar Navigation Shell', () => {
     expect(fs.existsSync(filePath)).toBe(true);
     const content = fs.readFileSync(filePath, 'utf-8');
     expect(content).toContain('MAIN NAVIGATION');
+    expect(content).toContain('CHAPTER');
+    expect(content).toContain('CHAPTER MANAGEMENT');
     expect(content).toContain('FINANCIAL SYSTEMS');
     expect(content).toContain('View Profile & Stats');
     expect(content).toContain('collapsed');
     expect(content).toContain("{ href: '/calendar', label: 'Calendar'");
     expect(content).toContain("{ href: '/events', label: 'Events & Community'");
+    expect(content).toContain('const chapterNavLinks');
+    expect(content).toContain('const chapterManagementNavLinks');
+    expect(content).toContain('chapterNavLinks.map');
+    expect(content).toContain('chapterManagementNavLinks.map');
+    expect(content).not.toContain('const adminNavLinks');
     expect(content).toContain('handleInternalLinkClick');
     expect(content).not.toContain("import { Link, useLocation } from 'wouter'");
     expect(content).not.toContain('<Link');

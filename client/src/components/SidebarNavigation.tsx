@@ -31,12 +31,15 @@ const mainNavLinks = [
   { href: '/pi-quizlet', label: 'PI Study Library', icon: BookOpen, group: 'MAIN' },
   { href: '/practice', label: 'Practice', icon: Target, group: 'MAIN' },
   { href: '/leaderboard', label: 'Leaderboard', icon: TrendingUp, group: 'MAIN' },
-  { href: '/calendar', label: 'Calendar', icon: Calendar, group: 'MAIN' },
-  { href: '/events', label: 'Events & Community', icon: Calendar, group: 'MAIN' },
-  { href: '/discussions', label: 'Discussion Posts', icon: MessageSquare, group: 'MAIN' },
-  { href: '/announcements', label: 'Announcements', icon: Bell, group: 'MAIN' },
-  { href: '/volunteer', label: 'Volunteer Sign-Ups', icon: Users, group: 'MAIN' },
   { href: '/speech-ai', label: 'AI Study & Roleplay', icon: Zap, group: 'MAIN' },
+];
+
+const chapterNavLinks = [
+  { href: '/events', label: 'Events & Community', icon: Calendar, group: 'CHAPTER' },
+  { href: '/calendar', label: 'Calendar', icon: Calendar, group: 'CHAPTER' },
+  { href: '/announcements', label: 'Announcements', icon: Bell, group: 'CHAPTER' },
+  { href: '/discussions', label: 'Discussion Posts', icon: MessageSquare, group: 'CHAPTER' },
+  { href: '/volunteer', label: 'Volunteer Sign-Ups', icon: Users, group: 'CHAPTER' },
   { href: '/feedback', label: 'Feedback', icon: MessageSquarePlus, group: 'MAIN' },
 ];
 
@@ -46,9 +49,9 @@ const financialNavLinks = [
   { href: '/blues-news', label: "Blue's News", icon: Newspaper, group: 'FINANCIAL' },
 ];
 
-const adminNavLinks = [
-  { href: '/chapter/members', label: 'Member Management', icon: Users, group: 'ADMIN' },
-  { href: '/admin', label: 'Chapter Management', icon: ShieldAlert, group: 'ADMIN' },
+const chapterManagementNavLinks = [
+  { href: '/chapter/members', label: 'Member Management', icon: Users, group: 'CHAPTER_MANAGEMENT' },
+  { href: '/admin', label: 'Chapter Management', icon: ShieldAlert, group: 'CHAPTER_MANAGEMENT' },
 ];
 
 export function SidebarNavigation({ children }: { children: React.ReactNode }) {
@@ -147,6 +150,33 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
             </div>
           </div>
 
+          <div>
+            {!collapsed && (
+              <p className="px-3 text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">CHAPTER</p>
+            )}
+            <div className="space-y-1">
+              {chapterNavLinks.map(({ href, label, icon: Icon }) => {
+                const isActive = location === href;
+                return (
+                  <a
+                    key={href}
+                    href={href}
+                    onClick={(event) => handleInternalLinkClick(event, href)}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group relative ${
+                      isActive
+                        ? 'bg-blue-600 text-white shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)]'
+                        : 'text-white/70 hover:text-white hover:bg-white/[0.06]'
+                    }`}
+                    title={collapsed ? label : undefined}
+                  >
+                    <Icon size={20} className={isActive ? 'text-white' : 'text-cyan-300 group-hover:text-cyan-200'} />
+                    {!collapsed && <span className="truncate">{label}</span>}
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Financial Section */}
           <div>
             {!collapsed && (
@@ -182,14 +212,14 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
             </div>
           </div>
 
-          {/* Admin Section if applicable */}
+          {/* Chapter Management Section if applicable */}
           {user && (user.role === 'admin' || user.role === 'super_admin' || user.email === 'rtbi2179@gmail.com' || user.email === 'sahan.mallampati@gmail.com') && (
             <div>
               {!collapsed && (
-                <p className="px-3 text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">ADMINISTRATION</p>
+                <p className="px-3 text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">CHAPTER MANAGEMENT</p>
               )}
               <div className="space-y-1">
-                {adminNavLinks.map(({ href, label, icon: Icon }) => {
+                {chapterManagementNavLinks.map(({ href, label, icon: Icon }) => {
                   const isActive = location === href;
                   return (
                     <a
@@ -337,11 +367,30 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                 </div>
               </div>
 
+              <div>
+                <p className="text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">CHAPTER</p>
+                <div className="space-y-1">
+                  {chapterNavLinks.map(({ href, label, icon: Icon }) => (
+                    <a
+                      key={href}
+                      href={href}
+                      onClick={(event) => handleInternalLinkClick(event, href, () => setMobileOpen(false))}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium ${
+                        location === href ? 'bg-blue-600 text-white' : 'text-white/70 hover:bg-white/5'
+                      }`}
+                    >
+                      <Icon size={18} className="text-cyan-300" />
+                      {label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+
               {user && (user.role === 'admin' || user.role === 'super_admin' || user.email === 'rtbi2179@gmail.com' || user.email === 'sahan.mallampati@gmail.com') && (
                 <div>
-                  <p className="text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">ADMINISTRATION</p>
+                  <p className="text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">CHAPTER MANAGEMENT</p>
                   <div className="space-y-1">
-                    {adminNavLinks.map(({ href, label, icon: Icon }) => (
+                    {chapterManagementNavLinks.map(({ href, label, icon: Icon }) => (
                       <a
                         key={href}
                         href={href}
