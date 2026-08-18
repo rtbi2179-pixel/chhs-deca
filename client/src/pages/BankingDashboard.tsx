@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { ArrowDownLeft, ArrowUpRight, CreditCard, ReceiptText, Send, ShoppingBag, TrendingUp } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { toast } from "sonner";
 import { CreditScoreChart } from "@/components/CreditScoreChart";
@@ -46,6 +46,7 @@ export function BankingDashboard() {
   const [cardActionAmount, setCardActionAmount] = useState("");
   const [merchantCategory, setMerchantCategory] = useState("General");
   const [selectedStatementCard, setSelectedStatementCard] = useState<number | null>(null);
+  const [activeBankingCardId, setActiveBankingCardId] = useState<number | null>(null);
   const [blueBucksDepositAmount, setBlueBucksDepositAmount] = useState("");
   const cardStatementQuery = trpc.banking.getCardStatement.useQuery(
     { cardId: selectedStatementCard ?? 1 },
@@ -57,6 +58,16 @@ export function BankingDashboard() {
   const creditScore = creditScoreQuery.data?.score || 500;
   const creditDetails = creditScoreQuery.data?.details;
   const bankAccount = bankAccountQuery.data;
+  const issuedBankingCards = userCardsQuery.data ?? [];
+  const activeBankingCard = issuedBankingCards.find((card: any) => card.id === activeBankingCardId) ?? issuedBankingCards[0] ?? null;
+  const activeStudyCard = studyCardCatalogQuery.data?.cards.find((card) => card.key === studyCardMineQuery.data?.cardKey) ?? studyCardCatalogQuery.data?.cards[0] ?? null;
+
+  useEffect(() => {
+    setActiveBankingCardId((current) => {
+      if (current && issuedBankingCards.some((card: any) => card.id === current)) return current;
+      return issuedBankingCards[0]?.id ?? null;
+    });
+  }, [issuedBankingCards]);
 
   const getScoreColor = (score: number) => {
     if (score >= 750) return "text-green-500";
@@ -153,7 +164,7 @@ export function BankingDashboard() {
     }
 
     try {
-      if (cardAction.mode === "charge") {
+      if (cardAction?.mode === "charge") {
         await chargeCardMutation.mutateAsync({
           cardId: cardAction.cardId,
           amount: Number(cardActionAmount),
@@ -171,7 +182,7 @@ export function BankingDashboard() {
       bankAccountQuery.refetch();
       spendingAnalyticsQuery.refetch();
     } catch (error) {
-      alert(`${cardAction.mode === "charge" ? "Purchase" : "Payment"} failed: ${(error as Error).message}`);
+      alert(`${cardAction?.mode === "charge" ? "Purchase" : "Payment"} failed: ${(error as Error).message}`);
     }
   };
 
@@ -266,109 +277,54 @@ export function BankingDashboard() {
           <CreditScoreChart data={creditHistoryQuery.data ?? []} isLoading={creditHistoryQuery.isLoading} currentScore={creditScore} />
         </div>
 
-        {/* Banking Cards and Study Cards */}
+        {/* Active Study Card with existing banking-card capabilities. */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-white mb-6">Banking Cards & Study Cards</h2>
+          <h2 className="text-2xl font-bold text-white mb-2">Banking Study Cards</h2>
+          <p className="mb-6 max-w-3xl text-sm leading-6 text-slate-400">Your active Study Card is now your Banking card interface. It keeps your selected learning focus and progress while using the same issued-card purchase, payment, statement, and spending functions.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* User's Current Cards */}
-            <Card className="editorial-panel p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Your Cards</h3>
-              {userCardsQuery.isLoading ? (
-                <p className="text-slate-400">Loading cards...</p>
-              ) : userCardsQuery.data && userCardsQuery.data.length > 0 ? (
-                <div className="space-y-3">
-                  {userCardsQuery.data.map((card: any) => (
-                    <div key={card.id} className="p-3 bg-slate-700 rounded-lg border border-blue-500/30">
-                      <p className="text-white font-semibold">{card.cardDetails?.name || 'Credit Card'}</p>
-                      <p className="text-slate-300 text-xs capitalize mb-2">{card.cardDetails?.tier} Tier</p>
-                      <div className="grid grid-cols-3 gap-2 text-sm">
-                        <div>
-                          <p className="text-slate-400 text-xs">Limit</p>
-                          <p className="text-blue-400 font-semibold">${parseFloat(card.creditLimit).toFixed(2)}</p>
-                        </div>
-                        <div>
-                          <p className="text-slate-400 text-xs">Available</p>
-                          <p className="text-green-400 font-semibold">${parseFloat(card.availableCredit).toFixed(2)}</p>
-                        </div>
-                        <div>
-                          <p className="text-slate-400 text-xs">Balance</p>
-                          <p className="text-amber-300 font-semibold">${parseFloat(card.currentBalance).toFixed(2)}</p>
-                        </div>
-                      </div>
-                      <div className="mt-3 grid grid-cols-3 gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => setCardAction({ cardId: card.id, mode: "charge" })}
-                          className="border-blue-400/50 text-blue-200 hover:bg-blue-500/10"
-                        >
-                          <ShoppingBag className="mr-1.5 h-3.5 w-3.5" /> Record Purchase
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => setCardAction({ cardId: card.id, mode: "payment" })}
-                          className="border-emerald-400/50 text-emerald-200 hover:bg-emerald-500/10"
-                        >
-                          <CreditCard className="mr-1.5 h-3.5 w-3.5" /> Make Payment
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => setSelectedStatementCard(card.id)}
-                          className="border-slate-500 text-slate-200 hover:bg-slate-600"
-                        >
-                          <ReceiptText className="mr-1.5 h-3.5 w-3.5" /> Statement
-                        </Button>
-                      </div>
-                      {cardAction?.cardId === card.id && (
-                        <div className="mt-3 space-y-2 rounded-md border border-slate-600 bg-slate-800 p-3">
-                          <p className="text-xs font-medium text-slate-200">
-                            {cardAction?.mode === "charge" ? "Record a card purchase" : "Pay this card from checking"}
-                          </p>
-                          <input
-                            type="number"
-                            min="0.01"
-                            step="0.01"
-                            value={cardActionAmount}
-                            onChange={(event) => setCardActionAmount(event.target.value)}
-                            placeholder="Amount"
-                            className="w-full rounded-md border border-slate-600 bg-slate-900 px-2 py-1.5 text-sm text-white"
-                          />
-                          {cardAction?.mode === "charge" && (
-                            <input
-                              value={merchantCategory}
-                              onChange={(event) => setMerchantCategory(event.target.value)}
-                              placeholder="Category, such as Books or Dining"
-                              className="w-full rounded-md border border-slate-600 bg-slate-900 px-2 py-1.5 text-sm text-white"
-                            />
-                          )}
-                          <div className="flex justify-end gap-2">
-                            <Button size="sm" variant="ghost" onClick={() => setCardAction(null)}>Cancel</Button>
-                            <Button
-                              size="sm"
-                              onClick={handleCardAction}
-                              disabled={chargeCardMutation.isPending || makePaymentMutation.isPending}
-                            >
-                              {chargeCardMutation.isPending || makePaymentMutation.isPending ? "Saving..." : "Confirm"}
-                            </Button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-slate-400">No credit cards yet. Apply for one below!</p>
-              )}
-            </Card>
-
-            {/* Available Study Cards */}
+            {/* Functional active Study Card, backed by an existing issued banking card. */}
             <Card className="editorial-panel p-6">
               <div className="mb-4 flex items-start justify-between gap-3">
                 <div>
-                  <h3 className="text-lg font-semibold text-white">Available Study Cards</h3>
-                  <p className="mt-1 text-xs leading-5 text-slate-400">Choose the virtual learning profile that shapes your Blue Bucks study experience. Your selection is saved server-side and can be changed at any time.</p>
+                  <p className="data-label">Active banking card</p>
+                  <h3 className="mt-1 text-lg font-semibold text-white">{activeStudyCard?.name ?? "Study Card"}</h3>
+                  <p className="mt-1 text-xs text-slate-400">{activeStudyCard ? `${activeStudyCard.title} · ${activeStudyCard.focus}` : "Loading your selected study specialization…"}</p>
+                </div>
+                <span className="rounded border border-blue-400/30 bg-blue-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-blue-200">Study + banking</span>
+              </div>
+              {userCardsQuery.isLoading || studyCardCatalogQuery.isLoading || studyCardMineQuery.isLoading ? (
+                <p className="text-slate-400">Loading cards...</p>
+              ) : activeBankingCard ? (
+                <div className="space-y-4">
+                  <div className="rounded-xl border border-blue-400/35 bg-[linear-gradient(135deg,rgba(30,64,175,.52),rgba(15,23,42,.96)_58%,rgba(14,116,144,.38))] p-5 shadow-[0_18px_44px_rgba(0,0,0,.2)]">
+                    <div className="flex items-start justify-between gap-3"><div><p className="text-sm font-semibold text-white">{activeStudyCard?.name ?? "Study Card"}</p><p className="mt-1 text-xs text-blue-100/75">Level {studyCardMineQuery.data?.level ?? 1} · {studyCardMineQuery.data?.practiceProgress ?? 0} study progress</p></div><p className="text-right text-xs text-blue-100/75">{activeBankingCard.cardDetails?.tier ?? "standard"} banking account<br />•••• {String(activeBankingCard.id).padStart(4, "0")}</p></div>
+                    <p className="mt-5 text-xs leading-5 text-blue-50/85">{activeStudyCard?.liveBenefit ?? "Your selected study benefit appears here."}</p>
+                    <p className="mt-2 text-[11px] leading-5 text-blue-100/60">{activeStudyCard?.tradeoff}</p>
+                  </div>
+                  {issuedBankingCards.length > 1 && <label className="block text-xs text-slate-400">Banking account connected to this Study Card<select value={activeBankingCard.id} onChange={(event) => setActiveBankingCardId(Number(event.target.value))} className="mt-1.5 w-full rounded-md border border-slate-600 bg-slate-900 px-2.5 py-2 text-sm text-white"><>{issuedBankingCards.map((card: any) => <option key={card.id} value={card.id}>{card.cardDetails?.name ?? "Credit Card"} · ${parseFloat(card.availableCredit).toFixed(2)} available</option>)}</></select></label>}
+                  <div className="grid grid-cols-3 gap-2 text-sm">
+                    <div><p className="text-slate-400 text-xs">Limit</p><p className="text-blue-400 font-semibold">${parseFloat(activeBankingCard.creditLimit).toFixed(2)}</p></div>
+                    <div><p className="text-slate-400 text-xs">Available</p><p className="text-green-400 font-semibold">${parseFloat(activeBankingCard.availableCredit).toFixed(2)}</p></div>
+                    <div><p className="text-slate-400 text-xs">Balance</p><p className="text-amber-300 font-semibold">${parseFloat(activeBankingCard.currentBalance).toFixed(2)}</p></div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    <Button size="sm" variant="outline" onClick={() => setCardAction({ cardId: activeBankingCard.id, mode: "charge" })} className="border-blue-400/50 text-blue-200 hover:bg-blue-500/10"><ShoppingBag className="mr-1.5 h-3.5 w-3.5" /> Record Purchase</Button>
+                    <Button size="sm" variant="outline" onClick={() => setCardAction({ cardId: activeBankingCard.id, mode: "payment" })} className="border-emerald-400/50 text-emerald-200 hover:bg-emerald-500/10"><CreditCard className="mr-1.5 h-3.5 w-3.5" /> Make Payment</Button>
+                    <Button size="sm" variant="outline" onClick={() => setSelectedStatementCard(activeBankingCard.id)} className="border-slate-500 text-slate-200 hover:bg-slate-600"><ReceiptText className="mr-1.5 h-3.5 w-3.5" /> Statement</Button>
+                  </div>
+                  {cardAction?.cardId === activeBankingCard.id && <div className="space-y-2 rounded-md border border-slate-600 bg-slate-800 p-3"><p className="text-xs font-medium text-slate-200">{cardAction?.mode === "charge" ? "Record a card purchase" : "Pay this card from checking"}</p><input type="number" min="0.01" step="0.01" value={cardActionAmount} onChange={(event) => setCardActionAmount(event.target.value)} placeholder="Amount" className="w-full rounded-md border border-slate-600 bg-slate-900 px-2 py-1.5 text-sm text-white" />{cardAction?.mode === "charge" && <input value={merchantCategory} onChange={(event) => setMerchantCategory(event.target.value)} placeholder="Category, such as Books or Dining" className="w-full rounded-md border border-slate-600 bg-slate-900 px-2 py-1.5 text-sm text-white" />}<div className="flex justify-end gap-2"><Button size="sm" variant="ghost" onClick={() => setCardAction(null)}>Cancel</Button><Button size="sm" onClick={handleCardAction} disabled={chargeCardMutation.isPending || makePaymentMutation.isPending}>{chargeCardMutation.isPending || makePaymentMutation.isPending ? "Saving..." : "Confirm"}</Button></div></div>}
+                </div>
+              ) : (
+                <p className="text-slate-400">Your selected Study Card is ready. Issue or connect a banking card account to use purchase, payment, and statement functions.</p>
+              )}
+            </Card>
+
+            {/* Study Card selection now changes the active banking-card identity. */}
+            <Card className="editorial-panel p-6">
+              <div className="mb-4 flex items-start justify-between gap-3">
+                <div>
+                  <h3 className="text-lg font-semibold text-white">Choose your Banking Study Card</h3>
+                  <p className="mt-1 text-xs leading-5 text-slate-400">Choose the learning profile shown on your functional Banking card. Your specialization, progress, and Blue Bucks study benefits remain saved server-side.</p>
                 </div>
                 {studyCardMineQuery.data && (
                   <span className="shrink-0 rounded border border-blue-500/25 bg-blue-500/10 px-2 py-0.5 text-xs font-medium text-blue-300">
@@ -402,7 +358,7 @@ export function BankingDashboard() {
                           variant={isActive ? "outline" : "default"}
                           className={`mt-3 w-full text-xs ${isActive ? "border-blue-400/30 bg-transparent text-blue-300" : "bg-blue-600 text-white hover:bg-blue-700"}`}
                         >
-                          {isActive ? "Currently Active" : selectStudyCardMutation.isPending ? "Switching..." : "Activate Study Card"}
+                          {isActive ? "Active Banking Study Card" : selectStudyCardMutation.isPending ? "Switching..." : "Use as my Banking Card"}
                         </Button>
                       </div>
                     );

@@ -8,7 +8,7 @@ describe("Banking-only Study Cards flow", () => {
   it("renders Study Cards as the only available-card catalog and keeps server selection", () => {
     const banking = readProjectFile("client/src/pages/BankingDashboard.tsx");
 
-    expect(banking).toContain("Available Study Cards");
+    expect(banking).toContain("Choose your Banking Study Card");
     expect(banking).toContain("trpc.studyCards.catalog.useQuery");
     expect(banking).toContain("trpc.studyCards.mine.useQuery");
     expect(banking).toContain("trpc.studyCards.select.useMutation");
@@ -16,6 +16,26 @@ describe("Banking-only Study Cards flow", () => {
     expect(banking).not.toContain("trpc.banking.getAvailableCards.useQuery");
     expect(banking).not.toContain("trpc.banking.applyCreditCard.useMutation");
     expect(banking).not.toContain("handleApplyCard");
+  });
+
+  it("uses the selected Study Card as the banking-card surface without removing issued-card account actions", () => {
+    const banking = readProjectFile("client/src/pages/BankingDashboard.tsx");
+
+    for (const contract of [
+      "Active banking card",
+      "Study + banking",
+      "activeStudyCard?.liveBenefit",
+      "studyCardMineQuery.data?.practiceProgress",
+      "activeBankingCard.cardDetails?.tier",
+      "Record Purchase",
+      "Make Payment",
+      "Statement",
+      "trpc.banking.chargeCard.useMutation",
+      "trpc.banking.makePayment.useMutation",
+      "trpc.banking.getCardStatement.useQuery",
+    ]) {
+      expect(banking, `missing unified Banking Study Card contract: ${contract}`).toContain(contract);
+    }
   });
 
   it("removes the standalone route and navigation item while redirecting onboarding to Banking", () => {

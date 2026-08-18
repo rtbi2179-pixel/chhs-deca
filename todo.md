@@ -8681,3 +8681,6 @@
 - [x] Replace the oval BBX chart hover mark with a modern circular marker and refined crosshair styling
 - [x] Preserve exact BBX hover timestamps and performance values across every graph
 - [x] Add regression coverage, validate, and checkpoint the refined graph interaction
+- [x] Make the selected Study Card the functional Banking card while preserving current banking-card functions
+- [x] Retain Study Card specializations, progress, and card selection behavior in the unified Banking card experience
+- [x] Add regression coverage, validate, and checkpoint the unified Banking Study Card update
