@@ -305,6 +305,56 @@ export async function isQuestionBookmarked(userId: number, questionId: string) {
   return result.length > 0;
 }
 
+export async function getProfileLearningMetrics(userId: number) {
+  const db = await getDb();
+  if (!db) {
+    return { questionsAnswered: 0, correctAnswers: 0, accuracyPercent: 0, savedQuestions: 0, studyStreak: 0 };
+  }
+
+  const [answerTotals] = await db.select({
+    questionsAnswered: sql<number>`count(${userAnswers.id})`,
+    correctAnswers: sql<number>`coalesce(sum(case when ${userAnswers.isCorrect} = 1 then 1 else 0 end), 0)`,
+  }).from(userAnswers).where(eq(userAnswers.userId, userId));
+  const [bookmarkTotals] = await db.select({ savedQuestions: sql<number>`count(${bookmarks.id})` })
+    .from(bookmarks)
+    .where(eq(bookmarks.userId, userId));
+  const activityRows = await db.select({ createdAt: userAnswers.createdAt })
+    .from(userAnswers)
+    .where(eq(userAnswers.userId, userId))
+    .orderBy(desc(userAnswers.createdAt));
+
+  const questionsAnswered = Number(answerTotals?.questionsAnswered ?? 0);
+  const correctAnswers = Number(answerTotals?.correctAnswers ?? 0);
+  const activityDays = new Set(
+    activityRows
+      .map((row) => row.createdAt)
+      .filter((value): value is Date => value instanceof Date)
+      .map((value) => value.toISOString().slice(0, 10)),
+  );
+  const latestActivityDay = Array.from(activityDays).sort().at(-1);
+  const today = new Date();
+  const utcDay = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+  const yesterday = new Date(utcDay);
+  yesterday.setUTCDate(yesterday.getUTCDate() - 1);
+  const latestIsCurrent = latestActivityDay === utcDay.toISOString().slice(0, 10) || latestActivityDay === yesterday.toISOString().slice(0, 10);
+  let studyStreak = 0;
+  if (latestActivityDay && latestIsCurrent) {
+    const streakDay = new Date(`${latestActivityDay}T00:00:00.000Z`);
+    while (activityDays.has(streakDay.toISOString().slice(0, 10))) {
+      studyStreak += 1;
+      streakDay.setUTCDate(streakDay.getUTCDate() - 1);
+    }
+  }
+
+  return {
+    questionsAnswered,
+    correctAnswers,
+    accuracyPercent: questionsAnswered > 0 ? Number(((correctAnswers / questionsAnswered) * 100).toFixed(1)) : 0,
+    savedQuestions: Number(bookmarkTotals?.savedQuestions ?? 0),
+    studyStreak,
+  };
+}
+
 // Leaderboard queries
 export async function getLeaderboard(limit: number = 100) {
   const db = await getDb();

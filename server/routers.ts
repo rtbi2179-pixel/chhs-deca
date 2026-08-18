@@ -27,6 +27,14 @@ import { bbxRouter } from "./bbxRouter";
 
 const mockExamClusterSchema = z.enum(CHAPTER_EXAM_CLUSTERS);
 const chapterExamQuestionCountSchema = z.union(CHAPTER_EXAM_QUESTION_COUNTS.map((count) => z.literal(count)) as [z.ZodLiteral<25>, z.ZodLiteral<50>, z.ZodLiteral<75>, z.ZodLiteral<100>]);
+const CREDIT_SCORE_REFRESH_HOUR_UTC = 3;
+
+function getNextCreditScoreRefresh(now = new Date()) {
+  const next = new Date(now);
+  next.setUTCHours(CREDIT_SCORE_REFRESH_HOUR_UTC, 0, 0, 0);
+  if (next.getTime() <= now.getTime()) next.setUTCDate(next.getUTCDate() + 1);
+  return next;
+}
 
 function getMockExamSchoolCode(user: { role: string; schoolCode?: string | null; selectedSchoolCode?: string | null }) {
   return user.role === "super_admin" ? user.selectedSchoolCode || user.schoolCode : user.schoolCode;
@@ -1646,6 +1654,9 @@ export const appRouter = router({
     getBookmarkedQuestions: protectedProcedure
       .query(({ ctx }) => db.getBookmarkedQuestionsWithDetails(ctx.user.id)),
 
+    getProfileMetrics: protectedProcedure
+      .query(({ ctx }) => db.getProfileLearningMetrics(ctx.user.id)),
+
     createStudySession: protectedProcedure
       .input(z.object({
         name: z.string().min(1),
@@ -2037,6 +2048,23 @@ export const appRouter = router({
       }),
   }),
   banking: router({
+    getCreditScoreRefreshSchedule: protectedProcedure.query(async () => {
+      const database = await db.getDb();
+      if (!database) {
+        return { cadence: "daily" as const, scheduledHourUtc: CREDIT_SCORE_REFRESH_HOUR_UTC, lastRunAt: null, nextRunAt: getNextCreditScoreRefresh() };
+      }
+      const { creditScoreUpdateSchedule } = await import("../drizzle/schema");
+      const [schedule] = await database.select({ lastRunAt: creditScoreUpdateSchedule.lastRunAt })
+        .from(creditScoreUpdateSchedule)
+        .limit(1);
+      return {
+        cadence: "daily" as const,
+        scheduledHourUtc: CREDIT_SCORE_REFRESH_HOUR_UTC,
+        lastRunAt: schedule?.lastRunAt ?? null,
+        nextRunAt: getNextCreditScoreRefresh(),
+      };
+    }),
+
     getCreditScore: protectedProcedure.query(async ({ ctx }) => {
       const { getUserCreditScore, getCreditScoreDetails } = await import("./creditScoreEngine");
       const schoolCode = ctx.user.schoolCode || '';

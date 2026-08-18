@@ -14,9 +14,14 @@ interface PortfolioChartProps {
   isLoading?: boolean;
   currentValue?: number;
   totalGain?: number;
+  currencyLabel?: string;
 }
 
-export function PortfolioChart({ data, isLoading = false, currentValue, totalGain }: PortfolioChartProps) {
+function formatValue(value: number, currencyLabel: string) {
+  return `${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currencyLabel}`;
+}
+
+export function PortfolioChart({ data, isLoading = false, currentValue, totalGain, currencyLabel = 'Blue Bucks' }: PortfolioChartProps) {
   if (isLoading) {
     return (
       <Card className="w-full">
@@ -36,10 +41,11 @@ export function PortfolioChart({ data, isLoading = false, currentValue, totalGai
       <Card className="w-full">
         <CardHeader>
           <CardTitle>Portfolio Performance</CardTitle>
-          <CardDescription>Your stock portfolio value over time</CardDescription>
+          <CardDescription>Your BBX portfolio value from current simulated market prices</CardDescription>
+          {currentValue !== undefined && <div className="mt-4 grid grid-cols-2 gap-4"><div><div className="text-sm text-gray-400">Current Value</div><div className="text-2xl font-bold text-green-500">{formatValue(currentValue, currencyLabel)}</div></div>{totalGain !== undefined && <div><div className="text-sm text-gray-400">Total Gain</div><div className={`text-2xl font-bold ${totalGain >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>{totalGain >= 0 ? '+' : ''}{totalGain.toFixed(2)}%</div></div>}</div>}
         </CardHeader>
-        <CardContent className="flex items-center justify-center h-80 text-gray-500">
-          No portfolio data available yet
+        <CardContent className="flex h-32 items-center text-sm text-gray-500">
+          BBX historical value points are not available yet. Current value and return use live BBX prices.
         </CardContent>
       </Card>
     );
@@ -53,13 +59,13 @@ export function PortfolioChart({ data, isLoading = false, currentValue, totalGai
     <Card className="w-full">
       <CardHeader>
         <CardTitle>Portfolio Performance</CardTitle>
-        <CardDescription>Your stock portfolio value over time</CardDescription>
+          <CardDescription>Your BBX portfolio value over time</CardDescription>
         <div className="mt-4 grid grid-cols-2 gap-4">
           {currentValue && (
             <div>
               <div className="text-sm text-gray-400">Current Value</div>
               <div className="text-2xl font-bold text-green-500">
-                ${parseFloat(currentValue.toString()).toFixed(2)}
+                {formatValue(currentValue, currencyLabel)}
               </div>
             </div>
           )}
@@ -86,7 +92,7 @@ export function PortfolioChart({ data, isLoading = false, currentValue, totalGai
               domain={[minValue, maxValue]}
               stroke="#888"
               tick={{ fill: '#888' }}
-              label={{ value: 'Blue Bucks', angle: -90, position: 'insideLeft' }}
+              label={{ value: currencyLabel, angle: -90, position: 'insideLeft' }}
             />
             <Tooltip 
               contentStyle={{ 
@@ -94,7 +100,7 @@ export function PortfolioChart({ data, isLoading = false, currentValue, totalGai
                 border: '1px solid #444',
                 borderRadius: '8px'
               }}
-              formatter={(value: number) => [`$${parseFloat(value.toString()).toFixed(2)}`, 'Value']}
+              formatter={(value: number) => [formatValue(Number(value), currencyLabel), 'Value']}
               labelFormatter={(label) => `Date: ${label}`}
             />
             <Legend />

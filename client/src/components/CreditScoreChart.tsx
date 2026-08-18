@@ -13,9 +13,18 @@ interface CreditScoreChartProps {
   data: CreditScoreData[];
   isLoading?: boolean;
   currentScore?: number;
+  refreshSchedule?: {
+    lastRunAt?: Date | string | null;
+    nextRunAt?: Date | string | null;
+  };
 }
 
-export function CreditScoreChart({ data, isLoading = false, currentScore }: CreditScoreChartProps) {
+function formatScheduleTime(value: Date | string | null | undefined) {
+  if (!value) return 'Not recorded yet';
+  return new Date(value).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
+}
+
+export function CreditScoreChart({ data, isLoading = false, currentScore, refreshSchedule }: CreditScoreChartProps) {
   if (isLoading) {
     return (
       <Card className="w-full">
@@ -36,9 +45,11 @@ export function CreditScoreChart({ data, isLoading = false, currentScore }: Cred
         <CardHeader>
           <CardTitle>Credit Score History</CardTitle>
           <CardDescription>Your credit score over time</CardDescription>
+          {currentScore !== undefined && <div className="mt-2 text-2xl font-bold text-blue-600">Current Score: {currentScore}</div>}
         </CardHeader>
-        <CardContent className="flex items-center justify-center h-80 text-gray-500">
-          No credit score history available yet
+        <CardContent className="space-y-3 py-10 text-gray-500">
+          <p>No credit score history available yet</p>
+          {refreshSchedule && <p className="text-xs leading-5 text-gray-500">Updates once daily. Next update: {formatScheduleTime(refreshSchedule.nextRunAt)}. Last update: {formatScheduleTime(refreshSchedule.lastRunAt)}.</p>}
         </CardContent>
       </Card>
     );
@@ -57,6 +68,7 @@ export function CreditScoreChart({ data, isLoading = false, currentScore }: Cred
             Current Score: {currentScore}
           </div>
         )}
+        {refreshSchedule && <p className="mt-3 text-xs leading-5 text-muted-foreground">Updates once daily. Next update: {formatScheduleTime(refreshSchedule.nextRunAt)}. Last update: {formatScheduleTime(refreshSchedule.lastRunAt)}.</p>}
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={400}>
