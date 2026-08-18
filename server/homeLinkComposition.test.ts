@@ -5,10 +5,11 @@ import { describe, expect, it } from "vitest";
 const readProjectFile = (relativePath: string) => readFileSync(join(process.cwd(), relativePath), "utf8");
 
 describe("Home-page link composition", () => {
-  it("uses Wouter Link as the anchor element in the authenticated sidebar shell", () => {
+  it("uses a single native anchor for each authenticated sidebar destination", () => {
     const sidebar = readProjectFile("client/src/components/SidebarNavigation.tsx");
 
-    expect(sidebar).toContain("<Link");
-    expect(sidebar).not.toMatch(/<a\b/);
+    expect(sidebar).toContain("handleInternalLinkClick");
+    expect(sidebar).toContain("<a");
+    expect(sidebar).not.toContain("<Link");
   });
 });

@@ -13,5 +13,8 @@ describe('Sidebar Navigation Shell', () => {
     expect(content).toContain('collapsed');
     expect(content).toContain("{ href: '/calendar', label: 'Calendar'");
     expect(content).toContain("{ href: '/events', label: 'Events & Community'");
+    expect(content).toContain('handleInternalLinkClick');
+    expect(content).not.toContain("import { Link, useLocation } from 'wouter'");
+    expect(content).not.toContain('<Link');
   });
 });

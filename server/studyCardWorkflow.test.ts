@@ -33,7 +33,7 @@ describe("virtual Study Card member workflow", () => {
     if (!database) throw new Error("Database unavailable for study-card workflow test");
     const created = await database.insert(users).values({ openId: `study-card-user-${Date.now()}-${Math.random()}`, name: "Study Card Student", schoolCode, role: "user", loginMethod: "custom" });
     userId = Number(created[0].insertId);
-    questionId = `study-card-hard-${Date.now()}-${Math.random()}`;
+    questionId = `sch-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
     await database.insert(questions).values({
       id: questionId,
       cluster: "Marketing",

@@ -8692,3 +8692,6 @@
 - [x] Validate and transform the uploaded DECA Cluster Exam question bank for the existing questions schema
 - [x] Replace every persisted practice question while preserving valid user-answer and bookmark references
 - [x] Add import regression coverage, validate Practice and Mock Exam data access, and checkpoint the replacement
+- [x] Remove nested anchor markup from the Calendar page render path
+- [x] Prevent Calendar from querying before an effective school code is available
+- [x] Add Calendar-specific nested-link regression coverage and validate the fix

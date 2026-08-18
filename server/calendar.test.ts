@@ -1,4 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
+import fs from 'node:fs'
+import path from 'node:path'
 import { getDb } from './db'
 import { users, calendarEvents } from '../drizzle/schema'
 import { eq } from 'drizzle-orm'
@@ -159,5 +161,11 @@ describe('Calendar Events - School Code Filtering', () => {
 
     const hasSchool3Event = school1Events.some((e: any) => e.schoolCode === 'SCHOOL3')
     expect(hasSchool3Event).toBe(false)
+  })
+
+  it('defers the calendar query until the user has an effective school code', () => {
+    const filePath = path.join(process.env.HOME || '/home/ubuntu', 'chhs-deca', 'client', 'src', 'pages', 'CalendarPage.tsx')
+    const source = fs.readFileSync(filePath, 'utf8')
+    expect(source).toContain('{ enabled: Boolean(effectiveSchoolCode) }')
   })
 })

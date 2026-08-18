@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'wouter';
+import { useLocation } from 'wouter';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { trpc } from '@/lib/trpc';
 import {
@@ -52,7 +52,7 @@ const adminNavLinks = [
 ];
 
 export function SidebarNavigation({ children }: { children: React.ReactNode }) {
-  const [location] = useLocation();
+  const [location, navigate] = useLocation();
   const { user, logout } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -67,6 +67,17 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
     } catch {
       window.location.href = '/login';
     }
+  };
+
+  const handleInternalLinkClick = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    href: string,
+    afterNavigate?: () => void,
+  ) => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
+    event.preventDefault();
+    navigate(href);
+    afterNavigate?.();
   };
 
   return (
@@ -117,9 +128,10 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                   ? location === '/practice' || location.startsWith('/practice/questions')
                   : location === href;
                 return (
-                  <Link
+                  <a
                     key={href}
                     href={href}
+                    onClick={(event) => handleInternalLinkClick(event, href)}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group relative ${
                       isActive
                         ? 'bg-blue-600 text-white shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)]'
@@ -129,7 +141,7 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                   >
                     <Icon size={20} className={isActive ? 'text-white' : 'text-blue-400 group-hover:text-blue-300'} />
                     {!collapsed && <span className="truncate">{label}</span>}
-                  </Link>
+                  </a>
                 );
               })}
             </div>
@@ -146,9 +158,10 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                   ? location === '/banking' || location === '/transaction-history'
                   : location === href;
                 return (
-                  <Link
+                  <a
                     key={href}
                     href={href}
+                    onClick={(event) => handleInternalLinkClick(event, href)}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group relative ${
                       isActive
                         ? 'bg-blue-600 text-white shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)]'
@@ -163,7 +176,7 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                         {unreadNews.data?.count}
                       </span>
                     )}
-                  </Link>
+                  </a>
                 );
               })}
             </div>
@@ -179,9 +192,10 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                 {adminNavLinks.map(({ href, label, icon: Icon }) => {
                   const isActive = location === href;
                   return (
-                    <Link
+                    <a
                       key={href}
                       href={href}
+                      onClick={(event) => handleInternalLinkClick(event, href)}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group relative ${
                         isActive
                           ? 'bg-blue-600 text-white shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)]'
@@ -191,7 +205,7 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                     >
                       <Icon size={20} className={isActive ? 'text-white' : 'text-amber-400 group-hover:text-amber-300'} />
                       {!collapsed && <span className="truncate">{label}</span>}
-                    </Link>
+                    </a>
                   );
                 })}
               </div>
@@ -223,17 +237,17 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                       <LogOut size={16} />
                     </button>
                   </div>
-                  <Link href="/profile" className="block w-full mt-1 py-1.5 px-3 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium text-center rounded-lg transition-colors shadow-sm">
+                  <a href="/profile" onClick={(event) => handleInternalLinkClick(event, '/profile')} className="block w-full mt-1 py-1.5 px-3 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium text-center rounded-lg transition-colors shadow-sm">
                     View Profile & Stats
-                  </Link>
+                  </a>
                 </div>
               ) : (
                 <div className="flex flex-col items-center gap-2">
-                  <Link href="/profile">
+                  <a href="/profile" onClick={(event) => handleInternalLinkClick(event, '/profile')}>
                     <div className="w-10 h-10 rounded-full bg-blue-600/20 border border-blue-500/30 text-blue-300 font-bold flex items-center justify-center text-sm cursor-pointer hover:bg-blue-600/30" title={user.name || user.username || undefined}>
                       {(user.name || user.username || 'U').charAt(0).toUpperCase()}
                     </div>
-                  </Link>
+                  </a>
                   <button
                     onClick={handleLogout}
                     className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
@@ -245,9 +259,9 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
               )}
             </div>
           ) : (
-            <Link href="/login" className="block w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium text-center rounded-xl transition-colors shadow-md">
+            <a href="/login" onClick={(event) => handleInternalLinkClick(event, '/login')} className="block w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium text-center rounded-xl transition-colors shadow-md">
               {!collapsed ? 'Sign In to Blue Blazer' : 'Login'}
-            </Link>
+            </a>
           )}
         </div>
       </aside>
@@ -282,10 +296,10 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                 <p className="text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">MAIN NAVIGATION</p>
                 <div className="space-y-1">
                   {mainNavLinks.map(({ href, label, icon: Icon }) => (
-                    <Link
+                    <a
                       key={href}
                       href={href}
-                      onClick={() => setMobileOpen(false)}
+                      onClick={(event) => handleInternalLinkClick(event, href, () => setMobileOpen(false))}
                       className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium ${
                         (href === '/practice'
                           ? location === '/practice' || location.startsWith('/practice/questions')
@@ -296,7 +310,7 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                     >
                       <Icon size={18} className="text-blue-400" />
                       {label}
-                    </Link>
+                    </a>
                   ))}
                 </div>
               </div>
@@ -305,10 +319,10 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                 <p className="text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">FINANCIAL SYSTEMS</p>
                 <div className="space-y-1">
                   {financialNavLinks.map(({ href, label, icon: Icon }) => (
-                    <Link
+                    <a
                       key={href}
                       href={href}
-                      onClick={() => setMobileOpen(false)}
+                      onClick={(event) => handleInternalLinkClick(event, href, () => setMobileOpen(false))}
                       className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium ${
                         (href === '/banking'
                           ? location === '/banking' || location === '/transaction-history'
@@ -318,7 +332,7 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                     >
                       <Icon size={18} className="text-green-400" />
                       {label}
-                    </Link>
+                    </a>
                   ))}
                 </div>
               </div>
@@ -328,17 +342,17 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                   <p className="text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">ADMINISTRATION</p>
                   <div className="space-y-1">
                     {adminNavLinks.map(({ href, label, icon: Icon }) => (
-                      <Link
+                      <a
                         key={href}
                         href={href}
-                        onClick={() => setMobileOpen(false)}
+                        onClick={(event) => handleInternalLinkClick(event, href, () => setMobileOpen(false))}
                         className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium ${
                           location === href ? 'bg-blue-600 text-white' : 'text-white/70 hover:bg-white/5'
                         }`}
                       >
                         <Icon size={18} className="text-amber-400" />
                         {label}
-                      </Link>
+                      </a>
                     ))}
                   </div>
                 </div>
@@ -362,13 +376,13 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                     </button>
                   </div>
                 ) : (
-                  <Link
+                  <a
                     href="/login"
-                    onClick={() => setMobileOpen(false)}
+                    onClick={(event) => handleInternalLinkClick(event, '/login', () => setMobileOpen(false))}
                     className="w-full py-3 bg-blue-600 text-white text-sm font-medium text-center rounded-xl block shadow-md"
                   >
                     Sign In
-                  </Link>
+                  </a>
                 )}
               </div>
             </nav>
