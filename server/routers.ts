@@ -18,9 +18,10 @@ import { getGachaRarityCost, selectGachaRarity, type GachaRarity } from "./gacha
 import { applyCreditCardCharge, applyCreditCardPayment, calculateCashback, summarizeSpending } from "./creditCardMath";
 import { calculateMonetaryPressure, calculateBlueBucksInflationIndex } from "./economicMonitoring";
 import { calculateStudyCardQuestionReward, getMaverickDailyFocus, STUDY_CARD_CATALOG, STUDY_CARD_KEYS, type StudyCardKey } from "./studyCardEngine";
+import { EVENT_MATCH_PROFILES, scoreEventMatchQuiz } from "../shared/eventMatchQuiz";
 
 import { initializeBanksForSchool, getBanksForSchool, getCreditCardsForBank } from './bankInitializer';
-import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback, notificationPreferences, userProfileSettings, adminActivityLogs, studySessions, sessionQuestions, stocks, userPiProgress, chapterExamConfigs, chapterExamAttempts, chapterExamActivity } from "../drizzle/schema";
+import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback, notificationPreferences, userProfileSettings, adminActivityLogs, studySessions, sessionQuestions, stocks, userPiProgress, chapterExamConfigs, chapterExamAttempts, chapterExamActivity, userEventQuizResults } from "../drizzle/schema";
 import { and, eq, sql, inArray, desc, asc, lte, gte } from "drizzle-orm";
 import { piLearningRouter } from "./piLearningRouter";
 import { bbxRouter } from "./bbxRouter";
@@ -676,6 +677,70 @@ export const appRouter = router({
         await database.update(users).set({ primaryEventCode: input.eventCode, eventSelectedAt: new Date() })
           .where(eq(users.id, ctx.user.id));
         return { success: true, primaryEventCode: input.eventCode };
+      }),
+
+    getEventMatchQuiz: protectedProcedure.query(async ({ ctx }) => {
+      const database = await db.getDb();
+      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Event quiz storage is unavailable' });
+      const [quizResult, user] = await Promise.all([
+        database.select().from(userEventQuizResults).where(eq(userEventQuizResults.userId, ctx.user.id)).limit(1),
+        database.select({ primaryEventCode: users.primaryEventCode }).from(users).where(eq(users.id, ctx.user.id)).limit(1),
+      ]);
+      return {
+        primaryEventCode: user[0]?.primaryEventCode ?? null,
+        quiz: quizResult[0] ?? null,
+      };
+    }),
+
+    submitEventMatchQuiz: protectedProcedure
+      .input(z.object({ answers: z.record(z.string(), z.string()) }))
+      .mutation(async ({ ctx, input }) => {
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Event quiz storage is unavailable' });
+        let result: ReturnType<typeof scoreEventMatchQuiz>;
+        try {
+          result = scoreEventMatchQuiz(input.answers);
+        } catch (error) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: error instanceof Error ? error.message : 'Please answer every question.' });
+        }
+        const [existing, user] = await Promise.all([
+          database.select().from(userEventQuizResults).where(eq(userEventQuizResults.userId, ctx.user.id)).limit(1),
+          database.select({ primaryEventCode: users.primaryEventCode }).from(users).where(eq(users.id, ctx.user.id)).limit(1),
+        ]);
+        const now = new Date();
+        await database.insert(userEventQuizResults).values({
+          userId: ctx.user.id,
+          traitScores: result.traitScores,
+          recommendedEventCodes: result.recommendations.map((recommendation) => recommendation.eventCode),
+          selectedEventCode: existing[0]?.selectedEventCode ?? user[0]?.primaryEventCode ?? null,
+          completedAt: now,
+        }).onDuplicateKeyUpdate({
+          set: {
+            traitScores: result.traitScores,
+            recommendedEventCodes: result.recommendations.map((recommendation) => recommendation.eventCode),
+            completedAt: now,
+            updatedAt: now,
+          },
+        });
+        return result;
+      }),
+
+    chooseEventMatch: protectedProcedure
+      .input(z.object({ eventCode: z.string().trim().min(2).max(20) }))
+      .mutation(async ({ ctx, input }) => {
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Event quiz storage is unavailable' });
+        const eventCode = input.eventCode.toUpperCase();
+        if (!EVENT_MATCH_PROFILES.some((profile) => profile.eventCode === eventCode)) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Please choose a supported DECA event.' });
+        }
+        const now = new Date();
+        await database.update(users).set({ primaryEventCode: eventCode, eventSelectedAt: now }).where(eq(users.id, ctx.user.id));
+        const existing = await database.select({ id: userEventQuizResults.id }).from(userEventQuizResults).where(eq(userEventQuizResults.userId, ctx.user.id)).limit(1);
+        if (existing[0]) {
+          await database.update(userEventQuizResults).set({ selectedEventCode: eventCode, updatedAt: now }).where(eq(userEventQuizResults.userId, ctx.user.id));
+        }
+        return { success: true, primaryEventCode: eventCode };
       }),
 
     getProfileSettings: protectedProcedure.query(async ({ ctx }) => {

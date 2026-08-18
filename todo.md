@@ -8698,3 +8698,7 @@
 - [x] Map each Events tab event to its required performance indicators
 - [x] Add an event-linked PI Study Library pop-up panel with module access
 - [x] Add regression coverage, validate event PI interactions, and checkpoint the integration
+- [x] Define the deterministic DECA Event Match Quiz questions, trait scoring, and event profiles
+- [x] Add the Event Match Quiz to onboarding, selected-event settings, and the existing primary-event workflow
+- [x] Persist useful quiz results and provide top-three recommendations, explanations, browse, skip, and retake actions
+- [x] Add regression coverage, validate all quiz handoffs, and checkpoint the feature

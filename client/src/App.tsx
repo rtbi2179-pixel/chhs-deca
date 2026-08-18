@@ -46,6 +46,7 @@ import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import MarketAnalytics from "./pages/MarketAnalytics";
 import Feedback from "./pages/Feedback";
 import BluesNews from "./pages/BluesNews";
+import EventMatchQuiz from "./pages/EventMatchQuiz";
 import { SignedOutWelcome } from "./components/SignedOutWelcome";
 import { FirstSignInTour } from "./components/FirstSignInTour";
 import Footer from "./components/Footer";
@@ -90,6 +91,7 @@ function Router() {
       <Route path="/super-admin" component={SuperAdminDashboard} />
       <Route path="/market-analytics" component={BbxPortfolioPage} />
       <Route path="/feedback" component={Feedback} />
+      <Route path="/event-match" component={EventMatchQuiz} />
       <Route path="/debug/practice" component={PracticeDebug} />
       <Route path="/verify-email" component={VerifyEmail} />
       <Route path="/reset-password" component={ResetPassword} />

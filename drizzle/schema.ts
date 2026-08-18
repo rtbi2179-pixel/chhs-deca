@@ -49,6 +49,18 @@ export const eventPerformanceIndicators = mysqlTable("eventPerformanceIndicators
   uniqueEventModule: unique("event_pi_unique").on(table.eventCode, table.moduleId),
 }));
 
+export const userEventQuizResults = mysqlTable("userEventQuizResults", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  traitScores: json("traitScores").$type<Record<string, number>>().notNull(),
+  recommendedEventCodes: json("recommendedEventCodes").$type<string[]>().notNull(),
+  selectedEventCode: varchar("selectedEventCode", { length: 20 }),
+  completedAt: timestamp("completedAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  uniqueUserEventQuiz: unique("user_event_quiz_user_unique").on(table.userId),
+}));
+
 /**
  * Volunteer opportunities and sign-ups
  */

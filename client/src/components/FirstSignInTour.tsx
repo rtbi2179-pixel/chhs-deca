@@ -22,6 +22,7 @@ export function FirstSignInTour() {
   const [, setLocation] = useLocation();
   const utils = trpc.useUtils();
   const { data: onboarding, isLoading } = trpc.preferences.getOnboardingStatus.useQuery(undefined, { staleTime: Infinity, retry: false });
+  const primaryEventQuery = trpc.preferences.getPrimaryEvent.useQuery(undefined, { staleTime: Infinity, retry: false });
   const completeOnboarding = trpc.preferences.completeOnboarding.useMutation();
   const [stepIndex, setStepIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -64,7 +65,7 @@ export function FirstSignInTour() {
     if (isCelebrating || isSkipping || completeOnboarding.isPending) return;
     setIsCelebrating(true);
     celebrationTimerRef.current = window.setTimeout(
-      () => finishTour(),
+      () => finishTour(primaryEventQuery.data?.primaryEventCode ? `/pi-quizlet?event=${encodeURIComponent(primaryEventQuery.data.primaryEventCode)}` : "/event-match?onboarding=1"),
       reduceMotion ? 220 : ONBOARDING_CELEBRATION_DURATION_MS,
     );
   };
