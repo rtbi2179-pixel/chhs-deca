@@ -1740,6 +1740,39 @@ export const appRouter = router({
         };
       }),
 
+    submitQuestionReport: protectedProcedure
+      .input(z.object({
+        questionId: z.string(),
+        questionNumber: z.number(),
+        cluster: z.string().optional(),
+        body: z.string().min(1).max(2000),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode || '1234567';
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database unavailable' });
+
+        // Find all super admins
+        const superAdmins = await database.select().from(users).where(eq(users.role, 'super_admin'));
+        if (superAdmins.length === 0) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'No super admins available to receive this report.' });
+        }
+
+        const reportText = `[Question Report] Question #${input.questionNumber} (ID: ${input.questionId}, Cluster: ${input.cluster || 'General'}) reported by ${ctx.user.name || ctx.user.email || 'Member'}:\n\n"${input.body}"`;
+
+        // Send a direct message to each super admin
+        for (const admin of superAdmins) {
+          await db.sendDirectMessage({
+            senderId: ctx.user.id,
+            recipientId: admin.id,
+            schoolCode,
+            body: reportText,
+          });
+        }
+
+        return { success: true, deliveredToCount: superAdmins.length };
+      }),
+
   }),
 
   market: router({

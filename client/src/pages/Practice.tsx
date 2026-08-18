@@ -30,6 +30,9 @@ export default function Practice() {
   const [showSessionSummary, setShowSessionSummary] = useState(false);
   const [sessionBlueBucks, setSessionBlueBucks] = useState(0);
   const [showQuestionInfo, setShowQuestionInfo] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportMessage, setReportMessage] = useState('');
+  const sendReportMutation = trpc.practice.submitQuestionReport.useMutation();
   const [blueBucksChange, setBlueBucksChange] = useState<{ amount: number; timestamp: number } | null>(null);
 
   // Timer effect
@@ -445,20 +448,8 @@ export default function Practice() {
 
         </div>
 
-        {/* Row 2: Action Buttons */}
+        {/* Row 2: Action Buttons (Highlight, Calculator, Reference, Clipboard removed per user instructions) */}
         <div className="flex items-center gap-2 justify-end">
-          <Button variant="ghost" size="sm" className="text-cyan-400 whitespace-nowrap">
-            ✏️ Highlight
-          </Button>
-          <Button variant="ghost" size="sm" className="text-foreground/70 whitespace-nowrap">
-            🧮 Calculator
-          </Button>
-          <Button variant="ghost" size="sm" className="text-foreground/70 whitespace-nowrap">
-            📖 Reference
-          </Button>
-          <Button variant="ghost" size="sm" className="text-foreground/70">
-            ⋯
-          </Button>
           <div className="flex items-center gap-3 ml-4 pl-4 border-l border-border relative">
             <div className="text-center">
               <span className="text-sm text-red-500 font-bold">0</span>
@@ -582,10 +573,12 @@ export default function Practice() {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm">
-                  📋
-                </Button>
-                <Button variant="ghost" size="sm" className="text-foreground/70">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setShowReportModal(true)}
+                  className="text-amber-400 hover:text-amber-300 hover:bg-amber-500/10"
+                >
                   Report
                 </Button>
               </div>
@@ -773,6 +766,66 @@ export default function Practice() {
           </Button>
         </div>
       </div>
+
+      {/* Report Question Modal */}
+      {showReportModal && currentQuestion && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-background border border-border rounded-lg p-6 max-w-lg w-full shadow-2xl">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-foreground">Report Question Issue</h2>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => { setShowReportModal(false); setReportMessage(''); }}
+                className="text-foreground/70"
+              >
+                ✕
+              </Button>
+            </div>
+            <p className="text-sm text-foreground/70 mb-4">
+              Please describe what is wrong with question #{currentQuestionNumber} ({currentQuestion.id}):
+            </p>
+            <textarea
+              value={reportMessage}
+              onChange={(e) => setReportMessage(e.target.value)}
+              placeholder="Explain the error (e.g., typo in options, incorrect correct answer, unclear wording)..."
+              className="w-full h-32 p-3 bg-background border border-border rounded-md text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none mb-4"
+              rows={4}
+            />
+            <div className="flex justify-end gap-3">
+              <Button
+                variant="outline"
+                onClick={() => { setShowReportModal(false); setReportMessage(''); }}
+              >
+                Cancel
+              </Button>
+              <Button
+                disabled={!reportMessage.trim() || sendReportMutation.isPending}
+                onClick={async () => {
+                  if (!reportMessage.trim()) return;
+                  try {
+                    await sendReportMutation.mutateAsync({
+                      questionId: currentQuestion.id,
+                      questionNumber: currentQuestionNumber,
+                      cluster: currentQuestion.cluster,
+                      body: reportMessage.trim(),
+                    });
+                    toast.success('Report sent directly to super admins via internal chat!');
+                    setReportMessage('');
+                    setShowReportModal(false);
+                  } catch (err: any) {
+                    toast.error(err?.message || 'Failed to send report');
+                  }
+                }}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                {sendReportMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                Send Report to Super Admins
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Session Summary Modal */}
 

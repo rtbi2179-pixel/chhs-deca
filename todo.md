@@ -1,5 +1,9 @@
 # Project TODO
 
+- [x] Remove Highlight, Calculator, Reference, and Clipboard buttons from the practice question interface.
+- [x] Transform the 'Report' button into a popup dialog for user feedback input.
+- [x] Implement the `submitQuestionReport` tRPC mutation to route direct messages to all super admins.
+
 - [x] Basic homepage layout
 - [x] Navigation menu
 - [x] User authentication system
@@ -1819,3 +1823,2356 @@
 - [x] Preserve all existing BBX charts, hover details, market controls, listings, movers, sectors, news, and trading actions in the new layout
 - [x] Add regression coverage for the new market dashboard structure and data-preservation contract
 - [x] Run full validation and save
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator, Reference, and Clipboard controls from the question interface
+- [ ] Add a Report dialog that asks what was wrong with the question
+- [ ] Deliver submitted question reports to super admins through internal chat with validation and authorization
+- [ ] Add regression tests for control removal and super-admin report delivery
+- [ ] Run full validation and save a checkpoint for the reporting workflow
+- [ ] Confirm all current TODO items are complete before final delivery
+
+- [ ] Remove Highlight, Calculator
