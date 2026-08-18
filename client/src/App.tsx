@@ -33,6 +33,7 @@ import PILearning from "./pages/PILearning";
 import PIQuizlet from "./pages/PIQuizlet";
 import ChapterMockExam from "./pages/ChapterMockExam";
 import BlueMarket from "./pages/BlueMarket";
+import { BbxMarketBoard } from "./pages/BbxMarketBoard";
 import { BbxCompanyPage, BbxLearnPage, BbxNewsPage, BbxPortfolioPage } from "./pages/BbxMarketViews";
 import PortfolioUpload from "./pages/PortfolioUpload";
 import AdminPortfolios from "./pages/AdminPortfolios";
@@ -73,6 +74,7 @@ function Router() {
       <Route path="/blue-market" component={BlueMarket} />
       <Route path="/blues-news" component={BluesNews} />
       <Route path="/market/portfolio" component={BbxPortfolioPage} />
+      <Route path="/market/board" component={BbxMarketBoard} />
       <Route path="/market/news" component={BbxNewsPage} />
       <Route path="/market/learn" component={BbxLearnPage} />
       <Route path="/market/:ticker" component={BbxCompanyPage} />

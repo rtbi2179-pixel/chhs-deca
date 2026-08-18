@@ -4,6 +4,7 @@ import { Loader2, Trash2, Plus, Minus } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useSchoolCode } from "@/contexts/SchoolCodeContext";
 import { toast } from "sonner";
+import { BbxSimulationControls } from "@/components/BbxSimulationControls";
 
 export function AdminPanel() {
   const { user } = useAuth();
@@ -200,6 +201,8 @@ export function AdminPanel() {
               )}
             </div>
           </div>
+
+          <BbxSimulationControls />
 
           {/* Info Box */}
           <div className="bg-blue-500/10 border-2 border-blue-500/30 rounded-lg p-6 shadow-[0_0_20px_rgba(59,130,246,0.2)]">

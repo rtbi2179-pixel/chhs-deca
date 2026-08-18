@@ -8669,3 +8669,9 @@
 - [x] Preserve direct transaction route compatibility while Banking becomes the primary destination
 - [x] Add regression coverage for Banking and Transactions consolidation
 - [x] Validate and checkpoint the Banking consolidation
+- [x] Add persistent BBX sub-navigation to Overview, Market Board, Portfolio, News, and Learn
+- [x] Add a dedicated Market Board route containing the existing listings and trade actions
+- [x] Move BBX super-admin simulation controls into Chapter Management with role protections preserved
+- [x] Remove the Blue’s News preview from the Stock Market overview while retaining dedicated news tabs
+- [x] Add regression coverage for BBX sub-routes, persistent navigation, and control placement
+- [x] Validate and checkpoint the BBX navigation and Chapter Management update

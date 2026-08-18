@@ -1,69 +1,58 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const source = readFileSync(new URL("../client/src/pages/BlueMarket.tsx", import.meta.url), "utf8");
+const readProjectFile = (relativePath: string) => readFileSync(new URL(`../${relativePath}`, import.meta.url), "utf8");
+const overview = readProjectFile("client/src/pages/BlueMarket.tsx");
+const board = readProjectFile("client/src/pages/BbxMarketBoard.tsx");
+const navigation = readProjectFile("client/src/components/BbxMarketNavigation.tsx");
+const controls = readProjectFile("client/src/components/BbxSimulationControls.tsx");
+const chapterManagement = readProjectFile("client/src/pages/AdminPanel.tsx");
+const routes = readProjectFile("client/src/App.tsx");
+const marketViews = readProjectFile("client/src/pages/BbxMarketViews.tsx");
 
-describe("BBX market dashboard layout", () => {
-  it("keeps the reference-inspired dashboard regions in the market overview", () => {
-    expect(source).toContain('aria-label="BBX market navigation"');
-    expect(source).toContain("market-dashboard-topbar");
-    expect(source).toContain('aria-label="BBX market summary"');
-    expect(source).toContain("market-dashboard-stats");
-    expect(source).toContain("<BbxPerformanceGraphs performance={data.performance} />");
-    expect(source).toContain("market-dashboard-content");
-    expect(source).toContain("Fictional company listings");
-    expect(source).toContain("Market movers");
-    expect(source).toContain("Sector performance");
-    expect(source).toContain("Latest simulated news");
-    expect(source).toContain("Before you trade");
-    expect(source).toContain('aria-label="Jump to market section"');
-    expect(source).toContain('const MARKET_SECTIONS = [');
-    expect(source).toContain('id="market-overview"');
-    expect(source).toContain('id="market-listings"');
-    expect(source).toContain('id="market-movers"');
-    expect(source).toContain('id="market-sectors"');
-    expect(source).toContain('id="market-news"');
-    expect(source).toContain('id="market-guidance"');
+describe("BBX market dashboard organization", () => {
+  it("keeps the Overview focused on market summary and performance without duplicating Board or News content", () => {
+    expect(overview).toContain("<BbxMarketNavigation />");
+    expect(overview).toContain('aria-label="BBX market summary"');
+    expect(overview).toContain("market-dashboard-stats");
+    expect(overview).toContain("<BbxPerformanceGraphs performance={data.performance} />");
+    expect(overview).toContain("Before you trade");
+    expect(overview).not.toContain("Latest simulated news");
+    expect(overview).not.toContain("Fictional company listings");
+    expect(overview).not.toContain("BBX simulation controls");
   });
 
-  it("preserves existing BBX information sources and user actions", () => {
+  it("uses one persistent navigator across Overview, Market Board, Portfolio, News, and Learn", () => {
+    for (const label of ["Overview", "Market Board", "Portfolio", "News", "Learn"]) {
+      expect(navigation).toContain(`label: "${label}"`);
+    }
+    expect(navigation).toContain('href: "/market/board"');
+    expect(navigation).toContain("sticky top-3");
+    expect(marketViews.match(/<BbxMarketNavigation \/>/g)?.length).toBeGreaterThanOrEqual(3);
+    expect(routes).toContain('path="/market/board"');
+  });
+
+  it("moves listing and trade functionality to the dedicated Market Board without changing its BBX contracts", () => {
     for (const contract of [
       "trpc.bbx.getOverview.useQuery",
       "trpc.bbx.placeMarketOrder.useMutation",
       "utils.bbx.getPortfolio.invalidate()",
       "utils.bbx.getTransactions.invalidate()",
-      "data.cash",
-      "data.state.benchmarkLevel",
-      "data.state.marketRegime",
-      "data.state.marketOpen",
-      "data.state.tickNumber",
-      "data.performance",
-      "const companies = data?.companies ?? []",
-      "data.movers.gainers",
-      "data.movers.losers",
-      "data.sectors",
-      "const news = data?.news ?? []",
-      "setTrade({ ticker: company.ticker, side: \"buy\"",
-      "setTrade({ ticker: company.ticker, side: \"sell\"",
-      "setLocation(\"/market/portfolio\")",
-      "setLocation(\"/market/news\")",
-      "setLocation(\"/market/learn\")",
+      "Fictional company listings",
+      "Market movers",
+      "Sector performance",
+      "SIMULATED MARKET ORDER",
     ]) {
-      expect(source, `missing preserved BBX contract: ${contract}`).toContain(contract);
+      expect(board, `missing Market Board contract: ${contract}`).toContain(contract);
     }
   });
 
-  it("keeps the responsive layout hooks used by the reference-inspired composition", () => {
-    expect(source).toContain("lg:flex-row");
-    expect(source).toContain("mobileSectionMenuOpen");
-    expect(source).toContain("scrollToMarketSection");
-    expect(source).toContain("IntersectionObserver");
-    expect(source).toContain("sticky top-3");
-    expect(source).toContain("sm:grid-cols-2 xl:grid-cols-4");
-    expect(source).toContain("xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,.85fr)]");
-    expect(source).toContain("lg:grid-cols-[1.45fr_0.85fr]");
+  it("places super-admin BBX controls in Chapter Management with server-protected operations", () => {
+    expect(chapterManagement).toContain("<BbxSimulationControls />");
+    expect(controls).toContain('user?.role === "super_admin"');
+    expect(controls).toContain("trpc.bbx.advanceNow.useMutation");
+    expect(controls).toContain("trpc.bbx.setRegime.useMutation");
+    expect(controls).toContain("trpc.bbx.setMarketOpen.useMutation");
+    expect(controls).toContain("trpc.bbx.injectEvent.useMutation");
   });
 });
-
-export {};
-
