@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { trpc } from '@/lib/trpc'
-import { ArrowLeft, Bell, BookOpen, CheckCircle, Clock3, Download, Edit2, FileText, Flame, Medal, Plus, RotateCcw, Sparkles, Target, Trash2 } from 'lucide-react'
+import { ArrowLeft, Bell, BookOpen, BriefcaseBusiness, CheckCircle, ChevronDown, ChevronRight, Download, Edit2, FileText, Flame, LayoutDashboard, LineChart, Medal, Plus, RotateCcw, SlidersHorizontal, Sparkles, Target, Trash2 } from 'lucide-react'
 import { useLocation } from 'wouter'
-import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
@@ -30,21 +29,22 @@ const statCards = [
   { key: 'savedQuestions', label: 'Saved Questions', detail: 'Questions bookmarked', icon: Target, valueClass: 'text-violet-300', iconClass: 'text-violet-300' },
 ] as const
 
-function formatDateTime(value: Date | string | null | undefined) {
-  if (!value) return 'Not recorded yet'
-  return new Date(value).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })
-}
-
-function formatDailyTime(value: Date | string | null | undefined) {
-  if (!value) return '03:00 UTC'
-  return new Date(value).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })
-}
+const PROFILE_SECTIONS = [
+  { id: 'profile-settings', label: 'Profile settings', description: 'Identity and appearance', icon: LayoutDashboard },
+  { id: 'progress', label: 'Progress', description: 'Credit and BBX performance', icon: LineChart },
+  { id: 'preferences', label: 'Notifications', description: 'Control your updates', icon: SlidersHorizontal },
+  { id: 'portfolio', label: 'My portfolio', description: 'Your DECA work', icon: BriefcaseBusiness },
+  { id: 'achievements', label: 'Achievements', description: 'Milestones and badges', icon: Medal },
+] as const
 
 export default function Profile() {
   const { user } = useAuth()
   const utils = trpc.useUtils()
   const [, setLocation] = useLocation()
   const [showAddPortfolioDialog, setShowAddPortfolioDialog] = useState(false)
+  const [activeSection, setActiveSection] = useState<(typeof PROFILE_SECTIONS)[number]['id']>('profile-settings')
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
+  const [focusMode, setFocusMode] = useState(false)
   const [editingPortfolioItem, setEditingPortfolioItem] = useState<any>(null)
   const [portfolioFormData, setPortfolioFormData] = useState({ title: '', category: '', description: '', fileUrl: '', externalUrl: '', memberProgressNotes: '' })
   const [profileCustomization, setProfileCustomization] = useState({ displayName: '', bio: '', accentColor: 'blue' as 'blue' | 'violet' | 'emerald' | 'rose', showOnLeaderboard: true })
@@ -89,6 +89,17 @@ export default function Profile() {
     if (!settings) return
     setProfileCustomization({ displayName: settings.displayName || '', bio: settings.bio || '', accentColor: settings.accentColor, showOnLeaderboard: settings.showOnLeaderboard })
   }, [profileSettingsQuery.data])
+
+  useEffect(() => {
+    const observedSections = PROFILE_SECTIONS.map(({ id }) => document.getElementById(id)).filter(Boolean) as HTMLElement[]
+    if (observedSections.length === 0) return
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+      if (visible[0]?.target instanceof HTMLElement) setActiveSection(visible[0].target.id as (typeof PROFILE_SECTIONS)[number]['id'])
+    }, { rootMargin: '-18% 0px -62% 0px', threshold: [0, 0.2, 0.6] })
+    observedSections.forEach((section) => observer.observe(section))
+    return () => observer.disconnect()
+  }, [])
 
   const setNotificationPreference = (key: 'announcementsEnabled' | 'feedbackResponsesEnabled' | 'systemUpdatesEnabled' | 'studyRemindersEnabled', checked: boolean) => {
     const current = notificationPreferencesQuery.data
@@ -172,12 +183,26 @@ export default function Profile() {
     studyStreak: metrics?.studyStreak ?? 0,
     savedQuestions: metrics?.savedQuestions ?? 0,
   }
-  const scrollToSection = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  const scrollToSection = (id: (typeof PROFILE_SECTIONS)[number]['id']) => {
+    setActiveSection(id)
+    setMobileNavOpen(false)
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+  const activeSectionLabel = PROFILE_SECTIONS.find((section) => section.id === activeSection)?.label ?? 'Profile settings'
 
   return (
     <main className="min-h-screen bg-[oklch(0.07_0.01_265)] pb-16 pt-20 text-white">
       <div className="mx-auto max-w-[1450px] px-4 sm:px-6 lg:px-8">
         <button onClick={() => setLocation('/')} className="mb-5 inline-flex items-center gap-2 text-sm text-blue-300 transition-colors hover:text-white"><ArrowLeft className="h-4 w-4" />Back to Home</button>
+
+        <div className="relative z-20 mb-4 flex flex-col gap-3 rounded-2xl border border-white/10 bg-slate-950/70 p-2 shadow-[0_12px_34px_oklch(0_0_0/0.2)] backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between">
+          <div className="relative min-w-0 sm:hidden">
+            <button type="button" onClick={() => setMobileNavOpen((open) => !open)} aria-expanded={mobileNavOpen} className="flex w-full items-center justify-between rounded-xl bg-white/[0.045] px-3 py-2.5 text-left text-sm text-white transition-colors hover:bg-white/[0.08]"><span><span className="block text-[10px] uppercase tracking-[0.16em] text-white/40">Jump to</span><span className="mt-0.5 block font-medium">{activeSectionLabel}</span></span><ChevronDown className={`h-4 w-4 text-blue-300 transition-transform ${mobileNavOpen ? 'rotate-180' : ''}`} /></button>
+            {mobileNavOpen && <div className="absolute left-0 right-0 top-[calc(100%+0.5rem)] overflow-hidden rounded-xl border border-white/10 bg-slate-900 p-1.5 shadow-2xl">{PROFILE_SECTIONS.map(({ id, label, icon: Icon }) => <button key={id} type="button" onClick={() => scrollToSection(id)} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm ${activeSection === id ? 'bg-blue-500/15 text-blue-100' : 'text-white/70 hover:bg-white/[0.06] hover:text-white'}`}><Icon className="h-4 w-4 text-blue-300" />{label}</button>)}</div>}
+          </div>
+          <div className="hidden min-w-0 items-center gap-1 overflow-x-auto sm:flex">{PROFILE_SECTIONS.map(({ id, label, icon: Icon }) => <button key={id} type="button" onClick={() => scrollToSection(id)} className={`group flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-xs transition-colors ${activeSection === id ? 'bg-blue-500/15 text-blue-100 ring-1 ring-inset ring-blue-400/25' : 'text-white/55 hover:bg-white/[0.06] hover:text-white'}`}><Icon className="h-3.5 w-3.5 text-blue-300/75" />{label}</button>)}</div>
+          <button type="button" onClick={() => setFocusMode((mode) => !mode)} aria-pressed={focusMode} className={`inline-flex shrink-0 items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs transition-colors ${focusMode ? 'bg-blue-500/15 text-blue-100 ring-1 ring-inset ring-blue-400/25' : 'text-white/60 hover:bg-white/[0.06] hover:text-white'}`}><SlidersHorizontal className="h-3.5 w-3.5" />{focusMode ? 'Exit focus' : 'Focus view'}</button>
+        </div>
 
         <section className={`overflow-hidden rounded-[1.6rem] border bg-gradient-to-br ${ACCENT_STYLES[profileCustomization.accentColor]} shadow-[0_24px_70px_oklch(0_0_0/0.28)]`}>
           <div className="h-28 border-b border-white/10 bg-[radial-gradient(circle_at_18%_20%,oklch(0.7_0.16_245/0.32),transparent_33%),radial-gradient(circle_at_85%_0%,oklch(0.62_0.16_285/0.2),transparent_36%)] sm:h-36" />
@@ -197,14 +222,13 @@ export default function Profile() {
           </div>
         </section>
 
-        <div className="mt-7 grid gap-7 lg:grid-cols-[minmax(17rem,0.78fr)_minmax(0,2fr)]">
-          <aside className="self-start lg:sticky lg:top-24">
+        <div className={`mt-7 grid gap-7 ${focusMode ? 'lg:grid-cols-1' : 'lg:grid-cols-[minmax(17rem,0.78fr)_minmax(0,2fr)]'}`}>
+          <aside className={`${focusMode ? 'hidden' : ''} self-start lg:sticky lg:top-24`}>
+
             <div className="overflow-hidden rounded-2xl border border-white/10 bg-slate-950/65 p-3 shadow-[0_16px_42px_oklch(0_0_0/0.2)] backdrop-blur-xl">
               <p className="px-3 pb-2 pt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-white/45">Profile navigation</p>
               <div className="space-y-1">
-                {[
-                  ['profile-settings', 'Profile settings'], ['progress', 'Progress'], ['preferences', 'Notifications'], ['portfolio', 'My portfolio'], ['achievements', 'Achievements'],
-                ].map(([id, label]) => <button key={id} type="button" onClick={() => scrollToSection(id)} className="flex w-full items-center rounded-xl px-3 py-2.5 text-left text-sm text-white/70 transition-colors hover:bg-white/[0.06] hover:text-white">{label}</button>)}
+                {PROFILE_SECTIONS.map(({ id, label, icon: Icon }) => <button key={id} type="button" onClick={() => scrollToSection(id)} className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition-colors ${activeSection === id ? 'bg-blue-500/15 text-blue-100 ring-1 ring-inset ring-blue-400/25' : 'text-white/70 hover:bg-white/[0.06] hover:text-white'}`}><Icon className={`h-4 w-4 shrink-0 ${activeSection === id ? 'text-blue-300' : 'text-white/45 group-hover:text-blue-200'}`} /><span className="min-w-0"><span className="block truncate">{label}</span><span className={`mt-0.5 block truncate text-[10px] ${activeSection === id ? 'text-blue-200/70' : 'text-white/35'}`}>{PROFILE_SECTIONS.find((section) => section.id === id)?.description}</span></span>{activeSection === id && <ChevronRight className="ml-auto h-3.5 w-3.5 text-blue-300" />}</button>)}
               </div>
             </div>
 

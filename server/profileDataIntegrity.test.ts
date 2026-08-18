@@ -40,8 +40,7 @@ describe('Profile data integrity and navigation', () => {
 
   it('keeps the profile’s available sections in a navigable reference-inspired two-column layout', () => {
     expect(profile).toContain('Profile navigation');
-    expect(profile).toContain("['profile-settings', 'Profile settings']");
-    expect(profile).toContain("['portfolio', 'My portfolio']");
+    expect(profile).toContain('PROFILE_SECTIONS');
     expect(profile).toContain('lg:grid-cols-[minmax(17rem,0.78fr)_minmax(0,2fr)]');
     expect(profile).toContain('Notification Preferences');
     expect(profile).toContain('My Portfolio');

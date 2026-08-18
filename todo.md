@@ -8654,3 +8654,8 @@
 - [x] Reorganize Profile into the provided two-column profile-and-content layout without adding or removing information
 - [x] Add regression coverage and validate Profile data accuracy and navigation
 - [x] Save a checkpoint for the Profile accuracy and layout update
+- [ ] Add active-section tracking to Profile navigation
+- [ ] Add compact interactive section controls inspired by the reference layout
+- [ ] Improve mobile Profile navigation and add a quick-jump control
+- [ ] Add regression coverage for the new Profile interactions
+- [ ] Validate and checkpoint the Profile interaction update
