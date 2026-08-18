@@ -39,6 +39,18 @@ export function FirstSignInTour() {
   }, [isLoading, onboarding?.shouldShow]);
 
   useEffect(() => {
+    const restartTour = () => {
+      if (celebrationTimerRef.current !== null) window.clearTimeout(celebrationTimerRef.current);
+      setStepIndex(0);
+      setIsCelebrating(false);
+      setIsSkipping(false);
+      setIsOpen(true);
+    };
+    window.addEventListener("blueblazer:restart-tour", restartTour);
+    return () => window.removeEventListener("blueblazer:restart-tour", restartTour);
+  }, []);
+
+  useEffect(() => {
     if (isOpen && !isCelebrating && !isSkipping) setLocation(step.path);
   }, [isOpen, isCelebrating, isSkipping, setLocation, step.path]);
 
@@ -85,7 +97,7 @@ export function FirstSignInTour() {
     else setIsOpen(open);
   };
 
-  if (isLoading || !onboarding?.shouldShow) return null;
+  if (isLoading || (!onboarding?.shouldShow && !isOpen)) return null;
 
   const isFinalStep = stepIndex === TOUR_STEPS.length - 1;
 

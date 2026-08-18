@@ -83,6 +83,11 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
     afterNavigate?.();
   };
 
+  const restartOnboardingTour = () => {
+    window.dispatchEvent(new Event('blueblazer:restart-tour'));
+    setMobileOpen(false);
+  };
+
   return (
     <div className="flex min-h-screen bg-[oklch(0.06_0.012_265)] text-foreground">
       {/* Desktop Sidebar */}
@@ -92,9 +97,9 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
         }`}
       >
         {/* Header / Brand */}
-        <div className="p-4 border-b border-white/[0.08] flex items-center justify-between">
+        <div className="flex items-center justify-between border-b border-white/[0.08] bg-black p-4">
           {!collapsed ? (
-            <div className="flex items-center gap-3">
+            <button type="button" onClick={restartOnboardingTour} aria-label="Restart Blue Blazer tour" className="flex items-center gap-3 rounded-xl text-left transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-blue-300">
               <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl border border-blue-300/30 bg-white/95 p-1 shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)]">
                 <img src={BLUE_BLAZER_LOGO} alt="Blue Blazer logo" className="h-full w-full object-contain" />
               </div>
@@ -102,11 +107,11 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                 <h1 className="font-heading tracking-wide text-white text-base leading-none">BLUE BLAZER</h1>
                 <p className="text-[10px] font-mono tracking-[0.15em] text-blue-400/80 mt-0.5">CHHS DECA</p>
               </div>
-            </div>
+            </button>
           ) : (
-            <div className="mx-auto flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-blue-300/30 bg-white/95 p-1 shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)]">
+            <button type="button" onClick={restartOnboardingTour} aria-label="Restart Blue Blazer tour" className="mx-auto flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-blue-300/30 bg-white/95 p-1 shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)] transition hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300">
               <img src={BLUE_BLAZER_LOGO} alt="Blue Blazer logo" className="h-full w-full object-contain" />
-            </div>
+            </button>
           )}
 
           <button
@@ -297,13 +302,13 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Mobile Top Bar */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-[oklch(0.08_0.014_265/0.95)] backdrop-blur-xl border-b border-white/[0.08] px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-3">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between border-b border-white/[0.08] bg-black px-4 py-3 backdrop-blur-xl">
+        <button type="button" onClick={restartOnboardingTour} aria-label="Restart Blue Blazer tour" className="flex items-center gap-3 rounded-lg text-left transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-blue-300">
           <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg border border-blue-300/30 bg-white/95 p-0.5 shadow-md">
             <img src={BLUE_BLAZER_LOGO} alt="Blue Blazer logo" className="h-full w-full object-contain" />
           </div>
           <span className="font-heading tracking-wide text-white text-sm">BLUE BLAZER</span>
-        </div>
+        </button>
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           className="p-2 text-white/80 hover:text-white"

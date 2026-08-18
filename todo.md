@@ -8708,3 +8708,6 @@
 - [x] Audit every event-to-PI mapping and identify current panel truncation or fallback behavior
 - [x] Display every applicable PI in each event’s PI Study Library panel with accurate totals
 - [x] Add regression coverage, validate complete PI retrieval, and checkpoint the update
+- [x] Make the Blue Blazer logo reopen the onboarding tour from desktop and mobile navigation
+- [x] Apply a black top-left brand background while preserving sidebar controls and accessibility
+- [x] Add regression coverage, validate logo interactions, and checkpoint the update

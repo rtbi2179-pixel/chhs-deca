@@ -20,6 +20,9 @@ describe('Sidebar Navigation Shell', () => {
     expect(content).toContain('chapterNavLinks.map');
     expect(content).toContain('chapterManagementNavLinks.map');
     expect(content).not.toContain('const adminNavLinks');
+    expect(content).toContain("blueblazer:restart-tour");
+    expect(content).toContain('Restart Blue Blazer tour');
+    expect(content).toContain('bg-black');
     expect(content).toContain('handleInternalLinkClick');
     expect(content).not.toContain("import { Link, useLocation } from 'wouter'");
     expect(content).not.toContain('<Link');

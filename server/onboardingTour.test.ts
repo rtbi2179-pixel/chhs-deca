@@ -38,4 +38,11 @@ describe("onboarding progress and celebration", () => {
     expect(source).toContain("allowBackgroundInteraction");
     expect(source).toContain("setLocation(step.path)");
   });
+
+  it("can reopen the tour from the Blue Blazer logo after onboarding is completed", () => {
+    const source = readFileSync(join(process.cwd(), "client/src/components/FirstSignInTour.tsx"), "utf8");
+    expect(source).toContain("blueblazer:restart-tour");
+    expect(source).toContain("setStepIndex(0)");
+    expect(source).toContain("(!onboarding?.shouldShow && !isOpen)");
+  });
 });
