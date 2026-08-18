@@ -20,6 +20,10 @@ describe("BBX market dashboard organization", () => {
     expect(overview).not.toContain("Latest simulated news");
     expect(overview).not.toContain("Fictional company listings");
     expect(overview).not.toContain("BBX simulation controls");
+    expect(overview).not.toContain('setLocation("/market/portfolio")');
+    expect(overview).not.toContain('setLocation("/market/news")');
+    expect(overview).not.toContain('setLocation("/market/learn")');
+    expect(overview).toContain("Refresh in {refreshRemaining}s");
   });
 
   it("uses one persistent navigator across Overview, Market Board, Portfolio, News, and Learn", () => {
@@ -28,6 +32,8 @@ describe("BBX market dashboard organization", () => {
     }
     expect(navigation).toContain('href: "/market/board"');
     expect(navigation).toContain("sticky top-3");
+    expect(navigation).not.toContain("Advance BBX");
+    expect(navigation).not.toContain("Refresh in");
     expect(marketViews.match(/<BbxMarketNavigation \/>/g)?.length).toBeGreaterThanOrEqual(3);
     expect(routes).toContain('path="/market/board"');
   });

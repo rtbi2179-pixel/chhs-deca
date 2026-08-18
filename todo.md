@@ -8675,3 +8675,6 @@
 - [x] Remove the Blue’s News preview from the Stock Market overview while retaining dedicated news tabs
 - [x] Add regression coverage for BBX sub-routes, persistent navigation, and control placement
 - [x] Validate and checkpoint the BBX navigation and Chapter Management update
+- [x] Remove duplicate BBX Overview header buttons while preserving simulation status and refresh information
+- [x] Retain Market Board, Portfolio, News, and Learn navigation exclusively in the persistent BBX tab bar
+- [x] Validate and checkpoint the streamlined BBX overview header
