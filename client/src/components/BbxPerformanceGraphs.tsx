@@ -23,22 +23,27 @@ function InteractiveGraph({ points, color, title }: { points: Point[]; color: st
   const endTimeStr = points[points.length - 1].timestamp ? new Date(String(points[points.length - 1].timestamp)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "Live";
 
   const path = points.map((point, index) => `${index ? "L" : "M"}${(index / (points.length - 1)) * 100},${90 - ((point.index - min) / range) * 80}`).join(" ");
+  const hoverPosition = hoverIndex !== null && points[hoverIndex] ? {
+    x: (hoverIndex / (points.length - 1)) * 100,
+    y: 90 - ((points[hoverIndex].index - min) / range) * 80,
+  } : null;
 
   return (
     <div className="mt-4">
       {/* Live / Hover Readout Header */}
-      <div className="mb-3 flex items-center justify-between text-xs">
-        <span className="text-slate-400 font-medium">
-          {hoverIndex !== null ? "Hovered Mark" : "Latest Mark"} ({activeDateStr} {activeTimeStr})
+      <div className="mb-3 flex items-center justify-between gap-3 text-xs">
+        <span className="inline-flex min-w-0 items-center gap-2 text-slate-400 font-medium">
+          <span className={`h-2 w-2 shrink-0 rounded-full ${hoverIndex !== null ? "bg-blue-300 shadow-[0_0_12px_rgba(147,197,253,.9)]" : "bg-slate-500"}`} />
+          <span className="truncate">{hoverIndex !== null ? "Hovered Mark" : "Latest Mark"} ({activeDateStr} {activeTimeStr})</span>
         </span>
-        <span className="font-mono font-bold text-white">
+        <span className="shrink-0 rounded-full border border-white/10 bg-white/[0.045] px-2.5 py-1 font-mono font-bold text-white shadow-sm">
           {activePoint.index.toFixed(2)} pts ({activePoint.changePercent >= 0 ? "+" : ""}{activePoint.changePercent.toFixed(2)}%)
         </span>
       </div>
 
       {/* SVG Graph with Mouse Tracking */}
       <div 
-        className="relative h-32 w-full cursor-crosshair overflow-hidden rounded-lg bg-slate-950/60 p-2 border border-white/10"
+        className="relative h-32 w-full cursor-crosshair overflow-hidden rounded-xl border border-white/10 bg-slate-950/70 shadow-inner"
         onMouseLeave={() => setHoverIndex(null)}
         onMouseMove={(e) => {
           const rect = e.currentTarget.getBoundingClientRect();
@@ -52,17 +57,13 @@ function InteractiveGraph({ points, color, title }: { points: Point[]; color: st
           <path d="M0,90 L100,90" stroke="rgba(148,163,184,.15)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
           <path d="M0,50 L100,50" stroke="rgba(148,163,184,.08)" strokeWidth="1" strokeDasharray="2 2" vectorEffect="non-scaling-stroke" />
           <path d={path} fill="none" stroke={color} strokeWidth="2.2" vectorEffect="non-scaling-stroke" />
-          {hoverIndex !== null && points[hoverIndex] && (() => {
-            const cx = (hoverIndex / (points.length - 1)) * 100;
-            const cy = 90 - ((points[hoverIndex].index - min) / range) * 80;
-            return (
-              <g>
-                <line x1={cx} y1="0" x2={cx} y2="100" stroke="rgba(255,255,255,0.3)" strokeWidth="1" strokeDasharray="2 2" vectorEffect="non-scaling-stroke" />
-                <circle cx={cx} cy={cy} r="3.5" fill={color} stroke="#ffffff" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
-              </g>
-            );
-          })()}
         </svg>
+        {hoverPosition && <>
+          <div className="pointer-events-none absolute inset-y-0 w-px bg-gradient-to-b from-transparent via-white/75 to-transparent" style={{ left: `${hoverPosition.x}%` }} />
+          <div className="pointer-events-none absolute h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/90 bg-slate-950 shadow-[0_0_0_4px_rgba(15,23,42,.8)] transition-transform duration-150 ease-out" style={{ left: `${hoverPosition.x}%`, top: `${hoverPosition.y}%`, boxShadow: `0 0 0 4px rgba(15,23,42,.8), 0 0 18px ${color}` }}>
+            <span className="absolute inset-[3px] rounded-full" style={{ backgroundColor: color }} />
+          </div>
+        </>}
       </div>
 
       {/* Explicit Time Axis Labels */}

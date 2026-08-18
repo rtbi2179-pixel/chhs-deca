@@ -8678,3 +8678,6 @@
 - [x] Remove duplicate BBX Overview header buttons while preserving simulation status and refresh information
 - [x] Retain Market Board, Portfolio, News, and Learn navigation exclusively in the persistent BBX tab bar
 - [x] Validate and checkpoint the streamlined BBX overview header
+- [x] Replace the oval BBX chart hover mark with a modern circular marker and refined crosshair styling
+- [x] Preserve exact BBX hover timestamps and performance values across every graph
+- [x] Add regression coverage, validate, and checkpoint the refined graph interaction

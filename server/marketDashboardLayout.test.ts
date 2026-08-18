@@ -9,6 +9,7 @@ const controls = readProjectFile("client/src/components/BbxSimulationControls.ts
 const chapterManagement = readProjectFile("client/src/pages/AdminPanel.tsx");
 const routes = readProjectFile("client/src/App.tsx");
 const marketViews = readProjectFile("client/src/pages/BbxMarketViews.tsx");
+const performanceGraphs = readProjectFile("client/src/components/BbxPerformanceGraphs.tsx");
 
 describe("BBX market dashboard organization", () => {
   it("keeps the Overview focused on market summary and performance without duplicating Board or News content", () => {
@@ -60,5 +61,15 @@ describe("BBX market dashboard organization", () => {
     expect(controls).toContain("trpc.bbx.setRegime.useMutation");
     expect(controls).toContain("trpc.bbx.setMarketOpen.useMutation");
     expect(controls).toContain("trpc.bbx.injectEvent.useMutation");
+  });
+
+  it("uses a circular modern hover marker without changing precise graph timestamps or values", () => {
+    expect(performanceGraphs).toContain("const hoverPosition");
+    expect(performanceGraphs).toContain("rounded-full");
+    expect(performanceGraphs).toContain("h-3.5 w-3.5");
+    expect(performanceGraphs).toContain("bg-gradient-to-b");
+    expect(performanceGraphs).toContain("activePoint.index.toFixed(2)");
+    expect(performanceGraphs).toContain("activePoint.changePercent.toFixed(2)");
+    expect(performanceGraphs).toContain("toLocaleTimeString");
   });
 });
