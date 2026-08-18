@@ -8689,3 +8689,6 @@
 - [x] Restore the dedicated Calendar page route and navigation access
 - [x] Preserve Events & Community and school-specific calendar event behavior
 - [x] Add regression coverage, validate, and checkpoint the restored Calendar flow
+- [x] Validate and transform the uploaded DECA Cluster Exam question bank for the existing questions schema
+- [x] Replace every persisted practice question while preserving valid user-answer and bookmark references
+- [x] Add import regression coverage, validate Practice and Mock Exam data access, and checkpoint the replacement
