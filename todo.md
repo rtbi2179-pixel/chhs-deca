@@ -8654,8 +8654,13 @@
 - [x] Reorganize Profile into the provided two-column profile-and-content layout without adding or removing information
 - [x] Add regression coverage and validate Profile data accuracy and navigation
 - [x] Save a checkpoint for the Profile accuracy and layout update
-- [ ] Add active-section tracking to Profile navigation
-- [ ] Add compact interactive section controls inspired by the reference layout
-- [ ] Improve mobile Profile navigation and add a quick-jump control
-- [ ] Add regression coverage for the new Profile interactions
-- [ ] Validate and checkpoint the Profile interaction update
+- [x] Add active-section tracking to Profile navigation
+- [x] Add compact interactive section controls inspired by the reference layout
+- [x] Improve mobile Profile navigation and add a quick-jump control
+- [x] Add regression coverage for the new Profile interactions
+- [x] Validate and checkpoint the Profile interaction update
+- [ ] Reorganize the Stock Market overview into a reference-inspired dashboard hierarchy without changing information
+- [ ] Add clearer in-page market navigation for overview, listings, movers, sectors, news, and guidance
+- [ ] Preserve all existing BBX charts, values, controls, trading, and admin actions
+- [ ] Add regression coverage for Stock Market layout and navigation
+- [ ] Validate the Stock Market update and save a checkpoint

@@ -4,10 +4,17 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   BookOpen,
+  ChartNoAxesCombined,
+  ChevronDown,
+  ChevronRight,
   Landmark,
+  LayoutGrid,
+  LineChart,
+  ListFilter,
   Loader2,
   Newspaper,
   ShieldCheck,
+  SlidersHorizontal,
   TrendingUp,
   X,
 } from "lucide-react";
@@ -49,6 +56,15 @@ const marketTabs = [
   { label: "Learn", href: "/market/learn" },
 ];
 
+const MARKET_SECTIONS = [
+  { id: "market-overview", label: "Overview", description: "Benchmark and performance", icon: LayoutGrid },
+  { id: "market-listings", label: "Listings", description: "Browse and trade companies", icon: ListFilter },
+  { id: "market-movers", label: "Movers", description: "Gainers and losers", icon: LineChart },
+  { id: "market-sectors", label: "Sectors", description: "Compare sector performance", icon: ChartNoAxesCombined },
+  { id: "market-news", label: "News", description: "Read simulated events", icon: Newspaper },
+  { id: "market-guidance", label: "Guidance", description: "Review before trading", icon: ShieldCheck },
+] as const;
+
 export default function BlueMarket() {
   const [, setLocation] = useLocation();
   const utils = trpc.useUtils();
@@ -85,6 +101,8 @@ export default function BlueMarket() {
   const [quantity, setQuantity] = useState("1");
   const [eventTemplate, setEventTemplate] = useState("");
   const [eventTicker, setEventTicker] = useState("");
+  const [activeSection, setActiveSection] = useState<(typeof MARKET_SECTIONS)[number]["id"]>("market-overview");
+  const [mobileSectionMenuOpen, setMobileSectionMenuOpen] = useState(false);
   const [clockNow, setClockNow] = useState(() => Date.now());
   const benchmarkChange = data?.state.benchmarkChangePercent ?? 0;
   const news = data?.news ?? [];
@@ -102,6 +120,23 @@ export default function BlueMarket() {
     const timer = window.setInterval(() => setClockNow(Date.now()), 1_000);
     return () => window.clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    const observedSections = MARKET_SECTIONS.map(({ id }) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    if (observedSections.length === 0) return;
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (visible[0]?.target instanceof HTMLElement) setActiveSection(visible[0].target.id as (typeof MARKET_SECTIONS)[number]["id"]);
+    }, { rootMargin: "-16% 0px -64% 0px", threshold: [0, 0.2, 0.6] });
+    observedSections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
+  const scrollToMarketSection = (id: (typeof MARKET_SECTIONS)[number]["id"]) => {
+    setActiveSection(id);
+    setMobileSectionMenuOpen(false);
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const submitOrder = async () => {
     if (!trade) return;
@@ -166,7 +201,7 @@ export default function BlueMarket() {
       <div className="page-content max-w-7xl">
         <nav
           aria-label="BBX market navigation"
-          className="market-dashboard-topbar mb-8 flex flex-col gap-4 rounded-2xl border border-white/10 bg-slate-950/70 p-3 shadow-[0_20px_70px_rgba(0,0,0,.22)] backdrop-blur-xl lg:flex-row lg:items-center lg:justify-between"
+          className="market-dashboard-topbar sticky top-3 z-40 mb-4 flex flex-col gap-4 rounded-2xl border border-white/10 bg-slate-950/80 p-3 shadow-[0_20px_70px_rgba(0,0,0,.22)] backdrop-blur-xl lg:flex-row lg:items-center lg:justify-between"
         >
           <button
             className="flex items-center gap-3 px-2 text-left"
@@ -216,7 +251,15 @@ export default function BlueMarket() {
           </div>
         </nav>
 
-        <header className="market-dashboard-hero mb-7 flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
+        <nav aria-label="Jump to market section" className="relative z-30 mb-7 rounded-2xl border border-white/10 bg-slate-950/65 p-2 shadow-[0_14px_45px_rgba(0,0,0,.18)] backdrop-blur-xl">
+          <div className="relative sm:hidden">
+            <button type="button" onClick={() => setMobileSectionMenuOpen((open) => !open)} aria-expanded={mobileSectionMenuOpen} className="flex w-full items-center justify-between rounded-xl bg-white/[0.045] px-3 py-2.5 text-left text-sm text-foreground transition-colors hover:bg-white/[0.08]"><span><span className="block text-[10px] uppercase tracking-[0.16em] text-foreground/40">Jump to market area</span><span className="mt-0.5 block font-medium">{MARKET_SECTIONS.find((section) => section.id === activeSection)?.label}</span></span><ChevronDown className={`h-4 w-4 text-blue-300 transition-transform ${mobileSectionMenuOpen ? "rotate-180" : ""}`} /></button>
+            {mobileSectionMenuOpen && <div className="absolute left-0 right-0 top-[calc(100%+0.5rem)] overflow-hidden rounded-xl border border-white/10 bg-slate-900 p-1.5 shadow-2xl">{MARKET_SECTIONS.map(({ id, label, icon: Icon }) => <button key={id} type="button" onClick={() => scrollToMarketSection(id)} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm ${activeSection === id ? "bg-blue-500/15 text-blue-100" : "text-foreground/70 hover:bg-white/[0.06] hover:text-foreground"}`}><Icon className="h-4 w-4 text-blue-300" />{label}</button>)}</div>}
+          </div>
+          <div className="hidden items-center gap-1 overflow-x-auto sm:flex">{MARKET_SECTIONS.map(({ id, label, description, icon: Icon }) => <button key={id} type="button" onClick={() => scrollToMarketSection(id)} className={`group flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-xs transition-colors ${activeSection === id ? "bg-blue-500/15 text-blue-100 ring-1 ring-inset ring-blue-400/25" : "text-foreground/55 hover:bg-white/[0.06] hover:text-foreground"}`}><Icon className="h-3.5 w-3.5 text-blue-300/80" /><span className="text-left"><span className="block">{label}</span><span className="hidden text-[10px] text-foreground/35 lg:block">{description}</span></span>{activeSection === id && <ChevronRight className="h-3.5 w-3.5 text-blue-300" />}</button>)}</div>
+        </nav>
+
+        <header id="market-overview" className="market-dashboard-hero mb-7 flex scroll-mt-28 flex-col justify-between gap-5 lg:flex-row lg:items-end">
           <div>
             <p className="page-eyebrow">Financial learning lab · fictional market</p>
             <div className="mt-2 flex flex-wrap items-center gap-3">
@@ -291,7 +334,7 @@ export default function BlueMarket() {
         <BbxPerformanceGraphs performance={data.performance} />
 
         <section className="market-dashboard-content mt-8 grid gap-6 xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,.85fr)]">
-          <Card className="editorial-panel overflow-hidden p-0">
+          <Card id="market-listings" className="editorial-panel scroll-mt-28 overflow-hidden p-0">
             <div className="border-b border-white/10 px-6 py-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
@@ -355,7 +398,7 @@ export default function BlueMarket() {
           </Card>
 
           <div className="space-y-6">
-            <Card className="editorial-panel p-6">
+            <Card id="market-movers" className="editorial-panel scroll-mt-28 p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="data-label">Exchange activity</p>
@@ -397,7 +440,7 @@ export default function BlueMarket() {
               </div>
             </Card>
 
-            <Card className="editorial-panel p-6">
+            <Card id="market-sectors" className="editorial-panel scroll-mt-28 p-6">
               <p className="data-label">Sector view</p>
               <h2 className="section-heading mt-1">Sector performance</h2>
               <div className="mt-4 space-y-3">
@@ -498,7 +541,7 @@ export default function BlueMarket() {
           </Card>
         )}
 
-        <section className="mt-8 grid gap-6 lg:grid-cols-[1.45fr_0.85fr]">
+        <section id="market-news" className="mt-8 scroll-mt-28 grid gap-6 lg:grid-cols-[1.45fr_0.85fr]">
           <Card className="editorial-panel p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -534,7 +577,7 @@ export default function BlueMarket() {
               )}
             </div>
           </Card>
-          <Card className="editorial-panel p-6">
+          <Card id="market-guidance" className="editorial-panel scroll-mt-28 p-6">
             <Landmark className="h-5 w-5 text-blue-300" />
             <h2 className="section-heading mt-4">Before you trade</h2>
             <ul className="mt-3 space-y-3 text-sm leading-6 text-foreground/65">

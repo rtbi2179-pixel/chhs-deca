@@ -16,6 +16,14 @@ describe("BBX market dashboard layout", () => {
     expect(source).toContain("Sector performance");
     expect(source).toContain("Latest simulated news");
     expect(source).toContain("Before you trade");
+    expect(source).toContain('aria-label="Jump to market section"');
+    expect(source).toContain('const MARKET_SECTIONS = [');
+    expect(source).toContain('id="market-overview"');
+    expect(source).toContain('id="market-listings"');
+    expect(source).toContain('id="market-movers"');
+    expect(source).toContain('id="market-sectors"');
+    expect(source).toContain('id="market-news"');
+    expect(source).toContain('id="market-guidance"');
   });
 
   it("preserves existing BBX information sources and user actions", () => {
@@ -47,6 +55,10 @@ describe("BBX market dashboard layout", () => {
 
   it("keeps the responsive layout hooks used by the reference-inspired composition", () => {
     expect(source).toContain("lg:flex-row");
+    expect(source).toContain("mobileSectionMenuOpen");
+    expect(source).toContain("scrollToMarketSection");
+    expect(source).toContain("IntersectionObserver");
+    expect(source).toContain("sticky top-3");
     expect(source).toContain("sm:grid-cols-2 xl:grid-cols-4");
     expect(source).toContain("xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,.85fr)]");
     expect(source).toContain("lg:grid-cols-[1.45fr_0.85fr]");
