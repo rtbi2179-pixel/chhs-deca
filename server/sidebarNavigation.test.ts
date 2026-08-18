@@ -11,5 +11,7 @@ describe('Sidebar Navigation Shell', () => {
     expect(content).toContain('FINANCIAL SYSTEMS');
     expect(content).toContain('View Profile & Stats');
     expect(content).toContain('collapsed');
+    expect(content).toContain("{ href: '/calendar', label: 'Calendar'");
+    expect(content).toContain("{ href: '/events', label: 'Events & Community'");
   });
 });

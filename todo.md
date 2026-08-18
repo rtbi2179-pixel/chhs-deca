@@ -8686,3 +8686,6 @@
 - [x] Add regression coverage, validate, and checkpoint the unified Banking Study Card update
 - [x] Fix invalid nested anchor markup on the Home-page render path
 - [x] Add regression coverage and validate Home-page link composition
+- [x] Restore the dedicated Calendar page route and navigation access
+- [x] Preserve Events & Community and school-specific calendar event behavior
+- [x] Add regression coverage, validate, and checkpoint the restored Calendar flow

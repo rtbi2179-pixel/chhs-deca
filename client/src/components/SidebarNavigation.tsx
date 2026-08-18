@@ -31,6 +31,7 @@ const mainNavLinks = [
   { href: '/pi-quizlet', label: 'PI Study Library', icon: BookOpen, group: 'MAIN' },
   { href: '/practice', label: 'Practice', icon: Target, group: 'MAIN' },
   { href: '/leaderboard', label: 'Leaderboard', icon: TrendingUp, group: 'MAIN' },
+  { href: '/calendar', label: 'Calendar', icon: Calendar, group: 'MAIN' },
   { href: '/events', label: 'Events & Community', icon: Calendar, group: 'MAIN' },
   { href: '/discussions', label: 'Discussion Posts', icon: MessageSquare, group: 'MAIN' },
   { href: '/announcements', label: 'Announcements', icon: Bell, group: 'MAIN' },
