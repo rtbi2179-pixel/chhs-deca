@@ -25,6 +25,8 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const BLUE_BLAZER_LOGO = '/manus-storage/Untitleddesign_c1fb0d88.png';
+
 const mainNavLinks = [
   { href: '/', label: 'Overview', icon: Home, group: 'MAIN' },
   { href: '/pi-quizlet', label: 'PI Study Library', icon: BookOpen, group: 'MAIN' },
@@ -80,8 +82,8 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
         <div className="p-4 border-b border-white/[0.08] flex items-center justify-between">
           {!collapsed ? (
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)] border border-blue-400/30">
-                <span className="font-heading tracking-wider text-white text-lg font-bold">BB</span>
+              <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl border border-blue-300/30 bg-white/95 p-1 shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)]">
+                <img src={BLUE_BLAZER_LOGO} alt="Blue Blazer logo" className="h-full w-full object-contain" />
               </div>
               <div>
                 <h1 className="font-heading tracking-wide text-white text-base leading-none">BLUE BLAZER</h1>
@@ -89,8 +91,8 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
               </div>
             </div>
           ) : (
-            <div className="mx-auto w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)] border border-blue-400/30">
-              <span className="font-heading tracking-wider text-white text-sm font-bold">BB</span>
+            <div className="mx-auto flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-blue-300/30 bg-white/95 p-1 shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)]">
+              <img src={BLUE_BLAZER_LOGO} alt="Blue Blazer logo" className="h-full w-full object-contain" />
             </div>
           )}
 
@@ -256,8 +258,8 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
       {/* Mobile Top Bar */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-[oklch(0.08_0.014_265/0.95)] backdrop-blur-xl border-b border-white/[0.08] px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-md">
-            <span className="font-heading tracking-wider text-white text-sm font-bold">BB</span>
+          <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg border border-blue-300/30 bg-white/95 p-0.5 shadow-md">
+            <img src={BLUE_BLAZER_LOGO} alt="Blue Blazer logo" className="h-full w-full object-contain" />
           </div>
           <span className="font-heading tracking-wide text-white text-sm">BLUE BLAZER</span>
         </div>

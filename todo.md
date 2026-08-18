@@ -8636,3 +8636,9 @@
 - [ ] Add a unified Practice tab that replaces separate Practice Questions and Mock Exams sidebar entries
 - [ ] Add two Practice landing-page buttons for Practice Questions and Mock Exams
 - [ ] Preserve
+
+- [ ] Restore the canonical Blue Blazer logo in the authenticated desktop sidebar brand header
+- [ ] Restore the canonical Blue Blazer logo in the collapsed sidebar and mobile header
+- [ ] Preserve existing logo references on the welcome screen and Home footer
+- [ ] Add logo regression coverage and validate the restored branded surfaces
+- [ ] Save a checkpoint for the restored Blue Blazer logos
