@@ -78,8 +78,8 @@ describe('Banking System', () => {
     expect(interest).toBeDefined();
     expect(interest).toHaveProperty('savingsBalance');
     expect(interest).toHaveProperty('interestEarned');
-    expect(interest).toHaveProperty('apy');
-    expect(parseFloat(interest.apy)).toBe(0.5); // 0.5% APY
+    expect(interest).toHaveProperty('monthlyRate');
+    expect(parseFloat(interest.monthlyRate)).toBe(7); // 7% monthly simulation return
   });
 
   it('should retrieve available credit cards', async () => {

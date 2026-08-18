@@ -60,7 +60,7 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const blueBucksQuery = trpc.practice.getBlueBucksBalance.useQuery(undefined, { enabled: !!user });
+  const bankAccountQuery = trpc.banking.getBankAccount.useQuery(undefined, { enabled: !!user });
   const unreadNews = trpc.bbx.getUnreadNewsCount.useQuery(undefined, { enabled: !!user, refetchInterval: 60_000 });
 
   const handleLogout = async () => {
@@ -261,7 +261,7 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                       </div>
                       <div className="min-w-0">
                         <p className="text-xs font-semibold text-white truncate">{user.name || user.username || 'Member'}</p>
-                        <p className="text-[10px] text-blue-300/80 font-mono">{blueBucksQuery.data?.balance || 0} Blue Bucks</p>
+                        <p className="text-[10px] text-blue-300/80 font-mono">${Number(bankAccountQuery.data?.checkingBalance ?? 0).toFixed(2)} Checking</p>
                       </div>
                     </div>
                     <button
@@ -417,7 +417,7 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                   <div className="space-y-3">
                     <div className="flex items-center justify-between px-2">
                       <span className="text-sm font-semibold text-white">{user.name || user.username}</span>
-                      <span className="text-xs text-blue-300 font-mono">{blueBucksQuery.data?.balance || 0} BB</span>
+                      <span className="text-xs text-blue-300 font-mono">${Number(bankAccountQuery.data?.checkingBalance ?? 0).toFixed(2)} Checking</span>
                     </div>
                     <button
                       onClick={() => {

@@ -32,8 +32,8 @@ describe("savings interest accrual", () => {
 
   it("credits one transparent monthly accrual and blocks a second credit in the same period", async () => {
     const caller = appRouter.createCaller(context({ id: userId, openId: `savings-user-${userId}`, name: "Savings Member", schoolCode, loginMethod: "custom", role: "user", createdAt: new Date(), updatedAt: new Date(), lastSignedIn: new Date() }));
-    await expect(caller.banking.accrueSavingsInterest()).resolves.toMatchObject({ success: true, apy: 0.5, interestAmount: 0.5, savingsBalance: 1200.5 });
+    await expect(caller.banking.accrueSavingsInterest()).resolves.toMatchObject({ success: true, monthlyRate: 7, interestAmount: 84, savingsBalance: 1284 });
     await expect(caller.banking.accrueSavingsInterest()).rejects.toMatchObject({ code: "CONFLICT" });
-    await expect(caller.banking.getBankAccount()).resolves.toMatchObject({ savingsBalance: "1200.50" });
+    await expect(caller.banking.getBankAccount()).resolves.toMatchObject({ savingsBalance: "1284.00" });
   });
 });

@@ -538,6 +538,15 @@ export const savingsInterestAccruals = mysqlTable("savingsInterestAccruals", {
 }));
 export type SavingsInterestAccrual = typeof savingsInterestAccruals.$inferSelect;
 
+export const savingsInterestSchedule = mysqlTable("savingsInterestSchedule", {
+  id: int("id").primaryKey(),
+  taskUid: varchar("taskUid", { length: 65 }),
+  lastRunAt: timestamp("lastRunAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({ taskUidIndex: index("savings_interest_schedule_task_uid_idx").on(table.taskUid) }));
+export type SavingsInterestSchedule = typeof savingsInterestSchedule.$inferSelect;
+
 export const adminActivityLogs = mysqlTable("adminActivityLogs", {
   id: int("id").autoincrement().primaryKey(),
   actorUserId: int("actorUserId").notNull().references(() => users.id, { onDelete: "cascade" }),
@@ -1423,7 +1432,7 @@ export const economicConfig = mysqlTable("economicConfig", {
   spendingBehaviorWeight: decimal("spendingBehaviorWeight", { precision: 5, scale: 2 }).default("10").notNull(),
   onTimePaymentPoints: int("onTimePaymentPoints").default(2).notNull(),
   missedPaymentPenalty: int("missedPaymentPenalty").default(15).notNull(),
-  savingsInterestRate: decimal("savingsInterestRate", { precision: 5, scale: 2 }).default("0.5").notNull(),
+  savingsInterestRate: decimal("savingsInterestRate", { precision: 5, scale: 2 }).default("7.0").notNull(),
   createdAt: timestamp("createdAt").defaultNow(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
 });

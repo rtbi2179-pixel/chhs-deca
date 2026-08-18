@@ -9,10 +9,11 @@ describe("BBX graph and Blue’s News rewards", () => {
     expect(router).toContain("bbxPriceHistory");
     expect(router).toContain("recentAffectedRows");
   });
-  it("awards a read reward once and tracks it durably", () => {
+  it("awards a read reward once to checking and tracks it durably", () => {
     const router = readFileSync(join(process.cwd(), "server/bbxRouter.ts"), "utf8");
     expect(router).toContain("BLUE_NEWS_READ_REWARD = 25");
-    expect(router).toContain("news_read_reward");
+    expect(router).toContain("checkingBalance: nextChecking.toFixed(2)");
+    expect(router).toContain("userBankAccounts");
     expect(router).toContain("rewardedAt");
   });
   it("keeps fictional news impact qualitative and displays the automatic market refresh countdown", () => {

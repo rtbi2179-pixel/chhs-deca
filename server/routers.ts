@@ -898,7 +898,7 @@ export const appRouter = router({
           spendingBehaviorWeight: '10',
           onTimePaymentPoints: 2,
           missedPaymentPenalty: 15,
-          savingsInterestRate: '0.5',
+          savingsInterestRate: '7.0',
         };
       }),
 
@@ -2210,24 +2210,8 @@ export const appRouter = router({
 
     depositBlueBucksToChecking: protectedProcedure
       .input(z.object({ amount: z.number().int().positive().max(100000) }))
-      .mutation(async ({ ctx, input }) => {
-        const { userBankAccounts } = await import("../drizzle/schema");
-        const database = await db.getDb();
-        const schoolCode = ctx.user.schoolCode || "";
-        if (!database) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Banking data is unavailable" });
-        return database.transaction(async (tx) => {
-          const [bucks] = await tx.select().from(blueBucks).where(eq(blueBucks.userId, ctx.user.id)).limit(1);
-          const availableBlueBucks = Number(bucks?.amount ?? 0);
-          if (availableBlueBucks < input.amount) throw new TRPCError({ code: "FORBIDDEN", message: "Not enough Blue Bucks to fund checking" });
-          const [account] = await tx.select().from(userBankAccounts).where(and(eq(userBankAccounts.userId, ctx.user.id), eq(userBankAccounts.schoolCode, schoolCode))).limit(1);
-          const checkingBefore = Number(account?.checkingBalance ?? 0);
-          const checkingAfter = Number((checkingBefore + input.amount).toFixed(2));
-          if (account) await tx.update(userBankAccounts).set({ checkingBalance: checkingAfter.toFixed(2) }).where(eq(userBankAccounts.id, account.id));
-          else await tx.insert(userBankAccounts).values({ userId: ctx.user.id, checkingBalance: checkingAfter.toFixed(2), savingsBalance: "0", investmentBalance: "0", totalDebt: "0", schoolCode });
-          if (bucks) await tx.update(blueBucks).set({ amount: availableBlueBucks - input.amount }).where(eq(blueBucks.id, bucks.id));
-          await tx.insert(blueBucksTransactions).values({ userId: ctx.user.id, amount: -input.amount, reason: "bank_deposit", schoolCode });
-          return { success: true, deposited: input.amount, checkingBalance: checkingAfter, remainingBlueBucks: availableBlueBucks - input.amount };
-        });
+      .mutation(async () => {
+        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Blue Bucks rewards now credit checking automatically; no deposit is needed." });
       }),
 
     getAvailableCards: protectedProcedure.query(async ({ ctx }) => {
@@ -2313,9 +2297,9 @@ export const appRouter = router({
         const { getDb } = await import('./db');
         const schoolCode = ctx.user.schoolCode || '';
         const database = await getDb();
-        if (!database) return { savingsBalance: '0', interestEarned: '0', apy: '0.5' };
+        if (!database) return { savingsBalance: '0', interestEarned: '0', monthlyRate: '7' };
         const [config] = await database.select().from(economicConfig).where(eq(economicConfig.schoolCode, schoolCode)).limit(1);
-        const apyPercent = Number(config?.savingsInterestRate ?? 0.5);
+        const monthlyRate = Number(config?.savingsInterestRate ?? 7);
         
         const account = await database
           .select()
@@ -2323,54 +2307,30 @@ export const appRouter = router({
           .where(and(eq(userBankAccounts.userId, ctx.user.id), eq(userBankAccounts.schoolCode, schoolCode)))
           .limit(1);
         
-        if (!account[0]) return { savingsBalance: '0', interestEarned: '0', apy: String(apyPercent) };
+        if (!account[0]) return { savingsBalance: '0', interestEarned: '0', monthlyRate: String(monthlyRate) };
         
         const savingsBalance = parseFloat(account[0].savingsBalance);
-        const apy = apyPercent / 100;
-        const interestEarned = (savingsBalance * apy) / 12; // Monthly interest
+        const interestEarned = (savingsBalance * monthlyRate) / 100;
         
         return {
           savingsBalance: account[0].savingsBalance,
           interestEarned: interestEarned.toString(),
-          apy: (apy * 100).toString(),
+          monthlyRate: monthlyRate.toString(),
         };
       }),
 
     accrueSavingsInterest: protectedProcedure.mutation(async ({ ctx }) => {
-      const { userBankAccounts, savingsInterestAccruals, economicConfig } = await import('../drizzle/schema');
-      const { getDb } = await import('./db');
-      const { calculateMonthlySavingsInterest, savingsInterestPeriodKey } = await import('./savingsInterest');
-      const database = await getDb();
       const schoolCode = ctx.user.schoolCode || '';
-      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Banking data is unavailable' });
-      const [config] = await database.select().from(economicConfig).where(eq(economicConfig.schoolCode, schoolCode)).limit(1);
-      const apyPercent = Number(config?.savingsInterestRate ?? 0.5);
-      const periodKey = savingsInterestPeriodKey();
-      const existing = await database.select().from(savingsInterestAccruals).where(and(
-        eq(savingsInterestAccruals.userId, ctx.user.id),
-        eq(savingsInterestAccruals.periodKey, periodKey),
-      )).limit(1);
-      if (existing[0]) throw new TRPCError({ code: 'CONFLICT', message: 'Savings interest was already accrued for this period' });
-      const account = await database.select().from(userBankAccounts).where(and(
-        eq(userBankAccounts.userId, ctx.user.id),
-        eq(userBankAccounts.schoolCode, schoolCode),
-      )).limit(1);
-      if (!account[0]) throw new TRPCError({ code: 'NOT_FOUND', message: 'Bank account not found' });
-      const balanceBefore = Number(account[0].savingsBalance);
-      const interestAmount = calculateMonthlySavingsInterest(balanceBefore, apyPercent);
-      const balanceAfter = Number((balanceBefore + interestAmount).toFixed(2));
-      if (interestAmount <= 0) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Add funds to savings before accruing interest' });
-      await database.insert(savingsInterestAccruals).values({
-        userId: ctx.user.id,
-        schoolCode,
-        periodKey,
-        apy: (apyPercent / 100).toFixed(4),
-        balanceBefore: balanceBefore.toFixed(2),
-        interestAmount: interestAmount.toFixed(2),
-        balanceAfter: balanceAfter.toFixed(2),
-      });
-      await database.update(userBankAccounts).set({ savingsBalance: balanceAfter.toFixed(2) }).where(eq(userBankAccounts.id, account[0].id));
-      return { success: true, periodKey, apy: apyPercent, interestAmount, savingsBalance: balanceAfter };
+      try {
+        const { accrueMonthlySavingsInterestForUser } = await import('./savingsInterestService');
+        const result = await accrueMonthlySavingsInterestForUser(ctx.user.id, schoolCode);
+        if (result.alreadyAccrued) throw new TRPCError({ code: 'CONFLICT', message: 'Savings interest was already accrued for this period' });
+        if (result.interestAmount <= 0) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Add funds to savings before the monthly credit' });
+        return { success: true, periodKey: result.periodKey, monthlyRate: result.monthlyRate, interestAmount: result.interestAmount, savingsBalance: result.savingsBalance };
+      } catch (error) {
+        if (error instanceof TRPCError) throw error;
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: error instanceof Error ? error.message : 'Banking data is unavailable' });
+      }
     }),
 
     // Get card usage tracking for a specific card

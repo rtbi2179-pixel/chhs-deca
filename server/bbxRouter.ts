@@ -49,9 +49,10 @@ export const bbxRouter = router({
     await ensureBbxSeeded();
     const db = await getDb();
     if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "BBX storage is unavailable" });
-    const { bbxCompanies, bbxEvents, bbxMarketState, bbxNews, bbxPriceHistory } = await import("../drizzle/schema");
+    const { bbxCompanies, bbxEvents, bbxMarketState, bbxNews, bbxPriceHistory, userBankAccounts } = await import("../drizzle/schema");
     const state = await getState();
     const account = await getOrCreateBbxAccount(ctx.user.id);
+    const [bankAccount] = await db.select({ investmentBalance: userBankAccounts.investmentBalance }).from(userBankAccounts).where(and(eq(userBankAccounts.userId, ctx.user.id), eq(userBankAccounts.schoolCode, ctx.user.schoolCode ?? ""))).limit(1);
     const companies = await db.select().from(bbxCompanies).where(eq(bbxCompanies.status, "active"));
     const news = await db.select().from(bbxNews).orderBy(desc(bbxNews.publishedAt)).limit(10);
     const sorted = companies.map(serializeCompany).sort((a, b) => b.changePercent - a.changePercent);
@@ -71,7 +72,7 @@ export const bbxRouter = router({
     const recentAffectedRows = await db.select({ sector: bbxEvents.sector, headline: bbxNews.headline, eventId: bbxEvents.id, publishedAt: bbxNews.publishedAt })
       .from(bbxEvents).innerJoin(bbxNews, eq(bbxNews.eventId, bbxEvents.id)).where(sql`${bbxEvents.sector} IS NOT NULL`).orderBy(desc(bbxNews.publishedAt)).limit(12);
     const affectedSectors = Array.from(new Map(recentAffectedRows.filter((row) => row.sector).map((row) => [row.sector!, row])).values()).slice(0, 3).map((event) => ({ sector: event.sector!, eventId: event.eventId, headline: event.headline, publishedAt: event.publishedAt, series: buildPerformance(historyRows.filter((row) => row.sector === event.sector)) }));
-    return { state: { marketOpen: state.marketOpen, marketRegime: state.marketRegime, tickNumber: state.tickNumber, simulationTimestamp: state.simulationTimestamp, benchmarkLevel: number(state.benchmarkLevel), benchmarkChangePercent: ((number(state.benchmarkLevel) - number(state.previousBenchmarkLevel)) / Math.max(number(state.previousBenchmarkLevel), 0.01)) * 100 }, cash: number(account.cashBalance), companies: companies.map(serializeCompany), movers: { gainers: sorted.slice(0, 5), losers: sorted.slice(-5).reverse() }, sectors, news, performance: { market: buildPerformance(historyRows), affectedSectors } };
+    return { state: { marketOpen: state.marketOpen, marketRegime: state.marketRegime, tickNumber: state.tickNumber, simulationTimestamp: state.simulationTimestamp, benchmarkLevel: number(state.benchmarkLevel), benchmarkChangePercent: ((number(state.benchmarkLevel) - number(state.previousBenchmarkLevel)) / Math.max(number(state.previousBenchmarkLevel), 0.01)) * 100 }, cash: number(bankAccount?.investmentBalance ?? account.cashBalance), companies: companies.map(serializeCompany), movers: { gainers: sorted.slice(0, 5), losers: sorted.slice(-5).reverse() }, sectors, news, performance: { market: buildPerformance(historyRows), affectedSectors } };
   }),
 
   getQuote: protectedProcedure.input(z.object({ ticker: z.string().min(5).max(16) })).query(async ({ ctx, input }) => {
@@ -139,7 +140,7 @@ export const bbxRouter = router({
     await ensureBbxSeeded();
     const db = await getDb();
     if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "BBX storage is unavailable" });
-    const { bbxAccounts, bbxLedger, bbxNews, bbxNewsReads } = await import("../drizzle/schema");
+    const { bbxNews, bbxNewsReads, userBankAccounts } = await import("../drizzle/schema");
     const newsIds = input.markAll
       ? (await db.select({ id: bbxNews.id }).from(bbxNews)).map((article) => article.id)
       : [input.newsId!];
@@ -154,10 +155,10 @@ export const bbxRouter = router({
       if (legacyUnrewardedIds.length) await tx.update(bbxNewsReads).set({ rewardedAt: new Date() }).where(and(eq(bbxNewsReads.userId, ctx.user.id), inArray(bbxNewsReads.newsId, legacyUnrewardedIds)));
       const rewardCount = unreadIds.length + legacyUnrewardedIds.length;
       if (!rewardCount) return { marked: 0, rewarded: 0, rewardPerArticle: BLUE_NEWS_READ_REWARD };
-      const [account] = await tx.select().from(bbxAccounts).where(eq(bbxAccounts.userId, ctx.user.id)).limit(1);
-      const nextBalance = number(account?.cashBalance) + rewardCount * BLUE_NEWS_READ_REWARD;
-      await tx.update(bbxAccounts).set({ cashBalance: nextBalance.toFixed(4) }).where(eq(bbxAccounts.userId, ctx.user.id));
-      await tx.insert(bbxLedger).values({ userId: ctx.user.id, amount: String(rewardCount * BLUE_NEWS_READ_REWARD), balanceAfter: nextBalance.toFixed(4), reason: "news_read_reward" });
+      const [account] = await tx.select().from(userBankAccounts).where(and(eq(userBankAccounts.userId, ctx.user.id), eq(userBankAccounts.schoolCode, ctx.user.schoolCode ?? ""))).limit(1);
+      const nextChecking = number(account?.checkingBalance) + rewardCount * BLUE_NEWS_READ_REWARD;
+      if (account) await tx.update(userBankAccounts).set({ checkingBalance: nextChecking.toFixed(2) }).where(eq(userBankAccounts.id, account.id));
+      else await tx.insert(userBankAccounts).values({ userId: ctx.user.id, schoolCode: ctx.user.schoolCode ?? "", checkingBalance: nextChecking.toFixed(2), savingsBalance: "0", investmentBalance: "0", totalDebt: "0" });
       return { marked: unreadIds.length, rewarded: rewardCount * BLUE_NEWS_READ_REWARD, rewardPerArticle: BLUE_NEWS_READ_REWARD };
     });
   }),
@@ -166,13 +167,15 @@ export const bbxRouter = router({
     await ensureBbxSeeded();
     const db = await getDb();
     if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "BBX storage is unavailable" });
-    const { bbxCompanies, bbxPositions } = await import("../drizzle/schema");
+    const { bbxCompanies, bbxPositions, userBankAccounts } = await import("../drizzle/schema");
     const account = await getOrCreateBbxAccount(ctx.user.id);
+    const [bankAccount] = await db.select({ investmentBalance: userBankAccounts.investmentBalance }).from(userBankAccounts).where(and(eq(userBankAccounts.userId, ctx.user.id), eq(userBankAccounts.schoolCode, ctx.user.schoolCode ?? ""))).limit(1);
     const rows = await db.select().from(bbxPositions).innerJoin(bbxCompanies, eq(bbxPositions.companyId, bbxCompanies.id)).where(eq(bbxPositions.userId, ctx.user.id));
     const holdings = rows.map((row: any) => { const position = row.bbxPositions; const company = row.bbxCompanies; const quantity = number(position.quantity); const cost = quantity * number(position.averageCost); const value = quantity * number(company.currentPrice); return { ticker: company.ticker, companyName: company.companyName, sector: company.sector, quantity, averageCost: number(position.averageCost), marketValue: value, unrealizedPnl: value - cost, unrealizedPnlPercent: cost > 0 ? ((value - cost) / cost) * 100 : 0 }; });
     const holdingsValue = holdings.reduce((sum, entry) => sum + entry.marketValue, 0);
-    const totalValue = number(account.cashBalance) + holdingsValue;
-    return { cash: number(account.cashBalance), startingBalance: number(account.startingBalance), realizedPnl: number(account.realizedPnl), holdings, holdingsValue, totalValue, totalReturn: totalValue - number(account.startingBalance), totalReturnPercent: ((totalValue - number(account.startingBalance)) / number(account.startingBalance)) * 100 };
+    const cash = number(bankAccount?.investmentBalance ?? account.cashBalance);
+    const totalValue = cash + holdingsValue;
+    return { cash, startingBalance: number(account.startingBalance), realizedPnl: number(account.realizedPnl), holdings, holdingsValue, totalValue, totalReturn: totalValue - number(account.startingBalance), totalReturnPercent: ((totalValue - number(account.startingBalance)) / number(account.startingBalance)) * 100 };
   }),
 
   placeMarketOrder: protectedProcedure.input(z.object({ ticker: z.string().min(5).max(16), side: z.enum(["buy", "sell"]), quantity: decimalQuantity, idempotencyKey: z.string().min(12).max(80) })).mutation(async ({ ctx, input }) => {
@@ -180,16 +183,18 @@ export const bbxRouter = router({
     await getOrCreateBbxAccount(ctx.user.id);
     const db = await getDb();
     if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "BBX storage is unavailable" });
-    const { bbxAccounts, bbxCompanies, bbxLedger, bbxMarketState, bbxOrders, bbxPositions } = await import("../drizzle/schema");
+    const { bbxAccounts, bbxCompanies, bbxLedger, bbxMarketState, bbxOrders, bbxPositions, userBankAccounts } = await import("../drizzle/schema");
     return db.transaction(async (tx) => {
       const [state] = await tx.select().from(bbxMarketState).where(eq(bbxMarketState.id, 1)).limit(1);
       if (!state?.marketOpen) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "The simulated market is paused." });
       await tx.execute(sql`SELECT userId FROM bbxAccounts WHERE userId = ${ctx.user.id} FOR UPDATE`);
+      await tx.execute(sql`SELECT userId FROM userBankAccounts WHERE userId = ${ctx.user.id} FOR UPDATE`);
       const [existing] = await tx.select().from(bbxOrders).where(and(eq(bbxOrders.userId, ctx.user.id), eq(bbxOrders.idempotencyKey, input.idempotencyKey))).limit(1);
       if (existing) return { orderId: existing.id, status: existing.status, fillPrice: number(existing.fillPrice), grossAmount: number(existing.grossAmount), duplicate: true };
       const [company] = await tx.select().from(bbxCompanies).where(eq(bbxCompanies.ticker, input.ticker)).limit(1);
       if (!company || company.status !== "active") throw new TRPCError({ code: "NOT_FOUND", message: "This simulated listing is not available for trading." });
       const [account] = await tx.select().from(bbxAccounts).where(eq(bbxAccounts.userId, ctx.user.id)).limit(1);
+      const [bankAccount] = await tx.select().from(userBankAccounts).where(and(eq(userBankAccounts.userId, ctx.user.id), eq(userBankAccounts.schoolCode, ctx.user.schoolCode ?? ""))).limit(1);
       const [position] = await tx.select().from(bbxPositions).where(and(eq(bbxPositions.userId, ctx.user.id), eq(bbxPositions.companyId, company.id))).limit(1);
       const quantity = Number(input.quantity);
       const estimatedValue = quantity * number(company.currentPrice);
@@ -197,11 +202,12 @@ export const bbxRouter = router({
       const slippage = slippagePct(estimatedValue, Math.max(50000, number(company.liquidityScore) * 750000));
       const fillPrice = executionPrice(input.side, number(company.currentPrice), spread, slippage);
       const grossAmount = quantity * fillPrice;
-      if (input.side === "buy" && number(account.cashBalance) + 1e-8 < grossAmount) throw new TRPCError({ code: "BAD_REQUEST", message: "Insufficient BBX BlueBucks for this simulated order." });
+      if (!bankAccount) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Transfer funds into your Banking investment account before trading." });
+      if (input.side === "buy" && number(bankAccount.investmentBalance) + 1e-8 < grossAmount) throw new TRPCError({ code: "BAD_REQUEST", message: "Insufficient investment-account funds for this simulated order." });
       if (input.side === "sell" && number(position?.quantity) + 1e-8 < quantity) throw new TRPCError({ code: "BAD_REQUEST", message: "You cannot sell more simulated shares than you own." });
       const orderResult = await tx.insert(bbxOrders).values({ userId: ctx.user.id, companyId: company.id, side: input.side, requestedQuantity: input.quantity, filledQuantity: input.quantity, fillPrice: fillPrice.toFixed(6), grossAmount: grossAmount.toFixed(4), spreadCost: (quantity * number(company.currentPrice) * spread / 2).toFixed(4), slippageCost: (quantity * number(company.currentPrice) * slippage).toFixed(4), status: "filled", idempotencyKey: input.idempotencyKey, tickNumber: state.tickNumber });
       const orderId = Number((orderResult as any)[0]?.insertId);
-      const nextCash = input.side === "buy" ? number(account.cashBalance) - grossAmount : number(account.cashBalance) + grossAmount;
+      const nextCash = input.side === "buy" ? number(bankAccount.investmentBalance) - grossAmount : number(bankAccount.investmentBalance) + grossAmount;
       const nextQuantity = input.side === "buy" ? number(position?.quantity) + quantity : number(position?.quantity) - quantity;
       const nextAverageCost = input.side === "buy" ? ((number(position?.quantity) * number(position?.averageCost) + grossAmount) / nextQuantity) : number(position?.averageCost);
       if (position) {
@@ -210,6 +216,7 @@ export const bbxRouter = router({
       } else await tx.insert(bbxPositions).values({ userId: ctx.user.id, companyId: company.id, quantity: nextQuantity.toFixed(6), averageCost: nextAverageCost.toFixed(6) });
       const realizedPnl = input.side === "sell" ? number(account.realizedPnl) + quantity * (fillPrice - number(position?.averageCost)) : number(account.realizedPnl);
       await tx.update(bbxAccounts).set({ cashBalance: nextCash.toFixed(4), realizedPnl: realizedPnl.toFixed(4) }).where(eq(bbxAccounts.userId, ctx.user.id));
+      await tx.update(userBankAccounts).set({ investmentBalance: nextCash.toFixed(2) }).where(eq(userBankAccounts.id, bankAccount.id));
       await tx.insert(bbxLedger).values({ userId: ctx.user.id, orderId, amount: (input.side === "buy" ? -grossAmount : grossAmount).toFixed(4), balanceAfter: nextCash.toFixed(4), reason: input.side === "buy" ? "trade_buy" : "trade_sell" });
       await tx.update(bbxCompanies).set({ temporaryOrderImpact: (number(company.temporaryOrderImpact) + (input.side === "buy" ? 1 : -1) * Math.min(0.0025, grossAmount / 100000000)).toFixed(8) }).where(eq(bbxCompanies.id, company.id));
       return { orderId, status: "filled", fillPrice, grossAmount, spreadPercent: spread * 100, slippagePercent: slippage * 100, duplicate: false };

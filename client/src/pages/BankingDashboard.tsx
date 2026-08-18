@@ -21,9 +21,6 @@ export function BankingDashboard() {
   const chargeCardMutation = trpc.banking.chargeCard.useMutation();
   const makePaymentMutation = trpc.banking.makePayment.useMutation();
   const savingsInterestQuery = trpc.banking.getSavingsInterest.useQuery();
-  const accrueSavingsInterestMutation = trpc.banking.accrueSavingsInterest.useMutation();
-  const blueBucksQuery = trpc.practice.getBlueBucksBalance.useQuery();
-  const depositBlueBucksMutation = trpc.banking.depositBlueBucksToChecking.useMutation();
   const studyCardCatalogQuery = trpc.studyCards.catalog.useQuery(undefined, { enabled: Boolean(user) });
   const studyCardMineQuery = trpc.studyCards.mine.useQuery(undefined, { enabled: Boolean(user) });
   const selectStudyCardMutation = trpc.studyCards.select.useMutation({
@@ -47,7 +44,6 @@ export function BankingDashboard() {
   const [merchantCategory, setMerchantCategory] = useState("General");
   const [selectedStatementCard, setSelectedStatementCard] = useState<number | null>(null);
   const [activeBankingCardId, setActiveBankingCardId] = useState<number | null>(null);
-  const [blueBucksDepositAmount, setBlueBucksDepositAmount] = useState("");
   const cardStatementQuery = trpc.banking.getCardStatement.useQuery(
     { cardId: selectedStatementCard ?? 1 },
     { enabled: selectedStatementCard !== null },
@@ -125,37 +121,6 @@ export function BankingDashboard() {
       alert("Transfer failed: " + (error as any).message);
     }
   };
-
-  const handleAccrueSavingsInterest = async () => {
-    try {
-      const result = await accrueSavingsInterestMutation.mutateAsync();
-      alert(`Savings interest credited: $${result.interestAmount.toFixed(2)} at ${result.apy}% APY.`);
-      bankAccountQuery.refetch();
-      savingsInterestQuery.refetch();
-    } catch (error) {
-      alert("Savings interest could not be accrued: " + (error as Error).message);
-    }
-  };
-
-  const handleBlueBucksDeposit = async () => {
-    const amount = Number(blueBucksDepositAmount);
-    if (!Number.isInteger(amount) || amount <= 0) {
-      toast.error("Enter a whole, positive Blue Bucks amount.");
-      return;
-    }
-    try {
-      const result = await depositBlueBucksMutation.mutateAsync({ amount });
-      setBlueBucksDepositAmount("");
-      await Promise.all([
-        utils.banking.getBankAccount.invalidate(),
-        utils.practice.getBlueBucksBalance.invalidate(),
-      ]);
-      toast.success(`${result.deposited} Blue Bucks deposited into checking.`);
-    } catch (error) {
-      toast.error("Deposit failed: " + (error as Error).message);
-    }
-  };
-
 
   const handleCardAction = async () => {
     if (!cardAction || !cardActionAmount || Number(cardActionAmount) <= 0) {
@@ -468,22 +433,8 @@ export function BankingDashboard() {
                 <span className="text-white font-semibold">${(typeof bankAccount?.checkingBalance === 'string' ? parseFloat(bankAccount.checkingBalance) : (bankAccount?.checkingBalance || 0)).toFixed(2)}</span>
               </div>
               <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-3">
-                <p className="text-sm font-medium text-blue-100">Fund checking with Blue Bucks</p>
-                <p className="mt-1 text-xs text-slate-400">Available to deposit: {blueBucksQuery.data?.balance ?? 0} Blue Bucks. Every deposit is recorded in the Blue Bucks ledger and reflected in checking.</p>
-                <div className="mt-3 flex gap-2">
-                  <input
-                    type="number"
-                    min="1"
-                    step="1"
-                    value={blueBucksDepositAmount}
-                    onChange={(event) => setBlueBucksDepositAmount(event.target.value)}
-                    placeholder="Blue Bucks amount"
-                    className="min-w-0 flex-1 rounded-md border border-slate-600 bg-slate-900 px-2.5 py-2 text-sm text-white"
-                  />
-                  <Button size="sm" onClick={handleBlueBucksDeposit} disabled={depositBlueBucksMutation.isPending || (blueBucksQuery.data?.balance ?? 0) <= 0} className="bg-blue-600 hover:bg-blue-700">
-                    {depositBlueBucksMutation.isPending ? "Depositing…" : "Deposit"}
-                  </Button>
-                </div>
+                <p className="text-sm font-medium text-blue-100">Blue Bucks reward destination</p>
+                <p className="mt-1 text-xs text-slate-400">Every Blue Bucks reward is credited directly to checking. Use transfers below to move funds into Savings or the BBX investment account.</p>
               </div>
               <div className="flex justify-between items-center p-3 bg-slate-700 rounded-lg">
                 <div className="flex items-center gap-2">
@@ -493,9 +444,8 @@ export function BankingDashboard() {
                 <span className="text-white font-semibold">${(typeof bankAccount?.savingsBalance === 'string' ? parseFloat(bankAccount.savingsBalance) : (bankAccount?.savingsBalance || 0)).toFixed(2)}</span>
               </div>
               <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
-                <div className="flex items-center justify-between gap-3"><span className="text-sm text-emerald-200">Simulated savings interest</span><span className="text-sm font-semibold text-emerald-300">{savingsInterestQuery.data?.apy ?? '0.5'}% APY</span></div>
-                <p className="mt-1 text-xs text-slate-400">Projected monthly credit: ${Number(savingsInterestQuery.data?.interestEarned ?? 0).toFixed(2)}. Interest can be credited once per monthly period.</p>
-                <Button size="sm" className="mt-3 bg-emerald-600 hover:bg-emerald-700" disabled={accrueSavingsInterestMutation.isPending || Number(savingsInterestQuery.data?.interestEarned ?? 0) <= 0} onClick={handleAccrueSavingsInterest}>{accrueSavingsInterestMutation.isPending ? 'Crediting…' : 'Accrue monthly interest'}</Button>
+                <div className="flex items-center justify-between gap-3"><span className="text-sm text-emerald-200">Simulated savings return</span><span className="text-sm font-semibold text-emerald-300">{savingsInterestQuery.data?.monthlyRate ?? '7'}% monthly</span></div>
+                <p className="mt-1 text-xs text-slate-400">Projected monthly credit: ${Number(savingsInterestQuery.data?.interestEarned ?? 0).toFixed(2)}. The first scheduled run each month credits this simulation return automatically.</p>
               </div>
               <div className="flex justify-between items-center p-3 bg-slate-700 rounded-lg">
                 <div className="flex items-center gap-2">
@@ -504,6 +454,7 @@ export function BankingDashboard() {
                 </div>
                 <span className="text-white font-semibold">${(typeof bankAccount?.investmentBalance === 'string' ? parseFloat(bankAccount.investmentBalance) : (bankAccount?.investmentBalance || 0)).toFixed(2)}</span>
               </div>
+              <p className="text-xs text-slate-400">Your Investment Account is the available cash balance for BBX simulated orders.</p>
             </div>
           </Card>
 

@@ -51,7 +51,7 @@ describe("super-admin banking controls", () => {
   it("updates credit rules and card terms, reports analytics, and logs chapter-scoped administrator activity", async () => {
     const caller = adminCaller();
     await expect(caller.superAdmin.updateEconomicCreditRules({ onTimePaymentPoints: 3, missedPaymentPenalty: 18, savingsInterestRate: 1.25, reason: "Season policy update" })).resolves.toMatchObject({ success: true, schoolCode, savingsInterestRate: "1.25" });
-    await expect(caller.banking.getSavingsInterest()).resolves.toMatchObject({ savingsBalance: "1200.00", apy: "1.25", interestEarned: "1.25" });
+    await expect(caller.banking.getSavingsInterest()).resolves.toMatchObject({ savingsBalance: "1200.00", monthlyRate: "1.25", interestEarned: "15" });
     await expect(caller.superAdmin.getCardCatalog()).resolves.toEqual(expect.arrayContaining([expect.objectContaining({ id: cardId, name: "Test Rewards Card" })]));
     await expect(caller.superAdmin.updateCardProduct({ cardId, creditScoreRequired: 680, rewardsPercentage: 2.25, interestRate: 17.5, annualFee: 25, reason: "Tier calibration" })).resolves.toMatchObject({ success: true, cardId, rewardsPercentage: "2.25", interestRate: "17.50" });
     await expect(caller.superAdmin.getCreditScoreAnalytics()).resolves.toMatchObject({ schoolCode, scoredMembers: 1, averageScore: 720, minScore: 720, maxScore: 720, issuedCards: 1, outstandingBalance: 240 });

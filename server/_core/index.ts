@@ -12,10 +12,11 @@ import { sdk } from "./sdk";
 import { advanceBbxSimulation, createBbxEvent } from "../bbxSimulation";
 import { updateAllCreditScores } from "../creditScoreUpdater";
 import { getDb } from "../db";
-import { bbxCompanies, bbxMarketState, bbxNews, creditScoreUpdateSchedule } from "../../drizzle/schema";
+import { bbxCompanies, bbxMarketState, bbxNews, creditScoreUpdateSchedule, savingsInterestSchedule } from "../../drizzle/schema";
 import { eq, lt } from "drizzle-orm";
 import bbxEventBank from "../bbxEventBank.json";
 import { blueNewsRetentionCutoff, blueNewsScheduleKey, chooseBlueNewsTemplate } from "../bbxScheduledNews";
+import { accrueMonthlySavingsInterestForAllAccounts } from "../savingsInterestService";
 
 type BbxEventTemplate = (typeof bbxEventBank)[number];
 
@@ -134,6 +135,23 @@ async function startServer() {
     } catch (error) {
       console.error("[Credit Score Heartbeat]", error);
       return res.status(500).json({ error: error instanceof Error ? error.message : "Unable to refresh credit scores", context: { url: req.originalUrl }, timestamp: new Date().toISOString() });
+    }
+  });
+  app.post("/api/scheduled/savings-interest", async (req, res) => {
+    try {
+      const caller = await sdk.authenticateRequest(req);
+      if (!caller.isCron || !caller.taskUid) return res.status(403).json({ error: "cron-only" });
+      const database = await getDb();
+      if (!database) throw new Error("Banking data is unavailable");
+      const [schedule] = await database.select().from(savingsInterestSchedule).where(eq(savingsInterestSchedule.taskUid, caller.taskUid)).limit(1);
+      if (!schedule) return res.json({ ok: true, skipped: "orphan" });
+      const result = await accrueMonthlySavingsInterestForAllAccounts();
+      const ranAt = new Date();
+      await database.update(savingsInterestSchedule).set({ lastRunAt: ranAt }).where(eq(savingsInterestSchedule.id, schedule.id));
+      return res.json({ ok: true, taskUid: caller.taskUid, ranAt: ranAt.toISOString(), result });
+    } catch (error) {
+      console.error("[Savings Interest Heartbeat]", error);
+      return res.status(500).json({ error: error instanceof Error ? error.message : "Unable to accrue monthly savings interest", context: { url: req.originalUrl }, timestamp: new Date().toISOString() });
     }
   });
   // development mode uses Vite, production mode uses static files

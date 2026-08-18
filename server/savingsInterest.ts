@@ -1,9 +1,9 @@
-export const SAVINGS_APY_PERCENT = 0.5;
+export const SAVINGS_MONTHLY_RATE_PERCENT = 7;
 
-export function calculateMonthlySavingsInterest(balance: number, apyPercent = SAVINGS_APY_PERCENT): number {
+export function calculateMonthlySavingsInterest(balance: number, monthlyRatePercent = SAVINGS_MONTHLY_RATE_PERCENT): number {
   if (!Number.isFinite(balance) || balance < 0) throw new Error("Savings balance must be a non-negative number");
-  if (!Number.isFinite(apyPercent) || apyPercent < 0) throw new Error("APY must be a non-negative number");
-  return Number(((balance * (apyPercent / 100)) / 12).toFixed(2));
+  if (!Number.isFinite(monthlyRatePercent) || monthlyRatePercent < 0) throw new Error("Monthly savings rate must be a non-negative number");
+  return Number((balance * (monthlyRatePercent / 100)).toFixed(2));
 }
 
 export function savingsInterestPeriodKey(date = new Date()): string {

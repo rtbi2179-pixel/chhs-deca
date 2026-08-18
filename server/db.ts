@@ -1698,8 +1698,9 @@ export async function getBlueBucksBalance(userId: number): Promise<number> {
   if (!db) return 0;
 
   try {
-    const result = await db.select().from(blueBucks).where(eq(blueBucks.userId, userId)).limit(1);
-    return result.length > 0 ? result[0].amount : 0;
+    const { userBankAccounts } = await import("../drizzle/schema");
+    const result = await db.select({ checkingBalance: userBankAccounts.checkingBalance }).from(userBankAccounts).where(eq(userBankAccounts.userId, userId)).limit(1);
+    return Number(result[0]?.checkingBalance ?? 0);
   } catch (error) {
     console.error('[Blue Bucks] Error getting balance:', error);
     return 0;
@@ -1747,17 +1748,18 @@ export async function getBlueBucksLeaderboard(schoolCode: string, limit: number 
   if (!db) return [];
 
   try {
+    const { userBankAccounts } = await import("../drizzle/schema");
     const result = await db
       .select({
-        userId: blueBucks.userId,
+        userId: userBankAccounts.userId,
         userName: users.name,
         userEmail: users.email,
-        amount: blueBucks.amount,
+        amount: userBankAccounts.checkingBalance,
       })
-      .from(blueBucks)
-      .innerJoin(users, eq(blueBucks.userId, users.id))
-      .where(eq(users.schoolCode, schoolCode))
-      .orderBy(desc(blueBucks.amount))
+      .from(userBankAccounts)
+      .innerJoin(users, eq(userBankAccounts.userId, users.id))
+      .where(and(eq(users.schoolCode, schoolCode), eq(userBankAccounts.schoolCode, schoolCode)))
+      .orderBy(desc(userBankAccounts.checkingBalance))
       .limit(limit);
     
     return result;
@@ -1788,18 +1790,13 @@ export async function awardBlueBucks(userId: number, amount: number, reason: 'co
       }
     }
 
-    // Get or create user's Blue Bucks record
-    const existing = await db.select().from(blueBucks).where(eq(blueBucks.userId, userId)).limit(1);
-    
-    if (existing.length === 0) {
-      await db.insert(blueBucks).values({
-        userId,
-        amount,
-      });
+    const { userBankAccounts } = await import("../drizzle/schema");
+    const [account] = await db.select().from(userBankAccounts).where(and(eq(userBankAccounts.userId, userId), eq(userBankAccounts.schoolCode, schoolCode))).limit(1);
+    const checkingAfter = Number((Number(account?.checkingBalance ?? 0) + amount).toFixed(2));
+    if (account) {
+      await db.update(userBankAccounts).set({ checkingBalance: checkingAfter.toFixed(2) }).where(eq(userBankAccounts.id, account.id));
     } else {
-      await db.update(blueBucks)
-        .set({ amount: existing[0].amount + amount })
-        .where(eq(blueBucks.userId, userId));
+      await db.insert(userBankAccounts).values({ userId, schoolCode, checkingBalance: checkingAfter.toFixed(2), savingsBalance: "0", investmentBalance: "0", totalDebt: "0" });
     }
 
     // Record the transaction
@@ -1923,11 +1920,17 @@ export async function ensureBbxSeeded() {
 export async function getOrCreateBbxAccount(userId: number) {
   const db = await getDb();
   if (!db) throw new Error("BBX storage is unavailable");
-  const { bbxAccounts, bbxLedger } = await import("../drizzle/schema");
+  const { bbxAccounts, bbxLedger, userBankAccounts, users } = await import("../drizzle/schema");
   const [existing] = await db.select().from(bbxAccounts).where(eq(bbxAccounts.userId, userId)).limit(1);
   if (existing) return existing;
-  await db.insert(bbxAccounts).values({ userId, cashBalance: "10000", startingBalance: "10000", realizedPnl: "0" });
-  await db.insert(bbxLedger).values({ userId, amount: "10000", balanceAfter: "10000", reason: "initial_grant" });
+  const [user] = await db.select({ schoolCode: users.schoolCode }).from(users).where(eq(users.id, userId)).limit(1);
+  const schoolCode = user?.schoolCode ?? "";
+  const [bankAccount] = await db.select().from(userBankAccounts).where(and(eq(userBankAccounts.userId, userId), eq(userBankAccounts.schoolCode, schoolCode))).limit(1);
+  const investmentBalance = Number(bankAccount?.investmentBalance ?? 0) || 10000;
+  if (bankAccount) await db.update(userBankAccounts).set({ investmentBalance: investmentBalance.toFixed(2) }).where(eq(userBankAccounts.id, bankAccount.id));
+  else await db.insert(userBankAccounts).values({ userId, schoolCode, checkingBalance: "0", savingsBalance: "0", investmentBalance: investmentBalance.toFixed(2), totalDebt: "0" });
+  await db.insert(bbxAccounts).values({ userId, cashBalance: investmentBalance.toFixed(4), startingBalance: investmentBalance.toFixed(4), realizedPnl: "0" });
+  await db.insert(bbxLedger).values({ userId, amount: investmentBalance.toFixed(4), balanceAfter: investmentBalance.toFixed(4), reason: "initial_grant" });
   const [created] = await db.select().from(bbxAccounts).where(eq(bbxAccounts.userId, userId)).limit(1);
   if (!created) throw new Error("Unable to initialize BBX account");
   return created;
