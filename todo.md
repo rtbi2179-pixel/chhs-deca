@@ -8718,3 +8718,6 @@
 - [x] Reorganize the logo-triggered tour into current Main Practice Tools, Chapter Tools, and Blue Bucks sections
 - [x] Add subtle tour-opening motion and eliminate grey from the desktop and mobile logo backgrounds
 - [x] Add regression coverage, validate the three-part tour, and checkpoint the update
+- [x] Add direct Main Practice Tools, Chapter Tools, and Blue Bucks category controls to the onboarding tour
+- [x] Preserve current-step progress and active-category feedback when jumping between tour sections
+- [x] Add regression coverage, validate category navigation, and checkpoint the update

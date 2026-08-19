@@ -10,6 +10,7 @@ import { ONBOARDING_WALKTHROUGH_STEPS } from "@/lib/onboardingWalkthrough";
 
 const TOUR_STEPS = ONBOARDING_WALKTHROUGH_STEPS;
 const TOUR_PARTS = ["MAIN PRACTICE TOOLS", "CHAPTER TOOLS", "BLUE BUCKS"] as const;
+const TOUR_PART_START_INDEX = Object.fromEntries(TOUR_PARTS.map((part) => [part, TOUR_STEPS.findIndex((step) => step.part === part)])) as Record<(typeof TOUR_PARTS)[number], number>;
 const TOUR_STEP_ICONS = {
   home: Home,
   study: BookOpenCheck,
@@ -95,6 +96,11 @@ export function FirstSignInTour() {
     setIsSkipping(true);
   };
 
+  const jumpToPart = (part: (typeof TOUR_PARTS)[number]) => {
+    const destinationIndex = TOUR_PART_START_INDEX[part];
+    if (destinationIndex >= 0 && !isCelebrating && !isSkipping) setStepIndex(destinationIndex);
+  };
+
   const handleOpenChange = (open: boolean) => {
     if (isCelebrating || isSkipping) return;
     if (!open && isOpen && !completeOnboarding.isPending) startSkipExit();
@@ -117,6 +123,13 @@ export function FirstSignInTour() {
             <div className="relative flex min-h-[118px] flex-col justify-between">
               <div className="flex items-center justify-between"><span className="font-mono-data text-[10px] tracking-[0.19em] text-blue-100/70">BLUE BLAZER START</span><span className="rounded-full border border-blue-300/15 bg-slate-950/30 px-2 py-1 font-mono-data text-[9px] tracking-[0.12em] text-blue-200/65">PART {currentPartIndex + 1} / {TOUR_PARTS.length}</span><button type="button" aria-label={ONBOARDING_TOUR_ACTIONS.skipLabel} onClick={startSkipExit} disabled={completeOnboarding.isPending || isCelebrating || isSkipping} className="text-white/45 transition-colors hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:opacity-30"><X className="h-4 w-4" /></button></div>
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-blue-300/30 bg-[linear-gradient(145deg,oklch(0.32_0.13_252/0.28),oklch(0.1_0.035_263/0.75))] text-blue-100 shadow-[0_0_0_12px_oklch(0.55_0.16_250/0.05),0_0_48px_oklch(0.55_0.16_250/0.25)]"><StepIcon className="h-7 w-7" /></div>
+              <nav aria-label="Tour categories" className="grid grid-cols-3 gap-1.5 rounded-xl border border-white/10 bg-slate-950/35 p-1.5">
+                {TOUR_PARTS.map((part, index) => {
+                  const isActivePart = part === step.part;
+                  const shortLabel = part === "MAIN PRACTICE TOOLS" ? "PRACTICE" : part === "CHAPTER TOOLS" ? "CHAPTER" : "BLUE BUCKS";
+                  return <button key={part} type="button" aria-current={isActivePart ? "step" : undefined} onClick={() => jumpToPart(part)} disabled={isCelebrating || isSkipping} className={`min-w-0 rounded-lg px-2 py-2 text-left transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:opacity-40 ${isActivePart ? "bg-blue-400/20 text-blue-100 shadow-[inset_0_0_0_1px_oklch(0.68_0.15_245/0.32)]" : "text-white/45 hover:bg-white/[0.06] hover:text-white/75"}`}><span className="block font-mono-data text-[8px] tracking-[0.12em]">PART {index + 1}</span><span className="mt-0.5 block truncate text-[10px] font-semibold">{shortLabel}</span></button>;
+                })}
+              </nav>
               <div><div className="mb-2 flex items-center justify-between text-[10px] font-medium uppercase tracking-[0.12em] text-blue-100/70"><span>TOUR PROGRESS</span><span>{progress.percentage}%</span></div><div role="progressbar" aria-label="Onboarding tour progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress.percentage} className="h-2.5 overflow-hidden rounded-full border border-white/5 bg-slate-950/55"><div className="h-full origin-left rounded-full bg-[linear-gradient(90deg,oklch(0.66_0.16_250),oklch(0.84_0.1_230))] transition-transform duration-200 ease-out motion-reduce:transition-none" style={{ transform: `scaleX(${progress.scale})` }} /></div><div className="mt-3 flex gap-2">{TOUR_STEPS.map((item, index) => <span key={item.title} className={`h-1.5 rounded-full transition-[width,background-color] duration-200 ${index === stepIndex ? "w-9 bg-blue-200" : index < stepIndex ? "w-4 bg-blue-300/50" : "w-4 bg-white/15"}`} />)}</div></div>
             </div>
           </div>

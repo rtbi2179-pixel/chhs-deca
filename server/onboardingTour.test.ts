@@ -48,4 +48,15 @@ describe("onboarding progress and celebration", () => {
     expect(source).toContain("scale: 0.985");
     expect(source).toContain("TOUR_PARTS");
   });
+
+  it("provides direct controls for all three tour categories without resetting the tour", () => {
+    const source = readFileSync(join(process.cwd(), "client/src/components/FirstSignInTour.tsx"), "utf8");
+    expect(source).toContain("TOUR_PART_START_INDEX");
+    expect(source).toContain("jumpToPart");
+    expect(source).toContain('aria-label="Tour categories"');
+    expect(source).toContain('"PRACTICE"');
+    expect(source).toContain('"CHAPTER"');
+    expect(source).toContain('"BLUE BUCKS"');
+    expect(source).toContain('aria-current={isActivePart ? "step" : undefined}');
+  });
 });
