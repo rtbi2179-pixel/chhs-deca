@@ -8784,3 +8784,4 @@
 - [x] Remove performance indicator displays and event-specific PI dialogs from Event Resources, keeping PI access only in the PI Library
 - [x] Expand Blazer’s solid blue, green, yellow, red, and lime palette across page-level buttons and controls
 - [x] Replace every failed avatar and banner gallery image with a working selectable visual
+- [x] Profile and reduce site-wide client and server lag without removing features

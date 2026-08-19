@@ -1,65 +1,71 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AdminModeProvider } from "./contexts/AdminModeContext";
 import { SchoolCodeProvider } from "./contexts/SchoolCodeContext";
 import { SidebarNavigation } from "./components/SidebarNavigation";
-import Home from "./pages/Home";
-import Events from "./pages/Events";
-import Practice from "./pages/Practice";
-import PracticeQuestions from "./pages/PracticeQuestions";
-import CalendarPage from "./pages/CalendarPage";
-import MembersPage from "./pages/MembersPage";
-
-import Volunteer from "./pages/Volunteer";
-import Discussions from "./pages/Discussions";
-import SpeechAI from "./pages/SpeechAI";
-import RoleplayAI from "./pages/RoleplayAI";
-import WrittenEventAI from "./pages/WrittenEventAI";
-import Leaderboard from "./pages/Leaderboard";
-import LoginSignup from "./pages/LoginSignup";
-import { VerifyEmail } from "./pages/VerifyEmail";
-import { ResetPassword } from "./pages/ResetPassword";
-import { ForgotPassword } from "./pages/ForgotPassword";
-import { TwoFactorAuth } from "./pages/TwoFactorAuth";
-import { SchoolCodeEntry } from "./pages/SchoolCodeEntry";
-import { AdminPanel } from "./pages/AdminPanel";
-import { Announcements } from "./pages/Announcements";
-import Profile from "./pages/Profile";
-import PILearning from "./pages/PILearning";
-import PIQuizlet from "./pages/PIQuizlet";
-import ChapterMockExam from "./pages/ChapterMockExam";
-import BlueMarket from "./pages/BlueMarket";
-import { BbxMarketBoard } from "./pages/BbxMarketBoard";
-import { BbxCompanyPage, BbxLearnPage, BbxNewsPage, BbxPortfolioPage } from "./pages/BbxMarketViews";
-import PortfolioUpload from "./pages/PortfolioUpload";
-import AdminPortfolios from "./pages/AdminPortfolios";
-import TransactionHistory from "./pages/TransactionHistory";
-import { BankingDashboard } from "./pages/BankingDashboard";
-
-import PracticeDebug from "./pages/PracticeDebug";
-import SpendingPatterns from "./pages/SpendingPatterns";
-import SuperAdminDashboard from "./pages/SuperAdminDashboard";
-import MarketAnalytics from "./pages/MarketAnalytics";
-import Feedback from "./pages/Feedback";
-import BluesNews from "./pages/BluesNews";
-import EventMatchQuiz from "./pages/EventMatchQuiz";
 import { SignedOutWelcome } from "./components/SignedOutWelcome";
-import { FirstSignInTour } from "./components/FirstSignInTour";
 import Footer from "./components/Footer";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { SIGNED_OUT_WELCOME_SESSION_KEY, shouldShowSignedOutWelcome } from "./lib/signedOutWelcome";
-import { useState, useEffect } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import { Toast, useToast } from "./components/Toast";
 import { useLocation } from "wouter";
-import { DirectMessagesPanel } from "./components/DirectMessagesPanel";
 import { BlueBlazerCursor } from "./components/BlueBlazerCursor";
+
+const NotFound = lazy(() => import("@/pages/NotFound"));
+const Home = lazy(() => import("./pages/Home"));
+const Events = lazy(() => import("./pages/Events"));
+const Practice = lazy(() => import("./pages/Practice"));
+const PracticeQuestions = lazy(() => import("./pages/PracticeQuestions"));
+const CalendarPage = lazy(() => import("./pages/CalendarPage"));
+const MembersPage = lazy(() => import("./pages/MembersPage"));
+const Volunteer = lazy(() => import("./pages/Volunteer"));
+const Discussions = lazy(() => import("./pages/Discussions"));
+const SpeechAI = lazy(() => import("./pages/SpeechAI"));
+const RoleplayAI = lazy(() => import("./pages/RoleplayAI"));
+const WrittenEventAI = lazy(() => import("./pages/WrittenEventAI"));
+const Leaderboard = lazy(() => import("./pages/Leaderboard"));
+const LoginSignup = lazy(() => import("./pages/LoginSignup"));
+const VerifyEmail = lazy(() => import("./pages/VerifyEmail").then((module) => ({ default: module.VerifyEmail })));
+const ResetPassword = lazy(() => import("./pages/ResetPassword").then((module) => ({ default: module.ResetPassword })));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword").then((module) => ({ default: module.ForgotPassword })));
+const TwoFactorAuth = lazy(() => import("./pages/TwoFactorAuth").then((module) => ({ default: module.TwoFactorAuth })));
+const SchoolCodeEntry = lazy(() => import("./pages/SchoolCodeEntry").then((module) => ({ default: module.SchoolCodeEntry })));
+const AdminPanel = lazy(() => import("./pages/AdminPanel").then((module) => ({ default: module.AdminPanel })));
+const Announcements = lazy(() => import("./pages/Announcements").then((module) => ({ default: module.Announcements })));
+const Profile = lazy(() => import("./pages/Profile"));
+const PILearning = lazy(() => import("./pages/PILearning"));
+const PIQuizlet = lazy(() => import("./pages/PIQuizlet"));
+const ChapterMockExam = lazy(() => import("./pages/ChapterMockExam"));
+const BlueMarket = lazy(() => import("./pages/BlueMarket"));
+const BbxMarketBoard = lazy(() => import("./pages/BbxMarketBoard").then((module) => ({ default: module.BbxMarketBoard })));
+const BbxCompanyPage = lazy(() => import("./pages/BbxMarketViews").then((module) => ({ default: module.BbxCompanyPage })));
+const BbxLearnPage = lazy(() => import("./pages/BbxMarketViews").then((module) => ({ default: module.BbxLearnPage })));
+const BbxNewsPage = lazy(() => import("./pages/BbxMarketViews").then((module) => ({ default: module.BbxNewsPage })));
+const BbxPortfolioPage = lazy(() => import("./pages/BbxMarketViews").then((module) => ({ default: module.BbxPortfolioPage })));
+const PortfolioUpload = lazy(() => import("./pages/PortfolioUpload"));
+const AdminPortfolios = lazy(() => import("./pages/AdminPortfolios"));
+const TransactionHistory = lazy(() => import("./pages/TransactionHistory"));
+const BankingDashboard = lazy(() => import("./pages/BankingDashboard").then((module) => ({ default: module.BankingDashboard })));
+const PracticeDebug = lazy(() => import("./pages/PracticeDebug"));
+const SpendingPatterns = lazy(() => import("./pages/SpendingPatterns"));
+const SuperAdminDashboard = lazy(() => import("./pages/SuperAdminDashboard"));
+const Feedback = lazy(() => import("./pages/Feedback"));
+const BluesNews = lazy(() => import("./pages/BluesNews"));
+const EventMatchQuiz = lazy(() => import("./pages/EventMatchQuiz"));
+const DirectMessagesPanel = lazy(() => import("./components/DirectMessagesPanel").then((module) => ({ default: module.DirectMessagesPanel })));
+const FirstSignInTour = lazy(() => import("./components/FirstSignInTour").then((module) => ({ default: module.FirstSignInTour })));
+
+function RouteLoadingFallback() {
+  return <main className="flex min-h-[60vh] items-center justify-center px-6" role="status" aria-live="polite"><div className="flex items-center gap-3 rounded-xl border border-blue-300/15 bg-slate-950/70 px-4 py-3 text-sm text-blue-100/80"><span className="h-2.5 w-2.5 animate-pulse rounded-full bg-blue-400" />Loading your workspace…</div></main>;
+}
 
 function Router() {
   return (
+    <Suspense fallback={<RouteLoadingFallback />}>
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/login" component={LoginSignup} />
@@ -110,6 +116,7 @@ function Router() {
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
+    </Suspense>
   );
 }
 
@@ -154,9 +161,9 @@ function App() {
               {user ? (
                 <SidebarNavigation>
                   <Router />
-                  <DirectMessagesPanel />
+                  <Suspense fallback={null}><DirectMessagesPanel /></Suspense>
                   <Footer />
-                  <FirstSignInTour />
+                  <Suspense fallback={null}><FirstSignInTour /></Suspense>
                 </SidebarNavigation>
               ) : (
                 <>

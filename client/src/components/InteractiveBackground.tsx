@@ -93,13 +93,17 @@ export function InteractiveBackground({ variant = "hero" }: { variant?: Backgrou
     let prefersReducedMotion = motionQuery.matches;
     const stars: Star[] = [];
     const nodes: Node[] = [];
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const lowPowerDevice = (navigator as Navigator & { deviceMemory?: number }).deviceMemory !== undefined
+      && (navigator as Navigator & { deviceMemory?: number }).deviceMemory! <= 4;
+    const dpr = Math.min(window.devicePixelRatio || 1, lowPowerDevice ? 1 : 1.5);
+    const targetFrameMs = lowPowerDevice ? 1000 / 24 : 1000 / 30;
+    let lastDrawTime = -Infinity;
     const configuration = configurationByVariant[variant];
 
     const createScene = () => {
       stars.length = 0;
       nodes.length = 0;
-      const densityScale = clamp((width * height) / 700_000, 0.65, 1.2);
+      const densityScale = clamp((width * height) / 700_000, 0.65, 1.2) * (lowPowerDevice ? 0.72 : 0.86);
       const starCount = Math.round(configuration.starCount * densityScale);
       const nodeCount = Math.round(configuration.nodeCount * densityScale);
 
@@ -316,12 +320,16 @@ export function InteractiveBackground({ variant = "hero" }: { variant?: Backgrou
     };
 
     const render = (time: number) => {
-      drawScene(time);
+      if (time - lastDrawTime >= targetFrameMs) {
+        drawScene(time);
+        lastDrawTime = time;
+      }
       if (isPageVisible && !prefersReducedMotion) animationFrame = window.requestAnimationFrame(render);
     };
 
     const start = () => {
       window.cancelAnimationFrame(animationFrame);
+      lastDrawTime = -Infinity;
       if (prefersReducedMotion) drawScene(0);
       else if (isPageVisible) animationFrame = window.requestAnimationFrame(render);
     };

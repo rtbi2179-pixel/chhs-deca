@@ -21,12 +21,13 @@ describe("InteractiveBackground", () => {
     expect(background).toContain("drawRoundedFrame");
   });
 
-  it("keeps animation technically considerate through pointer refs, high-density rendering, visibility handling, and reduced-motion support", () => {
+  it("keeps animation technically considerate through pointer refs, capped pixel rendering, visibility handling, and reduced-motion support", () => {
     const background = readProjectFile("client/src/components/InteractiveBackground.tsx");
 
     expect(background).toContain("pointerRef = useRef");
     expect(background).not.toContain("useState");
-    expect(background).toContain("Math.min(window.devicePixelRatio || 1, 2)");
+    expect(background).toContain("Math.min(window.devicePixelRatio || 1, lowPowerDevice ? 1 : 1.5)");
+    expect(background).toContain("time - lastDrawTime >= targetFrameMs");
     expect(background).toContain("new ResizeObserver");
     expect(background).toContain("prefers-reduced-motion: reduce");
     expect(background).toContain('document.addEventListener("visibilitychange"');

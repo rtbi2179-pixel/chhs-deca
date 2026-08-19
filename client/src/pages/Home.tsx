@@ -7,17 +7,23 @@
  */
 
 import { Link } from 'wouter'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { Activity, ArrowRight, Banknote, BarChart3, BookOpen, BookOpenCheck, Building2, Calendar, CheckCircle2, ChevronRight, CircleDollarSign, Compass, FileText, Globe, Landmark, LineChart, Newspaper, PiggyBank, Sparkles, Star, Target, TrendingUp, Trophy, Users, WalletCards } from 'lucide-react'
 import { getLoginUrl } from '@/const'
 import { InteractiveBackground } from '@/components/InteractiveBackground'
 import { trpc } from '@/lib/trpc'
-import { allEvents } from '@/pages/Events'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
 const HERO_BG = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/deca-hero-bg-3D56BJM7ugEtwwxPTqT3y7.webp'
+
+type OverviewEventOption = {
+  code: string
+  name: string
+  cluster: string
+  type: string
+}
 
 const stats = [
   { value: '60+', label: 'Competitive Events', icon: Trophy },
@@ -96,13 +102,14 @@ const formatCurrency = (value: number | string | null | undefined) => new Intl.N
 function AuthenticatedOverview({ user }: { user: NonNullable<ReturnType<typeof useAuth>['user']> }) {
   const [eventPickerOpen, setEventPickerOpen] = useState(false)
   const [eventSearch, setEventSearch] = useState('')
+  const [eventCatalog, setEventCatalog] = useState<OverviewEventOption[]>([])
   const utils = trpc.useUtils()
-  const profileMetricsQuery = trpc.practice.getProfileMetrics.useQuery()
-  const primaryEventQuery = trpc.preferences.getPrimaryEvent.useQuery()
-  const bankAccountQuery = trpc.banking.getBankAccount.useQuery()
-  const bbxPortfolioQuery = trpc.bbx.getPortfolio.useQuery(undefined, { refetchInterval: 20_000 })
-  const unreadNewsQuery = trpc.bbx.getUnreadNewsCount.useQuery(undefined, { refetchInterval: 60_000 })
-  const recentNewsQuery = trpc.bbx.getBluesNews.useQuery({ limit: 1 }, { refetchInterval: 60_000 })
+  const profileMetricsQuery = trpc.practice.getProfileMetrics.useQuery(undefined, { staleTime: 60_000, refetchOnWindowFocus: false })
+  const primaryEventQuery = trpc.preferences.getPrimaryEvent.useQuery(undefined, { staleTime: 60_000, refetchOnWindowFocus: false })
+  const bankAccountQuery = trpc.banking.getBankAccount.useQuery(undefined, { staleTime: 60_000, refetchOnWindowFocus: false })
+  const bbxPortfolioQuery = trpc.bbx.getPortfolio.useQuery(undefined, { staleTime: 45_000, refetchInterval: 60_000, refetchIntervalInBackground: false, refetchOnWindowFocus: false })
+  const unreadNewsQuery = trpc.bbx.getUnreadNewsCount.useQuery(undefined, { staleTime: 90_000, refetchInterval: 120_000, refetchIntervalInBackground: false, refetchOnWindowFocus: false })
+  const recentNewsQuery = trpc.bbx.getBluesNews.useQuery({ limit: 1 }, { staleTime: 90_000, refetchInterval: 120_000, refetchIntervalInBackground: false, refetchOnWindowFocus: false })
 
   const metrics = profileMetricsQuery.data
   const bankAccount = bankAccountQuery.data
@@ -119,10 +126,22 @@ function AuthenticatedOverview({ user }: { user: NonNullable<ReturnType<typeof u
   const firstName = user.name?.trim().split(/\s+/)[0] || user.email?.split('@')[0] || 'Competitor'
   const latestNews = recentNewsQuery.data?.[0]
   const normalizedEventSearch = eventSearch.trim().toLocaleLowerCase()
-  const selectableEvents = useMemo(() => allEvents.filter((event) => {
+  const selectableEvents = useMemo(() => eventCatalog.filter((event) => {
     if (!normalizedEventSearch) return true
     return [event.code, event.name, event.cluster, event.type].some((value) => value.toLocaleLowerCase().includes(normalizedEventSearch))
-  }), [normalizedEventSearch])
+  }), [eventCatalog, normalizedEventSearch])
+  const eventCatalogLoading = eventPickerOpen && eventCatalog.length === 0
+
+  useEffect(() => {
+    if (!eventPickerOpen || eventCatalog.length > 0) return
+    let isCurrent = true
+
+    void import('./Events').then(({ allEvents }) => {
+      if (isCurrent) setEventCatalog(allEvents)
+    })
+
+    return () => { isCurrent = false }
+  }, [eventCatalog.length, eventPickerOpen])
   const balanceReady = !bankAccountQuery.isLoading
   const portfolioReady = !bbxPortfolioQuery.isLoading
   const practiceMetrics = [
@@ -199,8 +218,10 @@ function AuthenticatedOverview({ user }: { user: NonNullable<ReturnType<typeof u
             <input id="overview-event-search" type="search" value={eventSearch} onChange={(event) => setEventSearch(event.target.value)} placeholder="Search by event name, code, cluster, or type" autoComplete="off" className="mt-5 h-11 w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-blue-400/60 focus:ring-2 focus:ring-blue-400/20" />
           </div>
           <div className="max-h-[calc(88vh-270px)] overflow-y-auto px-6 py-5">
-            <p className="mb-4 text-xs text-slate-400">{selectableEvents.length} available event{selectableEvents.length === 1 ? '' : 's'}{normalizedEventSearch ? ` match “${eventSearch.trim()}”` : ''}.</p>
-            {selectableEvents.length === 0 ? (
+            <p className="mb-4 text-xs text-slate-400">{eventCatalogLoading ? 'Loading the event catalog…' : `${selectableEvents.length} available event${selectableEvents.length === 1 ? '' : 's'}${normalizedEventSearch ? ` match “${eventSearch.trim()}”` : ''}.`}</p>
+            {eventCatalogLoading ? (
+              <div className="flex min-h-48 items-center justify-center rounded-xl border border-dashed border-white/15 bg-white/[0.025] text-sm text-blue-100/75"><span className="mr-3 h-2.5 w-2.5 animate-pulse rounded-full bg-blue-400" />Loading DECA events…</div>
+            ) : selectableEvents.length === 0 ? (
               <div className="rounded-xl border border-dashed border-white/15 bg-white/[0.025] px-5 py-10 text-center"><Compass className="mx-auto h-6 w-6 text-blue-300" /><p className="mt-3 font-medium text-white">No event matches that search.</p><button type="button" onClick={() => setEventSearch('')} className="mt-3 text-sm font-semibold text-blue-300 hover:text-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300">Clear search</button></div>
             ) : (
               <div className="grid gap-2 sm:grid-cols-2">

@@ -119,13 +119,15 @@ export default function PIQuizlet() {
   const relatedSection      = getSectionByType("examples");       // stored as 'examples'
   const teachBackSection    = getSectionByType("ai_coach_feedback");
 
-  const { data: theoryContent }   = trpc.piLearning.getSectionContent.useQuery({ sectionId: theorySection?.id! },    { enabled: !!theorySection?.id });
-  const { data: vocabContent }    = trpc.piLearning.getSectionContent.useQuery({ sectionId: vocabSection?.id! },     { enabled: !!vocabSection?.id });
-  const { data: flashcardContent }= trpc.piLearning.getSectionContent.useQuery({ sectionId: flashcardSection?.id! }, { enabled: !!flashcardSection?.id });
-  const { data: quizContent }     = trpc.piLearning.getSectionContent.useQuery({ sectionId: quizSection?.id! },      { enabled: !!quizSection?.id });
-  const { data: scenarioContent } = trpc.piLearning.getSectionContent.useQuery({ sectionId: scenarioSection?.id! },  { enabled: !!scenarioSection?.id });
-  const { data: relatedContent }  = trpc.piLearning.getSectionContent.useQuery({ sectionId: relatedSection?.id! },   { enabled: !!relatedSection?.id });
-  const { data: teachBackContent }= trpc.piLearning.getSectionContent.useQuery({ sectionId: teachBackSection?.id! }, { enabled: !!teachBackSection?.id });
+  const queryOptions = { staleTime: 5 * 60 * 1000, refetchOnWindowFocus: false };
+  const isQuizActivity = activeTab === "quick-review" || activeTab === "quiz" || activeTab === "quiz-results";
+  const { data: theoryContent }   = trpc.piLearning.getSectionContent.useQuery({ sectionId: theorySection?.id! },    { ...queryOptions, enabled: !!theorySection?.id && activeTab === "lesson" });
+  const { data: vocabContent }    = trpc.piLearning.getSectionContent.useQuery({ sectionId: vocabSection?.id! },     { ...queryOptions, enabled: !!vocabSection?.id && activeTab === "vocabulary" });
+  const { data: flashcardContent }= trpc.piLearning.getSectionContent.useQuery({ sectionId: flashcardSection?.id! }, { ...queryOptions, enabled: !!flashcardSection?.id && activeTab === "flashcards" });
+  const { data: quizContent }     = trpc.piLearning.getSectionContent.useQuery({ sectionId: quizSection?.id! },      { ...queryOptions, enabled: !!quizSection?.id && isQuizActivity });
+  const { data: scenarioContent } = trpc.piLearning.getSectionContent.useQuery({ sectionId: scenarioSection?.id! },  { ...queryOptions, enabled: !!scenarioSection?.id && activeTab === "scenarios" });
+  const { data: relatedContent }  = trpc.piLearning.getSectionContent.useQuery({ sectionId: relatedSection?.id! },   { ...queryOptions, enabled: !!relatedSection?.id && activeTab === "related" });
+  const { data: teachBackContent }= trpc.piLearning.getSectionContent.useQuery({ sectionId: teachBackSection?.id! }, { ...queryOptions, enabled: !!teachBackSection?.id && activeTab === "teach-back" });
 
   // ── Helpers ────────────────────────────────────────────────────────────────
   const parseOptions = (opts: any): string[] => {

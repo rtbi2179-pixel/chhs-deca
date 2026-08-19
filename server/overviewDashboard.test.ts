@@ -55,7 +55,8 @@ describe("authenticated Overview dashboard", () => {
     expect(source).toContain("trpc.preferences.setPrimaryEvent.useMutation");
     expect(source).toContain("utils.preferences.getPrimaryEvent.invalidate()");
     expect(source).toContain("Search by event name, code, cluster, or type");
-    expect(source).toContain("allEvents.filter");
+    expect(source).toContain("eventCatalog.filter");
+    expect(source).toContain("void import('./Events')");
     expect(source).toContain("aria-pressed={isSelected}");
     expect(source).toContain("No event matches that search.");
   });
