@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BBX_TARGET_ANNUAL_LOG_DRIFT, BBX_TARGET_MONTHLY_GROWTH, SeededRng, cumulativeEventTickLogReturn, executionPrice, fallbackNews, priceTick, regimeParams, slippagePct, spreadPct } from "./bbxEngine";
+import { BBX_EXPECTED_NEWS_LOG_RETURN_PER_TICK, BBX_SCHEDULED_ADVANCES_PER_MONTH, BBX_TARGET_MONTHLY_GROWTH, BBX_TARGET_MONTHLY_LOG_DRIFT, BBX_TARGET_TICK_LOG_DRIFT, SeededRng, cumulativeEventTickLogReturn, executionPrice, fallbackNews, priceTick, regimeParams, slippagePct, spreadPct } from "./bbxEngine";
 
 describe("BBX deterministic market engine", () => {
   it("distributes an event target cumulatively instead of compounding it each tick", () => {
@@ -37,7 +37,8 @@ describe("BBX deterministic market engine", () => {
 
   it("uses a neutral fictional benchmark drift calibrated to the stated 10% monthly target", () => {
     expect(BBX_TARGET_MONTHLY_GROWTH).toBe(0.10);
-    expect(Math.expm1(BBX_TARGET_ANNUAL_LOG_DRIFT / 12)).toBeCloseTo(0.10, 10);
-    expect(regimeParams("neutral").marketDrift).toBe(BBX_TARGET_ANNUAL_LOG_DRIFT);
+    expect(Math.expm1(BBX_TARGET_MONTHLY_LOG_DRIFT)).toBeCloseTo(0.10, 10);
+    expect(regimeParams("neutral").marketDrift).toBe(BBX_TARGET_TICK_LOG_DRIFT);
+    expect(Math.expm1((BBX_TARGET_TICK_LOG_DRIFT + BBX_EXPECTED_NEWS_LOG_RETURN_PER_TICK) * BBX_SCHEDULED_ADVANCES_PER_MONTH)).toBeCloseTo(0.10, 10);
   });
 });

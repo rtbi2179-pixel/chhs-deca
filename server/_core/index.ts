@@ -16,7 +16,7 @@ import { getDb } from "../db";
 import { bbxCompanies, bbxMarketState, bbxNews, creditScoreUpdateSchedule, savingsInterestSchedule } from "../../drizzle/schema";
 import { eq, lt } from "drizzle-orm";
 import bbxEventBank from "../bbxEventBank.json";
-import { blueNewsRetentionCutoff, blueNewsScheduleKey, chooseBlueNewsTemplate } from "../bbxScheduledNews";
+import { blueNewsRetentionCutoff, blueNewsScheduleKey, chooseCalibratedBlueNewsTemplate } from "../bbxScheduledNews";
 import { accrueMonthlySavingsInterestForAllAccounts } from "../savingsInterestService";
 
 type BbxEventTemplate = (typeof bbxEventBank)[number];
@@ -100,7 +100,7 @@ async function startServer() {
 
       const companies = await database.select().from(bbxCompanies).where(eq(bbxCompanies.status, "active"));
       if (companies.length === 0) throw new Error("No active BBX companies are available for the scheduled event");
-      const template = chooseBlueNewsTemplate(bbxEventBank as BbxEventTemplate[]);
+      const template = chooseCalibratedBlueNewsTemplate(bbxEventBank as BbxEventTemplate[], marketState.tickNumber);
       const target = companies[Math.floor(Math.random() * companies.length)];
       const event = await createBbxEvent({
         templateId: template.id,

@@ -8755,3 +8755,6 @@
 - [x] Replace unavailable-feature score factors with active Banking and learning signals, and define balanced score stages
 - [x] Apply transparent Blue Bucks question-reward multipliers by credit-score stage
 - [x] Add regression coverage, validate the balanced model, and checkpoint the update
+- [x] Audit Blue’s News event selection, impact weights, and BBX average-growth calibration
+- [x] Calibrate the positive-to-negative event distribution and market impact rules for approximately 10% average monthly BBX growth
+- [x] Add deterministic projection coverage, validate the market model, and checkpoint the update

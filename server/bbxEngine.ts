@@ -1,7 +1,15 @@
+import bbxEventBank from "./bbxEventBank.json";
+import { projectedBlueNewsCycleLogReturn } from "./bbxScheduledNews";
+
 export type BbxRegime = "bull" | "neutral" | "bear" | "high_volatility";
 export type BbxSeverity = "low" | "medium" | "high" | "severe";
 export const BBX_TARGET_MONTHLY_GROWTH = 0.10;
-export const BBX_TARGET_ANNUAL_LOG_DRIFT = 12 * Math.log1p(BBX_TARGET_MONTHLY_GROWTH);
+export const BBX_SCHEDULED_ADVANCES_PER_MONTH = 30 * 8;
+export const BBX_TARGET_MONTHLY_LOG_DRIFT = Math.log1p(BBX_TARGET_MONTHLY_GROWTH);
+export const BBX_EXPECTED_NEWS_LOG_RETURN_PER_TICK = projectedBlueNewsCycleLogReturn(bbxEventBank);
+export const BBX_TARGET_TICK_LOG_DRIFT = (
+  BBX_TARGET_MONTHLY_LOG_DRIFT - BBX_EXPECTED_NEWS_LOG_RETURN_PER_TICK * BBX_SCHEDULED_ADVANCES_PER_MONTH
+) / BBX_SCHEDULED_ADVANCES_PER_MONTH;
 
 export class SeededRng {
   private state: number;
@@ -33,15 +41,15 @@ export const sampleMagnitude = (range: readonly number[], rng: SeededRng) => {
 };
 
 export function regimeParams(regime: BbxRegime) {
-  if (regime === "bull") return { marketDrift: BBX_TARGET_ANNUAL_LOG_DRIFT * 1.35, marketVolatility: 0.14, correlationBoost: 0.95, meanReversion: 1.5 };
-  if (regime === "bear") return { marketDrift: BBX_TARGET_ANNUAL_LOG_DRIFT * 0.45, marketVolatility: 0.24, correlationBoost: 1.15, meanReversion: 1.1 };
-  if (regime === "high_volatility") return { marketDrift: BBX_TARGET_ANNUAL_LOG_DRIFT * 0.75, marketVolatility: 0.34, correlationBoost: 1.3, meanReversion: 0.75 };
-  return { marketDrift: BBX_TARGET_ANNUAL_LOG_DRIFT, marketVolatility: 0.18, correlationBoost: 1, meanReversion: 1.5 };
+  if (regime === "bull") return { marketDrift: BBX_TARGET_TICK_LOG_DRIFT * 1.35, marketVolatility: 0.14, correlationBoost: 0.95, meanReversion: 1.5 };
+  if (regime === "bear") return { marketDrift: BBX_TARGET_TICK_LOG_DRIFT * 0.45, marketVolatility: 0.24, correlationBoost: 1.15, meanReversion: 1.1 };
+  if (regime === "high_volatility") return { marketDrift: BBX_TARGET_TICK_LOG_DRIFT * 0.75, marketVolatility: 0.34, correlationBoost: 1.3, meanReversion: 0.75 };
+  return { marketDrift: BBX_TARGET_TICK_LOG_DRIFT, marketVolatility: 0.18, correlationBoost: 1, meanReversion: 1.5 };
 }
 
 export function benchmarkLogReturn(regime: BbxRegime, dtYears: number, rng: SeededRng) {
   const params = regimeParams(regime);
-  return params.marketDrift * dtYears + params.marketVolatility * Math.sqrt(dtYears) * rng.normal();
+  return params.marketDrift + params.marketVolatility * Math.sqrt(dtYears) * rng.normal();
 }
 
 export function sectorResidualLogReturn(regime: BbxRegime, dtYears: number, rng: SeededRng) {
