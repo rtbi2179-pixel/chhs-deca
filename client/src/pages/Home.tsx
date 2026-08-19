@@ -115,7 +115,7 @@ function AuthenticatedOverview({ user }: { user: NonNullable<ReturnType<typeof u
       setEventSearch('')
     },
   })
-  const studyDestination = primaryEvent ? `/pi-quizlet?event=${encodeURIComponent(primaryEvent)}` : '/event-match'
+  const studyDestination = primaryEvent ? '/events' : '/event-match'
   const firstName = user.name?.trim().split(/\s+/)[0] || user.email?.split('@')[0] || 'Competitor'
   const latestNews = recentNewsQuery.data?.[0]
   const normalizedEventSearch = eventSearch.trim().toLocaleLowerCase()

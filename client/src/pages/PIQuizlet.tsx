@@ -10,7 +10,6 @@ import {
   GraduationCap, ListChecks, FlipHorizontal, ClipboardList, Layers, Link2, Map, SkipBack, SkipForward, Search, X
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
-import { allEvents } from "@/pages/Events";
 
 const PI_PAGE_SIZE = 24;
 
@@ -44,22 +43,18 @@ const EVENT_CLUSTER_TO_PI_CLUSTER: Record<string, (typeof CLUSTERS)[number]> = {
   "Entrepreneurship": "Entrepreneurship",
 };
 
-function getRequestedEventStudyPath() {
-  if (typeof window === "undefined") return { eventCode: "", moduleId: null };
+function getRequestedModuleId() {
+  if (typeof window === "undefined") return null;
   const query = new URLSearchParams(window.location.search);
-  const requestedEventCode = query.get("event")?.trim().toUpperCase() ?? "";
-  const eventCode = allEvents.some((event) => event.code === requestedEventCode) ? requestedEventCode : "";
   const parsedModuleId = Number(query.get("module"));
-  return { eventCode, moduleId: Number.isInteger(parsedModuleId) && parsedModuleId > 0 ? parsedModuleId : null };
+  return Number.isInteger(parsedModuleId) && parsedModuleId > 0 ? parsedModuleId : null;
 }
 
 export default function PIQuizlet() {
   const { user } = useAuth();
   const utils = trpc.useUtils();
   const [selectedCluster, setSelectedCluster] = useState<(typeof CLUSTERS)[number]>(CLUSTERS[0]);
-  const [requestedStudyPath] = useState(getRequestedEventStudyPath);
-  const [selectedEventCode, setSelectedEventCode] = useState(requestedStudyPath.eventCode);
-  const [selectedModuleId, setSelectedModuleId] = useState<number | null>(requestedStudyPath.moduleId);
+  const [selectedModuleId, setSelectedModuleId] = useState<number | null>(getRequestedModuleId);
   const [activeTab, setActiveTab] = useState("lesson");
   const [searchQuery, setSearchQuery] = useState("");
   const [moduleOffset, setModuleOffset] = useState(0);
@@ -80,25 +75,13 @@ export default function PIQuizlet() {
   const [loadingFeedback, setLoadingFeedback] = useState(false);
 
   // ── Data fetching ──────────────────────────────────────────────────────────
-  const primaryEventQuery = trpc.preferences.getPrimaryEvent.useQuery();
-  const setPrimaryEvent = trpc.preferences.setPrimaryEvent.useMutation({
-    onSuccess: () => primaryEventQuery.refetch(),
-  });
-  const activeEventCode = selectedEventCode || primaryEventQuery.data?.primaryEventCode || "";
-  const selectedEvent = allEvents.find((event) => event.code === activeEventCode);
   const moduleListInput = useMemo(() => ({ cluster: selectedCluster, search: deferredSearchQuery, offset: moduleOffset, limit: PI_PAGE_SIZE }), [selectedCluster, deferredSearchQuery, moduleOffset]);
-  const eventStudyInput = useMemo(() => ({ eventCode: activeEventCode || "AAM", search: deferredSearchQuery, offset: moduleOffset, limit: PI_PAGE_SIZE }), [activeEventCode, deferredSearchQuery, moduleOffset]);
-  const modulesQuery = trpc.piLearning.getModulesByCluster.useQuery(moduleListInput, { enabled: !selectedEvent, staleTime: 5 * 60 * 1000 });
-  const eventStudyQuery = trpc.piLearning.getEventStudyGuide.useQuery(
-    eventStudyInput,
-    { enabled: !!selectedEvent, staleTime: 5 * 60 * 1000 }
-  );
+  const modulesQuery = trpc.piLearning.getModulesByCluster.useQuery(moduleListInput, { staleTime: 5 * 60 * 1000 });
   const modulesLoading = modulesQuery.isLoading;
-  const eventStudyLoading = !!selectedEvent && eventStudyQuery.isLoading;
 
   useEffect(() => {
     setModuleOffset(0);
-  }, [selectedCluster, activeEventCode, deferredSearchQuery]);
+  }, [selectedCluster, deferredSearchQuery]);
 
   const { data: moduleWithSections, isLoading: moduleLoading } = trpc.piLearning.getModuleWithSections.useQuery(
     { moduleId: selectedModuleId! },
@@ -112,17 +95,12 @@ export default function PIQuizlet() {
     { enabled: !!selectedModuleId }
   );
 
-  const activeModuleList = selectedEvent
-    ? (eventStudyQuery.data?.instructionalAreas?.flatMap((area) => area.modules) ?? [])
-    : (modulesQuery.data?.modules ?? []);
+  const activeModuleList = modulesQuery.data?.modules ?? [];
   const filteredModules = modulesQuery.data?.modules ?? [];
-  const filteredEventStudyAreas = eventStudyQuery.data?.instructionalAreas ?? [];
   const isSearching = Boolean(searchQuery.trim());
-  const totalVisibleModules = selectedEvent ? (eventStudyQuery.data?.totalModules ?? 0) : (modulesQuery.data?.totalModules ?? 0);
-  const currentPageModuleCount = selectedEvent
-    ? filteredEventStudyAreas.reduce((sum, area) => sum + area.modules.length, 0)
-    : filteredModules.length;
-  const hasMoreModules = selectedEvent ? Boolean(eventStudyQuery.data?.hasMore) : Boolean(modulesQuery.data?.hasMore);
+  const totalVisibleModules = modulesQuery.data?.totalModules ?? 0;
+  const currentPageModuleCount = filteredModules.length;
+  const hasMoreModules = Boolean(modulesQuery.data?.hasMore);
   const showingFrom = totalVisibleModules ? moduleOffset + 1 : 0;
   const showingTo = Math.min(moduleOffset + currentPageModuleCount, totalVisibleModules);
   const currentModuleIndex = selectedModuleId === null ? -1 : activeModuleList.findIndex((module: any) => module.id === selectedModuleId);
@@ -357,26 +335,8 @@ export default function PIQuizlet() {
             </div>
             <h1 className="page-title mb-2">Performance Indicator Study</h1>
             <p className="page-intro">
-              Choose a career cluster, then work through lessons, vocabulary, flashcards, review questions, and scenarios at your own pace.
+              Choose a career cluster, then work through lessons, vocabulary, flashcards, review questions, and scenarios at your own pace. Selected-event performance indicators are available directly in Event Resources.
             </p>
-            <div className="editorial-panel-muted mt-6 max-w-2xl p-4">
-              <label htmlFor="event-study-path" className="block text-sm font-semibold text-slate-200">Study for a specific competitive event</label>
-              <p className="mt-1 text-xs leading-relaxed text-slate-400">Select an event to separate business administration core skills from the indicators aligned with that event’s career cluster.</p>
-              <select
-                id="event-study-path"
-                value={activeEventCode}
-                onChange={(event) => {
-                  setSelectedEventCode(event.target.value);
-                  if (event.target.value) setPrimaryEvent.mutate({ eventCode: event.target.value });
-                }}
-                className="mt-3 w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2.5 text-sm text-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-              >
-                <option value="">Browse by career cluster instead</option>
-                {[...allEvents].sort((a, b) => a.name.localeCompare(b.name)).map((event) => (
-                  <option key={event.code} value={event.code}>{event.code} — {event.name}</option>
-                ))}
-              </select>
-            </div>
             <div className="editorial-panel-muted mt-4 max-w-2xl p-3">
               <label htmlFor="pi-study-search" className="data-label">Search this study path</label>
               <div className="relative mt-2">
@@ -390,7 +350,7 @@ export default function PIQuizlet() {
                 />
                 {searchQuery && <button type="button" onClick={() => setSearchQuery("")} className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded text-slate-400 hover:bg-white/5 hover:text-white" aria-label="Clear PI search"><X className="h-4 w-4" /></button>}
               </div>
-              <p className="mt-2 text-xs text-slate-500">Results update as you type and remain within the current cluster or selected event path. The library loads 24 indicators at a time for a smoother start.</p>
+              <p className="mt-2 text-xs text-slate-500">Results update as you type within the current career cluster. The library loads 24 indicators at a time for a smoother start.</p>
             </div>
           </div>
 
@@ -412,25 +372,12 @@ export default function PIQuizlet() {
           </div>
 
           {/* Modules Grid */}
-          {modulesLoading || eventStudyLoading ? (
+          {modulesLoading ? (
             <div className="loading-state py-12">
               <div className="text-center">
                 <Loader2 className="w-12 h-12 animate-spin text-blue-500 mx-auto mb-4" />
                 <p className="text-slate-400">Loading modules...</p>
               </div>
-            </div>
-          ) : selectedEvent ? (
-            <div className="space-y-10">
-              <div className="editorial-panel border-blue-500/20 bg-blue-500/[0.045] p-5">
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-300">Official 2026–2027 PI guide</p>
-                <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between"><div><h2 className="text-xl font-bold text-white">{selectedEvent.name}</h2><p className="mt-1 text-sm text-slate-400">Shared PI modules mapped to this event’s active performance-indicator list. Modules are grouped by instructional area; no content is duplicated.</p></div><span className="text-sm text-slate-400">{eventStudyQuery.data?.completedModules ?? 0} / {eventStudyQuery.data?.totalModules ?? 0} mastered</span></div>
-              </div>
-              {filteredEventStudyAreas.length ? filteredEventStudyAreas.map((area) => (
-                <div key={area.instructionalArea}>
-                  <div className="mb-4 flex items-end justify-between gap-4 border-l-2 border-emerald-500 pl-4"><div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300">{area.modules[0]?.cluster === "Business Administration Core" ? "General business skills" : "Event-specific preparation"}</p><h3 className="mt-1 text-xl font-bold text-white">{area.instructionalArea}</h3></div><span className="text-sm text-slate-500">{area.modules.length} indicators</span></div>
-                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">{area.modules.map(renderModuleCard)}</div>
-                </div>
-              )) : <div className="empty-state min-h-32 p-5 text-sm"><AlertCircle className="mb-3 h-5 w-5 text-slate-500" />{isSearching ? `No performance indicators match “${searchQuery.trim()}” in this event path.` : "No official PI mapping is available for this event."}</div>}
             </div>
           ) : filteredModules.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -443,7 +390,7 @@ export default function PIQuizlet() {
               {isSearching && <button type="button" onClick={() => setSearchQuery("")} className="mt-4 text-sm font-medium text-blue-300 hover:text-blue-200">Clear search</button>}
             </div>
           )}
-          {!modulesLoading && !eventStudyLoading && totalVisibleModules > 0 && (
+          {!modulesLoading && totalVisibleModules > 0 && (
             <div className="mt-8 flex flex-col gap-3 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-slate-400">Showing {showingFrom}–{showingTo} of {totalVisibleModules} indicators{isSearching ? " matching your search" : ""}.</p>
               <div className="flex gap-2">

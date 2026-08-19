@@ -8777,3 +8777,4 @@
 - [x] Rename all member-facing Find Your DECA Event action labels to Start Event Finder
 - [x] Restrict the signed-out welcome screen to the initial load of a fresh browser session
 - [x] Add a Select This Event action to every Event Resources card and reflect the member’s focused event
+- [x] Remove event-specific selection from PI Study and display selected-event PIs by default in Event Resources

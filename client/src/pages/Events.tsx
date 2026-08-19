@@ -4,7 +4,7 @@
  * Filterable by career cluster and event type
  */
 
-import { useDeferredValue, useState } from 'react'
+import { useDeferredValue, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ExternalLink, Search, ChevronDown, ChevronUp, BookOpen, FileText, Video, Globe, Target, Loader2, ArrowUpRight, LibraryBig, CheckCircle2 } from 'lucide-react'
 import { trpc } from '@/lib/trpc'
@@ -548,7 +548,7 @@ function EventPiStudyDialog({ event, open, onOpenChange }: EventPiStudyDialogPro
   const showingFrom = totalModules ? piOffset + 1 : 0
   const showingTo = Math.min(piOffset + shownModules.length, totalModules)
   const normalizedPiSearch = deferredPiSearch.toLocaleLowerCase()
-  const studyPathHref = `/pi-quizlet?event=${encodeURIComponent(event.code)}`
+  const studyPathHref = '/pi-quizlet'
   const handleOpenChange = (nextOpen: boolean) => {
     if (!nextOpen) {
       setPiSearch('')
@@ -626,7 +626,7 @@ function EventPiStudyDialog({ event, open, onOpenChange }: EventPiStudyDialogPro
                   {shownModules.map((module: any) => (
                     <a
                       key={module.id}
-                      href={`${studyPathHref}&module=${module.id}`}
+                      href={`${studyPathHref}?module=${module.id}`}
                       className="group rounded-xl border border-white/10 bg-white/[0.025] p-4 transition hover:border-blue-400/40 hover:bg-blue-500/[0.08] focus:outline-none focus:ring-2 focus:ring-blue-400/60"
                     >
                       <div className="flex items-start justify-between gap-3">
@@ -656,7 +656,7 @@ function EventPiStudyDialog({ event, open, onOpenChange }: EventPiStudyDialogPro
         <div className="flex flex-col gap-3 border-t border-white/10 bg-black/10 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-slate-400">Every PI opens as a complete learning module.</p>
           <a href={studyPathHref} className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-500">
-            Open full {event.code} PI Library <ArrowUpRight className="h-4 w-4" />
+            Open PI Study Library <ArrowUpRight className="h-4 w-4" />
           </a>
         </div>
       </DialogContent>
@@ -740,6 +740,19 @@ function EventCard({ event, isFocusedEvent, canSelectEvent, isSelecting, onSelec
   )
 }
 
+function SelectedEventPiPanel({ event }: { event: DECAEvent }) {
+  const studyInput = useMemo(() => ({ eventCode: event.code, search: '', offset: 0, limit: 24 }), [event.code])
+  const eventStudyQuery = trpc.piLearning.getEventStudyGuide.useQuery(studyInput, { staleTime: 5 * 60 * 1000 })
+  const modules = eventStudyQuery.data?.instructionalAreas.flatMap((area) => area.modules) ?? []
+
+  return (
+    <section aria-label="Selected event performance indicators" className="mb-7 overflow-hidden rounded-2xl border border-blue-400/25 bg-[linear-gradient(135deg,oklch(0.14_0.07_255/0.58),oklch(0.06_0.014_265/0.82))] shadow-[0_20px_48px_oklch(0.04_0.08_255/0.18)]">
+      <div className="flex flex-col gap-3 border-b border-blue-300/15 px-5 py-5 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-[10px] font-mono-data uppercase tracking-[0.16em] text-blue-200/70">Focused event PI path</p><h2 className="mt-1 text-xl font-semibold text-white">{event.code} — {event.name}</h2><p className="mt-1 text-sm text-blue-100/65">Required performance indicators for your selected event are displayed here by default.</p></div>{eventStudyQuery.data && <span className="text-xs font-mono-data text-blue-100/70">{eventStudyQuery.data.totalModules} indicators</span>}</div>
+      <div className="p-5">{eventStudyQuery.isLoading ? <div className="flex min-h-32 items-center justify-center gap-3 text-sm text-blue-100/70"><Loader2 className="h-5 w-5 animate-spin text-blue-300" /> Loading selected-event PIs…</div> : modules.length ? <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">{modules.map((module: any) => <a key={module.id} href={`/pi-quizlet?module=${module.id}`} className="group rounded-xl border border-white/10 bg-black/10 p-4 transition hover:border-blue-300/45 hover:bg-blue-400/[0.08] focus:outline-none focus:ring-2 focus:ring-blue-300"><p className="text-[11px] font-mono-data uppercase tracking-[0.12em] text-blue-300">{module.piId}</p><h3 className="mt-2 line-clamp-2 text-sm font-semibold leading-5 text-white group-hover:text-blue-100">{module.performanceIndicator}</h3><p className="mt-3 truncate text-xs text-white/45">{module.instructionalArea}</p></a>)}</div> : <div className="rounded-xl border border-dashed border-white/15 bg-black/10 px-5 py-8 text-center text-sm text-blue-100/70">No performance indicators are available for this event yet.</div>}</div>
+    </section>
+  )
+}
+
 function AnimatedExpand({ expanded, children }: { expanded: boolean; children: React.ReactNode }) {
   return (
     <motion.div
@@ -762,6 +775,7 @@ export default function Events() {
   const setPrimaryEvent = trpc.preferences.setPrimaryEvent.useMutation({
     onSuccess: async () => { await utils.preferences.getPrimaryEvent.invalidate() },
   })
+  const focusedEvent = allEvents.find((event) => event.code === primaryEventQuery.data?.primaryEventCode)
 
   const filtered = allEvents.filter((e) => {
     const matchCluster = activeCluster === 'All' || e.cluster === activeCluster
@@ -798,7 +812,7 @@ export default function Events() {
               className="group flex w-full items-center gap-4 rounded-2xl border border-blue-300/45 bg-[linear-gradient(115deg,oklch(0.22_0.1_255/0.82),oklch(0.08_0.025_265/0.9))] p-4 text-left shadow-[0_18px_42px_oklch(0.05_0.08_255/0.32)] transition-all duration-200 hover:-translate-y-1 hover:border-blue-200/80 hover:bg-[linear-gradient(115deg,oklch(0.27_0.12_255/0.88),oklch(0.1_0.035_265/0.94))] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200"
             >
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-blue-200/30 bg-blue-200/10 text-blue-100 shadow-[0_0_24px_oklch(0.7_0.16_250/0.2)]"><LibraryBig className="h-6 w-6" /></span>
-              <span className="min-w-0 flex-1"><span className="block text-[10px] font-mono-data uppercase tracking-[0.16em] text-blue-100/65">Performance indicators</span><span className="mt-1 block text-lg font-semibold text-white">Open PI Library</span><span className="mt-1 block text-sm leading-5 text-blue-100/70">Browse every learning module or continue with your event-specific PIs.</span></span>
+              <span className="min-w-0 flex-1"><span className="block text-[10px] font-mono-data uppercase tracking-[0.16em] text-blue-100/65">Performance indicators</span><span className="mt-1 block text-lg font-semibold text-white">Open PI Library</span><span className="mt-1 block text-sm leading-5 text-blue-100/70">Browse every learning module. Your focused event’s PIs appear below in Event Resources.</span></span>
               <ArrowUpRight className="h-5 w-5 shrink-0 text-blue-100 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
             <a
@@ -853,6 +867,7 @@ export default function Events() {
 
       {/* Events List */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {focusedEvent && <SelectedEventPiPanel event={focusedEvent} />}
         <div className="grid grid-cols-1 gap-3">
           {filtered.map((event) => (
             <EventCard key={event.code} event={event} isFocusedEvent={primaryEventQuery.data?.primaryEventCode === event.code} canSelectEvent={Boolean(user?.id)} isSelecting={setPrimaryEvent.isPending && setPrimaryEvent.variables?.eventCode === event.code} onSelectEvent={(eventCode) => setPrimaryEvent.mutate({ eventCode })} />

@@ -61,13 +61,17 @@ describe("event-linked PI Study Library", () => {
     expect(eventsPage).toContain("Select This Event");
     expect(eventsPage).toContain("Focused Event");
     expect(eventsPage).toContain("onSelectEvent={(eventCode) => setPrimaryEvent.mutate({ eventCode })}");
-    expect(eventsPage).toContain("/pi-quizlet?event=${encodeURIComponent(event.code)}");
+    expect(eventsPage).toContain("SelectedEventPiPanel");
+    expect(eventsPage).toContain("Focused event PI path");
+    expect(eventsPage).toContain("Required performance indicators for your selected event are displayed here by default.");
+    expect(eventsPage).toContain("/pi-quizlet?module=${module.id}");
     expect(piQuizletPage).toContain("PI_PAGE_SIZE = 24");
     expect(piQuizletPage).toContain("Next indicators");
     expect(piQuizletPage).toContain("Showing {showingFrom}–{showingTo} of {totalVisibleModules} indicators");
-    expect(piQuizletPage).toContain("getRequestedEventStudyPath");
-    expect(piQuizletPage).toContain("query.get(\"event\")");
+    expect(piQuizletPage).toContain("getRequestedModuleId");
     expect(piQuizletPage).toContain("query.get(\"module\")");
+    expect(piQuizletPage).not.toContain("Study for a specific competitive event");
+    expect(piQuizletPage).not.toContain("getEventStudyGuide.useQuery");
   });
 
   it("filters event-specific PIs by code, performance indicator, instructional area, or cluster and recovers from no results", () => {

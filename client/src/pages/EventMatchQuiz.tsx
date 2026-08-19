@@ -34,7 +34,7 @@ export default function EventMatchQuiz() {
     onSuccess: async (result) => {
       await utils.preferences.getPrimaryEvent.invalidate();
       await utils.preferences.getEventMatchQuiz.invalidate();
-      setLocation(`/pi-quizlet?event=${encodeURIComponent(result.primaryEventCode)}`);
+      setLocation('/events');
     },
   });
 
