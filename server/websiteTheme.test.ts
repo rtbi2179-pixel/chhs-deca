@@ -16,7 +16,7 @@ describe("Glass and Blazer website themes", () => {
     expect(router).toContain("updateWebsiteTheme: protectedProcedure");
   });
 
-  it("provides the Profile Settings selector and a colorful Blazer presentation while preserving Glass", () => {
+  it("provides the Profile Settings selector and a restrained solid-palette Blazer presentation while preserving Glass", () => {
     const profile = readProjectFile("client/src/pages/Profile.tsx");
     const shell = readProjectFile("client/src/components/SidebarNavigation.tsx");
     const css = readProjectFile("client/src/index.css");
@@ -28,6 +28,9 @@ describe("Glass and Blazer website themes", () => {
     expect(shell).toContain('data-website-theme={websiteTheme}');
     expect(css).toContain(':root[data-website-theme="glass"]');
     expect(css).toContain(':root[data-website-theme="blazer"]');
-    expect(css).toContain('linear-gradient(100deg, oklch(0.62 0.22 305)');
+    for (const suppliedColor of ['#F8C524', '#7C8689', '#009B46', '#0B74BF', '#CC1D36', '#91C659']) expect(css).toContain(suppliedColor);
+    expect(css).toContain('button[class*="bg-blue-"]');
+    expect(css).toContain('background-image: none !important');
+    expect(profile).toContain('disciplined solid yellow, gray, green, blue, red, and lime control palette');
   });
 });

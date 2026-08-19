@@ -8780,3 +8780,4 @@
 - [x] Remove event-specific selection from PI Study and display selected-event PIs by default in Event Resources
 - [x] Add a persistent Edit Profile gallery of DECA-inspired and general avatar and banner selections
 - [x] Remove the Profile page’s redundant top navigation controls while keeping the section sidebar
+- [x] Refine Blazer with the supplied solid yellow, gray, green, blue, red, and lime palette, prioritizing solid button treatments
