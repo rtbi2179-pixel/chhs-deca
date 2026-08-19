@@ -5,11 +5,11 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 describe("onboarding progress and celebration", () => {
-  it("reports clear, clamped progress through the seven tour steps", () => {
-    expect(getOnboardingProgress(0, 7)).toEqual({ currentStep: 1, totalSteps: 7, percentage: 14, scale: 1 / 7 });
-    expect(getOnboardingProgress(3, 7)).toEqual({ currentStep: 4, totalSteps: 7, percentage: 57, scale: 4 / 7 });
-    expect(getOnboardingProgress(6, 7)).toEqual({ currentStep: 7, totalSteps: 7, percentage: 100, scale: 1 });
-    expect(getOnboardingProgress(99, 7)).toMatchObject({ currentStep: 7, percentage: 100 });
+  it("reports clear, clamped progress through the complete tour", () => {
+    expect(getOnboardingProgress(0, 16)).toEqual({ currentStep: 1, totalSteps: 16, percentage: 6, scale: 1 / 16 });
+    expect(getOnboardingProgress(7, 16)).toEqual({ currentStep: 8, totalSteps: 16, percentage: 50, scale: 1 / 2 });
+    expect(getOnboardingProgress(15, 16)).toEqual({ currentStep: 16, totalSteps: 16, percentage: 100, scale: 1 });
+    expect(getOnboardingProgress(99, 16)).toMatchObject({ currentStep: 16, percentage: 100 });
   });
 
   it("keeps the completion celebration brief", () => {
@@ -28,7 +28,7 @@ describe("onboarding progress and celebration", () => {
   });
 
   it("routes each walkthrough step to an interactive destination", () => {
-    expect(ONBOARDING_WALKTHROUGH_STEPS.map((step) => step.path)).toEqual(["/", "/pi-quizlet", "/practice", "/events", "/calendar", "/banking", "/chapter-mock-exam"]);
+    expect(ONBOARDING_WALKTHROUGH_STEPS.map((step) => step.path)).toEqual(["/", "/pi-quizlet", "/practice", "/mock-exams", "/leaderboard", "/speech-ai", "/events", "/calendar", "/announcements", "/discussions", "/volunteer", "/feedback", "/practice", "/banking", "/blues-news", "/blue-market"]);
     expect(ONBOARDING_WALKTHROUGH_STEPS.every((step) => step.action.length > 0)).toBe(true);
   });
 
@@ -58,5 +58,11 @@ describe("onboarding progress and celebration", () => {
     expect(source).toContain('"CHAPTER"');
     expect(source).toContain('"BLUE BUCKS"');
     expect(source).toContain('aria-current={isActivePart ? "step" : undefined}');
+  });
+
+  it("keeps the tour panel clear of the desktop sidebar navigation", () => {
+    const source = readFileSync(join(process.cwd(), "client/src/components/FirstSignInTour.tsx"), "utf8");
+    expect(source).toContain("bottom-4 right-4 left-auto");
+    expect(source).not.toContain("bottom-4 left-4 top-auto");
   });
 });

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, BarChart3, BookOpenCheck, Check, ClipboardCheck, Coins, Compass, Flag, Home, PartyPopper, Sparkles, Trophy, Users, X } from "lucide-react";
+import { ArrowRight, BarChart3, Bell, BookOpenCheck, Calendar, Check, ClipboardCheck, Coins, Compass, Flag, Home, Landmark, MessageSquare, MessageSquarePlus, Newspaper, PartyPopper, Sparkles, TrendingUp, Trophy, Users, X, Zap } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
@@ -15,9 +15,19 @@ const TOUR_STEP_ICONS = {
   home: Home,
   study: BookOpenCheck,
   practice: ClipboardCheck,
-  community: Users,
-  blueBucks: Coins,
   readiness: BarChart3,
+  leaderboard: BarChart3,
+  ai: Zap,
+  events: Trophy,
+  calendar: Calendar,
+  announcements: Bell,
+  discussions: MessageSquare,
+  volunteer: Users,
+  feedback: MessageSquarePlus,
+  blueBucks: Coins,
+  banking: Landmark,
+  news: Newspaper,
+  market: TrendingUp,
 } as const;
 
 export function FirstSignInTour() {
@@ -113,7 +123,7 @@ export function FirstSignInTour() {
 
   return (
     <Dialog modal={false} open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogContent allowBackgroundInteraction showCloseButton={false} className="fixed bottom-4 left-4 top-auto z-[80] max-h-[calc(100vh-2rem)] w-[min(31rem,calc(100vw-2rem))] translate-x-0 translate-y-0 overflow-y-auto border-blue-300/25 bg-slate-950 p-0 text-white shadow-[0_30px_120px_oklch(0_0_0/0.58)] sm:max-w-none" onInteractOutside={(event) => event.preventDefault()} onEscapeKeyDown={(event) => { event.preventDefault(); startSkipExit(); }}>
+      <DialogContent allowBackgroundInteraction showCloseButton={false} className="fixed bottom-4 right-4 left-auto top-auto z-[80] max-h-[calc(100vh-2rem)] w-[min(31rem,calc(100vw-2rem))] translate-x-0 translate-y-0 overflow-y-auto border-blue-300/25 bg-slate-950 p-0 text-white shadow-[0_30px_120px_oklch(0_0_0/0.58)] sm:max-w-none" onInteractOutside={(event) => event.preventDefault()} onEscapeKeyDown={(event) => { event.preventDefault(); startSkipExit(); }}>
         <AnimatePresence initial={false} onExitComplete={() => { if (isSkipping) finishTour(); }}>
           {!isSkipping && <motion.div key={`onboarding-tour-${tourOpenVersion}`} initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 10, scale: 0.985 }} animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.28, ease: "easeOut" }} className="relative">
           <div className="relative overflow-hidden border-b border-white/10 bg-[linear-gradient(155deg,oklch(0.18_0.085_253),oklch(0.07_0.02_265))] p-5">
@@ -138,7 +148,7 @@ export function FirstSignInTour() {
             <div className="flex items-center justify-between gap-3"><div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-300/80"><Compass className="h-3.5 w-3.5" />{step.eyebrow}</div><span className="font-mono-data text-[9px] tracking-[0.16em] text-white/35">YOUR FIRST MOVE · {step.part}</span></div>
             <DialogTitle className="mt-4 max-w-md font-display text-3xl leading-[0.9] tracking-tight text-white">{step.title}</DialogTitle>
             <DialogDescription className="mt-3 max-w-md text-sm leading-6 text-white/65">{step.body}</DialogDescription>
-            <div className="mt-4 flex w-fit items-center gap-3 rounded-xl border border-blue-300/15 bg-blue-300/[0.055] px-3.5 py-2.5"><span className="font-mono-data text-[9px] tracking-[0.13em] text-blue-200/55">ACTIVE TAB</span><span className="h-3 w-px bg-blue-300/25" /><span className="text-xs font-semibold text-blue-100">{step.tabLabel}</span></div>
+            <div className="mt-4 flex w-fit items-center gap-3 rounded-xl border border-blue-300/15 bg-blue-300/[0.055] px-3.5 py-2.5"><span className="font-mono-data text-[9px] tracking-[0.13em] text-blue-200/55">CURRENT TOOL</span><span className="h-3 w-px bg-blue-300/25" /><span className="text-xs font-semibold text-blue-100">{step.tabLabel}</span></div>
             <div className="mt-3 inline-flex w-fit items-center gap-2 text-xs leading-5 text-white/55"><Flag className="h-3.5 w-3.5 shrink-0 text-blue-300" />{step.action}</div>
 
             <div className="mt-5 border-t border-white/10 pt-5">

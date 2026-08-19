@@ -8725,3 +8725,7 @@
 - [x] Connect Overview action cards to the current PI Study Library, Practice, Mock Exams, Banking, BBX, Blue's News, and chapter routes
 - [x] Add accurate loading and empty states while retaining the dark editorial visual system
 - [x] Add regression coverage, run full validation, and checkpoint the operational Overview update
+- [x] Audit every active Practice, Chapter, and Blue Bucks tool against the onboarding tour
+- [x] Replace navigation-tab-oriented tour steps with tool-focused walkthrough steps that cover all active member capabilities
+- [x] Expand Blue Bucks guidance to explain earning, checking, savings, Investment Account, BBX, and Blue's News rewards
+- [x] Add regression coverage, validate the complete tour, and checkpoint the update
