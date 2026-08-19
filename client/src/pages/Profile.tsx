@@ -12,6 +12,7 @@ import { CreditScoreChart } from '@/components/CreditScoreChart'
 import { PortfolioChart } from '@/components/PortfolioChart'
 import { allEvents } from '@/pages/Events'
 import { useTheme, type WebsiteTheme } from '@/contexts/ThemeContext'
+import { DEFAULT_PROFILE_AVATAR, DEFAULT_PROFILE_BANNER, getProfileAvatar, getProfileBanner, PROFILE_AVATAR_OPTIONS, PROFILE_BANNER_OPTIONS, type ProfileAvatarKey, type ProfileBannerKey } from '@/lib/profileVisuals'
 
 const PORTFOLIO_CATEGORIES = [
   'Written Event', 'Roleplay', 'Exam Preparation', 'Presentation', 'Resume', 'Community Service', 'Leadership', 'Awards', 'Other',
@@ -51,7 +52,7 @@ export default function Profile() {
   const [focusMode, setFocusMode] = useState(false)
   const [editingPortfolioItem, setEditingPortfolioItem] = useState<any>(null)
   const [portfolioFormData, setPortfolioFormData] = useState({ title: '', category: '', description: '', fileUrl: '', externalUrl: '', memberProgressNotes: '' })
-  const [profileCustomization, setProfileCustomization] = useState({ displayName: '', bio: '', accentColor: 'blue' as 'blue' | 'violet' | 'emerald' | 'rose', websiteTheme: 'glass' as WebsiteTheme, showOnLeaderboard: true })
+  const [profileCustomization, setProfileCustomization] = useState({ displayName: '', bio: '', accentColor: 'blue' as 'blue' | 'violet' | 'emerald' | 'rose', websiteTheme: 'glass' as WebsiteTheme, avatarKey: DEFAULT_PROFILE_AVATAR as ProfileAvatarKey, bannerKey: DEFAULT_PROFILE_BANNER as ProfileBannerKey, showOnLeaderboard: true })
 
   const profileMetricsQuery = trpc.practice.getProfileMetrics.useQuery(undefined, { enabled: !!user?.id })
   const { data: portfolio = [], refetch: refetchPortfolio } = trpc.members.getPortfolioItems.useQuery({ userId: user?.id }, { enabled: !!user?.id })
@@ -92,7 +93,7 @@ export default function Profile() {
   useEffect(() => {
     const settings = profileSettingsQuery.data
     if (!settings) return
-    setProfileCustomization({ displayName: settings.displayName || '', bio: settings.bio || '', accentColor: settings.accentColor, websiteTheme: settings.websiteTheme, showOnLeaderboard: settings.showOnLeaderboard })
+    setProfileCustomization({ displayName: settings.displayName || '', bio: settings.bio || '', accentColor: settings.accentColor, websiteTheme: settings.websiteTheme, avatarKey: settings.avatarKey, bannerKey: settings.bannerKey, showOnLeaderboard: settings.showOnLeaderboard })
     setWebsiteTheme(settings.websiteTheme)
   }, [profileSettingsQuery.data])
 
@@ -157,6 +158,8 @@ export default function Profile() {
   }
   const primaryEventCode = primaryEventQuery.data?.primaryEventCode
   const focusedEvent = allEvents.find((event) => event.code === primaryEventCode)
+  const selectedAvatar = getProfileAvatar(profileCustomization.avatarKey)
+  const selectedBanner = getProfileBanner(profileCustomization.bannerKey)
   const formatAccountBalance = (value: unknown) => Number(value ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
   const selectSection = (id: (typeof PROFILE_SECTIONS)[number]['id']) => {
     setActiveSection(id)
@@ -190,11 +193,11 @@ export default function Profile() {
         </div>
 
         <section className={`overflow-hidden rounded-[1.6rem] border bg-gradient-to-br ${ACCENT_STYLES[profileCustomization.accentColor]} shadow-[0_24px_70px_oklch(0_0_0/0.28)]`}>
-          <div className="h-28 border-b border-white/10 bg-[radial-gradient(circle_at_18%_20%,oklch(0.7_0.16_245/0.32),transparent_33%),radial-gradient(circle_at_85%_0%,oklch(0.62_0.16_285/0.2),transparent_36%)] sm:h-36" />
+          <div className="h-28 border-b border-white/10 bg-cover bg-center sm:h-36" style={{ backgroundImage: `linear-gradient(90deg, oklch(0.05 0.014 265 / 0.78), oklch(0.05 0.014 265 / 0.22)), url(${selectedBanner.src})` }} />
           <div className="relative flex flex-col gap-5 px-5 pb-6 sm:px-8 lg:flex-row lg:items-end lg:justify-between">
             <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-end">
-              <div className="-mt-14 flex h-28 w-28 shrink-0 items-center justify-center rounded-full border-4 border-slate-950 bg-gradient-to-br from-blue-400 via-indigo-500 to-blue-700 shadow-[0_14px_40px_oklch(0.45_0.2_260/0.42)] sm:-mt-16 sm:h-32 sm:w-32">
-                <span className="font-display text-5xl text-white">{user.name?.charAt(0).toUpperCase() || 'U'}</span>
+              <div className="-mt-14 h-28 w-28 shrink-0 overflow-hidden rounded-full border-4 border-slate-950 bg-slate-900 shadow-[0_14px_40px_oklch(0.45_0.2_260/0.42)] sm:-mt-16 sm:h-32 sm:w-32">
+                <img src={selectedAvatar.src} alt={`${selectedAvatar.label} profile avatar`} className="h-full w-full object-cover" />
               </div>
               <div className="min-w-0 pb-1">
                 <h1 className="truncate font-display text-4xl tracking-wide text-white sm:text-5xl">{profileCustomization.displayName || user.name || user.username}</h1>
@@ -227,9 +230,11 @@ export default function Profile() {
                 <label className="text-sm text-white/80">Accent color<select value={profileCustomization.accentColor} onChange={(event) => setProfileCustomization((current) => ({ ...current, accentColor: event.target.value as typeof current.accentColor }))} className="mt-1.5 w-full rounded-md border border-white/10 bg-slate-950/70 p-2 text-white"><option value="blue">Blue</option><option value="violet">Violet</option><option value="emerald">Emerald</option><option value="rose">Rose</option></select></label>
                 <label className="text-sm text-white/80 md:col-span-2">Short bio<textarea value={profileCustomization.bio} onChange={(event) => setProfileCustomization((current) => ({ ...current, bio: event.target.value }))} maxLength={280} rows={3} placeholder="Share your DECA focus, event, or goal." className="mt-1.5 w-full resize-y rounded-md border border-white/10 bg-slate-950/70 p-2 text-white" /></label>
               </div>
+              <div className="mt-6 border-t border-white/10 pt-5"><div><p className="data-label">Profile avatar</p><h3 className="mt-1 text-base font-semibold text-white">Choose your profile picture</h3><p className="mt-1 text-sm text-white/60">Select a DECA-inspired emblem or a general visual that fits your style.</p></div><div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-6">{PROFILE_AVATAR_OPTIONS.map((option) => <button key={option.key} type="button" aria-pressed={profileCustomization.avatarKey === option.key} onClick={() => setProfileCustomization((current) => ({ ...current, avatarKey: option.key }))} className={`group relative overflow-hidden rounded-xl border p-1 text-left transition focus:outline-none focus:ring-2 focus:ring-blue-300 ${profileCustomization.avatarKey === option.key ? 'border-blue-300 ring-1 ring-blue-300/50' : 'border-white/10 hover:border-white/30'}`}><img src={option.src} alt="" className="aspect-square w-full rounded-lg object-cover" /><span className="mt-1.5 block truncate px-1 text-[10px] font-medium text-white/75">{option.label}</span><span className="block truncate px-1 text-[9px] text-white/40">{option.category}</span></button>)}</div></div>
+              <div className="mt-6 border-t border-white/10 pt-5"><div><p className="data-label">Profile banner</p><h3 className="mt-1 text-base font-semibold text-white">Set your profile backdrop</h3><p className="mt-1 text-sm text-white/60">Choose a DECA scene or a general banner. Your selection appears behind your profile picture.</p></div><div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{PROFILE_BANNER_OPTIONS.map((option) => <button key={option.key} type="button" aria-pressed={profileCustomization.bannerKey === option.key} onClick={() => setProfileCustomization((current) => ({ ...current, bannerKey: option.key }))} className={`group overflow-hidden rounded-xl border text-left transition focus:outline-none focus:ring-2 focus:ring-blue-300 ${profileCustomization.bannerKey === option.key ? 'border-blue-300 ring-1 ring-blue-300/50' : 'border-white/10 hover:border-white/30'}`}><img src={option.src} alt="" className="aspect-[3/1] w-full object-cover" /><span className="flex items-center justify-between px-3 py-2"><span className="text-xs font-medium text-white/85">{option.label}</span><span className="text-[10px] text-white/40">{option.category}</span></span></button>)}</div></div>
               <div className="mt-5 border-t border-white/10 pt-5"><div><p className="data-label">Website style</p><h3 className="mt-1 text-base font-semibold text-white">Choose your Blue Blazer experience</h3><p className="mt-1 text-sm text-white/60">Glass preserves the current blue editorial system. Blazer adds colorful aurora accents across the app.</p></div><div className="mt-4 grid gap-3 md:grid-cols-2">{([{ value: 'glass', label: 'Glass', description: 'The original dark-blue, frosted editorial look.' }, { value: 'blazer', label: 'Blazer', description: 'A more colorful indigo, cyan, violet, and amber atmosphere.' }] as const).map((option) => <button key={option.value} type="button" data-active={profileCustomization.websiteTheme === option.value} onClick={() => applyWebsiteTheme(option.value)} disabled={updateWebsiteTheme.isPending} className="website-theme-choice rounded-xl border p-4 text-left transition focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:cursor-wait disabled:opacity-70"><span className="website-theme-swatch" aria-hidden="true" /><span className="mt-3 block font-semibold text-white">{option.label}</span><span className="mt-1 block text-xs leading-5 text-white/60">{option.description}</span><span className="mt-3 block text-[10px] font-mono-data uppercase tracking-[0.14em] text-white/45">{profileCustomization.websiteTheme === option.value ? 'Selected' : 'Select style'}</span></button>)}</div></div>
               <label className="mt-4 flex cursor-pointer items-center gap-3 text-sm text-white/80"><input type="checkbox" checked={profileCustomization.showOnLeaderboard} onChange={(event) => setProfileCustomization((current) => ({ ...current, showOnLeaderboard: event.target.checked }))} className="h-4 w-4 accent-blue-500" />Show my customized profile on chapter leaderboards</label>
-              <div className="mt-5 flex justify-end"><Button disabled={updateProfileSettings.isPending} onClick={() => updateProfileSettings.mutate({ displayName: profileCustomization.displayName.trim() || null, bio: profileCustomization.bio.trim() || null, accentColor: profileCustomization.accentColor, websiteTheme: profileCustomization.websiteTheme, showOnLeaderboard: profileCustomization.showOnLeaderboard })}>Save customization</Button></div>
+              <div className="mt-5 flex justify-end"><Button disabled={updateProfileSettings.isPending} onClick={() => updateProfileSettings.mutate({ displayName: profileCustomization.displayName.trim() || null, bio: profileCustomization.bio.trim() || null, accentColor: profileCustomization.accentColor, websiteTheme: profileCustomization.websiteTheme, avatarKey: profileCustomization.avatarKey, bannerKey: profileCustomization.bannerKey, showOnLeaderboard: profileCustomization.showOnLeaderboard })}>Save customization</Button></div>
             </section>}
 
             {activeSection === 'event-selection' && <section id="event-selection" role="tabpanel" className="rounded-2xl border border-white/10 bg-slate-950/65 p-5 shadow-[0_16px_42px_oklch(0_0_0/0.2)] backdrop-blur-xl sm:p-7">

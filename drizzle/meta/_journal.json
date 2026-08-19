@@ -169,6 +169,13 @@
       "when": 1787112201250,
       "tag": "0023_messy_iceman",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "5",
+      "when": 1787114020340,
+      "tag": "0024_stale_frank_castle",
+      "breakpoints": true
     }
   ]
 }

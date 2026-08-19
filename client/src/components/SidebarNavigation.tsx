@@ -4,6 +4,7 @@ import { useAuth } from '@/_core/hooks/useAuth';
 import { trpc } from '@/lib/trpc';
 import { InteractiveBackground, type BackgroundVariant } from '@/components/InteractiveBackground';
 import { useTheme } from '@/contexts/ThemeContext';
+import { getProfileAvatar } from '@/lib/profileVisuals';
 import {
   Home,
   BookOpen,
@@ -85,8 +86,10 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const bankAccountQuery = trpc.banking.getBankAccount.useQuery(undefined, { enabled: !!user });
+  const profileSettingsQuery = trpc.preferences.getProfileSettings.useQuery(undefined, { enabled: !!user });
   const unreadNews = trpc.bbx.getUnreadNewsCount.useQuery(undefined, { enabled: !!user, refetchInterval: 60_000 });
   const atmosphere = atmosphereForRoute(location);
+  const profileAvatar = getProfileAvatar(profileSettingsQuery.data?.avatarKey);
 
   const handleLogout = async () => {
     try {
@@ -281,8 +284,8 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                 <div className="p-3 rounded-xl bg-blue-600/10 border border-blue-500/20 shadow-lg">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-300 font-bold flex items-center justify-center text-xs">
-                        {(user.name || user.username || 'U').charAt(0).toUpperCase()}
+                      <div className="w-8 h-8 overflow-hidden rounded-full border border-blue-300/30 bg-slate-900">
+                        <img src={profileAvatar.src} alt="" className="h-full w-full object-cover" />
                       </div>
                       <div className="min-w-0">
                         <p className="text-xs font-semibold text-white truncate">{user.name || user.username || 'Member'}</p>
@@ -304,8 +307,8 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
               ) : (
                 <div className="flex flex-col items-center gap-2">
                   <a href="/profile" onClick={(event) => handleInternalLinkClick(event, '/profile')}>
-                    <div className="w-10 h-10 rounded-full bg-blue-600/20 border border-blue-500/30 text-blue-300 font-bold flex items-center justify-center text-sm cursor-pointer hover:bg-blue-600/30" title={user.name || user.username || undefined}>
-                      {(user.name || user.username || 'U').charAt(0).toUpperCase()}
+                    <div className="w-10 h-10 overflow-hidden rounded-full border border-blue-500/30 bg-slate-900 transition hover:border-blue-300/60" title={user.name || user.username || undefined}>
+                      <img src={profileAvatar.src} alt="" className="h-full w-full object-cover" />
                     </div>
                   </a>
                   <button

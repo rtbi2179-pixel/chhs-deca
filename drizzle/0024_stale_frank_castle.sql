@@ -1,0 +1,2 @@
+ALTER TABLE `userProfileSettings` ADD `avatarKey` enum('deca-compass','deca-trophy','deca-presentation','mountain','orbit','botanical') DEFAULT 'deca-compass' NOT NULL;--> statement-breakpoint
+ALTER TABLE `userProfileSettings` ADD `bannerKey` enum('deca-strategy','deca-stage','aurora','city','studio') DEFAULT 'deca-strategy' NOT NULL;

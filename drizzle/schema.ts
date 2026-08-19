@@ -998,6 +998,8 @@ export const userProfileSettings = mysqlTable("userProfileSettings", {
   bio: varchar("bio", { length: 280 }),
   accentColor: mysqlEnum("accentColor", ["blue", "violet", "emerald", "rose"]).default("blue").notNull(),
   websiteTheme: mysqlEnum("websiteTheme", ["glass", "blazer"]).default("glass").notNull(),
+  avatarKey: mysqlEnum("avatarKey", ["deca-compass", "deca-trophy", "deca-presentation", "mountain", "orbit", "botanical"]).default("deca-compass").notNull(),
+  bannerKey: mysqlEnum("bannerKey", ["deca-strategy", "deca-stage", "aurora", "city", "studio"]).default("deca-strategy").notNull(),
   showOnLeaderboard: boolean("showOnLeaderboard").default(true).notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 }, (table) => ({

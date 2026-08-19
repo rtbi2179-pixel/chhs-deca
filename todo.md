@@ -8778,3 +8778,4 @@
 - [x] Restrict the signed-out welcome screen to the initial load of a fresh browser session
 - [x] Add a Select This Event action to every Event Resources card and reflect the member’s focused event
 - [x] Remove event-specific selection from PI Study and display selected-event PIs by default in Event Resources
+- [x] Add a persistent Edit Profile gallery of DECA-inspired and general avatar and banner selections

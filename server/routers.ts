@@ -755,6 +755,8 @@ export const appRouter = router({
         bio: null,
         accentColor: 'blue' as const,
         websiteTheme: 'glass' as const,
+        avatarKey: 'deca-compass' as const,
+        bannerKey: 'deca-strategy' as const,
         showOnLeaderboard: true,
       };
     }),
@@ -765,6 +767,8 @@ export const appRouter = router({
         bio: z.string().trim().max(280).nullable(),
         accentColor: z.enum(['blue', 'violet', 'emerald', 'rose']),
         websiteTheme: z.enum(['glass', 'blazer']),
+        avatarKey: z.enum(['deca-compass', 'deca-trophy', 'deca-presentation', 'mountain', 'orbit', 'botanical']),
+        bannerKey: z.enum(['deca-strategy', 'deca-stage', 'aurora', 'city', 'studio']),
         showOnLeaderboard: z.boolean(),
       }))
       .mutation(async ({ ctx, input }) => {

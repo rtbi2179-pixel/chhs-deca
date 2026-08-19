@@ -32,9 +32,9 @@ describe("profile customization", () => {
     const caller = appRouter.createCaller(context({
       id: userId, openId: `profile-user-${userId}`, name: "Profile Settings User", schoolCode: "TEST-PROFILE", loginMethod: "custom", role: "user", createdAt: new Date(), updatedAt: new Date(), lastSignedIn: new Date(),
     }));
-    await expect(caller.preferences.getProfileSettings()).resolves.toMatchObject({ displayName: null, bio: null, accentColor: "blue", websiteTheme: "glass", showOnLeaderboard: true });
-    await expect(caller.preferences.updateProfileSettings({ displayName: "ICDC Competitor", bio: "Studying finance and business administration.", accentColor: "emerald", websiteTheme: "blazer", showOnLeaderboard: false })).resolves.toEqual({ success: true });
-    await expect(caller.preferences.getProfileSettings()).resolves.toMatchObject({ displayName: "ICDC Competitor", bio: "Studying finance and business administration.", accentColor: "emerald", websiteTheme: "blazer", showOnLeaderboard: false });
+    await expect(caller.preferences.getProfileSettings()).resolves.toMatchObject({ displayName: null, bio: null, accentColor: "blue", websiteTheme: "glass", avatarKey: "deca-compass", bannerKey: "deca-strategy", showOnLeaderboard: true });
+    await expect(caller.preferences.updateProfileSettings({ displayName: "ICDC Competitor", bio: "Studying finance and business administration.", accentColor: "emerald", websiteTheme: "blazer", avatarKey: "orbit", bannerKey: "aurora", showOnLeaderboard: false })).resolves.toEqual({ success: true });
+    await expect(caller.preferences.getProfileSettings()).resolves.toMatchObject({ displayName: "ICDC Competitor", bio: "Studying finance and business administration.", accentColor: "emerald", websiteTheme: "blazer", avatarKey: "orbit", bannerKey: "aurora", showOnLeaderboard: false });
     await expect(caller.preferences.updateWebsiteTheme({ websiteTheme: "glass" })).resolves.toEqual({ success: true, websiteTheme: "glass" });
     await expect(caller.preferences.getProfileSettings()).resolves.toMatchObject({ websiteTheme: "glass" });
   });
