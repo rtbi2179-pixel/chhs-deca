@@ -78,6 +78,9 @@ describe("shared Blue Blazer visual system", () => {
     expect(sidebar).toContain('<InteractiveBackground variant={atmosphere} />');
     expect(background).toContain('"study" | "practice" | "mockExam" | "roleplay"');
     expect(background).toContain("constellationShapes");
+    expect(background).toContain('overview: { starCount: 58, nodeCount: 16, coreX: 0.76, coreY: 0.3, strength: 1, shape: "orbit", spread: 0.31 }');
+    expect(background).toContain('const isCircularOrbit = configuration.shape === "orbit"');
+    expect(background).toContain('const orbitalVelocity = prefersReducedMotion ? 0 : time');
     expect(events).toContain('className="page-shell events-atmosphere"');
     expect(announcements).toContain('className="page-shell community-feed"');
   });

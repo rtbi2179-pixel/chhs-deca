@@ -13,7 +13,8 @@ describe("InteractiveBackground", () => {
     expect(background).toContain('export type BackgroundVariant = "hero" | "overview" | "study" | "practice"');
     expect(background).toContain("configurationByVariant");
     expect(background).toContain("constellationShapes");
-    expect(background).toContain("shape: \"compass\"");
+    expect(background).toContain("shape: \"orbit\"");
+    expect(background).toContain("const orbitalVelocity");
     expect(background).toContain("shape: \"chart\"");
     expect(background).toContain("const configuration = configurationByVariant[variant]");
     expect(background).toContain("activeNodes");

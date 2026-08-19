@@ -13,6 +13,7 @@ type Star = {
 type Node = {
   x: number;
   y: number;
+  orbit?: number;
   phase: number;
   radius: number;
   intensity: number;
@@ -23,11 +24,12 @@ type PointerPosition = { x: number; y: number };
 
 const clamp = (value: number, minimum: number, maximum: number) => Math.min(Math.max(value, minimum), maximum);
 
-type ConstellationShape = "horizon" | "compass" | "book" | "target" | "shield" | "dialogue" | "crown" | "library" | "starburst" | "calendar" | "beacon" | "speech" | "heart" | "quill" | "vault" | "chart" | "broadcast" | "people" | "grid" | "flag" | "profile";
+type ConstellationShape = "horizon" | "orbit" | "compass" | "book" | "target" | "shield" | "dialogue" | "crown" | "library" | "starburst" | "calendar" | "beacon" | "speech" | "heart" | "quill" | "vault" | "chart" | "broadcast" | "people" | "grid" | "flag" | "profile";
 type BackgroundConfiguration = { starCount: number; nodeCount: number; coreX: number; coreY: number; strength: number; shape: ConstellationShape; spread: number };
 
 const constellationShapes: Record<ConstellationShape, Array<[number, number]>> = {
   horizon: [[-1, 0.35], [-0.65, 0.1], [-0.32, 0.28], [0, -0.15], [0.34, 0.15], [0.67, -0.08], [1, 0.2]],
+  orbit: [],
   compass: [[0, -1], [0.32, -0.32], [1, 0], [0.32, 0.32], [0, 1], [-0.32, 0.32], [-1, 0], [-0.32, -0.32], [0, 0]],
   book: [[-1, -0.72], [-0.4, -0.95], [0, -0.3], [0.4, -0.95], [1, -0.72], [1, 0.75], [0.4, 0.52], [0, 0.86], [-0.4, 0.52], [-1, 0.75]],
   target: [[0, -1], [0.7, -0.7], [1, 0], [0.7, 0.7], [0, 1], [-0.7, 0.7], [-1, 0], [-0.7, -0.7], [0, 0], [0.35, 0], [-0.35, 0], [0, 0.35], [0, -0.35]],
@@ -52,7 +54,7 @@ const constellationShapes: Record<ConstellationShape, Array<[number, number]>> =
 
 const configurationByVariant: Record<BackgroundVariant, BackgroundConfiguration> = {
   hero: { starCount: 76, nodeCount: 19, coreX: 0.67, coreY: 0.38, strength: 1.15, shape: "horizon", spread: 0.38 },
-  overview: { starCount: 58, nodeCount: 16, coreX: 0.76, coreY: 0.3, strength: 1, shape: "compass", spread: 0.31 },
+  overview: { starCount: 58, nodeCount: 16, coreX: 0.76, coreY: 0.3, strength: 1, shape: "orbit", spread: 0.31 },
   study: { starCount: 48, nodeCount: 11, coreX: 0.8, coreY: 0.24, strength: 0.76, shape: "book", spread: 0.27 },
   practice: { starCount: 50, nodeCount: 14, coreX: 0.76, coreY: 0.28, strength: 0.84, shape: "target", spread: 0.29 },
   mockExam: { starCount: 46, nodeCount: 12, coreX: 0.76, coreY: 0.3, strength: 0.8, shape: "shield", spread: 0.28 },
@@ -111,21 +113,38 @@ export function InteractiveBackground({ variant = "hero" }: { variant?: Backgrou
         });
       }
 
-      const shape = constellationShapes[configuration.shape];
-      const constellationRadius = Math.min(width, height) * configuration.spread;
-      for (let index = 0; index < nodeCount; index += 1) {
-        const templatePoint = shape[index % shape.length];
-        const layer = Math.floor(index / shape.length);
-        const layerScale = layer === 0 ? 1 : 0.62 + layer * 0.08;
-        const offset = layer === 0 ? 0 : ((index % 3) - 1) * constellationRadius * 0.045;
-        nodes.push({
-          x: width * configuration.coreX + templatePoint[0] * constellationRadius * layerScale + offset,
-          y: height * configuration.coreY + templatePoint[1] * constellationRadius * 0.72 * layerScale + offset * 0.45,
-          phase: index * 0.89 + layer * 0.42,
-          radius: 1.2 + Math.random() * 1.9,
-          intensity: 0.45 + Math.random() * 0.55,
-          drift: 1.2 + Math.random() * 2.2,
-        });
+      const isCircularOrbit = configuration.shape === "orbit";
+      if (isCircularOrbit) {
+        for (let index = 0; index < nodeCount; index += 1) {
+          const angle = (index / nodeCount) * Math.PI * 2 + Math.random() * 0.42;
+          const orbit = (0.12 + Math.random() * 0.36) * Math.min(width, height);
+          nodes.push({
+            x: width * configuration.coreX + Math.cos(angle) * orbit,
+            y: height * configuration.coreY + Math.sin(angle) * orbit * 0.48,
+            orbit,
+            phase: angle,
+            radius: 1.2 + Math.random() * 1.9,
+            intensity: 0.45 + Math.random() * 0.55,
+            drift: 0,
+          });
+        }
+      } else {
+        const shape = constellationShapes[configuration.shape];
+        const constellationRadius = Math.min(width, height) * configuration.spread;
+        for (let index = 0; index < nodeCount; index += 1) {
+          const templatePoint = shape[index % shape.length];
+          const layer = Math.floor(index / shape.length);
+          const layerScale = layer === 0 ? 1 : 0.62 + layer * 0.08;
+          const offset = layer === 0 ? 0 : ((index % 3) - 1) * constellationRadius * 0.045;
+          nodes.push({
+            x: width * configuration.coreX + templatePoint[0] * constellationRadius * layerScale + offset,
+            y: height * configuration.coreY + templatePoint[1] * constellationRadius * 0.72 * layerScale + offset * 0.45,
+            phase: index * 0.89 + layer * 0.42,
+            radius: 1.2 + Math.random() * 1.9,
+            intensity: 0.45 + Math.random() * 0.55,
+            drift: 1.2 + Math.random() * 2.2,
+          });
+        }
       }
     };
 
@@ -206,7 +225,15 @@ export function InteractiveBackground({ variant = "hero" }: { variant?: Backgrou
         context.fill();
       });
 
+      const isCircularOrbit = configuration.shape === "orbit";
       const activeNodes = nodes.map((node, index) => {
+        if (isCircularOrbit) {
+          const orbitalVelocity = prefersReducedMotion ? 0 : time * (0.00004 + index * 0.0000015);
+          const orbitX = Math.cos(node.phase + orbitalVelocity) * (node.orbit ?? 0);
+          const orbitY = Math.sin(node.phase + orbitalVelocity * 1.18) * (node.orbit ?? 0) * 0.48;
+          const mouseInfluence = pointerIsNear ? 10 * (1 - clamp(Math.hypot(coreX + orbitX - pointer.x, coreY + orbitY - pointer.y) / 420, 0, 1)) : 0;
+          return { ...node, x: coreX + orbitX + mouseInfluence, y: coreY + orbitY - mouseInfluence * 0.35 };
+        }
         const driftVelocity = prefersReducedMotion ? 0 : time * (0.00042 + index * 0.000007);
         const driftX = Math.cos(node.phase + driftVelocity) * node.drift;
         const driftY = Math.sin(node.phase * 1.2 + driftVelocity * 1.35) * node.drift * 0.62;
