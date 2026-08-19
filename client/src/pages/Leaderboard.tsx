@@ -72,7 +72,7 @@ export default function Leaderboard() {
 
   if (isCurrentLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="page-shell flex min-h-screen items-center justify-center p-8">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
           <p className="text-foreground">Loading leaderboard...</p>
@@ -82,7 +82,7 @@ export default function Leaderboard() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-8">
+    <div className="page-shell p-8">
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-foreground mb-2">DECA Leaderboard</h1>

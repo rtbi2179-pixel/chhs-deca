@@ -63,11 +63,11 @@ export default function Feedback() {
     reviewDrafts[entry.id] ?? { status: entry.status as ReviewStatus, adminResponse: entry.adminResponse ?? "" };
 
   if (!user) {
-    return <div className="min-h-screen bg-background pt-28 text-center text-foreground">Sign in to submit feedback.</div>;
+    return <div className="page-shell pt-28 text-center text-foreground">Sign in to submit feedback.</div>;
   }
 
   return (
-    <main className="min-h-screen bg-background pt-28 pb-16">
+    <main className="page-shell pt-28 pb-16">
       <div className="container max-w-5xl space-y-8">
         <header>
           <div className="flex items-center gap-3 mb-2"><MessageSquarePlus className="w-8 h-8 text-blue-500" /><h1 className="text-3xl font-bold text-foreground">Feedback Center</h1></div>

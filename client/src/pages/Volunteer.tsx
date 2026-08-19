@@ -215,7 +215,7 @@ const Volunteer = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[oklch(0.07_0.01_265)]">
+    <div className="page-shell">
       {/* ── Hero Section ── */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8 border-b border-white/5">
         <div className="max-w-7xl mx-auto">

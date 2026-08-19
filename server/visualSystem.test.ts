@@ -33,6 +33,20 @@ describe("shared Blue Blazer visual system", () => {
     }
   });
 
+  it("keeps the requested community and chapter routes transparent enough for their constellation variants", () => {
+    const targetPages = [
+      "Leaderboard.tsx",
+      "CalendarPage.tsx",
+      "Discussions.tsx",
+      "Volunteer.tsx",
+      "Feedback.tsx",
+    ];
+
+    for (const page of targetPages) {
+      expect(readClientSource("pages", page)).toContain("page-shell");
+    }
+  });
+
   it("extends the Overview atmosphere across authenticated routes with route-specific constellation variants", () => {
     const css = readClientSource("index.css");
     const sidebar = readClientSource("components", "SidebarNavigation.tsx");

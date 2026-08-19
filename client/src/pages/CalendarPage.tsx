@@ -187,7 +187,7 @@ export default function CalendarPage() {
     .slice(0, 8)
 
   return (
-    <div className="min-h-screen bg-[oklch(0.07_0.01_265)]">
+    <div className="page-shell">
       {/* Header */}
       <div className="relative pt-32 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
         {/* Background overlays removed for transparency */}
