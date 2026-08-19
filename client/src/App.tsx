@@ -56,6 +56,7 @@ import { useState, useEffect } from "react";
 import { Toast, useToast } from "./components/Toast";
 import { useLocation } from "wouter";
 import { DirectMessagesPanel } from "./components/DirectMessagesPanel";
+import { BlueBlazerCursor } from "./components/BlueBlazerCursor";
 
 function Router() {
   return (
@@ -129,6 +130,7 @@ function App() {
         <AdminModeProvider>
           <SchoolCodeProvider>
             <TooltipProvider>
+            <BlueBlazerCursor />
             <Toaster />
             <Toast toasts={toasts} onRemove={removeToast} />
             {loading ? <SignedOutWelcome isChecking /> : showWelcomeGate ? <SignedOutWelcome /> : <>
