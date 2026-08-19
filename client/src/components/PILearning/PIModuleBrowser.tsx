@@ -24,9 +24,10 @@ type PICluster = (typeof CLUSTERS)[number];
 export default function PIModuleBrowser({ onSelectModule }: PIModuleBrowserProps) {
   const [selectedCluster, setSelectedCluster] = useState<PICluster>("Marketing");
 
-  const { data: modules, isLoading } = trpc.piLearning.getModulesByCluster.useQuery({
+  const { data: modulePage, isLoading } = trpc.piLearning.getModulesByCluster.useQuery({
     cluster: selectedCluster,
   });
+  const modules = modulePage?.modules ?? [];
 
   const { data: userProgress } = trpc.piLearning.getUserClusterProgress.useQuery({
     cluster: selectedCluster,
@@ -68,7 +69,7 @@ export default function PIModuleBrowser({ onSelectModule }: PIModuleBrowserProps
         <div className="flex items-center justify-center py-12">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
         </div>
-      ) : modules && modules.length > 0 ? (
+      ) : modules.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {modules.map((module) => {
             const progress = getUserProgress(module.id);
@@ -141,7 +142,7 @@ export default function PIModuleBrowser({ onSelectModule }: PIModuleBrowserProps
       )}
 
       {/* Cluster Stats */}
-      {modules && modules.length > 0 && (
+      {modules.length > 0 && (
         <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 border-blue-200 dark:border-blue-800">
           <CardHeader>
             <CardTitle className="text-lg">Cluster Overview</CardTitle>
@@ -150,7 +151,7 @@ export default function PIModuleBrowser({ onSelectModule }: PIModuleBrowserProps
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <p className="text-sm text-slate-600 dark:text-slate-400">Total Modules</p>
-                <p className="text-2xl font-bold">{modules.length}</p>
+                <p className="text-2xl font-bold">{modulePage?.totalModules ?? modules.length}</p>
               </div>
               <div>
                 <p className="text-sm text-slate-600 dark:text-slate-400">Completed</p>

@@ -4,7 +4,7 @@
  * Filterable by career cluster and event type
  */
 
-import { useState } from 'react'
+import { useDeferredValue, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ExternalLink, Search, ChevronDown, ChevronUp, BookOpen, FileText, Video, Globe, Target, Loader2, ArrowUpRight, LibraryBig, CheckCircle2 } from 'lucide-react'
 import { trpc } from '@/lib/trpc'
@@ -525,30 +525,34 @@ type EventPiStudyDialogProps = {
 
 function EventPiStudyDialog({ event, open, onOpenChange }: EventPiStudyDialogProps) {
   const [piSearch, setPiSearch] = useState('')
+  const [piOffset, setPiOffset] = useState(0)
+  const deferredPiSearch = useDeferredValue(piSearch.trim())
   const piCluster = EVENT_CLUSTER_TO_PI_CLUSTER[event.cluster as Exclude<Cluster, 'All'>] as PiCluster | undefined
   const eventStudyQuery = trpc.piLearning.getEventStudyGuide.useQuery(
-    { eventCode: event.code },
+    { eventCode: event.code, search: deferredPiSearch, offset: piOffset, limit: 24 },
     { enabled: open },
   )
   const clusterModulesQuery = trpc.piLearning.getModulesByCluster.useQuery(
-    { cluster: piCluster || 'Marketing' },
+    { cluster: piCluster || 'Marketing', search: deferredPiSearch, offset: piOffset, limit: 24 },
     { enabled: open && !eventStudyQuery.isLoading && eventStudyQuery.data?.totalModules === 0 && Boolean(piCluster) },
   )
 
   const officialAreas = eventStudyQuery.data?.instructionalAreas ?? []
   const officialModules = officialAreas.flatMap((area) => area.modules)
   const usesClusterFallback = !eventStudyQuery.isLoading && officialModules.length === 0 && Boolean(piCluster)
-  const displayedModules = usesClusterFallback ? (clusterModulesQuery.data ?? []) : officialModules
-  const normalizedPiSearch = piSearch.trim().toLocaleLowerCase()
-  const shownModules = normalizedPiSearch
-    ? displayedModules.filter((module: any) => [module.piId, module.performanceIndicator, module.instructionalArea, module.cluster, event.cluster]
-      .filter(Boolean)
-      .some((value) => String(value).toLocaleLowerCase().includes(normalizedPiSearch)))
-    : displayedModules
-  const totalModules = usesClusterFallback ? displayedModules.length : eventStudyQuery.data?.totalModules ?? 0
+  const displayedModules = usesClusterFallback ? (clusterModulesQuery.data?.modules ?? []) : officialModules
+  const shownModules = displayedModules
+  const totalModules = usesClusterFallback ? clusterModulesQuery.data?.totalModules ?? 0 : eventStudyQuery.data?.totalModules ?? 0
+  const hasMoreModules = usesClusterFallback ? Boolean(clusterModulesQuery.data?.hasMore) : Boolean(eventStudyQuery.data?.hasMore)
+  const showingFrom = totalModules ? piOffset + 1 : 0
+  const showingTo = Math.min(piOffset + shownModules.length, totalModules)
+  const normalizedPiSearch = deferredPiSearch.toLocaleLowerCase()
   const studyPathHref = `/pi-quizlet?event=${encodeURIComponent(event.code)}`
   const handleOpenChange = (nextOpen: boolean) => {
-    if (!nextOpen) setPiSearch('')
+    if (!nextOpen) {
+      setPiSearch('')
+      setPiOffset(0)
+    }
     onOpenChange(nextOpen)
   }
 
@@ -577,12 +581,15 @@ function EventPiStudyDialog({ event, open, onOpenChange }: EventPiStudyDialogPro
               id={`event-pi-search-${event.code}`}
               type="search"
               value={piSearch}
-              onChange={(input) => setPiSearch(input.target.value)}
+              onChange={(input) => {
+                setPiSearch(input.target.value)
+                setPiOffset(0)
+              }}
               placeholder={`Search ${event.code} PIs by code, skill, or area`}
               autoComplete="off"
               className="h-11 w-full rounded-xl border border-white/10 bg-slate-950/65 py-2 pl-10 pr-20 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-blue-400/60 focus:ring-2 focus:ring-blue-400/20"
             />
-            {piSearch && <button type="button" onClick={() => setPiSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-md px-2 py-1 text-xs font-semibold text-blue-200 transition hover:bg-white/[0.08] hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400/60">Clear</button>}
+            {piSearch && <button type="button" onClick={() => { setPiSearch(''); setPiOffset(0); }} className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-md px-2 py-1 text-xs font-semibold text-blue-200 transition hover:bg-white/[0.08] hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400/60">Clear</button>}
           </div>
         </div>
 
@@ -605,13 +612,13 @@ function EventPiStudyDialog({ event, open, onOpenChange }: EventPiStudyDialogPro
                   <p>This event uses the complete <strong>{event.cluster}</strong> PI pathway while its event-specific list is finalized.</p>
                 </div>
               )}
-              {normalizedPiSearch && <p className="mb-4 text-xs text-slate-400">{shownModules.length} of {totalModules} applicable performance indicators match <span className="font-medium text-blue-200">“{piSearch.trim()}”</span>.</p>}
+              {normalizedPiSearch && <p className="mb-4 text-xs text-slate-400">{totalModules} applicable performance indicators match <span className="font-medium text-blue-200">“{piSearch.trim()}”</span>.</p>}
               {shownModules.length === 0 ? (
                 <div className="rounded-xl border border-dashed border-white/15 bg-white/[0.025] px-5 py-10 text-center">
                   <Search className="mx-auto h-6 w-6 text-blue-300" />
                   <p className="mt-3 font-medium text-white">No event PIs match that search.</p>
                   <p className="mt-1 text-sm text-slate-400">Try a PI code, a skill keyword, instructional area, or the event’s cluster.</p>
-                  <button type="button" onClick={() => setPiSearch('')} className="mt-4 text-sm font-semibold text-blue-300 transition hover:text-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400/60">Clear search</button>
+                  <button type="button" onClick={() => { setPiSearch(''); setPiOffset(0); }} className="mt-4 text-sm font-semibold text-blue-300 transition hover:text-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400/60">Clear search</button>
                 </div>
               ) : (
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -634,7 +641,13 @@ function EventPiStudyDialog({ event, open, onOpenChange }: EventPiStudyDialogPro
                   ))}
                 </div>
               )}
-              <p className="mt-5 text-center text-xs text-slate-500">{normalizedPiSearch ? `Filtered from ${totalModules}` : `Showing all ${totalModules}`} applicable performance indicators for this event.</p>
+              <div className="mt-5 flex flex-col gap-3 border-t border-white/10 pt-4 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-xs text-slate-500">Showing {showingFrom}–{showingTo} of {totalModules} applicable performance indicators for this event.</p>
+                <div className="flex gap-2">
+                  <button type="button" onClick={() => setPiOffset((current) => Math.max(0, current - 24))} disabled={piOffset === 0} className="rounded-md border border-white/10 px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-white/25 hover:text-white disabled:cursor-not-allowed disabled:opacity-40">Previous</button>
+                  <button type="button" onClick={() => setPiOffset((current) => current + 24)} disabled={!hasMoreModules} className="rounded-md border border-blue-400/30 bg-blue-500/10 px-3 py-1.5 text-xs font-semibold text-blue-100 transition hover:bg-blue-500/20 disabled:cursor-not-allowed disabled:opacity-40">Next PIs</button>
+                </div>
+              </div>
             </>
           )}
         </div>

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { and, asc, desc, eq, inArray, lte } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, inArray, like, lte, or } from "drizzle-orm";
 import { protectedProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
 import * as db from "./db";
@@ -34,6 +34,17 @@ const sectionWeights: Record<string, number> = {
   examples: 0,
   ai_coach_feedback: 15,
 };
+
+function moduleSearchCondition(search: string) {
+  const normalized = search.trim();
+  if (!normalized) return undefined;
+  const pattern = `%${normalized}%`;
+  return or(
+    like(piLearningModules.piId, pattern),
+    like(piLearningModules.performanceIndicator, pattern),
+    like(piLearningModules.instructionalArea, pattern),
+  );
+}
 
 async function requireDatabase() {
   const database = await db.getDb();
@@ -115,26 +126,76 @@ export const piLearningRouter = router({
   }),
 
   getModulesByCluster: protectedProcedure
-    .input(z.object({ cluster: z.enum(PI_CLUSTERS) }))
+    .input(z.object({
+      cluster: z.enum(PI_CLUSTERS),
+      search: z.string().trim().max(160).default(""),
+      offset: z.number().int().nonnegative().max(5_000).default(0),
+      limit: z.number().int().min(1).max(48).default(24),
+    }))
     .query(async ({ input }) => {
       const database = await requireDatabase();
-      return database
+      const searchCondition = moduleSearchCondition(input.search);
+      const whereClause = searchCondition
+        ? and(eq(piLearningModules.cluster, input.cluster), searchCondition)
+        : eq(piLearningModules.cluster, input.cluster);
+      const [{ total }] = await database
+        .select({ total: count() })
+        .from(piLearningModules)
+        .where(whereClause);
+      const modules = await database
         .select()
         .from(piLearningModules)
-        .where(eq(piLearningModules.cluster, input.cluster))
-        .orderBy(asc(piLearningModules.instructionalArea), asc(piLearningModules.performanceIndicator));
+        .where(whereClause)
+        .orderBy(asc(piLearningModules.instructionalArea), asc(piLearningModules.performanceIndicator))
+        .limit(input.limit)
+        .offset(input.offset);
+      const totalModules = Number(total);
+      return {
+        modules,
+        totalModules,
+        offset: input.offset,
+        hasMore: input.offset + modules.length < totalModules,
+      };
     }),
 
   getEventStudyGuide: protectedProcedure
-    .input(z.object({ eventCode: z.string().trim().min(2).max(20) }))
+    .input(z.object({
+      eventCode: z.string().trim().min(2).max(20),
+      search: z.string().trim().max(160).default(""),
+      offset: z.number().int().nonnegative().max(5_000).default(0),
+      limit: z.number().int().min(1).max(48).default(24),
+    }))
     .query(async ({ ctx, input }) => {
       const database = await requireDatabase();
-      const mappings = await database
+      const eventCode = input.eventCode.toUpperCase();
+      const searchCondition = moduleSearchCondition(input.search);
+      const whereClause = searchCondition
+        ? and(eq(eventPerformanceIndicators.eventCode, eventCode), searchCondition)
+        : eq(eventPerformanceIndicators.eventCode, eventCode);
+      const [{ total }] = await database
+        .select({ total: count() })
+        .from(eventPerformanceIndicators)
+        .innerJoin(piLearningModules, eq(eventPerformanceIndicators.moduleId, piLearningModules.id))
+        .where(whereClause);
+      const [mappings, completedRows] = await Promise.all([
+        database
         .select({ module: piLearningModules, mappingBasis: eventPerformanceIndicators.mappingBasis })
         .from(eventPerformanceIndicators)
         .innerJoin(piLearningModules, eq(eventPerformanceIndicators.moduleId, piLearningModules.id))
-        .where(eq(eventPerformanceIndicators.eventCode, input.eventCode.toUpperCase()))
-        .orderBy(asc(piLearningModules.instructionalArea), asc(piLearningModules.performanceIndicator));
+        .where(whereClause)
+        .orderBy(asc(piLearningModules.instructionalArea), asc(piLearningModules.performanceIndicator))
+        .limit(input.limit)
+        .offset(input.offset),
+        database
+          .select({ total: count() })
+          .from(userPiProgress)
+          .innerJoin(eventPerformanceIndicators, eq(userPiProgress.moduleId, eventPerformanceIndicators.moduleId))
+          .where(and(
+            eq(userPiProgress.userId, ctx.user.id),
+            eq(eventPerformanceIndicators.eventCode, eventCode),
+            gte(userPiProgress.masteryScore, 85),
+          )),
+      ]);
       const moduleIds = mappings.map(item => item.module.id);
       const progress = moduleIds.length
         ? await database.select().from(userPiProgress).where(and(eq(userPiProgress.userId, ctx.user.id), inArray(userPiProgress.moduleId, moduleIds)))
@@ -146,9 +207,11 @@ export const piLearningRouter = router({
         return groups;
       }, {});
       return {
-        eventCode: input.eventCode.toUpperCase(),
-        totalModules: modules.length,
-        completedModules: modules.filter(module => (module.progress?.masteryScore ?? 0) >= 85).length,
+        eventCode,
+        totalModules: Number(total),
+        completedModules: Number(completedRows[0]?.total ?? 0),
+        offset: input.offset,
+        hasMore: input.offset + modules.length < Number(total),
         instructionalAreas: Object.entries(grouped).map(([instructionalArea, areaModules]) => ({ instructionalArea, modules: areaModules })),
       };
     }),

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,7 +11,8 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { allEvents } from "@/pages/Events";
-import { filterPiStudyModules } from "@/lib/piSearch";
+
+const PI_PAGE_SIZE = 24;
 
 const CLUSTERS = [
   "Marketing",
@@ -61,6 +62,8 @@ export default function PIQuizlet() {
   const [selectedModuleId, setSelectedModuleId] = useState<number | null>(requestedStudyPath.moduleId);
   const [activeTab, setActiveTab] = useState("lesson");
   const [searchQuery, setSearchQuery] = useState("");
+  const [moduleOffset, setModuleOffset] = useState(0);
+  const deferredSearchQuery = useDeferredValue(searchQuery.trim());
 
   // Flashcard state
   const [currentFlashcardIndex, setCurrentFlashcardIndex] = useState(0);
@@ -77,20 +80,25 @@ export default function PIQuizlet() {
   const [loadingFeedback, setLoadingFeedback] = useState(false);
 
   // ── Data fetching ──────────────────────────────────────────────────────────
-  const { data: modules, isLoading: modulesLoading } = trpc.piLearning.getModulesByCluster.useQuery(
-    { cluster: selectedCluster }
-  );
   const primaryEventQuery = trpc.preferences.getPrimaryEvent.useQuery();
   const setPrimaryEvent = trpc.preferences.setPrimaryEvent.useMutation({
     onSuccess: () => primaryEventQuery.refetch(),
   });
   const activeEventCode = selectedEventCode || primaryEventQuery.data?.primaryEventCode || "";
   const selectedEvent = allEvents.find((event) => event.code === activeEventCode);
+  const moduleListInput = useMemo(() => ({ cluster: selectedCluster, search: deferredSearchQuery, offset: moduleOffset, limit: PI_PAGE_SIZE }), [selectedCluster, deferredSearchQuery, moduleOffset]);
+  const eventStudyInput = useMemo(() => ({ eventCode: activeEventCode || "AAM", search: deferredSearchQuery, offset: moduleOffset, limit: PI_PAGE_SIZE }), [activeEventCode, deferredSearchQuery, moduleOffset]);
+  const modulesQuery = trpc.piLearning.getModulesByCluster.useQuery(moduleListInput, { enabled: !selectedEvent, staleTime: 5 * 60 * 1000 });
   const eventStudyQuery = trpc.piLearning.getEventStudyGuide.useQuery(
-    { eventCode: activeEventCode || "AAM" },
-    { enabled: !!selectedEvent }
+    eventStudyInput,
+    { enabled: !!selectedEvent, staleTime: 5 * 60 * 1000 }
   );
+  const modulesLoading = modulesQuery.isLoading;
   const eventStudyLoading = !!selectedEvent && eventStudyQuery.isLoading;
+
+  useEffect(() => {
+    setModuleOffset(0);
+  }, [selectedCluster, activeEventCode, deferredSearchQuery]);
 
   const { data: moduleWithSections, isLoading: moduleLoading } = trpc.piLearning.getModuleWithSections.useQuery(
     { moduleId: selectedModuleId! },
@@ -106,12 +114,17 @@ export default function PIQuizlet() {
 
   const activeModuleList = selectedEvent
     ? (eventStudyQuery.data?.instructionalAreas?.flatMap((area) => area.modules) ?? [])
-    : (modules ?? []);
-  const filteredModules = filterPiStudyModules(modules ?? [], searchQuery);
-  const filteredEventStudyAreas = (eventStudyQuery.data?.instructionalAreas ?? [])
-    .map((area) => ({ ...area, modules: filterPiStudyModules(area.modules, searchQuery) }))
-    .filter((area) => area.modules.length > 0);
+    : (modulesQuery.data?.modules ?? []);
+  const filteredModules = modulesQuery.data?.modules ?? [];
+  const filteredEventStudyAreas = eventStudyQuery.data?.instructionalAreas ?? [];
   const isSearching = Boolean(searchQuery.trim());
+  const totalVisibleModules = selectedEvent ? (eventStudyQuery.data?.totalModules ?? 0) : (modulesQuery.data?.totalModules ?? 0);
+  const currentPageModuleCount = selectedEvent
+    ? filteredEventStudyAreas.reduce((sum, area) => sum + area.modules.length, 0)
+    : filteredModules.length;
+  const hasMoreModules = selectedEvent ? Boolean(eventStudyQuery.data?.hasMore) : Boolean(modulesQuery.data?.hasMore);
+  const showingFrom = totalVisibleModules ? moduleOffset + 1 : 0;
+  const showingTo = Math.min(moduleOffset + currentPageModuleCount, totalVisibleModules);
   const currentModuleIndex = selectedModuleId === null ? -1 : activeModuleList.findIndex((module: any) => module.id === selectedModuleId);
   const currentModulePosition = currentModuleIndex >= 0 ? currentModuleIndex + 1 : 0;
   const visibleTabs = [...TABS, ...(showQuizResults ? [{ id: "quiz-results", label: "Results", icon: Award, color: "indigo" }] : [])];
@@ -377,7 +390,7 @@ export default function PIQuizlet() {
                 />
                 {searchQuery && <button type="button" onClick={() => setSearchQuery("")} className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded text-slate-400 hover:bg-white/5 hover:text-white" aria-label="Clear PI search"><X className="h-4 w-4" /></button>}
               </div>
-              <p className="mt-2 text-xs text-slate-500">Results update as you type and remain within the current cluster or selected event path.</p>
+              <p className="mt-2 text-xs text-slate-500">Results update as you type and remain within the current cluster or selected event path. The library loads 24 indicators at a time for a smoother start.</p>
             </div>
           </div>
 
@@ -428,6 +441,15 @@ export default function PIQuizlet() {
               <AlertCircle className="w-14 h-14 text-slate-700 mx-auto mb-4" />
               <p className="text-slate-400 font-medium">{isSearching ? `No performance indicators match “${searchQuery.trim()}” in this cluster.` : "No modules available for this cluster yet"}</p>
               {isSearching && <button type="button" onClick={() => setSearchQuery("")} className="mt-4 text-sm font-medium text-blue-300 hover:text-blue-200">Clear search</button>}
+            </div>
+          )}
+          {!modulesLoading && !eventStudyLoading && totalVisibleModules > 0 && (
+            <div className="mt-8 flex flex-col gap-3 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm text-slate-400">Showing {showingFrom}–{showingTo} of {totalVisibleModules} indicators{isSearching ? " matching your search" : ""}.</p>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={() => setModuleOffset((current) => Math.max(0, current - PI_PAGE_SIZE))} disabled={moduleOffset === 0} className="border-slate-700 bg-slate-950 text-slate-200 hover:bg-slate-800">Previous</Button>
+                <Button variant="outline" size="sm" onClick={() => setModuleOffset((current) => current + PI_PAGE_SIZE)} disabled={!hasMoreModules} className="border-blue-400/35 bg-blue-500/10 text-blue-100 hover:bg-blue-500/20">Next indicators</Button>
+              </div>
             </div>
           )}
         </div>

@@ -33,7 +33,9 @@ describe("event-linked PI Study Library", () => {
 
     expect(guide.eventCode).toBe("ACT");
     expect(guide.totalModules).toBeGreaterThan(0);
-    expect(modules).toHaveLength(guide.totalModules);
+    expect(modules.length).toBeLessThanOrEqual(24);
+    expect(guide.totalModules).toBeGreaterThanOrEqual(modules.length);
+    expect(guide.hasMore).toBe(guide.totalModules > modules.length);
     expect(modules[0]).toMatchObject({ cluster: "Finance" });
     expect(modules[0]?.piId).toBeTruthy();
     expect(modules[0]?.performanceIndicator).toBeTruthy();
@@ -51,8 +53,9 @@ describe("event-linked PI Study Library", () => {
     expect(eventsPage).toContain("Performance indicators");
     expect(eventsPage).toContain("View {event.code} PIs");
     expect(eventsPage).toContain("/pi-quizlet?event=${encodeURIComponent(event.code)}");
-    expect(eventsPage).not.toContain("displayedModules.slice(0, 24)");
-    expect(eventsPage).toContain("Showing all ${totalModules}");
+    expect(piQuizletPage).toContain("PI_PAGE_SIZE = 24");
+    expect(piQuizletPage).toContain("Next indicators");
+    expect(piQuizletPage).toContain("Showing {showingFrom}–{showingTo} of {totalVisibleModules} indicators");
     expect(piQuizletPage).toContain("getRequestedEventStudyPath");
     expect(piQuizletPage).toContain("query.get(\"event\")");
     expect(piQuizletPage).toContain("query.get(\"module\")");
@@ -63,11 +66,15 @@ describe("event-linked PI Study Library", () => {
 
     expect(eventsPage).toContain("const [piSearch, setPiSearch] = useState('')");
     expect(eventsPage).toContain("normalizedPiSearch");
-    expect(eventsPage).toContain("module.piId, module.performanceIndicator, module.instructionalArea, module.cluster, event.cluster");
+    expect(eventsPage).toContain("useDeferredValue(piSearch.trim())");
+    expect(eventsPage).toContain("search: deferredPiSearch, offset: piOffset, limit: 24");
+    expect(eventsPage).toContain("Next PIs");
+    expect(eventsPage).toContain("setPiOffset(0)");
     expect(eventsPage).toContain("Search ${event.code} PIs by code, skill, or area");
     expect(eventsPage).toContain("No event PIs match that search.");
     expect(eventsPage).toContain("Clear search");
-    expect(eventsPage).toContain("if (!nextOpen) setPiSearch('')");
+    expect(eventsPage).toContain("if (!nextOpen) {");
+    expect(eventsPage).toContain("setPiSearch('')");
   });
 
   it("maps every catalog event to a complete PI pathway", async () => {
