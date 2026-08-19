@@ -769,9 +769,11 @@ export default function Events() {
           </p>
           <a
             href="/pi-quizlet"
-            className="mt-7 inline-flex items-center gap-2 rounded-lg border border-blue-400/35 bg-blue-500/15 px-4 py-2.5 text-sm font-semibold text-blue-100 transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-300/65 hover:bg-blue-500/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+            className="group mt-8 flex w-full max-w-xl items-center gap-4 rounded-2xl border border-blue-300/45 bg-[linear-gradient(115deg,oklch(0.22_0.1_255/0.82),oklch(0.08_0.025_265/0.9))] p-4 text-left shadow-[0_18px_42px_oklch(0.05_0.08_255/0.32)] transition-all duration-200 hover:-translate-y-1 hover:border-blue-200/80 hover:bg-[linear-gradient(115deg,oklch(0.27_0.12_255/0.88),oklch(0.1_0.035_265/0.94))] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200"
           >
-            <LibraryBig className="h-4 w-4" /> PI Library <ArrowUpRight className="h-4 w-4" />
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-blue-200/30 bg-blue-200/10 text-blue-100 shadow-[0_0_24px_oklch(0.7_0.16_250/0.2)]"><LibraryBig className="h-6 w-6" /></span>
+            <span className="min-w-0 flex-1"><span className="block text-[10px] font-mono-data uppercase tracking-[0.16em] text-blue-100/65">Performance indicators</span><span className="mt-1 block text-lg font-semibold text-white">Open PI Library</span><span className="mt-1 block text-sm leading-5 text-blue-100/70">Browse every learning module or continue with your event-specific PIs.</span></span>
+            <ArrowUpRight className="h-5 w-5 shrink-0 text-blue-100 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </a>
         </div>
       </div>

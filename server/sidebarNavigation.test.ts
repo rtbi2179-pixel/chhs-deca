@@ -28,15 +28,15 @@ describe('Sidebar Navigation Shell', () => {
     expect(content).not.toContain('<Link');
   });
 
-  it('places Overview first, Events second, Leaderboard second-to-last, and PI Study Library last in Main Navigation', () => {
+  it('places Overview first and Events second while keeping PI Study Library available outside the sidebar', () => {
     const filePath = path.join(process.env.HOME || '/home/ubuntu', 'chhs-deca', 'client', 'src', 'components', 'SidebarNavigation.tsx');
     const content = fs.readFileSync(filePath, 'utf-8');
     const mainSection = content.slice(content.indexOf('const mainNavLinks'), content.indexOf('const chapterNavLinks'));
 
     expect(mainSection.indexOf("label: 'Overview'")).toBeLessThan(mainSection.indexOf("label: 'Events'"));
     expect(mainSection.indexOf("label: 'Events'")).toBeLessThan(mainSection.indexOf("label: 'Practice'"));
-    expect(mainSection.indexOf("label: 'Leaderboard'")).toBeLessThan(mainSection.indexOf("label: 'PI Study Library'"));
-    expect(mainSection.indexOf("label: 'PI Study Library'")).toBeGreaterThan(mainSection.indexOf("label: 'AI Study & Roleplay'"));
+    expect(mainSection.indexOf("label: 'Leaderboard'")).toBeGreaterThan(mainSection.indexOf("label: 'AI Study & Roleplay'"));
+    expect(mainSection).not.toContain("label: 'PI Study Library'");
     expect(content.slice(content.indexOf('const chapterNavLinks'), content.indexOf('const financialNavLinks'))).not.toContain("label: 'Events'");
   });
 });

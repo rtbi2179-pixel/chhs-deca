@@ -33,7 +33,6 @@ const mainNavLinks = [
   { href: '/practice', label: 'Practice', icon: Target, group: 'MAIN' },
   { href: '/speech-ai', label: 'AI Study & Roleplay', icon: Zap, group: 'MAIN' },
   { href: '/leaderboard', label: 'Leaderboard', icon: TrendingUp, group: 'MAIN' },
-  { href: '/pi-quizlet', label: 'PI Study Library', icon: BookOpen, group: 'MAIN' },
 ];
 
 const chapterNavLinks = [

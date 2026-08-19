@@ -8763,3 +8763,4 @@
 - [x] Add a pointer-enabled Blue Blazer cursor dot with a subtle particle burn and motion trail
 - [x] Move Overview above Events in Main Navigation and rename Events & Community to Events
 - [x] Correct the credit-score breakdown so its component weights total exactly 100%
+- [x] Make the Events PI Library control more prominent and remove the separate sidebar item while retaining the PI Study Library page
