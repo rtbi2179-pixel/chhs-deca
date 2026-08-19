@@ -8732,3 +8732,6 @@
 - [x] Audit the existing Overview graphic and define a technically polished replacement visual system
 - [x] Build an interactive, responsive, reduced-motion-aware Overview background that keeps dashboard content legible
 - [x] Add regression coverage, validate visual behavior, and checkpoint the upgraded Overview graphic
+- [x] Audit the event-specific Performance Indicator panel and identify the safest event-scoped search integration point
+- [x] Add an accessible search bar that filters an event's PIs by code, indicator text, cluster, and instructional area
+- [x] Add empty-state behavior and regression coverage, validate the search, and checkpoint the enhancement

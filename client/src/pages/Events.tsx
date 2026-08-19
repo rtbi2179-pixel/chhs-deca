@@ -524,6 +524,7 @@ type EventPiStudyDialogProps = {
 }
 
 function EventPiStudyDialog({ event, open, onOpenChange }: EventPiStudyDialogProps) {
+  const [piSearch, setPiSearch] = useState('')
   const piCluster = EVENT_CLUSTER_TO_PI_CLUSTER[event.cluster as Exclude<Cluster, 'All'>] as PiCluster | undefined
   const eventStudyQuery = trpc.piLearning.getEventStudyGuide.useQuery(
     { eventCode: event.code },
@@ -538,12 +539,21 @@ function EventPiStudyDialog({ event, open, onOpenChange }: EventPiStudyDialogPro
   const officialModules = officialAreas.flatMap((area) => area.modules)
   const usesClusterFallback = !eventStudyQuery.isLoading && officialModules.length === 0 && Boolean(piCluster)
   const displayedModules = usesClusterFallback ? (clusterModulesQuery.data ?? []) : officialModules
-  const shownModules = displayedModules
+  const normalizedPiSearch = piSearch.trim().toLocaleLowerCase()
+  const shownModules = normalizedPiSearch
+    ? displayedModules.filter((module: any) => [module.piId, module.performanceIndicator, module.instructionalArea, module.cluster, event.cluster]
+      .filter(Boolean)
+      .some((value) => String(value).toLocaleLowerCase().includes(normalizedPiSearch)))
+    : displayedModules
   const totalModules = usesClusterFallback ? displayedModules.length : eventStudyQuery.data?.totalModules ?? 0
   const studyPathHref = `/pi-quizlet?event=${encodeURIComponent(event.code)}`
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) setPiSearch('')
+    onOpenChange(nextOpen)
+  }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-h-[86vh] max-w-4xl overflow-hidden border-blue-400/25 bg-[oklch(0.09_0.014_265)] p-0 text-white shadow-[0_24px_80px_oklch(0.02_0.04_265/0.75)]">
         <div className="border-b border-white/10 bg-[radial-gradient(circle_at_top_right,oklch(0.35_0.13_255/0.28),transparent_45%)] px-6 py-6 pr-14">
           <DialogHeader className="gap-2 text-left">
@@ -560,9 +570,23 @@ function EventPiStudyDialog({ event, open, onOpenChange }: EventPiStudyDialogPro
             <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-slate-300">{event.type}</span>
             {!eventStudyQuery.isLoading && totalModules > 0 && <span className="rounded-full border border-blue-400/20 bg-blue-500/10 px-2.5 py-1 text-blue-200">{totalModules} study modules</span>}
           </div>
+          <div className="relative mt-5">
+            <label htmlFor={`event-pi-search-${event.code}`} className="sr-only">Search {event.code} performance indicators</label>
+            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-blue-300/75" />
+            <input
+              id={`event-pi-search-${event.code}`}
+              type="search"
+              value={piSearch}
+              onChange={(input) => setPiSearch(input.target.value)}
+              placeholder={`Search ${event.code} PIs by code, skill, or area`}
+              autoComplete="off"
+              className="h-11 w-full rounded-xl border border-white/10 bg-slate-950/65 py-2 pl-10 pr-20 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-blue-400/60 focus:ring-2 focus:ring-blue-400/20"
+            />
+            {piSearch && <button type="button" onClick={() => setPiSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-md px-2 py-1 text-xs font-semibold text-blue-200 transition hover:bg-white/[0.08] hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400/60">Clear</button>}
+          </div>
         </div>
 
-        <div className="max-h-[calc(86vh-210px)] overflow-y-auto px-6 py-5">
+        <div className="max-h-[calc(86vh-275px)] overflow-y-auto px-6 py-5">
           {eventStudyQuery.isLoading || clusterModulesQuery.isLoading ? (
             <div className="flex min-h-52 items-center justify-center gap-3 text-sm text-slate-300">
               <Loader2 className="h-5 w-5 animate-spin text-blue-300" /> Loading the PI study path…
@@ -581,26 +605,36 @@ function EventPiStudyDialog({ event, open, onOpenChange }: EventPiStudyDialogPro
                   <p>This event uses the complete <strong>{event.cluster}</strong> PI pathway while its event-specific list is finalized.</p>
                 </div>
               )}
-              <div className="grid gap-3 sm:grid-cols-2">
-                {shownModules.map((module: any) => (
-                  <a
-                    key={module.id}
-                    href={`${studyPathHref}&module=${module.id}`}
-                    className="group rounded-xl border border-white/10 bg-white/[0.025] p-4 transition hover:border-blue-400/40 hover:bg-blue-500/[0.08] focus:outline-none focus:ring-2 focus:ring-blue-400/60"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <p className="text-[11px] font-mono uppercase tracking-[0.12em] text-blue-300">{module.piId}</p>
-                        <h3 className="mt-2 line-clamp-2 text-sm font-semibold leading-5 text-white group-hover:text-blue-100">{module.performanceIndicator}</h3>
+              {normalizedPiSearch && <p className="mb-4 text-xs text-slate-400">{shownModules.length} of {totalModules} applicable performance indicators match <span className="font-medium text-blue-200">“{piSearch.trim()}”</span>.</p>}
+              {shownModules.length === 0 ? (
+                <div className="rounded-xl border border-dashed border-white/15 bg-white/[0.025] px-5 py-10 text-center">
+                  <Search className="mx-auto h-6 w-6 text-blue-300" />
+                  <p className="mt-3 font-medium text-white">No event PIs match that search.</p>
+                  <p className="mt-1 text-sm text-slate-400">Try a PI code, a skill keyword, instructional area, or the event’s cluster.</p>
+                  <button type="button" onClick={() => setPiSearch('')} className="mt-4 text-sm font-semibold text-blue-300 transition hover:text-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400/60">Clear search</button>
+                </div>
+              ) : (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {shownModules.map((module: any) => (
+                    <a
+                      key={module.id}
+                      href={`${studyPathHref}&module=${module.id}`}
+                      className="group rounded-xl border border-white/10 bg-white/[0.025] p-4 transition hover:border-blue-400/40 hover:bg-blue-500/[0.08] focus:outline-none focus:ring-2 focus:ring-blue-400/60"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-[11px] font-mono uppercase tracking-[0.12em] text-blue-300">{module.piId}</p>
+                          <h3 className="mt-2 line-clamp-2 text-sm font-semibold leading-5 text-white group-hover:text-blue-100">{module.performanceIndicator}</h3>
+                        </div>
+                        <ArrowUpRight className="h-4 w-4 shrink-0 text-slate-500 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-blue-300" />
                       </div>
-                      <ArrowUpRight className="h-4 w-4 shrink-0 text-slate-500 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-blue-300" />
-                    </div>
-                    <p className="mt-3 truncate text-xs text-slate-400">{module.instructionalArea}</p>
-                    {module.progress && <div className="mt-3 flex items-center gap-1.5 text-xs text-emerald-300"><CheckCircle2 className="h-3.5 w-3.5" /> {module.progress.masteryScore}% mastery</div>}
-                  </a>
-                ))}
-              </div>
-              <p className="mt-5 text-center text-xs text-slate-500">Showing all {totalModules} applicable performance indicators for this event.</p>
+                      <p className="mt-3 truncate text-xs text-slate-400">{module.instructionalArea}</p>
+                      {module.progress && <div className="mt-3 flex items-center gap-1.5 text-xs text-emerald-300"><CheckCircle2 className="h-3.5 w-3.5" /> {module.progress.masteryScore}% mastery</div>}
+                    </a>
+                  ))}
+                </div>
+              )}
+              <p className="mt-5 text-center text-xs text-slate-500">{normalizedPiSearch ? `Filtered from ${totalModules}` : `Showing all ${totalModules}`} applicable performance indicators for this event.</p>
             </>
           )}
         </div>

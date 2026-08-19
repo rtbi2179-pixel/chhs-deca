@@ -48,10 +48,22 @@ describe("event-linked PI Study Library", () => {
     expect(eventsPage).toContain("View {event.code} PIs");
     expect(eventsPage).toContain("/pi-quizlet?event=${encodeURIComponent(event.code)}");
     expect(eventsPage).not.toContain("displayedModules.slice(0, 24)");
-    expect(eventsPage).toContain("Showing all {totalModules} applicable performance indicators for this event.");
+    expect(eventsPage).toContain("Showing all ${totalModules}");
     expect(piQuizletPage).toContain("getRequestedEventStudyPath");
     expect(piQuizletPage).toContain("query.get(\"event\")");
     expect(piQuizletPage).toContain("query.get(\"module\")");
+  });
+
+  it("filters event-specific PIs by code, performance indicator, instructional area, or cluster and recovers from no results", () => {
+    const eventsPage = readFileSync(join(process.cwd(), "client/src/pages/Events.tsx"), "utf8");
+
+    expect(eventsPage).toContain("const [piSearch, setPiSearch] = useState('')");
+    expect(eventsPage).toContain("normalizedPiSearch");
+    expect(eventsPage).toContain("module.piId, module.performanceIndicator, module.instructionalArea, module.cluster, event.cluster");
+    expect(eventsPage).toContain("Search ${event.code} PIs by code, skill, or area");
+    expect(eventsPage).toContain("No event PIs match that search.");
+    expect(eventsPage).toContain("Clear search");
+    expect(eventsPage).toContain("if (!nextOpen) setPiSearch('')");
   });
 
   it("maps every catalog event to a complete PI pathway", async () => {
