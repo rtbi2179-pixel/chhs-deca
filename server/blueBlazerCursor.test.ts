@@ -11,9 +11,10 @@ describe("Blue Blazer cursor effect", () => {
     const cursor = readSource("client", "src", "components", "BlueBlazerCursor.tsx");
 
     expect(app).toContain("<BlueBlazerCursor />");
-    expect(cursor).toContain("TRAIL_PARTICLE_COUNT = 8");
+    expect(cursor).toContain("TRAIL_PARTICLE_COUNT = 4");
     expect(cursor).toContain("blueblazer-cursor-core");
     expect(cursor).toContain("blueblazer-cursor-burn");
+    expect(cursor).toContain("blueblazer-cursor-ring");
     expect(cursor).toContain("blueblazer-cursor-trail");
     expect(cursor).toContain('window.addEventListener("pointermove"');
     expect(cursor).toContain("window.requestAnimationFrame(render)");

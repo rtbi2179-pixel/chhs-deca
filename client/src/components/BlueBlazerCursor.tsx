@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-const TRAIL_PARTICLE_COUNT = 8;
+const TRAIL_PARTICLE_COUNT = 4;
 
 type Point = { x: number; y: number };
 
@@ -50,10 +50,10 @@ export function BlueBlazerCursor() {
 
       trail.forEach((particle, index) => {
         const lead = index === 0 ? core : trail[index - 1];
-        const easing = 0.26 - index * 0.012;
+        const easing = 0.32 - index * 0.02;
         particle.x += (lead.x - particle.x) * easing;
         particle.y += (lead.y - particle.y) * easing;
-        place(trailRefs.current[index], particle, 1 - index * 0.07);
+        place(trailRefs.current[index], particle, 1 - index * 0.11);
       });
 
       frame = window.requestAnimationFrame(render);
@@ -109,6 +109,6 @@ export function BlueBlazerCursor() {
   return <>
     <div ref={glowRef} aria-hidden="true" className="blueblazer-cursor-glow" />
     {Array.from({ length: TRAIL_PARTICLE_COUNT }, (_, index) => <span key={index} ref={(element) => { trailRefs.current[index] = element; }} aria-hidden="true" className="blueblazer-cursor-trail" style={{ "--trail-index": index } as React.CSSProperties} />)}
-    <div ref={coreRef} aria-hidden="true" className="blueblazer-cursor-core"><span className="blueblazer-cursor-burn" /><span className="blueblazer-cursor-dot" /></div>
+    <div ref={coreRef} aria-hidden="true" className="blueblazer-cursor-core"><span className="blueblazer-cursor-burn" /><span className="blueblazer-cursor-ring" /><span className="blueblazer-cursor-dot" /></div>
   </>;
 }

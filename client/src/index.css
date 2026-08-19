@@ -457,7 +457,7 @@
   }
 }
 
-/* Pointer-only Blue Blazer cursor: a small core, low-intensity burn, and trailing sparks. */
+/* Pointer-only Blue Blazer cursor: a luminous compass point with a restrained particle tail. */
 .blueblazer-cursor-core,
 .blueblazer-cursor-glow,
 .blueblazer-cursor-trail {
@@ -472,39 +472,50 @@
 }
 .blueblazer-cursor-core {
   display: grid;
-  height: 26px;
-  width: 26px;
+  height: 30px;
+  width: 30px;
   place-items: center;
 }
 .blueblazer-cursor-dot {
   position: relative;
-  z-index: 2;
-  height: 7px;
-  width: 7px;
+  z-index: 3;
+  height: 6px;
+  width: 6px;
   border-radius: 999px;
-  background: oklch(0.82 0.13 245);
-  box-shadow: 0 0 7px oklch(0.75 0.17 250 / 0.98), 0 0 20px oklch(0.55 0.22 260 / 0.6);
+  background: oklch(0.94 0.055 245);
+  box-shadow: 0 0 6px oklch(0.88 0.11 245 / 0.95), 0 0 18px oklch(0.58 0.2 255 / 0.72);
 }
 .blueblazer-cursor-burn {
   position: absolute;
-  inset: 1px;
+  inset: 0;
   border-radius: 999px;
-  background: radial-gradient(circle, oklch(0.72 0.16 250 / 0.45) 0%, oklch(0.55 0.2 260 / 0.16) 33%, transparent 71%);
-  filter: blur(1px);
+  background: radial-gradient(circle, oklch(0.77 0.15 245 / 0.4) 0%, oklch(0.56 0.2 255 / 0.19) 31%, transparent 68%);
+  filter: blur(1.5px);
+}
+.blueblazer-cursor-ring {
+  position: absolute;
+  z-index: 2;
+  height: 20px;
+  width: 20px;
+  border: 1px solid oklch(0.76 0.13 250 / 0.62);
+  border-radius: 8px;
+  background: linear-gradient(135deg, oklch(0.72 0.17 250 / 0.12), transparent 62%);
+  box-shadow: inset 0 0 9px oklch(0.7 0.15 250 / 0.12), 0 0 14px oklch(0.52 0.21 260 / 0.22);
+  transform: rotate(45deg);
 }
 .blueblazer-cursor-glow {
-  height: 48px;
-  width: 48px;
+  height: 44px;
+  width: 44px;
   border-radius: 999px;
-  background: radial-gradient(circle, oklch(0.64 0.17 250 / 0.16), transparent 68%);
-  filter: blur(2px);
+  background: radial-gradient(circle, oklch(0.62 0.18 250 / 0.2), oklch(0.48 0.17 260 / 0.08) 38%, transparent 70%);
+  filter: blur(3px);
 }
 .blueblazer-cursor-trail {
-  height: calc(5px - var(--trail-index) * 0.25px);
-  width: calc(5px - var(--trail-index) * 0.25px);
+  height: calc(4px - var(--trail-index) * 0.35px);
+  width: calc(4px - var(--trail-index) * 0.35px);
   border-radius: 999px;
-  background: oklch(0.7 0.14 245 / calc(0.66 - var(--trail-index) * 0.065));
-  box-shadow: 0 0 9px oklch(0.55 0.22 260 / 0.5);
+  background: oklch(0.76 0.13 245 / calc(0.52 - var(--trail-index) * 0.1));
+  box-shadow: 0 0 7px oklch(0.55 0.22 260 / 0.38);
 }
 .blueblazer-cursor-core.is-visible,
 .blueblazer-cursor-glow.is-visible,
