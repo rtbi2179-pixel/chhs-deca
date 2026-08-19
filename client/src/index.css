@@ -717,7 +717,34 @@
 }
 
 :root[data-website-theme="blazer"] .blueblazer-shell {
+  --blazer-page-action: var(--blazer-blue);
+  --blazer-page-action-foreground: #fff;
   background: #070b12;
+}
+:root[data-website-theme="blazer"] .blueblazer-shell[data-blazer-page="practice"],
+:root[data-website-theme="blazer"] .blueblazer-shell[data-blazer-page="piLibrary"],
+:root[data-website-theme="blazer"] .blueblazer-shell[data-blazer-page="discussions"],
+:root[data-website-theme="blazer"] .blueblazer-shell[data-blazer-page="banking"],
+:root[data-website-theme="blazer"] .blueblazer-shell[data-blazer-page="market"] {
+  --blazer-page-action: var(--blazer-green);
+}
+:root[data-website-theme="blazer"] .blueblazer-shell[data-blazer-page="mockExam"],
+:root[data-website-theme="blazer"] .blueblazer-shell[data-blazer-page="roleplay"],
+:root[data-website-theme="blazer"] .blueblazer-shell[data-blazer-page="leaderboard"],
+:root[data-website-theme="blazer"] .blueblazer-shell[data-blazer-page="events"],
+:root[data-website-theme="blazer"] .blueblazer-shell[data-blazer-page="feedback"],
+:root[data-website-theme="blazer"] .blueblazer-shell[data-blazer-page="chapter"] {
+  --blazer-page-action: var(--blazer-yellow);
+  --blazer-page-action-foreground: #151b21;
+}
+:root[data-website-theme="blazer"] .blueblazer-shell[data-blazer-page="volunteer"] {
+  --blazer-page-action: var(--blazer-lime);
+  --blazer-page-action-foreground: #151b21;
+}
+:root[data-website-theme="blazer"] .blueblazer-shell[data-blazer-page="announcements"],
+:root[data-website-theme="blazer"] .blueblazer-shell[data-blazer-page="news"],
+:root[data-website-theme="blazer"] .blueblazer-shell[data-blazer-page="admin"] {
+  --blazer-page-action: var(--blazer-red);
 }
 :root[data-website-theme="blazer"] .blueblazer-sidebar,
 :root[data-website-theme="blazer"] .blueblazer-mobile-drawer {
@@ -773,7 +800,7 @@
   opacity: 0.48;
 }
 :root[data-website-theme="blazer"] button[class*="bg-blue-"],
-:root[data-website-theme="blazer"] a[class*="bg-blue-"] { background-color: var(--blazer-blue) !important; background-image: none !important; color: #fff !important; }
+:root[data-website-theme="blazer"] a[class*="bg-blue-"] { background-color: var(--blazer-page-action, var(--blazer-blue)) !important; background-image: none !important; color: var(--blazer-page-action-foreground, #fff) !important; }
 :root[data-website-theme="blazer"] button[class*="bg-emerald-"],
 :root[data-website-theme="blazer"] a[class*="bg-emerald-"],
 :root[data-website-theme="blazer"] button[class*="bg-green-"],

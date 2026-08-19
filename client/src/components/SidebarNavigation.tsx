@@ -117,7 +117,7 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="blueblazer-shell flex min-h-screen bg-[oklch(0.06_0.012_265)] text-foreground" data-website-theme={websiteTheme}>
+    <div className="blueblazer-shell flex min-h-screen bg-[oklch(0.06_0.012_265)] text-foreground" data-website-theme={websiteTheme} data-blazer-page={atmosphere}>
       {/* Desktop Sidebar */}
       <aside
         className={`blueblazer-sidebar hidden md:flex flex-col border-r border-white/[0.08] bg-[oklch(0.08_0.014_265/0.95)] backdrop-blur-2xl transition-all duration-300 z-40 sticky top-0 h-screen select-none ${

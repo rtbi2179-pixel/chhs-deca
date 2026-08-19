@@ -26,11 +26,16 @@ describe("Glass and Blazer website themes", () => {
     expect(profile).toContain("label: 'Blazer'");
     expect(profile).toContain('updateWebsiteTheme.mutate');
     expect(shell).toContain('data-website-theme={websiteTheme}');
+    expect(shell).toContain('data-blazer-page={atmosphere}');
     expect(css).toContain(':root[data-website-theme="glass"]');
     expect(css).toContain(':root[data-website-theme="blazer"]');
     for (const suppliedColor of ['#F8C524', '#7C8689', '#009B46', '#0B74BF', '#CC1D36', '#91C659']) expect(css).toContain(suppliedColor);
     expect(css).toContain('button[class*="bg-blue-"]');
     expect(css).toContain('background-image: none !important');
+    expect(css).toContain('--blazer-page-action');
+    expect(css).toContain('data-blazer-page="events"');
+    expect(css).toContain('data-blazer-page="announcements"');
+    expect(css).toContain('data-blazer-page="volunteer"');
     expect(profile).toContain('disciplined solid yellow, gray, green, blue, red, and lime control palette');
   });
 });
