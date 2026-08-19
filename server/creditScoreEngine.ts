@@ -28,6 +28,39 @@ interface CreditScoreRuleConfig {
 
 type CreditScoreConfig = CreditScoreWeights & CreditScoreRuleConfig;
 export const MAX_SCORE_CHANGE_PER_UPDATE = 50;
+const DEFAULT_CREDIT_SCORE_WEIGHTS: CreditScoreWeights = {
+  paymentReliability: 30,
+  accountHistory: 20,
+  practiceConsistency: 25,
+  savingsDiscipline: 15,
+  creditUtilization: 10,
+};
+const CREDIT_SCORE_COMPOSITION_LABELS: Array<{ key: keyof CreditScoreWeights; name: string }> = [
+  { key: 'paymentReliability', name: 'Payment Reliability' },
+  { key: 'accountHistory', name: 'Account History' },
+  { key: 'practiceConsistency', name: 'Practice Consistency' },
+  { key: 'savingsDiscipline', name: 'Savings Discipline' },
+  { key: 'creditUtilization', name: 'Credit Utilization' },
+];
+
+/** Converts configured score weights into chart-ready percentages that total exactly 100. */
+export function normalizeCreditScoreComposition(weights: CreditScoreWeights) {
+  const configured = CREDIT_SCORE_COMPOSITION_LABELS.map(({ key, name }) => ({ name, rawValue: Math.max(0, Number(weights[key]) || 0) }));
+  const configuredTotal = configured.reduce((sum, component) => sum + component.rawValue, 0);
+  const source = configuredTotal > 0
+    ? configured
+    : CREDIT_SCORE_COMPOSITION_LABELS.map(({ key, name }) => ({ name, rawValue: DEFAULT_CREDIT_SCORE_WEIGHTS[key] }));
+  const sourceTotal = source.reduce((sum, component) => sum + component.rawValue, 0);
+  let allocated = 0;
+
+  return source.map((component, index) => {
+    const value = index === source.length - 1
+      ? Number((100 - allocated).toFixed(2))
+      : Number(((component.rawValue / sourceTotal) * 100).toFixed(2));
+    allocated += value;
+    return { name: component.name, value };
+  });
+}
 
 export function practiceConsistencyForInactiveDays(daysSinceActivity: number | null): number {
   if (daysSinceActivity === null) return 50;
@@ -250,6 +283,11 @@ async function getEconomicConfig(schoolCode: string): Promise<CreditScoreConfig>
       missedPaymentPenalty: 15,
     };
   }
+}
+
+export async function getCreditScoreComposition(schoolCode: string) {
+  const config = await getEconomicConfig(schoolCode);
+  return normalizeCreditScoreComposition(config);
 }
 
 /**

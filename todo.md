@@ -8762,3 +8762,4 @@
 - [x] Unify authenticated pages around the Overview’s dark atmospheric visual system with route-specific visual identities
 - [x] Add a pointer-enabled Blue Blazer cursor dot with a subtle particle burn and motion trail
 - [x] Move Overview above Events in Main Navigation and rename Events & Community to Events
+- [x] Correct the credit-score breakdown so its component weights total exactly 100%

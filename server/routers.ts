@@ -2144,11 +2144,14 @@ export const appRouter = router({
     }),
 
     getCreditScore: protectedProcedure.query(async ({ ctx }) => {
-      const { getUserCreditScore, getCreditScoreDetails } = await import("./creditScoreEngine");
+      const { getUserCreditScore, getCreditScoreDetails, getCreditScoreComposition } = await import("./creditScoreEngine");
       const schoolCode = ctx.user.schoolCode || '';
-      const score = await getUserCreditScore(ctx.user.id, schoolCode);
-      const details = await getCreditScoreDetails(ctx.user.id, schoolCode);
-      return { score, details };
+      const [score, details, composition] = await Promise.all([
+        getUserCreditScore(ctx.user.id, schoolCode),
+        getCreditScoreDetails(ctx.user.id, schoolCode),
+        getCreditScoreComposition(schoolCode),
+      ]);
+      return { score, details, composition };
     }),
 
     getCreditScoreHistory: protectedProcedure

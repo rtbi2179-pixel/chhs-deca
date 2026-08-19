@@ -28,8 +28,11 @@ describe("credit-score Blue Bucks stages", () => {
     expect(engine).toContain("Credit utilization uses real issued Banking & Cards balances");
     expect(router).toContain("calculateCreditScoreQuestionReward(studyCardReward.amount, score)");
     expect(router).toContain("creditScoreMultiplier");
-    expect(banking).toContain("Savings Discipline");
-    expect(banking).toContain("Credit Utilization");
+    expect(engine).toContain("Savings Discipline");
+    expect(engine).toContain("Credit Utilization");
+    expect(router).toContain("getCreditScoreComposition");
+    expect(banking).toContain("creditScoreComposition");
+    expect(banking).toContain("100% total");
     expect(banking).toContain("Blue Bucks reward stages");
   });
 });

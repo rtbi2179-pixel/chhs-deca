@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { eq } from "drizzle-orm";
-import { calculateFinalScore, calculatePaymentReliabilityFromCounts, MAX_SCORE_CHANGE_PER_UPDATE, practiceConsistencyForInactiveDays, updateCreditScore } from "./creditScoreEngine";
+import { calculateFinalScore, calculatePaymentReliabilityFromCounts, MAX_SCORE_CHANGE_PER_UPDATE, normalizeCreditScoreComposition, practiceConsistencyForInactiveDays, updateCreditScore } from "./creditScoreEngine";
 import { getDb } from "./db";
 import { banks, creditCardPayments, creditCards, creditHistory, creditScores, dailyPracticeStats, economicConfig, userCreditCards, users } from "../drizzle/schema";
 
@@ -20,6 +20,16 @@ describe("credit score engine", () => {
     expect(practiceConsistencyForInactiveDays(14)).toBe(75);
     expect(practiceConsistencyForInactiveDays(31)).toBe(30);
     expect(practiceConsistencyForInactiveDays(61)).toBe(10);
+  });
+
+  it("normalizes configured composition percentages to an exact 100% chart total", () => {
+    const even = normalizeCreditScoreComposition({ paymentReliability: 3, accountHistory: 3, practiceConsistency: 3, savingsDiscipline: 3, creditUtilization: 3 });
+    expect(even.reduce((sum, component) => sum + component.value, 0)).toBe(100);
+    expect(even.map((component) => component.value)).toEqual([20, 20, 20, 20, 20]);
+
+    const defaultComposition = normalizeCreditScoreComposition({ paymentReliability: 30, accountHistory: 20, practiceConsistency: 25, savingsDiscipline: 15, creditUtilization: 10 });
+    expect(defaultComposition.reduce((sum, component) => sum + component.value, 0)).toBe(100);
+    expect(defaultComposition.map((component) => component.value)).toEqual([30, 20, 25, 15, 10]);
   });
 
   describe("persisted chapter rule effect", () => {

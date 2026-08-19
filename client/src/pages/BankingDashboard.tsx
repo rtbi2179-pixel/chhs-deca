@@ -51,7 +51,7 @@ export function BankingDashboard() {
   if (!user) return <div className="page-shell"><div className="page-content"><div className="loading-state">Loading your banking dashboard…</div></div></div>;
 
   const creditScore = creditScoreQuery.data?.score || 500;
-  const creditDetails = creditScoreQuery.data?.details;
+  const creditScoreComposition = creditScoreQuery.data?.composition ?? [];
   const creditStage = getCreditScoreStage(creditScore);
   const bankAccount = bankAccountQuery.data;
   const issuedBankingCards = userCardsQuery.data ?? [];
@@ -79,14 +79,8 @@ export function BankingDashboard() {
     return "bg-red-500/10 border-red-500/30";
   };
 
-  // Credit score breakdown data for pie chart
-  const creditScoreBreakdown = creditDetails ? [
-    { name: "Payment Reliability", value: Number(creditDetails.paymentReliabilityScore) },
-    { name: "Account History", value: Number(creditDetails.accountHistoryScore) },
-    { name: "Practice Consistency", value: Number(creditDetails.practiceConsistencyScore) },
-    { name: "Savings Discipline", value: Number(creditDetails.netWorthScore) },
-    { name: "Credit Utilization", value: Number(creditDetails.spendingBehaviorScore) },
-  ] : [];
+  // Configuration weights are normalized by the server so the pie chart always totals 100%.
+  const creditScoreBreakdown = creditScoreComposition;
 
   // Account balances data for bar chart
   const accountBalances = bankAccount ? [
@@ -193,7 +187,7 @@ export function BankingDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Credit Score Breakdown Pie Chart */}
           <Card className="editorial-panel p-6">
-            <h2 className="text-xl font-semibold text-white mb-4">Credit Score Breakdown</h2>
+            <div className="mb-4 flex items-start justify-between gap-4"><h2 className="text-xl font-semibold text-white">Credit Score Breakdown</h2><span className="rounded-full border border-blue-300/20 bg-blue-500/10 px-2.5 py-1 text-[10px] font-mono-data uppercase tracking-[0.12em] text-blue-100">100% total</span></div>
             {creditScoreBreakdown.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
@@ -215,7 +209,7 @@ export function BankingDashboard() {
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <p className="text-slate-400">Loading credit score data...</p>
+              <p className="text-slate-400">Loading credit score composition...</p>
             )}
             <div className="mt-3 border-t border-white/10 pt-4">
               <div className="mb-3 flex items-center justify-between gap-3"><p className="text-sm font-semibold text-white">Blue Bucks reward stages</p><span className="text-xs text-slate-400">First-time correct answers</span></div>
