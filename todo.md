@@ -8770,3 +8770,4 @@
 - [x] Give every authenticated page a distinct constellation background shape within the shared dark Blue Blazer theme
 - [x] Add event-aware tested-cluster indicators and non-exam-event notices to Practice Questions and Mock Exams
 - [x] Ensure Leaderboard, Calendar, Discussion Posts, Volunteer Sign-Ups, and Feedback visibly display distinct route-specific constellation backgrounds
+- [x] Unify authenticated-page typography and refresh the Banking and Leaderboard visual design

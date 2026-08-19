@@ -58,6 +58,8 @@
 }
 
 :root {
+  --font-ui: 'Outfit', sans-serif;
+  --font-data: 'Space Mono', monospace;
   --radius: 0.5rem;
   --background: oklch(0.07 0.01 265);
   --foreground: oklch(0.96 0.005 265);
@@ -99,18 +101,18 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Outfit', sans-serif;
+    font-family: var(--font-ui);
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Outfit', sans-serif;
+  h1, h2, h3, h4, h5, h6, button, input, select, textarea {
+    font-family: var(--font-ui);
   }
   .font-display {
     font-family: 'Bebas Neue', sans-serif;
     letter-spacing: 0.05em;
   }
   .font-mono-data {
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-data);
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
@@ -282,6 +284,7 @@
     font-weight: 700;
     letter-spacing: -0.035em;
     line-height: 1.05;
+    font-family: var(--font-ui);
   }
   .page-intro {
     max-width: 44rem;
@@ -313,6 +316,7 @@
     font-size: 1.125rem;
     font-weight: 650;
     letter-spacing: -0.018em;
+    font-family: var(--font-ui);
   }
   .data-label {
     color: oklch(0.65 0.015 265);
@@ -320,6 +324,7 @@
     font-weight: 650;
     letter-spacing: 0.09em;
     text-transform: uppercase;
+    font-family: var(--font-data);
   }
   .editorial-tab {
     border: 1px solid transparent;
@@ -363,6 +368,82 @@
   .banking-dashboard .border-slate-700,
   .banking-dashboard .border-slate-600 {
     border-color: oklch(1 0 0 / 10%);
+  }
+  .banking-hero,
+  .leaderboard-hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid oklch(1 0 0 / 9%);
+  }
+  .banking-hero-status,
+  .leaderboard-hero-status {
+    min-width: 10.5rem;
+    border: 1px solid oklch(0.62 0.16 250 / 28%);
+    border-radius: 0.75rem;
+    background: linear-gradient(135deg, oklch(0.55 0.2 260 / 13%), oklch(0.1 0.02 265 / 34%));
+    padding: 0.8rem 1rem;
+  }
+  .banking-metric,
+  .leaderboard-metric {
+    position: relative;
+    overflow: hidden;
+    min-height: 11rem;
+    border-color: oklch(1 0 0 / 10%);
+    background: linear-gradient(145deg, oklch(1 0 0 / 5%), oklch(0.05 0.014 265 / 52%));
+  }
+  .banking-metric::after,
+  .leaderboard-metric::after {
+    content: "";
+    position: absolute;
+    top: -3rem;
+    right: -2rem;
+    width: 8rem;
+    height: 8rem;
+    border-radius: 999px;
+    background: radial-gradient(circle, oklch(0.68 0.17 250 / 15%), transparent 68%);
+    pointer-events: none;
+  }
+  .banking-metric-value,
+  .leaderboard-metric-value {
+    font-family: var(--font-data);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.07em;
+    line-height: 1;
+  }
+  .banking-section-card,
+  .leaderboard-section-card {
+    border-color: oklch(1 0 0 / 10%);
+    background: linear-gradient(155deg, oklch(1 0 0 / 4.5%), oklch(0.055 0.012 265 / 58%));
+  }
+  .banking-account-row {
+    border: 1px solid oklch(1 0 0 / 8%);
+    background: oklch(1 0 0 / 3.2%);
+    transition: border-color 160ms ease, background-color 160ms ease;
+  }
+  .banking-account-row:hover {
+    border-color: oklch(0.62 0.16 250 / 30%);
+    background: oklch(0.55 0.2 260 / 7%);
+  }
+  .leaderboard-table-shell {
+    overflow: hidden;
+    border-color: oklch(1 0 0 / 10%);
+    background: linear-gradient(155deg, oklch(1 0 0 / 4.5%), oklch(0.055 0.012 265 / 58%));
+  }
+  .leaderboard-table-shell thead tr {
+    background: linear-gradient(90deg, oklch(0.55 0.2 260 / 16%), oklch(0.55 0.2 260 / 5%));
+  }
+  .leaderboard-table-shell th {
+    font-family: var(--font-data);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
   /* Retained for legacy pages, but intentionally made calmer than the original glass treatment. */

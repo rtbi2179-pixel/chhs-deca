@@ -147,17 +147,17 @@ export function BankingDashboard() {
   return (
     <div className="page-shell banking-dashboard mt-16">
       <div className="page-content max-w-7xl">
-        <div className="mb-8"><p className="page-eyebrow">Financial systems</p><h1 className="page-title mt-2">Banking Dashboard</h1><p className="page-intro mt-3">Track virtual accounts, credit-building habits, and active study rewards in one clear workspace.</p></div>
+        <div className="banking-hero"><div><p className="page-eyebrow">Financial systems</p><h1 className="page-title mt-2">Banking Dashboard</h1><p className="page-intro mt-3">Track virtual accounts, credit-building habits, and active study rewards in one clear workspace.</p></div><div className="banking-hero-status"><p className="data-label">Current credit stage</p><p className="mt-1 text-lg font-semibold text-white">{creditStage.name}</p><p className="mt-1 font-mono-data text-xs text-blue-200">{creditScore} / 850</p></div></div>
 
         {/* Top Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {/* Credit Score Card */}
-          <Card className={`editorial-panel border p-6 ${getScoreBgColor(creditScore)}`}>
+          <Card className={`editorial-panel banking-metric border p-6 ${getScoreBgColor(creditScore)}`}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-white">Credit Score</h2>
+              <h2 className="data-label text-blue-200">Credit Score</h2>
               <TrendingUp className="w-6 h-6 text-blue-400" />
             </div>
-            <div className={`text-5xl font-bold ${getScoreColor(creditScore)} mb-2`}>
+            <div className={`banking-metric-value ${getScoreColor(creditScore)} mb-2`}>
               {creditScore}
             </div>
             <p className="text-slate-400 text-sm">Range: 300-850 · {creditStage.name} stage</p>
@@ -165,18 +165,18 @@ export function BankingDashboard() {
           </Card>
 
           {/* Total Balance Card */}
-          <Card className="editorial-panel p-6">
-            <h2 className="text-lg font-semibold text-white mb-4">Total Balance</h2>
-            <div className="text-5xl font-bold text-green-400 mb-2">
+          <Card className="editorial-panel banking-metric p-6">
+            <h2 className="data-label text-emerald-200 mb-4">Total Balance</h2>
+            <div className="banking-metric-value text-green-400 mb-2">
               ${totalBalance.toFixed(2)}
             </div>
             <p className="text-slate-400 text-sm">Across all accounts</p>
           </Card>
 
           {/* Total Debt Card */}
-          <Card className="editorial-panel p-6">
-            <h2 className="text-lg font-semibold text-white mb-4">Total Debt</h2>
-            <div className="text-5xl font-bold text-red-400 mb-2">
+          <Card className="editorial-panel banking-metric p-6">
+            <h2 className="data-label text-red-200 mb-4">Total Debt</h2>
+            <div className="banking-metric-value text-red-400 mb-2">
               ${(typeof bankAccount?.totalDebt === 'string' ? parseFloat(bankAccount.totalDebt) : (bankAccount?.totalDebt || 0)).toFixed(2)}
             </div>
             <p className="text-slate-400 text-sm">Outstanding balances</p>
@@ -186,7 +186,7 @@ export function BankingDashboard() {
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Credit Score Breakdown Pie Chart */}
-          <Card className="editorial-panel p-6">
+          <Card className="editorial-panel banking-section-card p-6">
             <div className="mb-4 flex items-start justify-between gap-4"><h2 className="text-xl font-semibold text-white">Credit Score Breakdown</h2><span className="rounded-full border border-blue-300/20 bg-blue-500/10 px-2.5 py-1 text-[10px] font-mono-data uppercase tracking-[0.12em] text-blue-100">100% total</span></div>
             {creditScoreBreakdown.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
@@ -220,7 +220,7 @@ export function BankingDashboard() {
           </Card>
 
           {/* Account Balances Bar Chart */}
-          <Card className="editorial-panel p-6">
+          <Card className="editorial-panel banking-section-card p-6">
             <h2 className="text-xl font-semibold text-white mb-4">Account Balances</h2>
             {accountBalances.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
@@ -248,7 +248,7 @@ export function BankingDashboard() {
           <p className="mb-6 max-w-3xl text-sm leading-6 text-slate-400">Your active Study Card is now your Banking card interface. It keeps your selected learning focus and progress while using the same issued-card purchase, payment, statement, and spending functions.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Functional active Study Card, backed by an existing issued banking card. */}
-            <Card className="editorial-panel p-6">
+            <Card className="editorial-panel banking-section-card p-6">
               <div className="mb-4 flex items-start justify-between gap-3">
                 <div>
                   <p className="data-label">Active banking card</p>
@@ -285,7 +285,7 @@ export function BankingDashboard() {
             </Card>
 
             {/* Study Card selection now changes the active banking-card identity. */}
-            <Card className="editorial-panel p-6">
+            <Card className="editorial-panel banking-section-card p-6">
               <div className="mb-4 flex items-start justify-between gap-3">
                 <div>
                   <h3 className="text-lg font-semibold text-white">Choose your Banking Study Card</h3>
@@ -336,7 +336,7 @@ export function BankingDashboard() {
           </div>
 
           {selectedStatementCard !== null && (
-            <Card className="editorial-panel mt-6 p-6">
+            <Card className="editorial-panel banking-section-card mt-6 p-6">
               <div className="mb-4 flex items-center justify-between gap-3">
                 <div>
                   <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
@@ -377,10 +377,10 @@ export function BankingDashboard() {
         {/* Account Details and Transfer */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Account Details */}
-          <Card className="editorial-panel p-6">
+          <Card className="editorial-panel banking-section-card p-6">
             <h2 className="text-xl font-semibold text-white mb-4">Account Details</h2>
             <div className="space-y-4">
-              <div className="flex justify-between items-center p-3 bg-slate-700 rounded-lg">
+              <div className="banking-account-row flex justify-between items-center p-3 rounded-lg">
                 <div className="flex items-center gap-2">
                   <ArrowDownLeft className="w-5 h-5 text-blue-400" />
                   <span className="text-slate-300">Checking Account</span>
@@ -391,7 +391,7 @@ export function BankingDashboard() {
                 <p className="text-sm font-medium text-blue-100">Blue Bucks reward destination</p>
                 <p className="mt-1 text-xs text-slate-400">Every Blue Bucks reward is credited directly to checking. Use transfers below to move funds into Savings or the BBX investment account.</p>
               </div>
-              <div className="flex justify-between items-center p-3 bg-slate-700 rounded-lg">
+              <div className="banking-account-row flex justify-between items-center p-3 rounded-lg">
                 <div className="flex items-center gap-2">
                   <ArrowDownLeft className="w-5 h-5 text-green-400" />
                   <span className="text-slate-300">Savings Account</span>
@@ -402,7 +402,7 @@ export function BankingDashboard() {
                 <div className="flex items-center justify-between gap-3"><span className="text-sm text-emerald-200">Simulated savings return</span><span className="text-sm font-semibold text-emerald-300">{savingsInterestQuery.data?.monthlyRate ?? '7'}% monthly</span></div>
                 <p className="mt-1 text-xs text-slate-400">Projected monthly credit: ${Number(savingsInterestQuery.data?.interestEarned ?? 0).toFixed(2)}. The first scheduled run each month credits this simulation return automatically.</p>
               </div>
-              <div className="flex justify-between items-center p-3 bg-slate-700 rounded-lg">
+              <div className="banking-account-row flex justify-between items-center p-3 rounded-lg">
                 <div className="flex items-center gap-2">
                   <ArrowUpRight className="w-5 h-5 text-purple-400" />
                   <span className="text-slate-300">Investment Account</span>
@@ -414,7 +414,7 @@ export function BankingDashboard() {
           </Card>
 
           {/* Transfer Funds */}
-          <Card className="editorial-panel p-6">
+          <Card className="editorial-panel banking-section-card p-6">
             <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
               <Send className="w-5 h-5" />
               Transfer Funds

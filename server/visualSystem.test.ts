@@ -47,6 +47,22 @@ describe("shared Blue Blazer visual system", () => {
     }
   });
 
+  it("uses shared typography tokens and editorial financial-performance surfaces on Banking and Leaderboard", () => {
+    const css = readClientSource("index.css");
+    const banking = readClientSource("pages", "BankingDashboard.tsx");
+    const leaderboard = readClientSource("pages", "Leaderboard.tsx");
+
+    expect(css).toContain("--font-ui");
+    expect(css).toContain("--font-data");
+    expect(css).toContain(".banking-metric");
+    expect(css).toContain(".leaderboard-table-shell");
+    expect(banking).toContain("banking-hero");
+    expect(banking).toContain("banking-section-card");
+    expect(banking).toContain("banking-account-row");
+    expect(leaderboard).toContain("leaderboard-hero");
+    expect(leaderboard).toContain("leaderboard-table-shell");
+  });
+
   it("extends the Overview atmosphere across authenticated routes with route-specific constellation variants", () => {
     const css = readClientSource("index.css");
     const sidebar = readClientSource("components", "SidebarNavigation.tsx");
