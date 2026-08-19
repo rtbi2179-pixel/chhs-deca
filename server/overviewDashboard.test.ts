@@ -46,4 +46,17 @@ describe("authenticated Overview dashboard", () => {
       'href="/discussions"',
     ]) expect(source).toContain(destination);
   });
+
+  it("lets members choose and persist a study-focus event from the Your Study Path compass", () => {
+    const source = homeSource();
+
+    expect(source).toContain('aria-label="Choose your DECA event focus"');
+    expect(source).toContain("setEventPickerOpen(true)");
+    expect(source).toContain("trpc.preferences.setPrimaryEvent.useMutation");
+    expect(source).toContain("utils.preferences.getPrimaryEvent.invalidate()");
+    expect(source).toContain("Search by event name, code, cluster, or type");
+    expect(source).toContain("allEvents.filter");
+    expect(source).toContain("aria-pressed={isSelected}");
+    expect(source).toContain("No event matches that search.");
+  });
 });

@@ -7,12 +7,15 @@
  */
 
 import { Link } from 'wouter'
+import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { Activity, ArrowRight, Banknote, BarChart3, BookOpen, BookOpenCheck, Building2, Calendar, CheckCircle2, ChevronRight, CircleDollarSign, Compass, FileText, Globe, Landmark, LineChart, Newspaper, PiggyBank, Sparkles, Star, Target, TrendingUp, Trophy, Users, WalletCards } from 'lucide-react'
 import { getLoginUrl } from '@/const'
 import { InteractiveBackground } from '@/components/InteractiveBackground'
 import { trpc } from '@/lib/trpc'
+import { allEvents } from '@/pages/Events'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
 const HERO_BG = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/deca-hero-bg-3D56BJM7ugEtwwxPTqT3y7.webp'
 
@@ -91,6 +94,9 @@ const formatCurrency = (value: number | string | null | undefined) => new Intl.N
 }).format(Number(value ?? 0))
 
 function AuthenticatedOverview({ user }: { user: NonNullable<ReturnType<typeof useAuth>['user']> }) {
+  const [eventPickerOpen, setEventPickerOpen] = useState(false)
+  const [eventSearch, setEventSearch] = useState('')
+  const utils = trpc.useUtils()
   const profileMetricsQuery = trpc.practice.getProfileMetrics.useQuery()
   const primaryEventQuery = trpc.preferences.getPrimaryEvent.useQuery()
   const bankAccountQuery = trpc.banking.getBankAccount.useQuery()
@@ -102,9 +108,21 @@ function AuthenticatedOverview({ user }: { user: NonNullable<ReturnType<typeof u
   const bankAccount = bankAccountQuery.data
   const portfolio = bbxPortfolioQuery.data
   const primaryEvent = primaryEventQuery.data?.primaryEventCode
+  const choosePrimaryEvent = trpc.preferences.setPrimaryEvent.useMutation({
+    onSuccess: async () => {
+      await utils.preferences.getPrimaryEvent.invalidate()
+      setEventPickerOpen(false)
+      setEventSearch('')
+    },
+  })
   const studyDestination = primaryEvent ? `/pi-quizlet?event=${encodeURIComponent(primaryEvent)}` : '/event-match'
   const firstName = user.name?.trim().split(/\s+/)[0] || user.email?.split('@')[0] || 'Competitor'
   const latestNews = recentNewsQuery.data?.[0]
+  const normalizedEventSearch = eventSearch.trim().toLocaleLowerCase()
+  const selectableEvents = useMemo(() => allEvents.filter((event) => {
+    if (!normalizedEventSearch) return true
+    return [event.code, event.name, event.cluster, event.type].some((value) => value.toLocaleLowerCase().includes(normalizedEventSearch))
+  }), [normalizedEventSearch])
   const balanceReady = !bankAccountQuery.isLoading
   const portfolioReady = !bbxPortfolioQuery.isLoading
   const practiceMetrics = [
@@ -151,7 +169,7 @@ function AuthenticatedOverview({ user }: { user: NonNullable<ReturnType<typeof u
 
         <div className="mt-8 grid gap-5 xl:grid-cols-[1.2fr_0.8fr]">
           <section aria-labelledby="next-step-heading" className="rounded-2xl border border-blue-300/20 bg-[linear-gradient(135deg,oklch(0.18_0.08_255/0.55),oklch(0.09_0.02_265/0.85))] p-6 sm:p-7">
-            <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-start"><div><div className="flex items-center gap-2 text-[10px] font-mono-data uppercase tracking-[0.16em] text-blue-200/75"><Compass className="h-3.5 w-3.5" />Your study path</div><h2 id="next-step-heading" className="mt-3 font-display text-4xl tracking-tight">{primaryEvent ? `FOCUS: ${primaryEvent}` : 'FIND YOUR EVENT'}</h2><p className="mt-3 max-w-xl text-sm leading-6 text-white/65">{primaryEvent ? `Open your event’s mapped performance indicators, then move directly into targeted practice and mock-exam preparation.` : 'Take the Event Match Quiz to select an event. Blue Blazer will use that choice to guide you into the appropriate PI Study Library path.'}</p></div><div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-blue-200/25 bg-blue-300/10 text-blue-200"><Compass className="h-5 w-5" /></div></div>
+            <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-start"><div><div className="flex items-center gap-2 text-[10px] font-mono-data uppercase tracking-[0.16em] text-blue-200/75"><Compass className="h-3.5 w-3.5" />Your study path</div><h2 id="next-step-heading" className="mt-3 font-display text-4xl tracking-tight">{primaryEvent ? `FOCUS: ${primaryEvent}` : 'FIND YOUR EVENT'}</h2><p className="mt-3 max-w-xl text-sm leading-6 text-white/65">{primaryEvent ? `Open your event’s mapped performance indicators, then move directly into targeted practice and mock-exam preparation.` : 'Choose an event now or take the Event Match Quiz if you would like a personalized recommendation.'}</p></div><button type="button" onClick={() => setEventPickerOpen(true)} aria-label="Choose your DECA event focus" title="Choose event focus" className="group flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-blue-200/25 bg-blue-300/10 text-blue-200 transition hover:border-blue-200/50 hover:bg-blue-300/20 focus:outline-none focus:ring-2 focus:ring-blue-200"><Compass className="h-5 w-5 transition-transform duration-200 group-hover:rotate-12" /></button></div>
             <div className="mt-7 grid gap-3 sm:grid-cols-3"><Link href={studyDestination} className="rounded-xl border border-blue-200/20 bg-blue-400/15 p-4 transition-colors hover:bg-blue-400/25 focus:outline-none focus:ring-2 focus:ring-blue-300"><BookOpen className="h-4 w-4 text-blue-100" /><p className="mt-4 text-sm font-semibold">{primaryEvent ? 'Open PI Library' : 'Take Event Quiz'}</p><p className="mt-1 text-xs leading-5 text-white/55">{primaryEvent ? 'Study the PIs for your event.' : 'Get a personalized event fit.'}</p></Link><Link href="/practice" className="rounded-xl border border-white/10 bg-slate-950/35 p-4 transition-colors hover:bg-white/[0.08] focus:outline-none focus:ring-2 focus:ring-blue-300"><Target className="h-4 w-4 text-blue-200" /><p className="mt-4 text-sm font-semibold">Practice Questions</p><p className="mt-1 text-xs leading-5 text-white/55">Choose a cluster and build accuracy.</p></Link><Link href="/mock-exams" className="rounded-xl border border-white/10 bg-slate-950/35 p-4 transition-colors hover:bg-white/[0.08] focus:outline-none focus:ring-2 focus:ring-blue-300"><FileText className="h-4 w-4 text-blue-200" /><p className="mt-4 text-sm font-semibold">Mock Exams</p><p className="mt-1 text-xs leading-5 text-white/55">Turn weak PIs into a study plan.</p></Link></div>
           </section>
 
@@ -168,6 +186,34 @@ function AuthenticatedOverview({ user }: { user: NonNullable<ReturnType<typeof u
           <section aria-labelledby="chapter-hub-heading" className="rounded-2xl border border-white/10 bg-slate-950/65 p-6"><div className="flex items-start justify-between gap-4"><div><p className="text-[10px] font-mono-data uppercase tracking-[0.16em] text-blue-200/65">Stay connected</p><h2 id="chapter-hub-heading" className="mt-1 font-display text-3xl tracking-tight">CHAPTER HUB</h2></div><Building2 className="h-5 w-5 text-blue-300" /></div><div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4"><Link href="/events" className="rounded-xl border border-white/10 bg-white/[0.035] p-4 transition-colors hover:bg-white/[0.08] focus:outline-none focus:ring-2 focus:ring-blue-300"><Trophy className="h-4 w-4 text-blue-300" /><p className="mt-3 text-sm font-semibold">Events</p><p className="mt-1 text-xs text-white/45">Explore event pathways</p></Link><Link href="/calendar" className="rounded-xl border border-white/10 bg-white/[0.035] p-4 transition-colors hover:bg-white/[0.08] focus:outline-none focus:ring-2 focus:ring-blue-300"><Calendar className="h-4 w-4 text-blue-300" /><p className="mt-3 text-sm font-semibold">Calendar</p><p className="mt-1 text-xs text-white/45">Plan chapter dates</p></Link><Link href="/announcements" className="rounded-xl border border-white/10 bg-white/[0.035] p-4 transition-colors hover:bg-white/[0.08] focus:outline-none focus:ring-2 focus:ring-blue-300"><CircleDollarSign className="h-4 w-4 text-blue-300" /><p className="mt-3 text-sm font-semibold">Announcements</p><p className="mt-1 text-xs text-white/45">Chapter updates</p></Link><Link href="/discussions" className="rounded-xl border border-white/10 bg-white/[0.035] p-4 transition-colors hover:bg-white/[0.08] focus:outline-none focus:ring-2 focus:ring-blue-300"><Users className="h-4 w-4 text-blue-300" /><p className="mt-3 text-sm font-semibold">Discussions</p><p className="mt-1 text-xs text-white/45">Connect with members</p></Link></div></section>
         </div>
       </div>
+
+      <Dialog open={eventPickerOpen} onOpenChange={(open) => { setEventPickerOpen(open); if (!open) setEventSearch('') }}>
+        <DialogContent className="max-h-[88vh] max-w-3xl overflow-hidden border-blue-300/25 bg-[oklch(0.09_0.014_265)] p-0 text-white shadow-[0_24px_90px_oklch(0.02_0.04_265/0.82)]">
+          <div className="border-b border-white/10 bg-[radial-gradient(circle_at_top_right,oklch(0.35_0.13_255/0.28),transparent_48%)] px-6 py-6 pr-14">
+            <DialogHeader className="text-left">
+              <div className="flex items-center gap-2 text-[10px] font-mono-data uppercase tracking-[0.16em] text-blue-300"><Compass className="h-3.5 w-3.5" /> Study focus</div>
+              <DialogTitle className="mt-2 font-display text-3xl tracking-wide text-white">CHOOSE YOUR EVENT</DialogTitle>
+              <DialogDescription className="mt-2 text-sm leading-6 text-slate-300">Select the DECA event you want Blue Blazer to prioritize. This updates your Overview focus and sends PI Study directly to the matching event path.</DialogDescription>
+            </DialogHeader>
+            <label htmlFor="overview-event-search" className="sr-only">Search DECA events</label>
+            <input id="overview-event-search" type="search" value={eventSearch} onChange={(event) => setEventSearch(event.target.value)} placeholder="Search by event name, code, cluster, or type" autoComplete="off" className="mt-5 h-11 w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-blue-400/60 focus:ring-2 focus:ring-blue-400/20" />
+          </div>
+          <div className="max-h-[calc(88vh-270px)] overflow-y-auto px-6 py-5">
+            <p className="mb-4 text-xs text-slate-400">{selectableEvents.length} available event{selectableEvents.length === 1 ? '' : 's'}{normalizedEventSearch ? ` match “${eventSearch.trim()}”` : ''}.</p>
+            {selectableEvents.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-white/15 bg-white/[0.025] px-5 py-10 text-center"><Compass className="mx-auto h-6 w-6 text-blue-300" /><p className="mt-3 font-medium text-white">No event matches that search.</p><button type="button" onClick={() => setEventSearch('')} className="mt-3 text-sm font-semibold text-blue-300 hover:text-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300">Clear search</button></div>
+            ) : (
+              <div className="grid gap-2 sm:grid-cols-2">
+                {selectableEvents.map((event) => {
+                  const isSelected = event.code === primaryEvent
+                  return <button key={event.code} type="button" aria-pressed={isSelected} onClick={() => choosePrimaryEvent.mutate({ eventCode: event.code })} disabled={choosePrimaryEvent.isPending} className={`rounded-xl border p-4 text-left transition focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:cursor-wait disabled:opacity-60 ${isSelected ? 'border-blue-300/60 bg-blue-500/20' : 'border-white/10 bg-white/[0.025] hover:border-blue-300/35 hover:bg-blue-500/[0.07]'}`}><div className="flex items-center justify-between gap-3"><span className="font-mono-data text-xs font-semibold tracking-[0.12em] text-blue-200">{event.code}</span>{isSelected && <CheckCircle2 className="h-4 w-4 text-blue-200" />}</div><p className="mt-2 text-sm font-semibold leading-5 text-white">{event.name}</p><p className="mt-1 text-xs text-white/45">{event.cluster} · {event.type}</p></button>
+                })}
+              </div>
+            )}
+          </div>
+          <div className="border-t border-white/10 bg-black/10 px-6 py-4"><p className="text-xs text-slate-400">Want a recommendation instead? <Link href="/event-match" className="font-semibold text-blue-300 hover:text-blue-200">Take the Event Match Quiz</Link>.</p>{choosePrimaryEvent.error && <p role="alert" className="mt-2 text-xs text-red-300">{choosePrimaryEvent.error.message}</p>}</div>
+        </DialogContent>
+      </Dialog>
     </main>
   )
 }

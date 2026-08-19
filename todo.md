@@ -8735,3 +8735,6 @@
 - [x] Audit the event-specific Performance Indicator panel and identify the safest event-scoped search integration point
 - [x] Add an accessible search bar that filters an event's PIs by code, indicator text, cluster, and instructional area
 - [x] Add empty-state behavior and regression coverage, validate the search, and checkpoint the enhancement
+- [x] Audit the existing primary-event preference flow and the Overview Your Study Path compass control
+- [x] Add an accessible compass-triggered event selector that persists the member's study focus
+- [x] Refresh Overview study-path and PI links after selection, add coverage, validate, and checkpoint the update
