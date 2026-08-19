@@ -35,7 +35,7 @@ describe("authenticated Overview dashboard", () => {
     const source = homeSource();
 
     for (const destination of [
-      "const studyDestination = primaryEvent ? '/events' : '/event-match'",
+      "const studyDestination = primaryEvent ? '/pi-quizlet' : '/event-match'",
       'href="/practice"',
       'href="/mock-exams"',
       'href="/banking"',

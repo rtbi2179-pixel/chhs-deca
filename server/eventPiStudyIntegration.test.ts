@@ -41,12 +41,10 @@ describe("event-linked PI Study Library", () => {
     expect(modules[0]?.performanceIndicator).toBeTruthy();
   });
 
-  it("wires each Events card to a PI dialog and deep-links the selected event and module", () => {
+  it("keeps PI presentation in the PI Library and gives Event Resources a generic library route", () => {
     const eventsPage = readFileSync(join(process.cwd(), "client/src/pages/Events.tsx"), "utf8");
     const piQuizletPage = readFileSync(join(process.cwd(), "client/src/pages/PIQuizlet.tsx"), "utf8");
 
-    expect(eventsPage).toContain("EventPiStudyDialog");
-    expect(eventsPage).toContain("getEventStudyGuide.useQuery");
     expect(eventsPage).toContain('href="/pi-quizlet"');
     expect(eventsPage).toContain("PI Library");
     expect(eventsPage).toContain("Open PI Library");
@@ -55,16 +53,15 @@ describe("event-linked PI Study Library", () => {
     expect(eventsPage).not.toContain('Find Your DECA Event');
     expect(eventsPage).toContain('href="/event-match?retake=1"');
     expect(eventsPage).toContain('Competition planning');
-    expect(eventsPage).toContain("View {event.code} PIs");
     expect(eventsPage).toContain("getPrimaryEvent.useQuery");
     expect(eventsPage).toContain("setPrimaryEvent.useMutation");
     expect(eventsPage).toContain("Select This Event");
     expect(eventsPage).toContain("Focused Event");
     expect(eventsPage).toContain("onSelectEvent={(eventCode) => setPrimaryEvent.mutate({ eventCode })}");
-    expect(eventsPage).toContain("SelectedEventPiPanel");
-    expect(eventsPage).toContain("Focused event PI path");
-    expect(eventsPage).toContain("Required performance indicators for your selected event are displayed here by default.");
-    expect(eventsPage).toContain("/pi-quizlet?module=${module.id}");
+    expect(eventsPage).toContain("Open PI Library");
+    expect(eventsPage).not.toContain("<EventPiStudyDialog event={event}");
+    expect(eventsPage).not.toContain("{focusedEvent && <SelectedEventPiPanel");
+    expect(eventsPage).not.toContain("View {event.code} PIs");
     expect(piQuizletPage).toContain("PI_PAGE_SIZE = 24");
     expect(piQuizletPage).toContain("Next indicators");
     expect(piQuizletPage).toContain("Showing {showingFrom}–{showingTo} of {totalVisibleModules} indicators");
@@ -74,20 +71,12 @@ describe("event-linked PI Study Library", () => {
     expect(piQuizletPage).not.toContain("getEventStudyGuide.useQuery");
   });
 
-  it("filters event-specific PIs by code, performance indicator, instructional area, or cluster and recovers from no results", () => {
+  it("keeps Event Resources free of event-specific PI search and modal state", () => {
     const eventsPage = readFileSync(join(process.cwd(), "client/src/pages/Events.tsx"), "utf8");
 
-    expect(eventsPage).toContain("const [piSearch, setPiSearch] = useState('')");
-    expect(eventsPage).toContain("normalizedPiSearch");
-    expect(eventsPage).toContain("useDeferredValue(piSearch.trim())");
-    expect(eventsPage).toContain("search: deferredPiSearch, offset: piOffset, limit: 24");
-    expect(eventsPage).toContain("Next PIs");
-    expect(eventsPage).toContain("setPiOffset(0)");
-    expect(eventsPage).toContain("Search ${event.code} PIs by code, skill, or area");
-    expect(eventsPage).toContain("No event PIs match that search.");
-    expect(eventsPage).toContain("Clear search");
-    expect(eventsPage).toContain("if (!nextOpen) {");
-    expect(eventsPage).toContain("setPiSearch('')");
+    expect(eventsPage).not.toContain("setPiDialogOpen(true)");
+    expect(eventsPage).not.toContain("{focusedEvent && <SelectedEventPiPanel");
+    expect(eventsPage).toContain("Open PI Library");
   });
 
   it("maps every catalog event to a complete PI pathway", async () => {

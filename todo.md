@@ -8781,3 +8781,4 @@
 - [x] Add a persistent Edit Profile gallery of DECA-inspired and general avatar and banner selections
 - [x] Remove the Profile page’s redundant top navigation controls while keeping the section sidebar
 - [x] Refine Blazer with the supplied solid yellow, gray, green, blue, red, and lime palette, prioritizing solid button treatments
+- [x] Remove performance indicator displays and event-specific PI dialogs from Event Resources, keeping PI access only in the PI Library

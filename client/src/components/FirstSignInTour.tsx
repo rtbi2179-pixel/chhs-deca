@@ -92,7 +92,7 @@ export function FirstSignInTour() {
     if (isCelebrating || isSkipping || completeOnboarding.isPending) return;
     setIsCelebrating(true);
     celebrationTimerRef.current = window.setTimeout(
-      () => finishTour(primaryEventQuery.data?.primaryEventCode ? "/events" : "/event-match?onboarding=1"),
+      () => finishTour(primaryEventQuery.data?.primaryEventCode ? "/pi-quizlet" : "/event-match?onboarding=1"),
       reduceMotion ? 220 : ONBOARDING_CELEBRATION_DURATION_MS,
     );
   };

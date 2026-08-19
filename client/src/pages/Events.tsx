@@ -666,7 +666,6 @@ function EventPiStudyDialog({ event, open, onOpenChange }: EventPiStudyDialogPro
 
 function EventCard({ event, isFocusedEvent, canSelectEvent, isSelecting, onSelectEvent }: { event: DECAEvent; isFocusedEvent: boolean; canSelectEvent: boolean; isSelecting: boolean; onSelectEvent: (eventCode: string) => void }) {
   const [expanded, setExpanded] = useState(false)
-  const [piDialogOpen, setPiDialogOpen] = useState(false)
   const clusterColor = clusterColors[event.cluster]
 
   return (
@@ -702,16 +701,14 @@ function EventCard({ event, isFocusedEvent, canSelectEvent, isSelecting, onSelec
           <p className="text-white/60 text-sm mt-4 mb-4">{event.description}</p>
           <div className="mb-4 rounded-xl border border-blue-400/20 bg-blue-500/[0.06] p-3 sm:flex sm:items-center sm:justify-between sm:gap-4">
             <div>
-              <p className="text-sm font-semibold text-blue-100">Event-linked PI Study Library</p>
-              <p className="mt-0.5 text-xs leading-5 text-slate-400">View the performance indicators required for {event.code} and open any complete PI learning module.</p>
+              <p className="text-sm font-semibold text-blue-100">Event focus</p>
+              <p className="mt-0.5 text-xs leading-5 text-slate-400">Make {event.code} your focused event, then use the PI Library to browse complete learning modules.</p>
             </div>
             <div className="mt-3 flex w-full flex-col gap-2 sm:mt-0 sm:w-auto sm:flex-row">
               <button type="button" onClick={() => onSelectEvent(event.code)} disabled={!canSelectEvent || isSelecting || isFocusedEvent} title={!canSelectEvent ? 'Sign in to select an event' : undefined} className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-lg border border-emerald-300/30 bg-emerald-400/10 px-3.5 py-2 text-xs font-semibold text-emerald-100 transition hover:border-emerald-200/70 hover:bg-emerald-400/20 disabled:cursor-not-allowed disabled:opacity-65 sm:w-auto">
                 {isFocusedEvent ? <CheckCircle2 className="h-4 w-4" /> : <Target className="h-4 w-4" />} {isFocusedEvent ? 'Focused Event' : isSelecting ? 'Selecting…' : 'Select This Event'}
               </button>
-              <button type="button" onClick={() => setPiDialogOpen(true)} className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-lg border border-blue-400/30 bg-blue-500/10 px-3.5 py-2 text-xs font-semibold text-blue-100 transition hover:border-blue-300/60 hover:bg-blue-500/20 sm:w-auto">
-                <LibraryBig className="h-4 w-4" /> View {event.code} PIs
-              </button>
+              <a href="/pi-quizlet" className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-lg border border-blue-400/30 bg-blue-500/10 px-3.5 py-2 text-xs font-semibold text-blue-100 transition hover:border-blue-300/60 hover:bg-blue-500/20 sm:w-auto"><LibraryBig className="h-4 w-4" /> Open PI Library</a>
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -735,7 +732,6 @@ function EventCard({ event, isFocusedEvent, canSelectEvent, isSelecting, onSelec
           </div>
         </div>
       </AnimatedExpand>
-      <EventPiStudyDialog event={event} open={piDialogOpen} onOpenChange={setPiDialogOpen} />
     </motion.div>
   )
 }
@@ -775,7 +771,6 @@ export default function Events() {
   const setPrimaryEvent = trpc.preferences.setPrimaryEvent.useMutation({
     onSuccess: async () => { await utils.preferences.getPrimaryEvent.invalidate() },
   })
-  const focusedEvent = allEvents.find((event) => event.code === primaryEventQuery.data?.primaryEventCode)
 
   const filtered = allEvents.filter((e) => {
     const matchCluster = activeCluster === 'All' || e.cluster === activeCluster
@@ -812,7 +807,7 @@ export default function Events() {
               className="group flex w-full items-center gap-4 rounded-2xl border border-blue-300/45 bg-[linear-gradient(115deg,oklch(0.22_0.1_255/0.82),oklch(0.08_0.025_265/0.9))] p-4 text-left shadow-[0_18px_42px_oklch(0.05_0.08_255/0.32)] transition-all duration-200 hover:-translate-y-1 hover:border-blue-200/80 hover:bg-[linear-gradient(115deg,oklch(0.27_0.12_255/0.88),oklch(0.1_0.035_265/0.94))] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200"
             >
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-blue-200/30 bg-blue-200/10 text-blue-100 shadow-[0_0_24px_oklch(0.7_0.16_250/0.2)]"><LibraryBig className="h-6 w-6" /></span>
-              <span className="min-w-0 flex-1"><span className="block text-[10px] font-mono-data uppercase tracking-[0.16em] text-blue-100/65">Performance indicators</span><span className="mt-1 block text-lg font-semibold text-white">Open PI Library</span><span className="mt-1 block text-sm leading-5 text-blue-100/70">Browse every learning module. Your focused event’s PIs appear below in Event Resources.</span></span>
+              <span className="min-w-0 flex-1"><span className="block text-[10px] font-mono-data uppercase tracking-[0.16em] text-blue-100/65">Performance indicators</span><span className="mt-1 block text-lg font-semibold text-white">Open PI Library</span><span className="mt-1 block text-sm leading-5 text-blue-100/70">Browse every complete PI learning module in the dedicated PI Library.</span></span>
               <ArrowUpRight className="h-5 w-5 shrink-0 text-blue-100 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
             <a
@@ -867,7 +862,6 @@ export default function Events() {
 
       {/* Events List */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {focusedEvent && <SelectedEventPiPanel event={focusedEvent} />}
         <div className="grid grid-cols-1 gap-3">
           {filtered.map((event) => (
             <EventCard key={event.code} event={event} isFocusedEvent={primaryEventQuery.data?.primaryEventCode === event.code} canSelectEvent={Boolean(user?.id)} isSelecting={setPrimaryEvent.isPending && setPrimaryEvent.variables?.eventCode === event.code} onSelectEvent={(eventCode) => setPrimaryEvent.mutate({ eventCode })} />

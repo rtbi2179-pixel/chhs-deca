@@ -115,7 +115,7 @@ function AuthenticatedOverview({ user }: { user: NonNullable<ReturnType<typeof u
       setEventSearch('')
     },
   })
-  const studyDestination = primaryEvent ? '/events' : '/event-match'
+  const studyDestination = primaryEvent ? '/pi-quizlet' : '/event-match'
   const firstName = user.name?.trim().split(/\s+/)[0] || user.email?.split('@')[0] || 'Competitor'
   const latestNews = recentNewsQuery.data?.[0]
   const normalizedEventSearch = eventSearch.trim().toLocaleLowerCase()
@@ -193,7 +193,7 @@ function AuthenticatedOverview({ user }: { user: NonNullable<ReturnType<typeof u
             <DialogHeader className="text-left">
               <div className="flex items-center gap-2 text-[10px] font-mono-data uppercase tracking-[0.16em] text-blue-300"><Compass className="h-3.5 w-3.5" /> Study focus</div>
               <DialogTitle className="mt-2 font-display text-3xl tracking-wide text-white">CHOOSE YOUR EVENT</DialogTitle>
-              <DialogDescription className="mt-2 text-sm leading-6 text-slate-300">Select the DECA event you want Blue Blazer to prioritize. This updates your Overview focus and sends PI Study directly to the matching event path.</DialogDescription>
+              <DialogDescription className="mt-2 text-sm leading-6 text-slate-300">Select the DECA event you want Blue Blazer to prioritize. This updates your Overview focus; PI study remains available in the dedicated PI Library.</DialogDescription>
             </DialogHeader>
             <label htmlFor="overview-event-search" className="sr-only">Search DECA events</label>
             <input id="overview-event-search" type="search" value={eventSearch} onChange={(event) => setEventSearch(event.target.value)} placeholder="Search by event name, code, cluster, or type" autoComplete="off" className="mt-5 h-11 w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-blue-400/60 focus:ring-2 focus:ring-blue-400/20" />
