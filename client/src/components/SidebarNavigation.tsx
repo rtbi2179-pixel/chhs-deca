@@ -55,9 +55,24 @@ const chapterManagementNavLinks = [
 ];
 
 function atmosphereForRoute(location: string): Exclude<BackgroundVariant, "hero" | "overview"> {
-  if (location.startsWith('/banking') || location.startsWith('/blue-market') || location.startsWith('/market') || location.startsWith('/blues-news')) return 'finance';
-  if (location.startsWith('/calendar') || location.startsWith('/announcements') || location.startsWith('/discussions') || location.startsWith('/volunteer') || location.startsWith('/events') || location.startsWith('/feedback')) return 'community';
-  if (location.startsWith('/chapter') || location.startsWith('/admin') || location.startsWith('/super-admin')) return 'chapter';
+  if (location.startsWith('/events')) return 'events';
+  if (location.startsWith('/practice')) return 'practice';
+  if (location.startsWith('/mock-exams')) return 'mockExam';
+  if (location.startsWith('/speech-ai')) return 'roleplay';
+  if (location.startsWith('/leaderboard')) return 'leaderboard';
+  if (location.startsWith('/pi-quizlet')) return 'piLibrary';
+  if (location.startsWith('/calendar')) return 'calendar';
+  if (location.startsWith('/announcements')) return 'announcements';
+  if (location.startsWith('/discussions')) return 'discussions';
+  if (location.startsWith('/volunteer')) return 'volunteer';
+  if (location.startsWith('/feedback')) return 'feedback';
+  if (location.startsWith('/banking')) return 'banking';
+  if (location.startsWith('/blue-market') || location.startsWith('/market')) return 'market';
+  if (location.startsWith('/blues-news')) return 'news';
+  if (location.startsWith('/chapter/members')) return 'members';
+  if (location.startsWith('/admin') || location.startsWith('/super-admin')) return 'admin';
+  if (location.startsWith('/chapter')) return 'chapter';
+  if (location.startsWith('/profile')) return 'profile';
   return 'study';
 }
 

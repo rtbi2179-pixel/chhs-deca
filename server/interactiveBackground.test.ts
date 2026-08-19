@@ -10,8 +10,11 @@ describe("InteractiveBackground", () => {
     const background = readProjectFile("client/src/components/InteractiveBackground.tsx");
 
     expect(home).toContain('<InteractiveBackground variant="overview" />');
-    expect(background).toContain('export type BackgroundVariant = "hero" | "overview" | "study" | "community" | "finance" | "chapter"');
+    expect(background).toContain('export type BackgroundVariant = "hero" | "overview" | "study" | "practice"');
     expect(background).toContain("configurationByVariant");
+    expect(background).toContain("constellationShapes");
+    expect(background).toContain("shape: \"compass\"");
+    expect(background).toContain("shape: \"chart\"");
     expect(background).toContain("const configuration = configurationByVariant[variant]");
     expect(background).toContain("activeNodes");
     expect(background).toContain("drawRoundedFrame");

@@ -8767,3 +8767,4 @@
 - [x] Refine the Blue Blazer cursor visual treatment and reduce the particle trail length
 - [x] Reduce PI Study Library opening lag while preserving all module, search, and event-study functionality
 - [x] Add a subtle Blue Blazer cursor click pulse with accessibility safeguards
+- [x] Give every authenticated page a distinct constellation background shape within the shared dark Blue Blazer theme

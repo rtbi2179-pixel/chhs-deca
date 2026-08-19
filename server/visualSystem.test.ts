@@ -33,7 +33,7 @@ describe("shared Blue Blazer visual system", () => {
     }
   });
 
-  it("extends the Overview atmosphere across authenticated routes while keeping study, community, finance, and chapter variants distinct", () => {
+  it("extends the Overview atmosphere across authenticated routes with route-specific constellation variants", () => {
     const css = readClientSource("index.css");
     const sidebar = readClientSource("components", "SidebarNavigation.tsx");
     const background = readClientSource("components", "InteractiveBackground.tsx");
@@ -41,12 +41,13 @@ describe("shared Blue Blazer visual system", () => {
     const announcements = readClientSource("pages", "Announcements.tsx");
 
     expect(css).toContain(".app-atmosphere");
-    for (const variant of ["study", "community", "finance", "chapter"]) {
-      expect(css).toContain(`data-atmosphere=\"${variant}\"`);
+    for (const variant of ["study", "practice", "roleplay", "leaderboard", "piLibrary", "events", "calendar", "announcements", "discussions", "volunteer", "feedback", "banking", "market", "news", "members", "admin", "chapter", "profile"]) {
+      expect(css).toContain(`data-atmosphere="${variant}"`);
       expect(sidebar).toContain(`'${variant}'`);
     }
     expect(sidebar).toContain('<InteractiveBackground variant={atmosphere} />');
-    expect(background).toContain('"study" | "community" | "finance" | "chapter"');
+    expect(background).toContain('"study" | "practice" | "mockExam" | "roleplay"');
+    expect(background).toContain("constellationShapes");
     expect(events).toContain('className="page-shell events-atmosphere"');
     expect(announcements).toContain('className="page-shell community-feed"');
   });

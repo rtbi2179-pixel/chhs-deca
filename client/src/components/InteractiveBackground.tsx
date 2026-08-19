@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-export type BackgroundVariant = "hero" | "overview" | "study" | "community" | "finance" | "chapter";
+export type BackgroundVariant = "hero" | "overview" | "study" | "practice" | "mockExam" | "roleplay" | "leaderboard" | "piLibrary" | "events" | "calendar" | "announcements" | "discussions" | "volunteer" | "feedback" | "banking" | "market" | "news" | "members" | "admin" | "chapter" | "profile";
 
 type Star = {
   x: number;
@@ -13,15 +13,66 @@ type Star = {
 type Node = {
   x: number;
   y: number;
-  orbit: number;
   phase: number;
   radius: number;
   intensity: number;
+  drift: number;
 };
 
 type PointerPosition = { x: number; y: number };
 
 const clamp = (value: number, minimum: number, maximum: number) => Math.min(Math.max(value, minimum), maximum);
+
+type ConstellationShape = "horizon" | "compass" | "book" | "target" | "shield" | "dialogue" | "crown" | "library" | "starburst" | "calendar" | "beacon" | "speech" | "heart" | "quill" | "vault" | "chart" | "broadcast" | "people" | "grid" | "flag" | "profile";
+type BackgroundConfiguration = { starCount: number; nodeCount: number; coreX: number; coreY: number; strength: number; shape: ConstellationShape; spread: number };
+
+const constellationShapes: Record<ConstellationShape, Array<[number, number]>> = {
+  horizon: [[-1, 0.35], [-0.65, 0.1], [-0.32, 0.28], [0, -0.15], [0.34, 0.15], [0.67, -0.08], [1, 0.2]],
+  compass: [[0, -1], [0.32, -0.32], [1, 0], [0.32, 0.32], [0, 1], [-0.32, 0.32], [-1, 0], [-0.32, -0.32], [0, 0]],
+  book: [[-1, -0.72], [-0.4, -0.95], [0, -0.3], [0.4, -0.95], [1, -0.72], [1, 0.75], [0.4, 0.52], [0, 0.86], [-0.4, 0.52], [-1, 0.75]],
+  target: [[0, -1], [0.7, -0.7], [1, 0], [0.7, 0.7], [0, 1], [-0.7, 0.7], [-1, 0], [-0.7, -0.7], [0, 0], [0.35, 0], [-0.35, 0], [0, 0.35], [0, -0.35]],
+  shield: [[0, -1], [0.86, -0.52], [0.72, 0.4], [0, 1], [-0.72, 0.4], [-0.86, -0.52], [0, -0.15]],
+  dialogue: [[-1, -0.55], [-0.35, -0.82], [0.1, -0.45], [-0.32, -0.1], [-0.85, -0.08], [-0.5, 0.14], [0.22, 0.22], [0.58, -0.08], [1, 0.2], [0.64, 0.75], [0.14, 0.65]],
+  crown: [[-1, 0.52], [-0.8, -0.62], [-0.35, 0.05], [0, -1], [0.35, 0.05], [0.8, -0.62], [1, 0.52], [0.62, 0.9], [0, 0.72], [-0.62, 0.9]],
+  library: [[-1, -0.88], [-1, 0.92], [-0.58, 0.92], [-0.58, -0.88], [-0.22, -0.65], [-0.22, 0.8], [0.18, 0.8], [0.18, -0.95], [0.58, -0.72], [0.58, 0.92], [1, 0.92], [1, -0.72]],
+  starburst: [[0, 0], [0, -1], [0.68, -0.68], [1, 0], [0.68, 0.68], [0, 1], [-0.68, 0.68], [-1, 0], [-0.68, -0.68]],
+  calendar: [[-1, -0.82], [1, -0.82], [1, 0.9], [-1, 0.9], [-1, -0.22], [1, -0.22], [-0.5, 0.15], [0, 0.15], [0.5, 0.15], [-0.5, 0.62], [0, 0.62], [0.5, 0.62]],
+  beacon: [[0, -1], [0, 0.92], [-0.72, 0.92], [0.72, 0.92], [-1, -0.28], [1, -0.28], [-0.88, 0.3], [0.88, 0.3]],
+  speech: [[-1, -0.62], [0.62, -0.75], [1, -0.24], [0.68, 0.35], [0.04, 0.35], [-0.45, 0.92], [-0.36, 0.35], [-1, 0.05]],
+  heart: [[0, 1], [-0.92, -0.08], [-0.7, -0.72], [-0.22, -0.8], [0, -0.42], [0.22, -0.8], [0.7, -0.72], [0.92, -0.08], [0, 0.56]],
+  quill: [[-0.86, 0.86], [-0.32, 0.42], [0.2, -0.1], [0.7, -0.95], [0.96, -0.7], [0.36, 0.22], [-0.14, 0.72], [0.52, 0.9]],
+  vault: [[-0.95, -0.88], [0.95, -0.88], [0.95, 0.9], [-0.95, 0.9], [0, 0], [0, -0.5], [0.42, 0], [0, 0.42], [-0.42, 0]],
+  chart: [[-1, 0.78], [-0.62, 0.35], [-0.25, 0.52], [0.12, -0.18], [0.48, 0.05], [1, -0.92], [0.78, -0.92], [1, -0.92], [1, -0.58]],
+  broadcast: [[-0.85, 0.76], [-0.34, 0.22], [0, 0], [0.38, -0.18], [0.96, -0.75], [0.7, -0.3], [0.42, 0.08], [0.06, 0.4]],
+  people: [[-0.72, -0.68], [-0.72, -0.05], [-0.72, 0.78], [0, -1], [0, -0.22], [0, 0.92], [0.72, -0.68], [0.72, -0.05], [0.72, 0.78]],
+  grid: [[-0.9, -0.9], [0, -0.9], [0.9, -0.9], [-0.9, 0], [0, 0], [0.9, 0], [-0.9, 0.9], [0, 0.9], [0.9, 0.9]],
+  flag: [[-0.9, -0.95], [-0.9, 0.95], [-0.35, 0.68], [-0.35, -0.72], [0.86, -0.82], [0.42, -0.25], [0.86, 0.32], [-0.35, 0.14]],
+  profile: [[0, -1], [0.58, -0.58], [0.58, 0], [1, 0.72], [0.46, 0.96], [0, 0.5], [-0.46, 0.96], [-1, 0.72], [-0.58, 0], [-0.58, -0.58]],
+};
+
+const configurationByVariant: Record<BackgroundVariant, BackgroundConfiguration> = {
+  hero: { starCount: 76, nodeCount: 19, coreX: 0.67, coreY: 0.38, strength: 1.15, shape: "horizon", spread: 0.38 },
+  overview: { starCount: 58, nodeCount: 16, coreX: 0.76, coreY: 0.3, strength: 1, shape: "compass", spread: 0.31 },
+  study: { starCount: 48, nodeCount: 11, coreX: 0.8, coreY: 0.24, strength: 0.76, shape: "book", spread: 0.27 },
+  practice: { starCount: 50, nodeCount: 14, coreX: 0.76, coreY: 0.28, strength: 0.84, shape: "target", spread: 0.29 },
+  mockExam: { starCount: 46, nodeCount: 12, coreX: 0.76, coreY: 0.3, strength: 0.8, shape: "shield", spread: 0.28 },
+  roleplay: { starCount: 52, nodeCount: 14, coreX: 0.22, coreY: 0.28, strength: 0.84, shape: "dialogue", spread: 0.27 },
+  leaderboard: { starCount: 54, nodeCount: 15, coreX: 0.75, coreY: 0.26, strength: 0.9, shape: "crown", spread: 0.29 },
+  piLibrary: { starCount: 50, nodeCount: 15, coreX: 0.78, coreY: 0.25, strength: 0.82, shape: "library", spread: 0.26 },
+  events: { starCount: 54, nodeCount: 14, coreX: 0.2, coreY: 0.3, strength: 0.86, shape: "starburst", spread: 0.29 },
+  calendar: { starCount: 44, nodeCount: 14, coreX: 0.22, coreY: 0.25, strength: 0.76, shape: "calendar", spread: 0.25 },
+  announcements: { starCount: 48, nodeCount: 12, coreX: 0.22, coreY: 0.25, strength: 0.8, shape: "beacon", spread: 0.27 },
+  discussions: { starCount: 50, nodeCount: 13, coreX: 0.2, coreY: 0.28, strength: 0.82, shape: "speech", spread: 0.28 },
+  volunteer: { starCount: 46, nodeCount: 12, coreX: 0.22, coreY: 0.28, strength: 0.76, shape: "heart", spread: 0.27 },
+  feedback: { starCount: 42, nodeCount: 11, coreX: 0.2, coreY: 0.26, strength: 0.74, shape: "quill", spread: 0.25 },
+  banking: { starCount: 48, nodeCount: 13, coreX: 0.77, coreY: 0.22, strength: 0.88, shape: "vault", spread: 0.28 },
+  market: { starCount: 54, nodeCount: 13, coreX: 0.78, coreY: 0.22, strength: 0.94, shape: "chart", spread: 0.3 },
+  news: { starCount: 50, nodeCount: 12, coreX: 0.76, coreY: 0.22, strength: 0.86, shape: "broadcast", spread: 0.28 },
+  members: { starCount: 46, nodeCount: 13, coreX: 0.22, coreY: 0.24, strength: 0.76, shape: "people", spread: 0.25 },
+  admin: { starCount: 46, nodeCount: 12, coreX: 0.24, coreY: 0.23, strength: 0.74, shape: "grid", spread: 0.25 },
+  chapter: { starCount: 44, nodeCount: 11, coreX: 0.26, coreY: 0.23, strength: 0.7, shape: "flag", spread: 0.25 },
+  profile: { starCount: 48, nodeCount: 12, coreX: 0.78, coreY: 0.24, strength: 0.78, shape: "profile", spread: 0.26 },
+};
 
 export function InteractiveBackground({ variant = "hero" }: { variant?: BackgroundVariant }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -41,14 +92,6 @@ export function InteractiveBackground({ variant = "hero" }: { variant?: Backgrou
     const stars: Star[] = [];
     const nodes: Node[] = [];
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const configurationByVariant: Record<BackgroundVariant, { starCount: number; nodeCount: number; coreX: number; coreY: number; strength: number }> = {
-      hero: { starCount: 76, nodeCount: 19, coreX: 0.67, coreY: 0.38, strength: 1.15 },
-      overview: { starCount: 58, nodeCount: 16, coreX: 0.76, coreY: 0.3, strength: 1 },
-      study: { starCount: 48, nodeCount: 11, coreX: 0.8, coreY: 0.24, strength: 0.76 },
-      community: { starCount: 52, nodeCount: 12, coreX: 0.2, coreY: 0.28, strength: 0.82 },
-      finance: { starCount: 50, nodeCount: 14, coreX: 0.77, coreY: 0.2, strength: 0.92 },
-      chapter: { starCount: 44, nodeCount: 10, coreX: 0.26, coreY: 0.23, strength: 0.7 },
-    };
     const configuration = configurationByVariant[variant];
 
     const createScene = () => {
@@ -68,16 +111,20 @@ export function InteractiveBackground({ variant = "hero" }: { variant?: Backgrou
         });
       }
 
+      const shape = constellationShapes[configuration.shape];
+      const constellationRadius = Math.min(width, height) * configuration.spread;
       for (let index = 0; index < nodeCount; index += 1) {
-        const angle = (index / nodeCount) * Math.PI * 2 + Math.random() * 0.42;
-        const orbit = (0.12 + Math.random() * 0.36) * Math.min(width, height);
+        const templatePoint = shape[index % shape.length];
+        const layer = Math.floor(index / shape.length);
+        const layerScale = layer === 0 ? 1 : 0.62 + layer * 0.08;
+        const offset = layer === 0 ? 0 : ((index % 3) - 1) * constellationRadius * 0.045;
         nodes.push({
-          x: width * configuration.coreX + Math.cos(angle) * orbit,
-          y: height * configuration.coreY + Math.sin(angle) * orbit * 0.48,
-          orbit,
-          phase: angle,
+          x: width * configuration.coreX + templatePoint[0] * constellationRadius * layerScale + offset,
+          y: height * configuration.coreY + templatePoint[1] * constellationRadius * 0.72 * layerScale + offset * 0.45,
+          phase: index * 0.89 + layer * 0.42,
           radius: 1.2 + Math.random() * 1.9,
           intensity: 0.45 + Math.random() * 0.55,
+          drift: 1.2 + Math.random() * 2.2,
         });
       }
     };
@@ -160,11 +207,11 @@ export function InteractiveBackground({ variant = "hero" }: { variant?: Backgrou
       });
 
       const activeNodes = nodes.map((node, index) => {
-        const orbitalVelocity = prefersReducedMotion ? 0 : time * (0.00004 + index * 0.0000015);
-        const orbitX = Math.cos(node.phase + orbitalVelocity) * node.orbit;
-        const orbitY = Math.sin(node.phase + orbitalVelocity * 1.18) * node.orbit * 0.48;
-        const mouseInfluence = pointerIsNear ? 10 * (1 - clamp(Math.hypot(coreX + orbitX - pointer.x, coreY + orbitY - pointer.y) / 420, 0, 1)) : 0;
-        return { ...node, x: coreX + orbitX + mouseInfluence, y: coreY + orbitY - mouseInfluence * 0.35 };
+        const driftVelocity = prefersReducedMotion ? 0 : time * (0.00042 + index * 0.000007);
+        const driftX = Math.cos(node.phase + driftVelocity) * node.drift;
+        const driftY = Math.sin(node.phase * 1.2 + driftVelocity * 1.35) * node.drift * 0.62;
+        const mouseInfluence = pointerIsNear ? 10 * (1 - clamp(Math.hypot(node.x + driftX - pointer.x, node.y + driftY - pointer.y) / 420, 0, 1)) : 0;
+        return { ...node, x: node.x + driftX + mouseInfluence, y: node.y + driftY - mouseInfluence * 0.35 };
       });
 
       for (let index = 0; index < activeNodes.length; index += 1) {
