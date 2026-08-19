@@ -50,6 +50,18 @@ describe("Banking-only Study Cards flow", () => {
     expect(walkthrough).toContain('path: "/banking"');
     expect(walkthrough).toContain("choose a Study Card");
   });
+
+  it("keeps Banking & Cards focused by omitting transaction history, spending analytics, and Collector Card", () => {
+    const banking = readProjectFile("client/src/pages/BankingDashboard.tsx");
+    const studyCardEngine = readProjectFile("server/studyCardEngine.ts");
+
+    expect(banking).not.toContain("<TransactionHistory embedded />");
+    expect(banking).not.toContain("Spending by Category");
+    expect(banking).not.toContain("Monthly Spending Trend");
+    expect(banking).not.toContain("getSpendingAnalytics.useQuery");
+    expect(studyCardEngine).not.toContain('key: "collector"');
+    expect(studyCardEngine).not.toContain("Collector Card");
+  });
 });
 
 export {};

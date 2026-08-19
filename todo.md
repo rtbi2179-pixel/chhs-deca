@@ -8741,3 +8741,6 @@
 - [x] Move Events & Community into the top position of Main Navigation
 - [x] Place Leaderboard second-to-last and PI Study Library last in Main Navigation
 - [x] Update navigation regression coverage, validate the reordered sidebar, and checkpoint the change
+- [x] Remove Transaction History from Banking Activity on the Banking & Cards page
+- [x] Remove Spending by Category, Monthly Spending Trend, and Collector Card interfaces from Banking & Cards
+- [x] Update banking regression coverage, validate the streamlined page, and checkpoint the change

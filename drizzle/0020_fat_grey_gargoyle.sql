@@ -1,0 +1,1 @@
+ALTER TABLE `userStudyCards` MODIFY COLUMN `cardKey` enum('scholar','scholar_pro','investor','entrepreneur','social','leader','competitor','blazer','maverick') NOT NULL DEFAULT 'blazer';

@@ -840,7 +840,7 @@ export type InsertBlueBucksTransaction = typeof blueBucksTransactions.$inferInse
 export const userStudyCards = mysqlTable("userStudyCards", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }).unique(),
-  cardKey: mysqlEnum("cardKey", ["scholar", "scholar_pro", "investor", "entrepreneur", "social", "leader", "collector", "competitor", "blazer", "maverick"]).notNull().default("blazer"),
+  cardKey: mysqlEnum("cardKey", ["scholar", "scholar_pro", "investor", "entrepreneur", "social", "leader", "competitor", "blazer", "maverick"]).notNull().default("blazer"),
   level: int("level").notNull().default(1),
   practiceProgress: int("practiceProgress").notNull().default(0),
   bonusBlueBucks: int("bonusBlueBucks").notNull().default(0),

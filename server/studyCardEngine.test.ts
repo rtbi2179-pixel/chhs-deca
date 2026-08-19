@@ -4,11 +4,12 @@ import { calculateStudyCardLevel, calculateStudyCardQuestionReward, getMaverickD
 describe("virtual Study Card reward engine", () => {
   const stableDate = new Date("2026-08-14T12:00:00.000Z");
 
-  it("defines ten specialization profiles with transparent tradeoffs and no cash mechanics", () => {
-    expect(STUDY_CARD_CATALOG).toHaveLength(10);
-    expect(new Set(STUDY_CARD_CATALOG.map((card) => card.key)).size).toBe(10);
+  it("defines nine specialization profiles with transparent tradeoffs and no cosmetics mechanics", () => {
+    expect(STUDY_CARD_CATALOG).toHaveLength(9);
+    expect(new Set(STUDY_CARD_CATALOG.map((card) => card.key)).size).toBe(9);
     expect(STUDY_CARD_CATALOG.every((card) => card.tradeoff.length > 0)).toBe(true);
     expect(STUDY_CARD_CATALOG.every((card) => !/cash|wager|withdraw/i.test(card.liveBenefit))).toBe(true);
+    expect(STUDY_CARD_CATALOG.some((card) => card.key === "collector")).toBe(false);
   });
 
   it("applies only the advertised eligible practice multipliers and preserves base rewards elsewhere", () => {

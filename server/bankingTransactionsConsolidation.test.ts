@@ -11,9 +11,9 @@ describe("Banking and Transactions consolidation", () => {
   const legacyNavigation = readProjectFile("client/src/components/Navigation.tsx");
   const app = readProjectFile("client/src/App.tsx");
 
-  it("renders the existing transaction history inside Banking", () => {
-    expect(banking).toContain('import TransactionHistory from "./TransactionHistory"');
-    expect(banking).toContain("<TransactionHistory embedded />");
+  it("removes transaction history from Banking activity while retaining the legacy page implementation", () => {
+    expect(banking).not.toContain('import TransactionHistory from "./TransactionHistory"');
+    expect(banking).not.toContain("<TransactionHistory embedded />");
     expect(transactions).toContain("trpc.market.getTransactionHistory.useQuery");
     expect(transactions).toContain("selectedTicker");
     expect(transactions).toContain("startDate");

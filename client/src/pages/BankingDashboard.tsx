@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { toast } from "sonner";
 import { CreditScoreChart } from "@/components/CreditScoreChart";
-import TransactionHistory from "./TransactionHistory";
 
 export function BankingDashboard() {
   const { user } = useAuth();
@@ -17,7 +16,6 @@ export function BankingDashboard() {
   const bankAccountQuery = trpc.banking.getBankAccount.useQuery();
   const transferMutation = trpc.banking.transferFunds.useMutation();
   const userCardsQuery = trpc.banking.getUserCards.useQuery();
-  const spendingAnalyticsQuery = trpc.banking.getSpendingAnalytics.useQuery();
   const chargeCardMutation = trpc.banking.chargeCard.useMutation();
   const makePaymentMutation = trpc.banking.makePayment.useMutation();
   const savingsInterestQuery = trpc.banking.getSavingsInterest.useQuery();
@@ -145,7 +143,6 @@ export function BankingDashboard() {
       setCardActionAmount("");
       userCardsQuery.refetch();
       bankAccountQuery.refetch();
-      spendingAnalyticsQuery.refetch();
     } catch (error) {
       alert(`${cardAction?.mode === "charge" ? "Purchase" : "Payment"} failed: ${(error as Error).message}`);
     }
@@ -374,51 +371,6 @@ export function BankingDashboard() {
           )}
         </div>
 
-        {/* Spending analytics drawn from issued-card purchase activity. */}
-        <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <Card className="editorial-panel p-6">
-            <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-white">
-              <ReceiptText className="h-5 w-5 text-blue-400" /> Spending by Category
-            </h2>
-            {spendingAnalyticsQuery.isLoading ? (
-              <p className="text-sm text-slate-400">Loading spending activity...</p>
-            ) : spendingAnalyticsQuery.data?.categories.length ? (
-              <div className="space-y-3">
-                {spendingAnalyticsQuery.data.categories.slice(0, 5).map((category) => (
-                  <div key={category.category} className="flex items-center justify-between rounded-md bg-slate-700 px-3 py-2 text-sm">
-                    <div>
-                      <p className="font-medium text-white">{category.category}</p>
-                      <p className="text-xs text-slate-400">{category.transactions} transactions · ${category.average.toFixed(2)} average</p>
-                    </div>
-                    <p className="font-semibold text-amber-300">${category.total.toFixed(2)}</p>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-slate-400">Record a credit-card purchase to begin building your spending profile.</p>
-            )}
-          </Card>
-
-          <Card className="editorial-panel p-6">
-            <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-white">
-              <TrendingUp className="h-5 w-5 text-emerald-400" /> Monthly Spending Trend
-            </h2>
-            {spendingAnalyticsQuery.data?.monthly.length ? (
-              <ResponsiveContainer width="100%" height={220}>
-                <BarChart data={spendingAnalyticsQuery.data.monthly}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-                  <XAxis dataKey="month" stroke="#94a3b8" />
-                  <YAxis stroke="#94a3b8" />
-                  <Tooltip contentStyle={{ backgroundColor: "#1e293b", border: "1px solid #475569" }} />
-                  <Bar dataKey="total" fill="#10b981" />
-                </BarChart>
-              </ResponsiveContainer>
-            ) : (
-              <p className="text-sm text-slate-400">No monthly spending data yet.</p>
-            )}
-          </Card>
-        </div>
-
         {/* Account Details and Transfer */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Account Details */}
@@ -509,8 +461,6 @@ export function BankingDashboard() {
             </div>
           </Card>
         </div>
-
-        <TransactionHistory embedded />
       </div>
     </div>
   );
