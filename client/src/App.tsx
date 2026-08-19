@@ -51,7 +51,7 @@ import { SignedOutWelcome } from "./components/SignedOutWelcome";
 import { FirstSignInTour } from "./components/FirstSignInTour";
 import Footer from "./components/Footer";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { shouldShowSignedOutWelcome } from "./lib/signedOutWelcome";
+import { SIGNED_OUT_WELCOME_SESSION_KEY, shouldShowSignedOutWelcome } from "./lib/signedOutWelcome";
 import { useState, useEffect } from "react";
 import { Toast, useToast } from "./components/Toast";
 import { useLocation } from "wouter";
@@ -117,12 +117,29 @@ function App() {
   const { user, loading } = useAuth();
   const { toasts, addToast, removeToast } = useToast();
   const [location] = useLocation();
+  const [sessionStartLocation] = useState(location);
+  const [welcomeGate, setWelcomeGate] = useState({ resolved: false, shouldShow: false });
 
   const handleLoginRequired = () => {
     addToast("Log in required", "warning", 3000);
   };
 
-  const showWelcomeGate = shouldShowSignedOutWelcome({ location, isAuthenticated: Boolean(user), isLoading: loading });
+  useEffect(() => {
+    if (loading || welcomeGate.resolved) return;
+
+    const hasSeenThisSession = window.sessionStorage.getItem(SIGNED_OUT_WELCOME_SESSION_KEY) === "true";
+    const shouldShow = shouldShowSignedOutWelcome({
+      location: sessionStartLocation,
+      isAuthenticated: Boolean(user),
+      isLoading: loading,
+      hasSeenThisSession,
+    });
+
+    window.sessionStorage.setItem(SIGNED_OUT_WELCOME_SESSION_KEY, "true");
+    setWelcomeGate({ resolved: true, shouldShow });
+  }, [loading, user, sessionStartLocation, welcomeGate.resolved]);
+
+  const showWelcomeGate = welcomeGate.shouldShow && !user;
 
   return (
     <ErrorBoundary>
@@ -133,7 +150,7 @@ function App() {
             <BlueBlazerCursor />
             <Toaster />
             <Toast toasts={toasts} onRemove={removeToast} />
-            {loading ? <SignedOutWelcome isChecking /> : showWelcomeGate ? <SignedOutWelcome /> : <>
+            {loading || !welcomeGate.resolved ? <SignedOutWelcome isChecking /> : showWelcomeGate ? <SignedOutWelcome /> : <>
               {user ? (
                 <SidebarNavigation>
                   <Router />

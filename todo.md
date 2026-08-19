@@ -8775,3 +8775,4 @@
 - [x] Restore the Overview background constellation to its original circular orbit shape while preserving all other route-specific shapes
 - [x] Preserve the current Glass style, create a more colorful Blazer style, and add a persistent Profile Settings theme toggle
 - [x] Rename all member-facing Find Your DECA Event action labels to Start Event Finder
+- [x] Restrict the signed-out welcome screen to the initial load of a fresh browser session
