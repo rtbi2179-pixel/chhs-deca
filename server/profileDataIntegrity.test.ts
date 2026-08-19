@@ -42,9 +42,34 @@ describe('Profile data integrity and navigation', () => {
     expect(profile).toContain('Profile navigation');
     expect(profile).toContain('PROFILE_SECTIONS');
     expect(profile).toContain('lg:grid-cols-[minmax(17rem,0.78fr)_minmax(0,2fr)]');
+    expect(profile).toContain("{activeSection === 'profile-settings' &&");
+    expect(profile).toContain("{activeSection === 'event-selection' &&");
+    expect(profile).toContain("{activeSection === 'progress' &&");
+    expect(profile).toContain("{activeSection === 'preferences' &&");
+    expect(profile).toContain("{activeSection === 'portfolio' &&");
+    expect(profile).toContain("{activeSection === 'achievements' &&");
     expect(profile).toContain('Notification Preferences');
     expect(profile).toContain('My Portfolio');
     expect(profile).toContain('Achievements');
+  });
+
+  it('keeps focused-event selection and both learning and Banking detail within focused Profile tabs', () => {
+    expect(profile).toContain('trpc.preferences.getPrimaryEvent.useQuery');
+    expect(profile).toContain('trpc.banking.getBankAccount.useQuery');
+    expect(profile).toContain('const focusedEvent = allEvents.find');
+    expect(profile).toContain('Event Selection');
+    expect(profile).toContain('No event selected');
+    expect(profile).toContain('Find Your DECA Event');
+    expect(profile).toContain('Learning summary');
+    expect(profile).toContain('Banking information');
+    expect(profile).toContain('Manage Banking &amp; Cards');
+  });
+
+  it('removes obsolete onboarding replay and downloadable-report actions from the Profile page', () => {
+    expect(profile).not.toContain('Replay Blue Blazer Onboarding');
+    expect(profile).not.toContain('Download Your Report');
+    expect(profile).not.toContain('restartOnboarding');
+    expect(profile).not.toContain('downloadMyReport');
   });
 
   it('labels both values transparently when there is no historical chart series', () => {

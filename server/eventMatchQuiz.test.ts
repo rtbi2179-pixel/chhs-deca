@@ -87,7 +87,7 @@ describe("DECA Event Match Quiz", () => {
     expect(afterChoose.quiz?.selectedEventCode).toBe("ACT");
   });
 
-  it("connects onboarding and profile retakes to a skippable quiz with manual event browsing", () => {
+  it("connects onboarding and Profile event selection to a skippable quiz with manual event browsing", () => {
     const appSource = readFileSync(join(process.cwd(), "client/src/App.tsx"), "utf8");
     const tourSource = readFileSync(join(process.cwd(), "client/src/components/FirstSignInTour.tsx"), "utf8");
     const quizSource = readFileSync(join(process.cwd(), "client/src/pages/EventMatchQuiz.tsx"), "utf8");
@@ -98,6 +98,7 @@ describe("DECA Event Match Quiz", () => {
     expect(quizSource).toContain("Skip for now");
     expect(quizSource).toContain("Browse all DECA events");
     expect(quizSource).toContain("chooseEvent.mutate");
-    expect(profileSource).toContain("Retake Event Match Quiz");
+    expect(profileSource).toContain("Find Your DECA Event");
+    expect(profileSource).toContain('href="/event-match?retake=1"');
   });
 });

@@ -51,6 +51,9 @@ describe("event-linked PI Study Library", () => {
     expect(eventsPage).toContain("PI Library");
     expect(eventsPage).toContain("Open PI Library");
     expect(eventsPage).toContain("Performance indicators");
+    expect(eventsPage).toContain('Find Your DECA Event');
+    expect(eventsPage).toContain('href="/event-match?retake=1"');
+    expect(eventsPage).toContain('Competition planning');
     expect(eventsPage).toContain("View {event.code} PIs");
     expect(eventsPage).toContain("/pi-quizlet?event=${encodeURIComponent(event.code)}");
     expect(piQuizletPage).toContain("PI_PAGE_SIZE = 24");

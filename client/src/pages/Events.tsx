@@ -780,14 +780,24 @@ export default function Events() {
           <p className="text-white/60 text-lg max-w-2xl">
             Every DECA competitive event — with official DECA links, exam blueprints, practice materials, and study guides. Click any event to expand resources.
           </p>
-          <a
-            href="/pi-quizlet"
-            className="group mt-8 flex w-full max-w-xl items-center gap-4 rounded-2xl border border-blue-300/45 bg-[linear-gradient(115deg,oklch(0.22_0.1_255/0.82),oklch(0.08_0.025_265/0.9))] p-4 text-left shadow-[0_18px_42px_oklch(0.05_0.08_255/0.32)] transition-all duration-200 hover:-translate-y-1 hover:border-blue-200/80 hover:bg-[linear-gradient(115deg,oklch(0.27_0.12_255/0.88),oklch(0.1_0.035_265/0.94))] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200"
-          >
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-blue-200/30 bg-blue-200/10 text-blue-100 shadow-[0_0_24px_oklch(0.7_0.16_250/0.2)]"><LibraryBig className="h-6 w-6" /></span>
-            <span className="min-w-0 flex-1"><span className="block text-[10px] font-mono-data uppercase tracking-[0.16em] text-blue-100/65">Performance indicators</span><span className="mt-1 block text-lg font-semibold text-white">Open PI Library</span><span className="mt-1 block text-sm leading-5 text-blue-100/70">Browse every learning module or continue with your event-specific PIs.</span></span>
-            <ArrowUpRight className="h-5 w-5 shrink-0 text-blue-100 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </a>
+          <div className="mt-8 grid max-w-5xl gap-4 lg:grid-cols-2">
+            <a
+              href="/pi-quizlet"
+              className="group flex w-full items-center gap-4 rounded-2xl border border-blue-300/45 bg-[linear-gradient(115deg,oklch(0.22_0.1_255/0.82),oklch(0.08_0.025_265/0.9))] p-4 text-left shadow-[0_18px_42px_oklch(0.05_0.08_255/0.32)] transition-all duration-200 hover:-translate-y-1 hover:border-blue-200/80 hover:bg-[linear-gradient(115deg,oklch(0.27_0.12_255/0.88),oklch(0.1_0.035_265/0.94))] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200"
+            >
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-blue-200/30 bg-blue-200/10 text-blue-100 shadow-[0_0_24px_oklch(0.7_0.16_250/0.2)]"><LibraryBig className="h-6 w-6" /></span>
+              <span className="min-w-0 flex-1"><span className="block text-[10px] font-mono-data uppercase tracking-[0.16em] text-blue-100/65">Performance indicators</span><span className="mt-1 block text-lg font-semibold text-white">Open PI Library</span><span className="mt-1 block text-sm leading-5 text-blue-100/70">Browse every learning module or continue with your event-specific PIs.</span></span>
+              <ArrowUpRight className="h-5 w-5 shrink-0 text-blue-100 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </a>
+            <a
+              href="/event-match?retake=1"
+              className="group flex w-full items-center gap-4 rounded-2xl border border-blue-300/45 bg-[linear-gradient(115deg,oklch(0.22_0.1_255/0.82),oklch(0.08_0.025_265/0.9))] p-4 text-left shadow-[0_18px_42px_oklch(0.05_0.08_255/0.32)] transition-all duration-200 hover:-translate-y-1 hover:border-blue-200/80 hover:bg-[linear-gradient(115deg,oklch(0.27_0.12_255/0.88),oklch(0.1_0.035_265/0.94))] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200"
+            >
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-blue-200/30 bg-blue-200/10 text-blue-100 shadow-[0_0_24px_oklch(0.7_0.16_250/0.2)]"><Target className="h-6 w-6" /></span>
+              <span className="min-w-0 flex-1"><span className="block text-[10px] font-mono-data uppercase tracking-[0.16em] text-blue-100/65">Competition planning</span><span className="mt-1 block text-lg font-semibold text-white">Find Your DECA Event</span><span className="mt-1 block text-sm leading-5 text-blue-100/70">Retake the short survey to explore events that fit your interests and strengths.</span></span>
+              <ArrowUpRight className="h-5 w-5 shrink-0 text-blue-100 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </a>
+          </div>
         </div>
       </div>
 
