@@ -8783,3 +8783,4 @@
 - [x] Refine Blazer with the supplied solid yellow, gray, green, blue, red, and lime palette, prioritizing solid button treatments
 - [x] Remove performance indicator displays and event-specific PI dialogs from Event Resources, keeping PI access only in the PI Library
 - [x] Expand Blazer’s solid blue, green, yellow, red, and lime palette across page-level buttons and controls
+- [x] Replace every failed avatar and banner gallery image with a working selectable visual

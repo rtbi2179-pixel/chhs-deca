@@ -1,18 +1,18 @@
 export const PROFILE_AVATAR_OPTIONS = [
-  { key: 'deca-compass', label: 'Compass', category: 'DECA', src: '/manus-storage/avatar-deca-compass_2d7ab75d.png' },
-  { key: 'deca-trophy', label: 'Trophy', category: 'DECA', src: '/manus-storage/avatar-deca-trophy_16c8f9da.png' },
-  { key: 'deca-presentation', label: 'Presentation', category: 'DECA', src: '/manus-storage/avatar-deca-presentation_72211727.png' },
-  { key: 'mountain', label: 'Mountain', category: 'General', src: '/manus-storage/avatar-general-mountain_0efc6160.png' },
-  { key: 'orbit', label: 'Orbit', category: 'General', src: '/manus-storage/avatar-general-orbit_4af830db.png' },
-  { key: 'botanical', label: 'Botanical', category: 'General', src: '/manus-storage/avatar-general-botanical_6d3d71fc.png' },
+  { key: 'deca-compass', label: 'Compass', category: 'DECA', src: '/manus-storage/avatar-deca-compass_3aeeccc6.svg' },
+  { key: 'deca-trophy', label: 'Trophy', category: 'DECA', src: '/manus-storage/avatar-deca-trophy_7cb4f6a7.svg' },
+  { key: 'deca-presentation', label: 'Presentation', category: 'DECA', src: '/manus-storage/avatar-deca-presentation_14fae3be.svg' },
+  { key: 'mountain', label: 'Mountain', category: 'General', src: '/manus-storage/avatar-general-mountain_15ad7bbe.svg' },
+  { key: 'orbit', label: 'Orbit', category: 'General', src: '/manus-storage/avatar-general-orbit_40c2872f.svg' },
+  { key: 'botanical', label: 'Botanical', category: 'General', src: '/manus-storage/avatar-general-botanical_48eb0761.svg' },
 ] as const
 
 export const PROFILE_BANNER_OPTIONS = [
-  { key: 'deca-strategy', label: 'Strategy Desk', category: 'DECA', src: '/manus-storage/banner-deca-strategy_62b1743c.png' },
-  { key: 'deca-stage', label: 'Competition Stage', category: 'DECA', src: '/manus-storage/banner-deca-stage_087ad3d3.png' },
-  { key: 'aurora', label: 'Aurora', category: 'General', src: '/manus-storage/banner-general-aurora_57ef52df.png' },
-  { key: 'city', label: 'Night City', category: 'General', src: '/manus-storage/banner-general-city_6c1f68cf.png' },
-  { key: 'studio', label: 'Glass Studio', category: 'General', src: '/manus-storage/banner-general-studio_570de310.png' },
+  { key: 'deca-strategy', label: 'Strategy Desk', category: 'DECA', src: '/manus-storage/banner-deca-strategy_a87fb044.svg' },
+  { key: 'deca-stage', label: 'Competition Stage', category: 'DECA', src: '/manus-storage/banner-deca-stage_18b5c7cc.svg' },
+  { key: 'aurora', label: 'Aurora', category: 'General', src: '/manus-storage/banner-general-aurora_1b804bd0.svg' },
+  { key: 'city', label: 'Night City', category: 'General', src: '/manus-storage/banner-general-city_63195f44.svg' },
+  { key: 'studio', label: 'Glass Studio', category: 'General', src: '/manus-storage/banner-general-studio_e0b00f74.svg' },
 ] as const
 
 export type ProfileAvatarKey = (typeof PROFILE_AVATAR_OPTIONS)[number]['key']
