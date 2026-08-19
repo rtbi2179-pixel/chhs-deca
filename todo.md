@@ -8721,3 +8721,7 @@
 - [x] Add direct Main Practice Tools, Chapter Tools, and Blue Bucks category controls to the onboarding tour
 - [x] Preserve current-step progress and active-category feedback when jumping between tour sections
 - [x] Add regression coverage, validate category navigation, and checkpoint the update
+- [x] Replace the static authenticated Overview content with live member study, event, banking, BBX, and chapter summaries
+- [x] Connect Overview action cards to the current PI Study Library, Practice, Mock Exams, Banking, BBX, Blue's News, and chapter routes
+- [x] Add accurate loading and empty states while retaining the dark editorial visual system
+- [x] Add regression coverage, run full validation, and checkpoint the operational Overview update

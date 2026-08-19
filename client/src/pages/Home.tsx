@@ -9,9 +9,10 @@
 import { Link } from 'wouter'
 import { motion } from 'framer-motion'
 import { useAuth } from '@/_core/hooks/useAuth'
-import { Trophy, BookOpen, Calendar, Users, ArrowRight, Star, Target, Globe, ChevronRight, Building2, BarChart3, CheckCircle2, Compass } from 'lucide-react'
+import { Activity, ArrowRight, Banknote, BarChart3, BookOpen, BookOpenCheck, Building2, Calendar, CheckCircle2, ChevronRight, CircleDollarSign, Compass, FileText, Globe, Landmark, LineChart, Newspaper, PiggyBank, Sparkles, Star, Target, TrendingUp, Trophy, Users, WalletCards } from 'lucide-react'
 import { getLoginUrl } from '@/const'
 import { InteractiveBackground } from '@/components/InteractiveBackground'
+import { trpc } from '@/lib/trpc'
 
 const HERO_BG = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/deca-hero-bg-3D56BJM7ugEtwwxPTqT3y7.webp'
 
@@ -83,6 +84,94 @@ const fadeUp = {
   }),
 }
 
+const formatCurrency = (value: number | string | null | undefined) => new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  maximumFractionDigits: 2,
+}).format(Number(value ?? 0))
+
+function AuthenticatedOverview({ user }: { user: NonNullable<ReturnType<typeof useAuth>['user']> }) {
+  const profileMetricsQuery = trpc.practice.getProfileMetrics.useQuery()
+  const primaryEventQuery = trpc.preferences.getPrimaryEvent.useQuery()
+  const bankAccountQuery = trpc.banking.getBankAccount.useQuery()
+  const bbxPortfolioQuery = trpc.bbx.getPortfolio.useQuery(undefined, { refetchInterval: 20_000 })
+  const unreadNewsQuery = trpc.bbx.getUnreadNewsCount.useQuery(undefined, { refetchInterval: 60_000 })
+  const recentNewsQuery = trpc.bbx.getBluesNews.useQuery({ limit: 1 }, { refetchInterval: 60_000 })
+
+  const metrics = profileMetricsQuery.data
+  const bankAccount = bankAccountQuery.data
+  const portfolio = bbxPortfolioQuery.data
+  const primaryEvent = primaryEventQuery.data?.primaryEventCode
+  const studyDestination = primaryEvent ? `/pi-quizlet?event=${encodeURIComponent(primaryEvent)}` : '/event-match'
+  const firstName = user.name?.trim().split(/\s+/)[0] || user.email?.split('@')[0] || 'Competitor'
+  const latestNews = recentNewsQuery.data?.[0]
+  const balanceReady = !bankAccountQuery.isLoading
+  const portfolioReady = !bbxPortfolioQuery.isLoading
+  const practiceMetrics = [
+    { label: 'Questions answered', value: metrics ? metrics.questionsAnswered.toLocaleString() : '—', icon: BookOpenCheck, detail: metrics ? 'Across practice and review' : 'Syncing your practice record' },
+    { label: 'Overall accuracy', value: metrics ? `${metrics.accuracyPercent}%` : '—', icon: Target, detail: metrics ? `${metrics.correctAnswers.toLocaleString()} correct answers` : 'Syncing your accuracy' },
+    { label: 'Study streak', value: metrics ? `${metrics.studyStreak} day${metrics.studyStreak === 1 ? '' : 's'}` : '—', icon: Activity, detail: 'Practice on consecutive days' },
+    { label: 'Saved questions', value: metrics ? metrics.savedQuestions.toLocaleString() : '—', icon: Star, detail: 'Ready for focused review' },
+  ]
+
+  return (
+    <main className="relative min-h-screen overflow-hidden bg-[oklch(0.07_0.01_265)] text-white">
+      <InteractiveBackground />
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+        <header className="flex flex-col gap-6 border-b border-white/10 pb-8 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/25 bg-blue-400/10 px-3 py-1.5 text-[10px] font-mono-data uppercase tracking-[0.18em] text-blue-200">
+              <Sparkles className="h-3.5 w-3.5" /> Member Overview
+            </div>
+            <h1 className="mt-4 font-display text-5xl leading-none tracking-tight sm:text-6xl">WELCOME BACK, {firstName.toUpperCase()}</h1>
+            <p className="mt-4 max-w-2xl text-base leading-7 text-white/60">Your current practice, event preparation, chapter activity, and Blue Bucks accounts are organized here so the next productive step is always clear.</p>
+          </div>
+          <div className="grid w-full max-w-xl grid-cols-2 gap-3 sm:grid-cols-3 lg:w-auto">
+            <Link href={studyDestination} className="group rounded-xl border border-blue-300/25 bg-blue-500/15 px-4 py-3 transition-colors hover:bg-blue-500/25 focus:outline-none focus:ring-2 focus:ring-blue-300">
+              <span className="flex items-center gap-2 text-xs font-semibold text-blue-100"><BookOpen className="h-4 w-4" />PI Study</span>
+              <span className="mt-1 block text-[11px] text-blue-100/60">{primaryEvent ? primaryEvent : 'Choose an event'}</span>
+            </Link>
+            <Link href="/practice" className="group rounded-xl border border-white/10 bg-white/[0.045] px-4 py-3 transition-colors hover:bg-white/[0.09] focus:outline-none focus:ring-2 focus:ring-blue-300">
+              <span className="flex items-center gap-2 text-xs font-semibold text-white"><Target className="h-4 w-4 text-blue-300" />Practice</span>
+              <span className="mt-1 block text-[11px] text-white/45">Question Bank</span>
+            </Link>
+            <Link href="/mock-exams" className="col-span-2 group rounded-xl border border-white/10 bg-white/[0.045] px-4 py-3 transition-colors hover:bg-white/[0.09] focus:outline-none focus:ring-2 focus:ring-blue-300 sm:col-span-1">
+              <span className="flex items-center gap-2 text-xs font-semibold text-white"><FileText className="h-4 w-4 text-blue-300" />Mock Exams</span>
+              <span className="mt-1 block text-[11px] text-white/45">Build exam readiness</span>
+            </Link>
+          </div>
+        </header>
+
+        <section aria-labelledby="study-progress-heading" className="mt-8">
+          <div className="mb-4 flex items-end justify-between gap-4"><div><p className="text-[10px] font-mono-data uppercase tracking-[0.16em] text-blue-200/65">Live practice record</p><h2 id="study-progress-heading" className="mt-1 font-display text-3xl tracking-tight">STUDY PROGRESS</h2></div><Link href="/profile" className="text-xs font-semibold text-blue-300 transition-colors hover:text-blue-200">View profile <ChevronRight className="inline h-3.5 w-3.5" /></Link></div>
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {practiceMetrics.map(({ label, value, detail, icon: Icon }) => <Link key={label} href="/profile" className="group rounded-2xl border border-white/10 bg-slate-950/55 p-5 transition-all hover:-translate-y-0.5 hover:border-blue-300/30 hover:bg-slate-900/80 focus:outline-none focus:ring-2 focus:ring-blue-300"><Icon className="h-5 w-5 text-blue-300" /><p className="mt-6 text-[10px] font-mono-data uppercase tracking-[0.14em] text-white/45">{label}</p><p className="mt-1 font-display text-3xl tracking-tight text-white">{value}</p><p className="mt-2 text-xs text-white/45">{detail}</p></Link>)}
+          </div>
+        </section>
+
+        <div className="mt-8 grid gap-5 xl:grid-cols-[1.2fr_0.8fr]">
+          <section aria-labelledby="next-step-heading" className="rounded-2xl border border-blue-300/20 bg-[linear-gradient(135deg,oklch(0.18_0.08_255/0.55),oklch(0.09_0.02_265/0.85))] p-6 sm:p-7">
+            <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-start"><div><div className="flex items-center gap-2 text-[10px] font-mono-data uppercase tracking-[0.16em] text-blue-200/75"><Compass className="h-3.5 w-3.5" />Your study path</div><h2 id="next-step-heading" className="mt-3 font-display text-4xl tracking-tight">{primaryEvent ? `FOCUS: ${primaryEvent}` : 'FIND YOUR EVENT'}</h2><p className="mt-3 max-w-xl text-sm leading-6 text-white/65">{primaryEvent ? `Open your event’s mapped performance indicators, then move directly into targeted practice and mock-exam preparation.` : 'Take the Event Match Quiz to select an event. Blue Blazer will use that choice to guide you into the appropriate PI Study Library path.'}</p></div><div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-blue-200/25 bg-blue-300/10 text-blue-200"><Compass className="h-5 w-5" /></div></div>
+            <div className="mt-7 grid gap-3 sm:grid-cols-3"><Link href={studyDestination} className="rounded-xl border border-blue-200/20 bg-blue-400/15 p-4 transition-colors hover:bg-blue-400/25 focus:outline-none focus:ring-2 focus:ring-blue-300"><BookOpen className="h-4 w-4 text-blue-100" /><p className="mt-4 text-sm font-semibold">{primaryEvent ? 'Open PI Library' : 'Take Event Quiz'}</p><p className="mt-1 text-xs leading-5 text-white/55">{primaryEvent ? 'Study the PIs for your event.' : 'Get a personalized event fit.'}</p></Link><Link href="/practice" className="rounded-xl border border-white/10 bg-slate-950/35 p-4 transition-colors hover:bg-white/[0.08] focus:outline-none focus:ring-2 focus:ring-blue-300"><Target className="h-4 w-4 text-blue-200" /><p className="mt-4 text-sm font-semibold">Practice Questions</p><p className="mt-1 text-xs leading-5 text-white/55">Choose a cluster and build accuracy.</p></Link><Link href="/mock-exams" className="rounded-xl border border-white/10 bg-slate-950/35 p-4 transition-colors hover:bg-white/[0.08] focus:outline-none focus:ring-2 focus:ring-blue-300"><FileText className="h-4 w-4 text-blue-200" /><p className="mt-4 text-sm font-semibold">Mock Exams</p><p className="mt-1 text-xs leading-5 text-white/55">Turn weak PIs into a study plan.</p></Link></div>
+          </section>
+
+          <section aria-labelledby="accounts-heading" className="rounded-2xl border border-white/10 bg-slate-950/65 p-6 sm:p-7">
+            <div className="flex items-start justify-between gap-4"><div><p className="text-[10px] font-mono-data uppercase tracking-[0.16em] text-blue-200/65">Blue Bucks accounts</p><h2 id="accounts-heading" className="mt-1 font-display text-3xl tracking-tight">BANKING &amp; BBX</h2></div><Landmark className="h-5 w-5 text-blue-300" /></div>
+            <div className="mt-6 divide-y divide-white/10 border-y border-white/10"><div className="flex items-center justify-between py-4"><span className="flex items-center gap-2 text-sm text-white/65"><WalletCards className="h-4 w-4 text-blue-300" />Checking</span><span className="font-mono-data text-sm text-white">{balanceReady ? formatCurrency(bankAccount?.checkingBalance) : 'Syncing…'}</span></div><div className="flex items-center justify-between py-4"><span className="flex items-center gap-2 text-sm text-white/65"><PiggyBank className="h-4 w-4 text-blue-300" />Savings</span><span className="font-mono-data text-sm text-white">{balanceReady ? formatCurrency(bankAccount?.savingsBalance) : 'Syncing…'}</span></div><div className="flex items-center justify-between py-4"><span className="flex items-center gap-2 text-sm text-white/65"><TrendingUp className="h-4 w-4 text-blue-300" />BBX value</span><span className="font-mono-data text-sm text-white">{portfolioReady ? formatCurrency(portfolio?.totalValue) : 'Syncing…'}</span></div></div>
+            <div className="mt-4 flex items-center justify-between"><span className="text-xs text-white/45">{portfolioReady ? `${portfolio?.totalReturnPercent && portfolio.totalReturnPercent > 0 ? '+' : ''}${portfolio?.totalReturnPercent?.toFixed(1) ?? '0.0'}% BBX total return` : 'Updating BBX valuation'}</span><Link href="/banking" className="text-xs font-semibold text-blue-300 transition-colors hover:text-blue-200">Manage accounts <ChevronRight className="inline h-3.5 w-3.5" /></Link></div>
+          </section>
+        </div>
+
+        <div className="mt-5 grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
+          <section aria-labelledby="blues-news-heading" className="rounded-2xl border border-white/10 bg-slate-950/65 p-6"><div className="flex items-start justify-between gap-4"><div><p className="text-[10px] font-mono-data uppercase tracking-[0.16em] text-blue-200/65">Market simulation</p><h2 id="blues-news-heading" className="mt-1 font-display text-3xl tracking-tight">BLUE&apos;S NEWS</h2></div><Newspaper className="h-5 w-5 text-blue-300" /></div><div className="mt-6 rounded-xl border border-white/10 bg-white/[0.035] p-4"><p className="text-[10px] font-mono-data uppercase tracking-[0.14em] text-blue-200/60">{recentNewsQuery.isLoading ? 'Checking for updates' : latestNews?.isRead ? 'Latest read update' : `${unreadNewsQuery.data?.count ?? 0} unread update${unreadNewsQuery.data?.count === 1 ? '' : 's'}`}</p><p className="mt-3 text-sm font-semibold leading-6 text-white">{latestNews?.headline ?? (recentNewsQuery.isLoading ? 'Loading Blue’s News…' : 'No active Blue’s News article yet.')}</p><p className="mt-2 line-clamp-2 text-xs leading-5 text-white/55">{latestNews?.body ?? 'New simulated market stories will appear here as they are published.'}</p></div><Link href="/blues-news" className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-blue-300 transition-colors hover:text-blue-200">Read Blue&apos;s News <ArrowRight className="h-3.5 w-3.5" /></Link></section>
+
+          <section aria-labelledby="chapter-hub-heading" className="rounded-2xl border border-white/10 bg-slate-950/65 p-6"><div className="flex items-start justify-between gap-4"><div><p className="text-[10px] font-mono-data uppercase tracking-[0.16em] text-blue-200/65">Stay connected</p><h2 id="chapter-hub-heading" className="mt-1 font-display text-3xl tracking-tight">CHAPTER HUB</h2></div><Building2 className="h-5 w-5 text-blue-300" /></div><div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4"><Link href="/events" className="rounded-xl border border-white/10 bg-white/[0.035] p-4 transition-colors hover:bg-white/[0.08] focus:outline-none focus:ring-2 focus:ring-blue-300"><Trophy className="h-4 w-4 text-blue-300" /><p className="mt-3 text-sm font-semibold">Events</p><p className="mt-1 text-xs text-white/45">Explore event pathways</p></Link><Link href="/calendar" className="rounded-xl border border-white/10 bg-white/[0.035] p-4 transition-colors hover:bg-white/[0.08] focus:outline-none focus:ring-2 focus:ring-blue-300"><Calendar className="h-4 w-4 text-blue-300" /><p className="mt-3 text-sm font-semibold">Calendar</p><p className="mt-1 text-xs text-white/45">Plan chapter dates</p></Link><Link href="/announcements" className="rounded-xl border border-white/10 bg-white/[0.035] p-4 transition-colors hover:bg-white/[0.08] focus:outline-none focus:ring-2 focus:ring-blue-300"><CircleDollarSign className="h-4 w-4 text-blue-300" /><p className="mt-3 text-sm font-semibold">Announcements</p><p className="mt-1 text-xs text-white/45">Chapter updates</p></Link><Link href="/discussions" className="rounded-xl border border-white/10 bg-white/[0.035] p-4 transition-colors hover:bg-white/[0.08] focus:outline-none focus:ring-2 focus:ring-blue-300"><Users className="h-4 w-4 text-blue-300" /><p className="mt-3 text-sm font-semibold">Discussions</p><p className="mt-1 text-xs text-white/45">Connect with members</p></Link></div></section>
+        </div>
+      </div>
+    </main>
+  )
+}
+
 export default function Home() {
   const { user } = useAuth();
 
@@ -93,6 +182,8 @@ export default function Home() {
     }
     window.location.href = getLoginUrl();
   };
+
+  if (user) return <AuthenticatedOverview user={user} />
 
   return (
     <div className="min-h-screen bg-[oklch(0.07_0.01_265)]">
