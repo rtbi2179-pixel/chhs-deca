@@ -32,4 +32,22 @@ describe("shared Blue Blazer visual system", () => {
       expect(readClientSource("pages", page)).toContain("page-shell");
     }
   });
+
+  it("extends the Overview atmosphere across authenticated routes while keeping study, community, finance, and chapter variants distinct", () => {
+    const css = readClientSource("index.css");
+    const sidebar = readClientSource("components", "SidebarNavigation.tsx");
+    const background = readClientSource("components", "InteractiveBackground.tsx");
+    const events = readClientSource("pages", "Events.tsx");
+    const announcements = readClientSource("pages", "Announcements.tsx");
+
+    expect(css).toContain(".app-atmosphere");
+    for (const variant of ["study", "community", "finance", "chapter"]) {
+      expect(css).toContain(`data-atmosphere=\"${variant}\"`);
+      expect(sidebar).toContain(`'${variant}'`);
+    }
+    expect(sidebar).toContain('<InteractiveBackground variant={atmosphere} />');
+    expect(background).toContain('"study" | "community" | "finance" | "chapter"');
+    expect(events).toContain('className="page-shell events-atmosphere"');
+    expect(announcements).toContain('className="page-shell community-feed"');
+  });
 });

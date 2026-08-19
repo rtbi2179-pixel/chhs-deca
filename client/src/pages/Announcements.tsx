@@ -127,14 +127,15 @@ export function Announcements() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black pt-24 pb-12">
-      <div className="container max-w-4xl mx-auto px-4">
+    <div className="page-shell community-feed">
+      <div className="page-content max-w-4xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
+          <p className="page-eyebrow mb-3">Chapter broadcast</p>
           <h1 className="font-display text-5xl sm:text-7xl text-white mb-4">
             ANNOUNCEMENTS
           </h1>

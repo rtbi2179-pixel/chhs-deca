@@ -8759,3 +8759,4 @@
 - [x] Calibrate the positive-to-negative event distribution and market impact rules for approximately 10% average monthly BBX growth
 - [x] Add deterministic projection coverage, validate the market model, and checkpoint the update
 - [x] Add an accessible Blue Blazer Exchange information control explaining simulated market-performance ranges and economic conditions
+- [x] Unify authenticated pages around the Overview’s dark atmospheric visual system with route-specific visual identities

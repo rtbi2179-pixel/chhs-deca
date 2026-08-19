@@ -748,12 +748,12 @@ export default function Events() {
   })
 
   return (
-    <div className="min-h-screen bg-[oklch(0.07_0.01_265)]">
+    <div className="page-shell events-atmosphere">
       {/* Header */}
       <div
         className="relative pt-32 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden"
         style={{
-          backgroundImage: `url(${EVENTS_BG})`,
+          backgroundImage: `linear-gradient(112deg, oklch(0.055 0.014 265 / 0.94) 4%, oklch(0.09 0.035 255 / 0.78) 48%, oklch(0.04 0.012 265 / 0.9) 100%), url(${EVENTS_BG})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -777,7 +777,7 @@ export default function Events() {
       </div>
 
       {/* Filters */}
-      <div className="sticky top-16 z-30 bg-[oklch(0.07_0.01_265/0.95)] backdrop-blur-xl border-b border-white/5 px-4 sm:px-6 lg:px-8 py-4">
+      <div className="sticky top-16 z-30 border-b border-white/10 bg-[oklch(0.055_0.012_265/0.76)] px-4 py-4 backdrop-blur-xl sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col sm:flex-row gap-3">
             {/* Search */}

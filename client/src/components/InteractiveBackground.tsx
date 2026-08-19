@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-type BackgroundVariant = "hero" | "overview";
+export type BackgroundVariant = "hero" | "overview" | "study" | "community" | "finance" | "chapter";
 
 type Star = {
   x: number;
@@ -41,9 +41,15 @@ export function InteractiveBackground({ variant = "hero" }: { variant?: Backgrou
     const stars: Star[] = [];
     const nodes: Node[] = [];
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const configuration = variant === "overview"
-      ? { starCount: 58, nodeCount: 16, coreX: 0.76, coreY: 0.3, strength: 1 }
-      : { starCount: 76, nodeCount: 19, coreX: 0.67, coreY: 0.38, strength: 1.15 };
+    const configurationByVariant: Record<BackgroundVariant, { starCount: number; nodeCount: number; coreX: number; coreY: number; strength: number }> = {
+      hero: { starCount: 76, nodeCount: 19, coreX: 0.67, coreY: 0.38, strength: 1.15 },
+      overview: { starCount: 58, nodeCount: 16, coreX: 0.76, coreY: 0.3, strength: 1 },
+      study: { starCount: 48, nodeCount: 11, coreX: 0.8, coreY: 0.24, strength: 0.76 },
+      community: { starCount: 52, nodeCount: 12, coreX: 0.2, coreY: 0.28, strength: 0.82 },
+      finance: { starCount: 50, nodeCount: 14, coreX: 0.77, coreY: 0.2, strength: 0.92 },
+      chapter: { starCount: 44, nodeCount: 10, coreX: 0.26, coreY: 0.23, strength: 0.7 },
+    };
+    const configuration = configurationByVariant[variant];
 
     const createScene = () => {
       stars.length = 0;
@@ -86,7 +92,7 @@ export function InteractiveBackground({ variant = "hero" }: { variant?: Backgrou
     };
 
     const drawRoundedFrame = (time: number) => {
-      const frameOpacity = variant === "overview" ? 0.14 : 0.2;
+      const frameOpacity = variant === "overview" ? 0.14 : variant === "hero" ? 0.2 : 0.1;
       const gradient = context.createLinearGradient(width * 0.12, 0, width * 0.88, height);
       gradient.addColorStop(0, `rgba(59, 130, 246, ${frameOpacity * 0.15})`);
       gradient.addColorStop(0.5, `rgba(125, 211, 252, ${frameOpacity})`);
@@ -123,7 +129,7 @@ export function InteractiveBackground({ variant = "hero" }: { variant?: Backgrou
       const pointerIsNear = pointer.x > -1000 && pointer.y > -1000;
       const coreX = width * configuration.coreX + (pointerIsNear ? (normalizedPointerX - 0.5) * 22 : 0);
       const coreY = height * configuration.coreY + (pointerIsNear ? (normalizedPointerY - 0.5) * 18 : 0);
-      const coreRadius = Math.min(width, height) * (variant === "overview" ? 0.33 : 0.39);
+      const coreRadius = Math.min(width, height) * (variant === "overview" ? 0.33 : variant === "hero" ? 0.39 : 0.29);
 
       const atmosphere = context.createRadialGradient(coreX, coreY, 0, coreX, coreY, coreRadius * 1.45);
       atmosphere.addColorStop(0, "rgba(96, 165, 250, 0.2)");

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLocation } from 'wouter';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { trpc } from '@/lib/trpc';
+import { InteractiveBackground, type BackgroundVariant } from '@/components/InteractiveBackground';
 import {
   Home,
   BookOpen,
@@ -54,6 +55,13 @@ const chapterManagementNavLinks = [
   { href: '/admin', label: 'Chapter Management', icon: ShieldAlert, group: 'CHAPTER_MANAGEMENT' },
 ];
 
+function atmosphereForRoute(location: string): Exclude<BackgroundVariant, "hero" | "overview"> {
+  if (location.startsWith('/banking') || location.startsWith('/blue-market') || location.startsWith('/market') || location.startsWith('/blues-news')) return 'finance';
+  if (location.startsWith('/calendar') || location.startsWith('/announcements') || location.startsWith('/discussions') || location.startsWith('/volunteer') || location.startsWith('/events') || location.startsWith('/feedback')) return 'community';
+  if (location.startsWith('/chapter') || location.startsWith('/admin') || location.startsWith('/super-admin')) return 'chapter';
+  return 'study';
+}
+
 export function SidebarNavigation({ children }: { children: React.ReactNode }) {
   const [location, navigate] = useLocation();
   const { user, logout } = useAuth();
@@ -62,6 +70,7 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
 
   const bankAccountQuery = trpc.banking.getBankAccount.useQuery(undefined, { enabled: !!user });
   const unreadNews = trpc.bbx.getUnreadNewsCount.useQuery(undefined, { enabled: !!user, refetchInterval: 60_000 });
+  const atmosphere = atmosphereForRoute(location);
 
   const handleLogout = async () => {
     try {
@@ -445,8 +454,11 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
       </AnimatePresence>
 
       {/* Main Content Area */}
-      <main className="flex-1 min-w-0 md:pt-0 pt-14 bg-gradient-to-br from-[oklch(0.06_0.012_265)] via-[oklch(0.08_0.015_260)] to-[oklch(0.05_0.01_270)]">
-        {children}
+      <main className="app-atmosphere relative isolate flex-1 min-w-0 overflow-hidden md:pt-0 pt-14" data-atmosphere={atmosphere}>
+        {location !== '/' && <InteractiveBackground variant={atmosphere} />}
+        <div className="relative z-10 min-h-full">
+          {children}
+        </div>
       </main>
     </div>
   );
