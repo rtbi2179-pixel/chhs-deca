@@ -1,5 +1,5 @@
 import { getDb } from './db';
-import { creditScores, creditHistory, dailyPracticeStats, userBankAccounts, creditCardPayments, financialProfiles, economicConfig } from '../drizzle/schema';
+import { creditScores, creditHistory, dailyPracticeStats, userBankAccounts, creditCardPayments, userCreditCards, economicConfig } from '../drizzle/schema';
 import { eq, and, desc } from 'drizzle-orm';
 
 const MIN_CREDIT_SCORE = 300;
@@ -9,16 +9,16 @@ interface CreditScoreFactors {
   paymentReliability: number; // 0-100
   accountHistory: number; // 0-100
   practiceConsistency: number; // 0-100
-  netWorth: number; // 0-100
-  spendingBehavior: number; // 0-100
+  savingsDiscipline: number; // 0-100
+  creditUtilization: number; // 0-100
 }
 
 interface CreditScoreWeights {
-  paymentReliability: number; // 25%
-  accountHistory: number; // 25%
-  practiceConsistency: number; // 20%
-  netWorth: number; // 20%
-  spendingBehavior: number; // 10%
+  paymentReliability: number; // 30%
+  accountHistory: number; // 20%
+  practiceConsistency: number; // 25%
+  savingsDiscipline: number; // 15%
+  creditUtilization: number; // 10%
 }
 
 interface CreditScoreRuleConfig {
@@ -142,56 +142,52 @@ async function calculatePracticeConsistency(userId: number, schoolCode: string):
 }
 
 /**
- * Calculate net worth factor (20% weight)
- * Net Worth = Assets - Debt
+ * Savings discipline reflects actual Savings Account usage. It replaces the
+ * prior net-worth factor because Savings is an active member-facing feature.
  */
-async function calculateNetWorth(userId: number, schoolCode: string): Promise<number> {
+async function calculateSavingsDiscipline(userId: number, schoolCode: string): Promise<number> {
   try {
     const db = await getDb();
     if (!db) return 50;
-
-    const profile = await db
-      .select()
-      .from(financialProfiles)
-      .where(and(eq(financialProfiles.userId, userId), eq(financialProfiles.schoolCode, schoolCode)))
+    const [account] = await db.select().from(userBankAccounts)
+      .where(and(eq(userBankAccounts.userId, userId), eq(userBankAccounts.schoolCode, schoolCode)))
       .limit(1);
-
-    if (profile.length === 0) {
-      return 50; // Neutral score
-    }
-
-    const netWorth = parseFloat(profile[0].netWorth.toString());
-
-    // Score based on net worth:
-    // Negative net worth: 0 points
-    // 0-1000: 20 points
-    // 1000-5000: 40 points
-    // 5000-10000: 60 points
-    // 10000-50000: 80 points
-    // 50000+: 100 points
-    if (netWorth < 0) return 0;
-    if (netWorth < 1000) return 20;
-    if (netWorth < 5000) return 40;
-    if (netWorth < 10000) return 60;
-    if (netWorth < 50000) return 80;
-    return 100;
+    if (!account) return 50;
+    const checking = Number(account.checkingBalance ?? 0);
+    const savings = Number(account.savingsBalance ?? 0);
+    const investment = Number(account.investmentBalance ?? 0);
+    const totalBalances = Math.max(0, checking + savings + investment);
+    if (totalBalances === 0) return 50;
+    const savingsShare = Math.max(0, savings) / totalBalances;
+    return Math.max(25, Math.min(100, Math.round(35 + savingsShare * 200)));
   } catch (error) {
-    console.error('[Credit Score] Error calculating net worth:', error);
+    console.error('[Credit Score] Error calculating savings discipline:', error);
     return 50;
   }
 }
 
 /**
- * Calculate spending behavior factor (10% weight)
- * Currently disabled - will be enabled when store functionality exists
+ * Credit utilization uses real issued Banking & Cards balances. It replaces the
+ * prior disabled spending-behavior factor.
  */
-async function calculateSpendingBehavior(userId: number, schoolCode: string): Promise<number> {
+async function calculateCreditUtilization(userId: number, schoolCode: string): Promise<number> {
   try {
-    // TODO: Implement when Blue Blazer Store is ready
-    // For now, return neutral score
-    return 50;
+    const db = await getDb();
+    if (!db) return 50;
+    const cards = await db.select().from(userCreditCards)
+      .where(and(eq(userCreditCards.userId, userId), eq(userCreditCards.schoolCode, schoolCode)));
+    if (cards.length === 0) return 50;
+    const totalLimit = cards.reduce((sum, card) => sum + Number(card.creditLimit ?? 0), 0);
+    const totalBalance = cards.reduce((sum, card) => sum + Number(card.currentBalance ?? 0), 0);
+    if (totalLimit <= 0) return 50;
+    const utilization = Math.max(0, totalBalance / totalLimit);
+    if (utilization <= 0.1) return 100;
+    if (utilization <= 0.3) return 90;
+    if (utilization <= 0.5) return 70;
+    if (utilization <= 0.75) return 40;
+    return 15;
   } catch (error) {
-    console.error('[Credit Score] Error calculating spending behavior:', error);
+    console.error('[Credit Score] Error calculating credit utilization:', error);
     return 50;
   }
 }
@@ -204,11 +200,11 @@ async function getEconomicConfig(schoolCode: string): Promise<CreditScoreConfig>
     const db = await getDb();
     if (!db) {
       return {
-        paymentReliability: 25,
-        accountHistory: 25,
-        practiceConsistency: 20,
-        netWorth: 20,
-        spendingBehavior: 10,
+        paymentReliability: 30,
+        accountHistory: 20,
+        practiceConsistency: 25,
+        savingsDiscipline: 15,
+        creditUtilization: 10,
         onTimePaymentPoints: 2,
         missedPaymentPenalty: 15,
       };
@@ -223,11 +219,11 @@ async function getEconomicConfig(schoolCode: string): Promise<CreditScoreConfig>
     if (config.length === 0) {
       // Return default weights
       return {
-        paymentReliability: 25,
-        accountHistory: 25,
-        practiceConsistency: 20,
-        netWorth: 20,
-        spendingBehavior: 10,
+        paymentReliability: 30,
+        accountHistory: 20,
+        practiceConsistency: 25,
+        savingsDiscipline: 15,
+        creditUtilization: 10,
         onTimePaymentPoints: 2,
         missedPaymentPenalty: 15,
       };
@@ -237,19 +233,19 @@ async function getEconomicConfig(schoolCode: string): Promise<CreditScoreConfig>
       paymentReliability: parseFloat(config[0].paymentReliabilityWeight.toString()),
       accountHistory: parseFloat(config[0].accountHistoryWeight.toString()),
       practiceConsistency: parseFloat(config[0].practiceConsistencyWeight.toString()),
-      netWorth: parseFloat(config[0].netWorthWeight.toString()),
-      spendingBehavior: parseFloat(config[0].spendingBehaviorWeight.toString()),
+      savingsDiscipline: parseFloat(config[0].netWorthWeight.toString()),
+      creditUtilization: parseFloat(config[0].spendingBehaviorWeight.toString()),
       onTimePaymentPoints: config[0].onTimePaymentPoints,
       missedPaymentPenalty: config[0].missedPaymentPenalty,
     };
   } catch (error) {
     console.error('[Credit Score] Error getting economic config:', error);
     return {
-      paymentReliability: 25,
-      accountHistory: 25,
-      practiceConsistency: 20,
-      netWorth: 20,
-      spendingBehavior: 10,
+      paymentReliability: 30,
+      accountHistory: 20,
+      practiceConsistency: 25,
+      savingsDiscipline: 15,
+      creditUtilization: 10,
       onTimePaymentPoints: 2,
       missedPaymentPenalty: 15,
     };
@@ -260,20 +256,20 @@ async function getEconomicConfig(schoolCode: string): Promise<CreditScoreConfig>
  * Calculate all credit score factors
  */
 async function calculateFactors(userId: number, schoolCode: string, rules: CreditScoreRuleConfig): Promise<CreditScoreFactors> {
-  const [paymentReliability, accountHistory, practiceConsistency, netWorth, spendingBehavior] = await Promise.all([
+  const [paymentReliability, accountHistory, practiceConsistency, savingsDiscipline, creditUtilization] = await Promise.all([
     calculatePaymentReliability(userId, schoolCode, rules),
     calculateAccountHistory(userId, schoolCode),
     calculatePracticeConsistency(userId, schoolCode),
-    calculateNetWorth(userId, schoolCode),
-    calculateSpendingBehavior(userId, schoolCode),
+    calculateSavingsDiscipline(userId, schoolCode),
+    calculateCreditUtilization(userId, schoolCode),
   ]);
 
   return {
     paymentReliability,
     accountHistory,
     practiceConsistency,
-    netWorth,
-    spendingBehavior,
+    savingsDiscipline,
+    creditUtilization,
   };
 }
 
@@ -285,8 +281,8 @@ export function calculateFinalScore(factors: CreditScoreFactors, weights: Credit
     (factors.paymentReliability * weights.paymentReliability +
       factors.accountHistory * weights.accountHistory +
       factors.practiceConsistency * weights.practiceConsistency +
-      factors.netWorth * weights.netWorth +
-      factors.spendingBehavior * weights.spendingBehavior) /
+      factors.savingsDiscipline * weights.savingsDiscipline +
+      factors.creditUtilization * weights.creditUtilization) /
     100;
 
   // Scale from 0-100 to 300-850
@@ -336,8 +332,8 @@ export async function updateCreditScore(userId: number, schoolCode: string, reas
           paymentReliabilityScore: factors.paymentReliability.toString(),
           accountHistoryScore: factors.accountHistory.toString(),
           practiceConsistencyScore: factors.practiceConsistency.toString(),
-          netWorthScore: factors.netWorth.toString(),
-          spendingBehaviorScore: factors.spendingBehavior.toString(),
+          netWorthScore: factors.savingsDiscipline.toString(),
+          spendingBehaviorScore: factors.creditUtilization.toString(),
           lastCalculatedDate: new Date(),
           updatedAt: new Date(),
         })
@@ -349,8 +345,8 @@ export async function updateCreditScore(userId: number, schoolCode: string, reas
         paymentReliabilityScore: factors.paymentReliability.toString(),
         accountHistoryScore: factors.accountHistory.toString(),
         practiceConsistencyScore: factors.practiceConsistency.toString(),
-        netWorthScore: factors.netWorth.toString(),
-        spendingBehaviorScore: factors.spendingBehavior.toString(),
+        netWorthScore: factors.savingsDiscipline.toString(),
+        spendingBehaviorScore: factors.creditUtilization.toString(),
         schoolCode,
       }]);
     }

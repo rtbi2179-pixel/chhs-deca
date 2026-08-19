@@ -187,7 +187,7 @@ export default function PracticeQuestions() {
       });
 
       if (result.blueBucksAwarded > 0) {
-        toast.success(`${result.message}${result.studyCardBonus > 0 ? ` Study Card bonus: +${result.studyCardBonus}.` : ""}`);
+        toast.success(`${result.message}${result.studyCardBonus > 0 ? ` Study Card bonus: +${result.studyCardBonus}.` : ""}${result.creditScoreBonus > 0 ? ` ${result.creditScoreStage} credit stage: +${result.creditScoreBonus}.` : ""}`);
         setBlueBucksChange({
           amount: result.blueBucksAwarded,
           timestamp: Date.now()

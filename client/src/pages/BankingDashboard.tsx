@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { toast } from "sonner";
 import { CreditScoreChart } from "@/components/CreditScoreChart";
+import { CREDIT_SCORE_STAGES, getCreditScoreStage } from "@shared/creditScoreStages";
 
 export function BankingDashboard() {
   const { user } = useAuth();
@@ -51,6 +52,7 @@ export function BankingDashboard() {
 
   const creditScore = creditScoreQuery.data?.score || 500;
   const creditDetails = creditScoreQuery.data?.details;
+  const creditStage = getCreditScoreStage(creditScore);
   const bankAccount = bankAccountQuery.data;
   const issuedBankingCards = userCardsQuery.data ?? [];
   const activeBankingCard = issuedBankingCards.find((card: any) => card.id === activeBankingCardId) ?? issuedBankingCards[0] ?? null;
@@ -82,8 +84,8 @@ export function BankingDashboard() {
     { name: "Payment Reliability", value: Number(creditDetails.paymentReliabilityScore) },
     { name: "Account History", value: Number(creditDetails.accountHistoryScore) },
     { name: "Practice Consistency", value: Number(creditDetails.practiceConsistencyScore) },
-    { name: "Net Worth", value: Number(creditDetails.netWorthScore) },
-    { name: "Spending Behavior", value: Number(creditDetails.spendingBehaviorScore) },
+    { name: "Savings Discipline", value: Number(creditDetails.netWorthScore) },
+    { name: "Credit Utilization", value: Number(creditDetails.spendingBehaviorScore) },
   ] : [];
 
   // Account balances data for bar chart
@@ -151,7 +153,7 @@ export function BankingDashboard() {
   return (
     <div className="page-shell banking-dashboard mt-16">
       <div className="page-content max-w-7xl">
-        <div className="mb-8"><p className="page-eyebrow">Financial systems</p><h1 className="page-title mt-2">Banking Dashboard</h1><p className="page-intro mt-3">Track virtual accounts, credit-building decisions, and spending patterns in one clear workspace.</p></div>
+        <div className="mb-8"><p className="page-eyebrow">Financial systems</p><h1 className="page-title mt-2">Banking Dashboard</h1><p className="page-intro mt-3">Track virtual accounts, credit-building habits, and active study rewards in one clear workspace.</p></div>
 
         {/* Top Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -164,7 +166,8 @@ export function BankingDashboard() {
             <div className={`text-5xl font-bold ${getScoreColor(creditScore)} mb-2`}>
               {creditScore}
             </div>
-            <p className="text-slate-400 text-sm">Range: 300-850</p>
+            <p className="text-slate-400 text-sm">Range: 300-850 · {creditStage.name} stage</p>
+            <p className="mt-2 text-xs leading-5 text-blue-100/75">{creditStage.description}</p>
           </Card>
 
           {/* Total Balance Card */}
@@ -214,6 +217,12 @@ export function BankingDashboard() {
             ) : (
               <p className="text-slate-400">Loading credit score data...</p>
             )}
+            <div className="mt-3 border-t border-white/10 pt-4">
+              <div className="mb-3 flex items-center justify-between gap-3"><p className="text-sm font-semibold text-white">Blue Bucks reward stages</p><span className="text-xs text-slate-400">First-time correct answers</span></div>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-5">
+                {CREDIT_SCORE_STAGES.map((stage) => <div key={stage.key} className={`rounded-lg border px-2.5 py-2 text-xs ${stage.key === creditStage.key ? "border-blue-300/55 bg-blue-500/15 text-blue-100" : "border-white/10 bg-white/[0.03] text-slate-400"}`}><p className="font-semibold">{stage.name}</p><p className="mt-0.5">{stage.minScore}–{stage.maxScore}</p><p className="mt-1 text-[11px]">{stage.multiplier === 1 ? "Standard" : `+${Math.round((stage.multiplier - 1) * 100)}%`} Blue Bucks</p></div>)}
+              </div>
+            </div>
           </Card>
 
           {/* Account Balances Bar Chart */}

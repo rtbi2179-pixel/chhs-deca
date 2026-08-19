@@ -12,10 +12,10 @@ export default function SuperAdminDashboard() {
   const [activeTab, setActiveTab] = useState<'overview' | 'credit' | 'cards' | 'rewards' | 'market' | 'logs'>('overview');
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [weights, setWeights] = useState({
-    paymentReliabilityWeight: 25,
-    accountHistoryWeight: 25,
-    practiceConsistencyWeight: 20,
-    netWorthWeight: 20,
+    paymentReliabilityWeight: 30,
+    accountHistoryWeight: 20,
+    practiceConsistencyWeight: 25,
+    netWorthWeight: 15,
     spendingBehaviorWeight: 10,
   });
   const selectedSchoolQuery = trpc.superAdmin.getSelectedSchool.useQuery(undefined, { enabled: user?.role === 'super_admin' });
@@ -67,11 +67,11 @@ export default function SuperAdminDashboard() {
 
   const totalWeight = Object.values(weights).reduce((sum, value) => sum + value, 0);
   const weightFields = [
-    { key: 'paymentReliabilityWeight' as const, label: 'Payment Reliability Weight', description: 'Influence of on-time payments on credit score' },
-    { key: 'accountHistoryWeight' as const, label: 'Account History Weight', description: 'Influence of account age on credit score' },
-    { key: 'practiceConsistencyWeight' as const, label: 'Practice Consistency Weight', description: 'Influence of practice activity on credit score' },
-    { key: 'netWorthWeight' as const, label: 'Net Worth Weight', description: 'Influence of net worth on credit score' },
-    { key: 'spendingBehaviorWeight' as const, label: 'Spending Behavior Weight', description: 'Influence of spending patterns on credit score' },
+    { key: 'paymentReliabilityWeight' as const, label: 'Payment Reliability Weight', description: 'Influence of on-time Banking & Cards payments on credit score' },
+    { key: 'accountHistoryWeight' as const, label: 'Account History Weight', description: 'Influence of Banking account age on credit score' },
+    { key: 'practiceConsistencyWeight' as const, label: 'Practice Consistency Weight', description: 'Influence of recent practice activity on credit score' },
+    { key: 'netWorthWeight' as const, label: 'Savings Discipline Weight', description: 'Influence of active Savings Account participation on credit score' },
+    { key: 'spendingBehaviorWeight' as const, label: 'Credit Utilization Weight', description: 'Influence of issued-card utilization on credit score' },
   ];
 
   // Redirect if not super admin

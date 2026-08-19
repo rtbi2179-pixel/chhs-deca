@@ -9,8 +9,9 @@ describe("credit score engine", () => {
     expect(calculatePaymentReliabilityFromCounts({ onTime: 1, late: 0, missed: 0 }, { onTimePaymentPoints: 2, missedPaymentPenalty: 15 })).toBe(100);
     expect(calculatePaymentReliabilityFromCounts({ onTime: 1, late: 0, missed: 0 }, { onTimePaymentPoints: 1, missedPaymentPenalty: 15 })).toBe(75);
     expect(calculatePaymentReliabilityFromCounts({ onTime: 0, late: 0, missed: 1 }, { onTimePaymentPoints: 2, missedPaymentPenalty: 5 })).toBeCloseTo(16.67, 2);
-    expect(calculateFinalScore({ paymentReliability: 100, accountHistory: 100, practiceConsistency: 100, netWorth: 100, spendingBehavior: 100 }, { paymentReliability: 25, accountHistory: 25, practiceConsistency: 20, netWorth: 20, spendingBehavior: 10 })).toBe(850);
-    expect(calculateFinalScore({ paymentReliability: 0, accountHistory: 0, practiceConsistency: 0, netWorth: 0, spendingBehavior: 0 }, { paymentReliability: 25, accountHistory: 25, practiceConsistency: 20, netWorth: 20, spendingBehavior: 10 })).toBe(300);
+    const balancedWeights = { paymentReliability: 30, accountHistory: 20, practiceConsistency: 25, savingsDiscipline: 15, creditUtilization: 10 };
+    expect(calculateFinalScore({ paymentReliability: 100, accountHistory: 100, practiceConsistency: 100, savingsDiscipline: 100, creditUtilization: 100 }, balancedWeights)).toBe(850);
+    expect(calculateFinalScore({ paymentReliability: 0, accountHistory: 0, practiceConsistency: 0, savingsDiscipline: 0, creditUtilization: 0 }, balancedWeights)).toBe(300);
   });
 
   it("reduces the practice-consistency factor only after recorded inactivity thresholds", () => {

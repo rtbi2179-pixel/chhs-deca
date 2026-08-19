@@ -18,7 +18,9 @@ import { getGachaRarityCost, selectGachaRarity, type GachaRarity } from "./gacha
 import { applyCreditCardCharge, applyCreditCardPayment, calculateCashback, summarizeSpending } from "./creditCardMath";
 import { calculateMonetaryPressure, calculateBlueBucksInflationIndex } from "./economicMonitoring";
 import { calculateStudyCardQuestionReward, getMaverickDailyFocus, STUDY_CARD_CATALOG, STUDY_CARD_KEYS, type StudyCardKey } from "./studyCardEngine";
+import { getUserCreditScore } from "./creditScoreEngine";
 import { EVENT_MATCH_PROFILES, scoreEventMatchQuiz } from "../shared/eventMatchQuiz";
+import { calculateCreditScoreQuestionReward } from "../shared/creditScoreStages";
 
 import { initializeBanksForSchool, getBanksForSchool, getCreditCardsForBank } from './bankInitializer';
 import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback, notificationPreferences, userProfileSettings, adminActivityLogs, studySessions, sessionQuestions, stocks, userPiProgress, chapterExamConfigs, chapterExamAttempts, chapterExamActivity, userEventQuizResults } from "../drizzle/schema";
@@ -1791,16 +1793,24 @@ export const appRouter = router({
         // Use a hash of the question ID as the relatedId for tracking duplicate rewards
         let blueBucksAwarded = 0;
         let studyCardBonus = 0;
+        let creditScoreBonus = 0;
+        let creditScoreMultiplier = 1;
+        let creditScoreStage = "Foundation";
         if (isCorrect) {
           const questionHash = Math.abs(input.questionId.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % 1000000;
           const activeStudyCard = await db.getUserStudyCard(ctx.user.id);
           const cardKey = (activeStudyCard?.cardKey ?? "blazer") as StudyCardKey;
-          const reward = calculateStudyCardQuestionReward(100, cardKey, question[0].difficulty, ctx.user.id);
-          const awarded = await db.awardBlueBucks(ctx.user.id, reward.amount, 'correct_first_attempt', schoolCode, questionHash);
+          const studyCardReward = calculateStudyCardQuestionReward(100, cardKey, question[0].difficulty, ctx.user.id);
+          const score = await getUserCreditScore(ctx.user.id, schoolCode);
+          const creditReward = calculateCreditScoreQuestionReward(studyCardReward.amount, score);
+          const awarded = await db.awardBlueBucks(ctx.user.id, creditReward.amount, 'correct_first_attempt', schoolCode, questionHash);
           if (awarded) {
-            blueBucksAwarded = reward.amount;
-            studyCardBonus = reward.bonus;
-            await db.recordStudyCardPracticeProgress(ctx.user.id, reward.bonus);
+            blueBucksAwarded = creditReward.amount;
+            studyCardBonus = studyCardReward.bonus;
+            creditScoreBonus = creditReward.bonus;
+            creditScoreMultiplier = creditReward.multiplier;
+            creditScoreStage = creditReward.stage.name;
+            await db.recordStudyCardPracticeProgress(ctx.user.id, studyCardReward.bonus);
           }
         }
         
@@ -1811,8 +1821,11 @@ export const appRouter = router({
           isCorrect,
           blueBucksAwarded,
           studyCardBonus,
+          creditScoreBonus,
+          creditScoreMultiplier,
+          creditScoreStage,
           newBalance: balance,
-          message: isCorrect ? `Correct! You earned ${blueBucksAwarded} Blue Bucks! (Total: ${balance})` : 'Incorrect answer.',
+          message: isCorrect ? `Correct! You earned ${blueBucksAwarded} Blue Bucks! (Total: ${balance})${creditScoreBonus > 0 ? ` Credit stage ${creditScoreStage}: +${creditScoreBonus}.` : ''}` : 'Incorrect answer.',
         };
       }),
 

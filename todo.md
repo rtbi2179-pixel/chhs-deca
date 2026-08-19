@@ -8751,3 +8751,7 @@
 - [x] Inspect the Events & Community header and existing PI Study Library route behavior
 - [x] Add a prominent top-level PI Library button to Events & Community
 - [x] Add regression coverage, validate the link, and checkpoint the entry-point update
+- [x] Audit active credit-score factors, question-reward rules, and member-facing score breakdowns
+- [x] Replace unavailable-feature score factors with active Banking and learning signals, and define balanced score stages
+- [x] Apply transparent Blue Bucks question-reward multipliers by credit-score stage
+- [x] Add regression coverage, validate the balanced model, and checkpoint the update
