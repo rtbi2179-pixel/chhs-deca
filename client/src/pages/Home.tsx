@@ -116,7 +116,7 @@ function AuthenticatedOverview({ user }: { user: NonNullable<ReturnType<typeof u
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[oklch(0.07_0.01_265)] text-white">
-      <InteractiveBackground />
+      <InteractiveBackground variant="overview" />
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
         <header className="flex flex-col gap-6 border-b border-white/10 pb-8 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">

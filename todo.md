@@ -8729,3 +8729,6 @@
 - [x] Replace navigation-tab-oriented tour steps with tool-focused walkthrough steps that cover all active member capabilities
 - [x] Expand Blue Bucks guidance to explain earning, checking, savings, Investment Account, BBX, and Blue's News rewards
 - [x] Add regression coverage, validate the complete tour, and checkpoint the update
+- [x] Audit the existing Overview graphic and define a technically polished replacement visual system
+- [x] Build an interactive, responsive, reduced-motion-aware Overview background that keeps dashboard content legible
+- [x] Add regression coverage, validate visual behavior, and checkpoint the upgraded Overview graphic
