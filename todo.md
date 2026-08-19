@@ -8779,3 +8779,4 @@
 - [x] Add a Select This Event action to every Event Resources card and reflect the member’s focused event
 - [x] Remove event-specific selection from PI Study and display selected-event PIs by default in Event Resources
 - [x] Add a persistent Edit Profile gallery of DECA-inspired and general avatar and banner selections
+- [x] Remove the Profile page’s redundant top navigation controls while keeping the section sidebar

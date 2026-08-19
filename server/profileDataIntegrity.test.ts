@@ -38,10 +38,14 @@ describe('Profile data integrity and navigation', () => {
     expect(profile).not.toContain('trpc.practice.getLeaderboard.useQuery');
   });
 
-  it('keeps the profile’s available sections in a navigable reference-inspired two-column layout', () => {
+  it('keeps the profile’s available sections in a sidebar-driven two-column layout without redundant top controls', () => {
     expect(profile).toContain('Profile navigation');
     expect(profile).toContain('PROFILE_SECTIONS');
     expect(profile).toContain('lg:grid-cols-[minmax(17rem,0.78fr)_minmax(0,2fr)]');
+    expect(profile).not.toContain('Jump to');
+    expect(profile).not.toContain('Focus view');
+    expect(profile).not.toContain('setMobileNavOpen');
+    expect(profile).not.toContain('setFocusMode');
     expect(profile).toContain("{activeSection === 'profile-settings' &&");
     expect(profile).toContain("{activeSection === 'event-selection' &&");
     expect(profile).toContain("{activeSection === 'progress' &&");

@@ -13,18 +13,17 @@ describe('Profile interactive navigation', () => {
     expect(profile).toContain('role="tabpanel"');
   });
 
-  it('provides responsive quick navigation instead of requiring long manual scrolling', () => {
-    expect(profile).toContain('Jump to');
-    expect(profile).toContain('mobileNavOpen');
-    expect(profile).toContain('overflow-x-auto');
+  it('relies on the persistent Profile navigation sidebar instead of redundant top controls', () => {
+    expect(profile).toContain('Profile navigation');
+    expect(profile).not.toContain('Jump to');
+    expect(profile).not.toContain('mobileNavOpen');
     expect(profile).toContain('PROFILE_SECTIONS.map');
     expect(profile).toContain('onClick={() => selectSection(id)}');
   });
 
-  it('provides an optional Focus view that expands content without deleting any profile sections', () => {
-    expect(profile).toContain('Focus view');
-    expect(profile).toContain('aria-pressed={focusMode}');
-    expect(profile).toContain("focusMode ? 'lg:grid-cols-1'");
+  it('retains every focused Profile tab after removing the top control bar', () => {
+    expect(profile).not.toContain('Focus view');
+    expect(profile).not.toContain('setFocusMode');
     expect(profile).toContain('Event Selection');
     expect(profile).toContain('Profile Customization');
     expect(profile).toContain('Credit & BBX Performance');
@@ -38,9 +37,9 @@ describe('Profile interactive navigation', () => {
 describe('Profile interaction accessibility', () => {
   const profile = fs.readFileSync(path.join(process.cwd(), 'client/src/pages/Profile.tsx'), 'utf8');
 
-  it('uses actual buttons with expanded state for the mobile section menu', () => {
+  it('uses actual accessible tab buttons in the Profile navigation sidebar', () => {
     expect(profile).toContain('type="button"');
-    expect(profile).toContain('aria-expanded={mobileNavOpen}');
+    expect(profile).toContain('role="tab"');
     expect(profile).toContain('aria-selected={activeSection === id}');
   });
 });

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/_core/hooks/useAuth'
 import { trpc } from '@/lib/trpc'
-import { ArrowLeft, Bell, BookOpen, BriefcaseBusiness, CheckCircle, ChevronDown, ChevronRight, Edit2, FileText, Flame, LayoutDashboard, LineChart, Medal, Plus, SlidersHorizontal, Sparkles, Target, Trash2 } from 'lucide-react'
+import { ArrowLeft, Bell, BookOpen, BriefcaseBusiness, CheckCircle, ChevronRight, Edit2, FileText, Flame, LayoutDashboard, LineChart, Medal, Plus, SlidersHorizontal, Sparkles, Target, Trash2 } from 'lucide-react'
 import { useLocation } from 'wouter'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -48,8 +48,6 @@ export default function Profile() {
   const [, setLocation] = useLocation()
   const [showAddPortfolioDialog, setShowAddPortfolioDialog] = useState(false)
   const [activeSection, setActiveSection] = useState<(typeof PROFILE_SECTIONS)[number]['id']>('profile-settings')
-  const [mobileNavOpen, setMobileNavOpen] = useState(false)
-  const [focusMode, setFocusMode] = useState(false)
   const [editingPortfolioItem, setEditingPortfolioItem] = useState<any>(null)
   const [portfolioFormData, setPortfolioFormData] = useState({ title: '', category: '', description: '', fileUrl: '', externalUrl: '', memberProgressNotes: '' })
   const [profileCustomization, setProfileCustomization] = useState({ displayName: '', bio: '', accentColor: 'blue' as 'blue' | 'violet' | 'emerald' | 'rose', websiteTheme: 'glass' as WebsiteTheme, avatarKey: DEFAULT_PROFILE_AVATAR as ProfileAvatarKey, bannerKey: DEFAULT_PROFILE_BANNER as ProfileBannerKey, showOnLeaderboard: true })
@@ -163,9 +161,7 @@ export default function Profile() {
   const formatAccountBalance = (value: unknown) => Number(value ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
   const selectSection = (id: (typeof PROFILE_SECTIONS)[number]['id']) => {
     setActiveSection(id)
-    setMobileNavOpen(false)
   }
-  const activeSectionLabel = PROFILE_SECTIONS.find((section) => section.id === activeSection)?.label ?? 'Profile settings'
   const applyWebsiteTheme = (websiteTheme: WebsiteTheme) => {
     const previousTheme = profileCustomization.websiteTheme
     setProfileCustomization((current) => ({ ...current, websiteTheme }))
@@ -182,15 +178,6 @@ export default function Profile() {
     <main className="min-h-screen bg-[oklch(0.07_0.01_265)] pb-16 pt-20 text-white">
       <div className="mx-auto max-w-[1450px] px-4 sm:px-6 lg:px-8">
         <button onClick={() => setLocation('/')} className="mb-5 inline-flex items-center gap-2 text-sm text-blue-300 transition-colors hover:text-white"><ArrowLeft className="h-4 w-4" />Back to Home</button>
-
-        <div className="relative z-20 mb-4 flex flex-col gap-3 rounded-2xl border border-white/10 bg-slate-950/70 p-2 shadow-[0_12px_34px_oklch(0_0_0/0.2)] backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between">
-          <div className="relative min-w-0 sm:hidden">
-            <button type="button" onClick={() => setMobileNavOpen((open) => !open)} aria-expanded={mobileNavOpen} className="flex w-full items-center justify-between rounded-xl bg-white/[0.045] px-3 py-2.5 text-left text-sm text-white transition-colors hover:bg-white/[0.08]"><span><span className="block text-[10px] uppercase tracking-[0.16em] text-white/40">Jump to</span><span className="mt-0.5 block font-medium">{activeSectionLabel}</span></span><ChevronDown className={`h-4 w-4 text-blue-300 transition-transform ${mobileNavOpen ? 'rotate-180' : ''}`} /></button>
-            {mobileNavOpen && <div role="tablist" aria-label="Profile sections" className="absolute left-0 right-0 top-[calc(100%+0.5rem)] overflow-hidden rounded-xl border border-white/10 bg-slate-900 p-1.5 shadow-2xl">{PROFILE_SECTIONS.map(({ id, label, icon: Icon }) => <button key={id} type="button" role="tab" aria-selected={activeSection === id} onClick={() => selectSection(id)} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm ${activeSection === id ? 'bg-blue-500/15 text-blue-100' : 'text-white/70 hover:bg-white/[0.06] hover:text-white'}`}><Icon className="h-4 w-4 text-blue-300" />{label}</button>)}</div>}
-          </div>
-          <div role="tablist" aria-label="Profile sections" className="hidden min-w-0 items-center gap-1 overflow-x-auto sm:flex">{PROFILE_SECTIONS.map(({ id, label, icon: Icon }) => <button key={id} type="button" role="tab" aria-selected={activeSection === id} onClick={() => selectSection(id)} className={`group flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-xs transition-colors ${activeSection === id ? 'bg-blue-500/15 text-blue-100 ring-1 ring-inset ring-blue-400/25' : 'text-white/55 hover:bg-white/[0.06] hover:text-white'}`}><Icon className="h-3.5 w-3.5 text-blue-300/75" />{label}</button>)}</div>
-          <button type="button" onClick={() => setFocusMode((mode) => !mode)} aria-pressed={focusMode} className={`inline-flex shrink-0 items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs transition-colors ${focusMode ? 'bg-blue-500/15 text-blue-100 ring-1 ring-inset ring-blue-400/25' : 'text-white/60 hover:bg-white/[0.06] hover:text-white'}`}><SlidersHorizontal className="h-3.5 w-3.5" />{focusMode ? 'Exit focus' : 'Focus view'}</button>
-        </div>
 
         <section className={`overflow-hidden rounded-[1.6rem] border bg-gradient-to-br ${ACCENT_STYLES[profileCustomization.accentColor]} shadow-[0_24px_70px_oklch(0_0_0/0.28)]`}>
           <div className="h-28 border-b border-white/10 bg-cover bg-center sm:h-36" style={{ backgroundImage: `linear-gradient(90deg, oklch(0.05 0.014 265 / 0.78), oklch(0.05 0.014 265 / 0.22)), url(${selectedBanner.src})` }} />
@@ -210,8 +197,8 @@ export default function Profile() {
           </div>
         </section>
 
-        <div className={`mt-7 grid gap-7 ${focusMode ? 'lg:grid-cols-1' : 'lg:grid-cols-[minmax(17rem,0.78fr)_minmax(0,2fr)]'}`}>
-          <aside className={`${focusMode ? 'hidden' : ''} self-start lg:sticky lg:top-24`}>
+        <div className="mt-7 grid gap-7 lg:grid-cols-[minmax(17rem,0.78fr)_minmax(0,2fr)]">
+          <aside className="self-start lg:sticky lg:top-24">
 
             <div className="overflow-hidden rounded-2xl border border-white/10 bg-slate-950/65 p-3 shadow-[0_16px_42px_oklch(0_0_0/0.2)] backdrop-blur-xl">
               <p className="px-3 pb-2 pt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-white/45">Profile navigation</p>
