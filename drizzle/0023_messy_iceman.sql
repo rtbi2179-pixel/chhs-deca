@@ -1,0 +1,1 @@
+ALTER TABLE `userProfileSettings` ADD `websiteTheme` enum('glass','blazer') DEFAULT 'glass' NOT NULL;

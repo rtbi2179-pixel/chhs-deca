@@ -28,12 +28,14 @@ describe("profile customization", () => {
     await database.delete(users).where(eq(users.id, userId));
   });
 
-  it("returns defaults and persists a display name, bio, accent, and leaderboard preference", async () => {
+  it("returns defaults and persists profile customization together with the selected website style", async () => {
     const caller = appRouter.createCaller(context({
       id: userId, openId: `profile-user-${userId}`, name: "Profile Settings User", schoolCode: "TEST-PROFILE", loginMethod: "custom", role: "user", createdAt: new Date(), updatedAt: new Date(), lastSignedIn: new Date(),
     }));
-    await expect(caller.preferences.getProfileSettings()).resolves.toMatchObject({ displayName: null, bio: null, accentColor: "blue", showOnLeaderboard: true });
-    await expect(caller.preferences.updateProfileSettings({ displayName: "ICDC Competitor", bio: "Studying finance and business administration.", accentColor: "emerald", showOnLeaderboard: false })).resolves.toEqual({ success: true });
-    await expect(caller.preferences.getProfileSettings()).resolves.toMatchObject({ displayName: "ICDC Competitor", bio: "Studying finance and business administration.", accentColor: "emerald", showOnLeaderboard: false });
+    await expect(caller.preferences.getProfileSettings()).resolves.toMatchObject({ displayName: null, bio: null, accentColor: "blue", websiteTheme: "glass", showOnLeaderboard: true });
+    await expect(caller.preferences.updateProfileSettings({ displayName: "ICDC Competitor", bio: "Studying finance and business administration.", accentColor: "emerald", websiteTheme: "blazer", showOnLeaderboard: false })).resolves.toEqual({ success: true });
+    await expect(caller.preferences.getProfileSettings()).resolves.toMatchObject({ displayName: "ICDC Competitor", bio: "Studying finance and business administration.", accentColor: "emerald", websiteTheme: "blazer", showOnLeaderboard: false });
+    await expect(caller.preferences.updateWebsiteTheme({ websiteTheme: "glass" })).resolves.toEqual({ success: true, websiteTheme: "glass" });
+    await expect(caller.preferences.getProfileSettings()).resolves.toMatchObject({ websiteTheme: "glass" });
   });
 });

@@ -688,3 +688,89 @@
     display: none !important;
   }
 }
+
+/* Named website styles: Glass retains the current editorial system; Blazer adds a richer multi-color atmospheric layer. */
+:root[data-website-theme="glass"] {
+  color-scheme: dark;
+}
+
+:root[data-website-theme="blazer"] {
+  color-scheme: dark;
+  --primary: oklch(0.64 0.22 305);
+  --secondary: oklch(0.2 0.08 285);
+  --accent: oklch(0.24 0.09 230);
+  --ring: oklch(0.77 0.15 195);
+  --chart-1: oklch(0.72 0.18 195);
+  --chart-2: oklch(0.7 0.19 305);
+  --chart-3: oklch(0.78 0.16 80);
+  --chart-4: oklch(0.68 0.17 155);
+  --chart-5: oklch(0.66 0.2 250);
+  --sidebar-primary: oklch(0.64 0.22 305);
+  --sidebar-ring: oklch(0.77 0.15 195);
+}
+
+:root[data-website-theme="blazer"] .blueblazer-shell {
+  background: radial-gradient(circle at 78% 8%, oklch(0.68 0.18 305 / 0.14), transparent 28rem), radial-gradient(circle at 42% 92%, oklch(0.72 0.16 80 / 0.1), transparent 32rem), oklch(0.06 0.015 275);
+}
+:root[data-website-theme="blazer"] .blueblazer-sidebar,
+:root[data-website-theme="blazer"] .blueblazer-mobile-drawer {
+  background: linear-gradient(180deg, oklch(0.1 0.035 285 / 0.97), oklch(0.07 0.028 245 / 0.98)) !important;
+  border-color: oklch(0.72 0.17 305 / 0.18) !important;
+}
+:root[data-website-theme="blazer"] .blueblazer-sidebar-header,
+:root[data-website-theme="blazer"] .blueblazer-mobile-bar {
+  background: linear-gradient(105deg, oklch(0.12 0.075 305), oklch(0.09 0.06 235) 52%, oklch(0.13 0.07 80)) !important;
+  border-color: oklch(0.72 0.17 305 / 0.24) !important;
+}
+:root[data-website-theme="blazer"] .blueblazer-sidebar [class*="bg-blue-600"],
+:root[data-website-theme="blazer"] .blueblazer-mobile-drawer [class*="bg-blue-600"] {
+  background-color: transparent !important;
+  background-image: linear-gradient(100deg, oklch(0.62 0.22 305), oklch(0.62 0.19 245) 54%, oklch(0.74 0.16 80)) !important;
+  box-shadow: 0 0 22px oklch(0.62 0.22 305 / 0.32) !important;
+}
+:root[data-website-theme="blazer"] .app-atmosphere {
+  background: radial-gradient(circle at 76% 14%, oklch(0.67 0.19 305 / 0.16), transparent 26rem), radial-gradient(circle at 14% 86%, oklch(0.73 0.17 80 / 0.1), transparent 29rem), oklch(0.06 0.018 275);
+}
+:root[data-website-theme="blazer"] .app-atmosphere::before {
+  opacity: 0.58;
+  background-image: linear-gradient(oklch(0.78 0.16 195 / 0.06) 1px, transparent 1px), linear-gradient(90deg, oklch(0.76 0.16 305 / 0.05) 1px, transparent 1px);
+}
+:root[data-website-theme="blazer"] .page-shell {
+  background-image: radial-gradient(circle at 12% 8%, oklch(0.7 0.18 195 / 0.11), transparent 24rem), radial-gradient(circle at 86% 20%, oklch(0.68 0.19 305 / 0.12), transparent 25rem), radial-gradient(circle at 52% 100%, oklch(0.74 0.16 80 / 0.06), transparent 28rem);
+}
+:root[data-website-theme="blazer"] .page-eyebrow { color: oklch(0.78 0.16 195); }
+:root[data-website-theme="blazer"] .editorial-panel,
+:root[data-website-theme="blazer"] .banking-section-card,
+:root[data-website-theme="blazer"] .leaderboard-section-card,
+:root[data-website-theme="blazer"] .leaderboard-table-shell {
+  border-color: oklch(0.68 0.16 305 / 0.2);
+  background: linear-gradient(145deg, oklch(0.16 0.06 295 / 0.52), oklch(0.07 0.035 245 / 0.64));
+}
+:root[data-website-theme="blazer"] .editorial-tab-active {
+  border-color: oklch(0.76 0.16 195 / 0.5);
+  background: linear-gradient(100deg, oklch(0.63 0.2 305 / 0.26), oklch(0.66 0.18 195 / 0.2));
+}
+:root[data-website-theme="blazer"] .banking-hero-status,
+:root[data-website-theme="blazer"] .leaderboard-hero-status,
+:root[data-website-theme="blazer"] .banking-metric,
+:root[data-website-theme="blazer"] .leaderboard-metric {
+  border-color: oklch(0.74 0.16 195 / 0.26);
+  background: linear-gradient(145deg, oklch(0.6 0.18 305 / 0.15), oklch(0.6 0.16 245 / 0.08) 56%, oklch(0.74 0.16 80 / 0.08));
+}
+:root[data-website-theme="blazer"] .gradient-text {
+  background-image: linear-gradient(105deg, oklch(0.8 0.16 195), oklch(0.74 0.2 305) 52%, oklch(0.8 0.16 80));
+}
+:root[data-website-theme="blazer"] .section-divider {
+  background: linear-gradient(90deg, transparent, oklch(0.74 0.18 305 / 0.6), oklch(0.78 0.16 195 / 0.6), transparent);
+}
+.website-theme-choice {
+  position: relative;
+  overflow: hidden;
+  border-color: oklch(1 0 0 / 10%);
+  background: oklch(1 0 0 / 3%);
+}
+.website-theme-choice:hover { border-color: oklch(0.7 0.16 250 / 0.42); background: oklch(1 0 0 / 5%); }
+.website-theme-choice[data-active="true"] { border-color: oklch(0.72 0.16 250 / 0.6); background: oklch(0.55 0.18 260 / 0.14); box-shadow: inset 0 0 0 1px oklch(0.72 0.16 250 / 0.14); }
+.website-theme-swatch { display: block; height: 3.5rem; border: 1px solid oklch(1 0 0 / 12%); border-radius: 0.65rem; background: radial-gradient(circle at 76% 20%, oklch(0.7 0.16 250 / 0.32), transparent 28%), linear-gradient(145deg, oklch(0.12 0.025 265), oklch(0.06 0.012 265)); }
+.website-theme-choice:nth-child(2) .website-theme-swatch { background: radial-gradient(circle at 78% 22%, oklch(0.72 0.19 305 / 0.48), transparent 27%), radial-gradient(circle at 22% 84%, oklch(0.76 0.16 80 / 0.28), transparent 30%), linear-gradient(145deg, oklch(0.12 0.07 295), oklch(0.07 0.04 245)); }
+:root[data-website-theme="blazer"] .website-theme-choice[data-active="true"] { border-color: oklch(0.78 0.16 195 / 0.68); background: linear-gradient(135deg, oklch(0.63 0.2 305 / 0.22), oklch(0.7 0.17 195 / 0.15)); box-shadow: inset 0 0 0 1px oklch(0.78 0.16 195 / 0.18); }

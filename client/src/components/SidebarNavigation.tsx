@@ -3,6 +3,7 @@ import { useLocation } from 'wouter';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { trpc } from '@/lib/trpc';
 import { InteractiveBackground, type BackgroundVariant } from '@/components/InteractiveBackground';
+import { useTheme } from '@/contexts/ThemeContext';
 import {
   Home,
   BookOpen,
@@ -79,6 +80,7 @@ function atmosphereForRoute(location: string): Exclude<BackgroundVariant, "hero"
 export function SidebarNavigation({ children }: { children: React.ReactNode }) {
   const [location, navigate] = useLocation();
   const { user, logout } = useAuth();
+  const { websiteTheme } = useTheme();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -112,15 +114,15 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="flex min-h-screen bg-[oklch(0.06_0.012_265)] text-foreground">
+    <div className="blueblazer-shell flex min-h-screen bg-[oklch(0.06_0.012_265)] text-foreground" data-website-theme={websiteTheme}>
       {/* Desktop Sidebar */}
       <aside
-        className={`hidden md:flex flex-col border-r border-white/[0.08] bg-[oklch(0.08_0.014_265/0.95)] backdrop-blur-2xl transition-all duration-300 z-40 sticky top-0 h-screen select-none ${
+        className={`blueblazer-sidebar hidden md:flex flex-col border-r border-white/[0.08] bg-[oklch(0.08_0.014_265/0.95)] backdrop-blur-2xl transition-all duration-300 z-40 sticky top-0 h-screen select-none ${
           collapsed ? 'w-20' : 'w-72'
         }`}
       >
         {/* Header / Brand */}
-        <div className="flex items-center justify-between border-b border-white/[0.08] bg-black p-4">
+        <div className="blueblazer-sidebar-header flex items-center justify-between border-b border-white/[0.08] bg-black p-4">
           {!collapsed ? (
             <button type="button" onClick={restartOnboardingTour} aria-label="Restart Blue Blazer tour" className="flex items-center gap-3 rounded-xl text-left transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-blue-300">
               <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl border border-blue-300/30 bg-black p-1 shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)]">
@@ -325,7 +327,7 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Mobile Top Bar */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between border-b border-white/[0.08] bg-black px-4 py-3 backdrop-blur-xl">
+      <div className="blueblazer-mobile-bar md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between border-b border-white/[0.08] bg-black px-4 py-3 backdrop-blur-xl">
         <button type="button" onClick={restartOnboardingTour} aria-label="Restart Blue Blazer tour" className="flex items-center gap-3 rounded-lg text-left transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-blue-300">
           <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg border border-blue-300/30 bg-black p-0.5 shadow-md">
             <img src={BLUE_BLAZER_LOGO} alt="Blue Blazer logo" className="h-full w-full object-contain" />
@@ -347,7 +349,7 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="md:hidden fixed inset-0 top-14 z-40 bg-[oklch(0.06_0.012_265/0.98)] backdrop-blur-2xl p-4 overflow-y-auto"
+            className="blueblazer-mobile-drawer md:hidden fixed inset-0 top-14 z-40 bg-[oklch(0.06_0.012_265/0.98)] backdrop-blur-2xl p-4 overflow-y-auto"
           >
             <nav className="space-y-4 pb-12">
               <div>

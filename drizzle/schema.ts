@@ -997,6 +997,7 @@ export const userProfileSettings = mysqlTable("userProfileSettings", {
   displayName: varchar("displayName", { length: 60 }),
   bio: varchar("bio", { length: 280 }),
   accentColor: mysqlEnum("accentColor", ["blue", "violet", "emerald", "rose"]).default("blue").notNull(),
+  websiteTheme: mysqlEnum("websiteTheme", ["glass", "blazer"]).default("glass").notNull(),
   showOnLeaderboard: boolean("showOnLeaderboard").default(true).notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 }, (table) => ({

@@ -11,6 +11,7 @@ import { toast } from 'sonner'
 import { CreditScoreChart } from '@/components/CreditScoreChart'
 import { PortfolioChart } from '@/components/PortfolioChart'
 import { allEvents } from '@/pages/Events'
+import { useTheme, type WebsiteTheme } from '@/contexts/ThemeContext'
 
 const PORTFOLIO_CATEGORIES = [
   'Written Event', 'Roleplay', 'Exam Preparation', 'Presentation', 'Resume', 'Community Service', 'Leadership', 'Awards', 'Other',
@@ -41,6 +42,7 @@ const PROFILE_SECTIONS = [
 
 export default function Profile() {
   const { user } = useAuth()
+  const { setWebsiteTheme } = useTheme()
   const utils = trpc.useUtils()
   const [, setLocation] = useLocation()
   const [showAddPortfolioDialog, setShowAddPortfolioDialog] = useState(false)
@@ -49,7 +51,7 @@ export default function Profile() {
   const [focusMode, setFocusMode] = useState(false)
   const [editingPortfolioItem, setEditingPortfolioItem] = useState<any>(null)
   const [portfolioFormData, setPortfolioFormData] = useState({ title: '', category: '', description: '', fileUrl: '', externalUrl: '', memberProgressNotes: '' })
-  const [profileCustomization, setProfileCustomization] = useState({ displayName: '', bio: '', accentColor: 'blue' as 'blue' | 'violet' | 'emerald' | 'rose', showOnLeaderboard: true })
+  const [profileCustomization, setProfileCustomization] = useState({ displayName: '', bio: '', accentColor: 'blue' as 'blue' | 'violet' | 'emerald' | 'rose', websiteTheme: 'glass' as WebsiteTheme, showOnLeaderboard: true })
 
   const profileMetricsQuery = trpc.practice.getProfileMetrics.useQuery(undefined, { enabled: !!user?.id })
   const { data: portfolio = [], refetch: refetchPortfolio } = trpc.members.getPortfolioItems.useQuery({ userId: user?.id }, { enabled: !!user?.id })
@@ -67,7 +69,11 @@ export default function Profile() {
     onError: (error) => toast.error(error.message),
   })
   const updateProfileSettings = trpc.preferences.updateProfileSettings.useMutation({
-    onSuccess: () => { profileSettingsQuery.refetch(); toast.success('Profile customization saved') },
+    onSuccess: async () => { await utils.preferences.getProfileSettings.invalidate(); toast.success('Profile customization saved') },
+    onError: (error) => toast.error(error.message),
+  })
+  const updateWebsiteTheme = trpc.preferences.updateWebsiteTheme.useMutation({
+    onSuccess: async () => { await utils.preferences.getProfileSettings.invalidate(); toast.success('Website style saved') },
     onError: (error) => toast.error(error.message),
   })
   const createPortfolioMutation = trpc.members.createPortfolioItem.useMutation({
@@ -86,7 +92,8 @@ export default function Profile() {
   useEffect(() => {
     const settings = profileSettingsQuery.data
     if (!settings) return
-    setProfileCustomization({ displayName: settings.displayName || '', bio: settings.bio || '', accentColor: settings.accentColor, showOnLeaderboard: settings.showOnLeaderboard })
+    setProfileCustomization({ displayName: settings.displayName || '', bio: settings.bio || '', accentColor: settings.accentColor, websiteTheme: settings.websiteTheme, showOnLeaderboard: settings.showOnLeaderboard })
+    setWebsiteTheme(settings.websiteTheme)
   }, [profileSettingsQuery.data])
 
   const setNotificationPreference = (key: 'announcementsEnabled' | 'feedbackResponsesEnabled' | 'systemUpdatesEnabled' | 'studyRemindersEnabled', checked: boolean) => {
@@ -156,6 +163,17 @@ export default function Profile() {
     setMobileNavOpen(false)
   }
   const activeSectionLabel = PROFILE_SECTIONS.find((section) => section.id === activeSection)?.label ?? 'Profile settings'
+  const applyWebsiteTheme = (websiteTheme: WebsiteTheme) => {
+    const previousTheme = profileCustomization.websiteTheme
+    setProfileCustomization((current) => ({ ...current, websiteTheme }))
+    setWebsiteTheme(websiteTheme)
+    updateWebsiteTheme.mutate({ websiteTheme }, {
+      onError: () => {
+        setProfileCustomization((current) => ({ ...current, websiteTheme: previousTheme }))
+        setWebsiteTheme(previousTheme)
+      },
+    })
+  }
 
   return (
     <main className="min-h-screen bg-[oklch(0.07_0.01_265)] pb-16 pt-20 text-white">
@@ -209,8 +227,9 @@ export default function Profile() {
                 <label className="text-sm text-white/80">Accent color<select value={profileCustomization.accentColor} onChange={(event) => setProfileCustomization((current) => ({ ...current, accentColor: event.target.value as typeof current.accentColor }))} className="mt-1.5 w-full rounded-md border border-white/10 bg-slate-950/70 p-2 text-white"><option value="blue">Blue</option><option value="violet">Violet</option><option value="emerald">Emerald</option><option value="rose">Rose</option></select></label>
                 <label className="text-sm text-white/80 md:col-span-2">Short bio<textarea value={profileCustomization.bio} onChange={(event) => setProfileCustomization((current) => ({ ...current, bio: event.target.value }))} maxLength={280} rows={3} placeholder="Share your DECA focus, event, or goal." className="mt-1.5 w-full resize-y rounded-md border border-white/10 bg-slate-950/70 p-2 text-white" /></label>
               </div>
+              <div className="mt-5 border-t border-white/10 pt-5"><div><p className="data-label">Website style</p><h3 className="mt-1 text-base font-semibold text-white">Choose your Blue Blazer experience</h3><p className="mt-1 text-sm text-white/60">Glass preserves the current blue editorial system. Blazer adds colorful aurora accents across the app.</p></div><div className="mt-4 grid gap-3 md:grid-cols-2">{([{ value: 'glass', label: 'Glass', description: 'The original dark-blue, frosted editorial look.' }, { value: 'blazer', label: 'Blazer', description: 'A more colorful indigo, cyan, violet, and amber atmosphere.' }] as const).map((option) => <button key={option.value} type="button" data-active={profileCustomization.websiteTheme === option.value} onClick={() => applyWebsiteTheme(option.value)} disabled={updateWebsiteTheme.isPending} className="website-theme-choice rounded-xl border p-4 text-left transition focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:cursor-wait disabled:opacity-70"><span className="website-theme-swatch" aria-hidden="true" /><span className="mt-3 block font-semibold text-white">{option.label}</span><span className="mt-1 block text-xs leading-5 text-white/60">{option.description}</span><span className="mt-3 block text-[10px] font-mono-data uppercase tracking-[0.14em] text-white/45">{profileCustomization.websiteTheme === option.value ? 'Selected' : 'Select style'}</span></button>)}</div></div>
               <label className="mt-4 flex cursor-pointer items-center gap-3 text-sm text-white/80"><input type="checkbox" checked={profileCustomization.showOnLeaderboard} onChange={(event) => setProfileCustomization((current) => ({ ...current, showOnLeaderboard: event.target.checked }))} className="h-4 w-4 accent-blue-500" />Show my customized profile on chapter leaderboards</label>
-              <div className="mt-5 flex justify-end"><Button disabled={updateProfileSettings.isPending} onClick={() => updateProfileSettings.mutate({ displayName: profileCustomization.displayName.trim() || null, bio: profileCustomization.bio.trim() || null, accentColor: profileCustomization.accentColor, showOnLeaderboard: profileCustomization.showOnLeaderboard })}>Save customization</Button></div>
+              <div className="mt-5 flex justify-end"><Button disabled={updateProfileSettings.isPending} onClick={() => updateProfileSettings.mutate({ displayName: profileCustomization.displayName.trim() || null, bio: profileCustomization.bio.trim() || null, accentColor: profileCustomization.accentColor, websiteTheme: profileCustomization.websiteTheme, showOnLeaderboard: profileCustomization.showOnLeaderboard })}>Save customization</Button></div>
             </section>}
 
             {activeSection === 'event-selection' && <section id="event-selection" role="tabpanel" className="rounded-2xl border border-white/10 bg-slate-950/65 p-5 shadow-[0_16px_42px_oklch(0_0_0/0.2)] backdrop-blur-xl sm:p-7">

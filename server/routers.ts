@@ -754,6 +754,7 @@ export const appRouter = router({
         displayName: null,
         bio: null,
         accentColor: 'blue' as const,
+        websiteTheme: 'glass' as const,
         showOnLeaderboard: true,
       };
     }),
@@ -763,6 +764,7 @@ export const appRouter = router({
         displayName: z.string().trim().min(1).max(60).nullable(),
         bio: z.string().trim().max(280).nullable(),
         accentColor: z.enum(['blue', 'violet', 'emerald', 'rose']),
+        websiteTheme: z.enum(['glass', 'blazer']),
         showOnLeaderboard: z.boolean(),
       }))
       .mutation(async ({ ctx, input }) => {
@@ -771,6 +773,16 @@ export const appRouter = router({
         await database.insert(userProfileSettings).values({ userId: ctx.user.id, ...input })
           .onDuplicateKeyUpdate({ set: { ...input, updatedAt: new Date() } });
         return { success: true };
+      }),
+
+    updateWebsiteTheme: protectedProcedure
+      .input(z.object({ websiteTheme: z.enum(['glass', 'blazer']) }))
+      .mutation(async ({ ctx, input }) => {
+        const database = await db.getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Profile settings storage is unavailable' });
+        await database.insert(userProfileSettings).values({ userId: ctx.user.id, websiteTheme: input.websiteTheme })
+          .onDuplicateKeyUpdate({ set: { websiteTheme: input.websiteTheme, updatedAt: new Date() } });
+        return { success: true, websiteTheme: input.websiteTheme };
       }),
   }),
   reports: router({
