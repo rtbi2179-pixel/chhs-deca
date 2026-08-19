@@ -28,8 +28,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 const BLUE_BLAZER_LOGO = '/manus-storage/Untitleddesign_c1fb0d88.png';
 
 const mainNavLinks = [
-  { href: '/events', label: 'Events & Community', icon: Calendar, group: 'MAIN' },
   { href: '/', label: 'Overview', icon: Home, group: 'MAIN' },
+  { href: '/events', label: 'Events', icon: Calendar, group: 'MAIN' },
   { href: '/practice', label: 'Practice', icon: Target, group: 'MAIN' },
   { href: '/speech-ai', label: 'AI Study & Roleplay', icon: Zap, group: 'MAIN' },
   { href: '/leaderboard', label: 'Leaderboard', icon: TrendingUp, group: 'MAIN' },
