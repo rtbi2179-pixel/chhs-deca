@@ -12,6 +12,7 @@ function place(element: HTMLElement | null, point: Point, scale = 1) {
 export function BlueBlazerCursor() {
   const coreRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
+  const pulseRef = useRef<HTMLDivElement>(null);
   const trailRefs = useRef<Array<HTMLSpanElement | null>>([]);
 
   useEffect(() => {
@@ -33,6 +34,7 @@ export function BlueBlazerCursor() {
         window.cancelAnimationFrame(frame);
         coreRef.current?.classList.remove("is-visible");
         glowRef.current?.classList.remove("is-visible");
+        pulseRef.current?.classList.remove("is-pulsing");
         trailRefs.current.forEach((particle) => particle?.classList.remove("is-visible"));
       } else if (hasPointer) {
         frame = window.requestAnimationFrame(render);
@@ -81,7 +83,21 @@ export function BlueBlazerCursor() {
       window.cancelAnimationFrame(frame);
       coreRef.current?.classList.remove("is-visible");
       glowRef.current?.classList.remove("is-visible");
+      pulseRef.current?.classList.remove("is-pulsing");
       trailRefs.current.forEach((particle) => particle?.classList.remove("is-visible"));
+    };
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (!isEnabled || event.pointerType && event.pointerType !== "mouse") return;
+      const interactiveTarget = event.target instanceof Element && event.target.closest("input, textarea, select, [contenteditable='true']");
+      if (interactiveTarget) return;
+      const point = { x: event.clientX, y: event.clientY };
+      target.x = point.x;
+      target.y = point.y;
+      place(pulseRef.current, point);
+      pulseRef.current?.classList.remove("is-pulsing");
+      void pulseRef.current?.offsetWidth;
+      pulseRef.current?.classList.add("is-pulsing");
     };
 
     const onPointerEnter = () => {
@@ -89,6 +105,7 @@ export function BlueBlazerCursor() {
     };
 
     window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("pointerdown", onPointerDown, { passive: true });
     document.documentElement.addEventListener("pointerleave", onPointerLeave);
     document.documentElement.addEventListener("pointerenter", onPointerEnter);
     finePointer.addEventListener("change", setEnabled);
@@ -99,6 +116,7 @@ export function BlueBlazerCursor() {
       window.cancelAnimationFrame(frame);
       root.classList.remove("blueblazer-cursor-active");
       window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerdown", onPointerDown);
       document.documentElement.removeEventListener("pointerleave", onPointerLeave);
       document.documentElement.removeEventListener("pointerenter", onPointerEnter);
       finePointer.removeEventListener("change", setEnabled);
@@ -108,6 +126,7 @@ export function BlueBlazerCursor() {
 
   return <>
     <div ref={glowRef} aria-hidden="true" className="blueblazer-cursor-glow" />
+    <div ref={pulseRef} aria-hidden="true" className="blueblazer-cursor-pulse"><span /></div>
     {Array.from({ length: TRAIL_PARTICLE_COUNT }, (_, index) => <span key={index} ref={(element) => { trailRefs.current[index] = element; }} aria-hidden="true" className="blueblazer-cursor-trail" style={{ "--trail-index": index } as React.CSSProperties} />)}
     <div ref={coreRef} aria-hidden="true" className="blueblazer-cursor-core"><span className="blueblazer-cursor-burn" /><span className="blueblazer-cursor-ring" /><span className="blueblazer-cursor-dot" /></div>
   </>;

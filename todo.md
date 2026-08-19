@@ -8766,3 +8766,4 @@
 - [x] Make the Events PI Library control more prominent and remove the separate sidebar item while retaining the PI Study Library page
 - [x] Refine the Blue Blazer cursor visual treatment and reduce the particle trail length
 - [x] Reduce PI Study Library opening lag while preserving all module, search, and event-study functionality
+- [x] Add a subtle Blue Blazer cursor click pulse with accessibility safeguards

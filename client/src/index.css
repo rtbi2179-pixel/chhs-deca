@@ -460,7 +460,8 @@
 /* Pointer-only Blue Blazer cursor: a luminous compass point with a restrained particle tail. */
 .blueblazer-cursor-core,
 .blueblazer-cursor-glow,
-.blueblazer-cursor-trail {
+.blueblazer-cursor-trail,
+.blueblazer-cursor-pulse {
   position: fixed;
   top: 0;
   left: 0;
@@ -510,6 +511,30 @@
   background: radial-gradient(circle, oklch(0.62 0.18 250 / 0.2), oklch(0.48 0.17 260 / 0.08) 38%, transparent 70%);
   filter: blur(3px);
 }
+.blueblazer-cursor-pulse {
+  height: 34px;
+  width: 34px;
+}
+.blueblazer-cursor-pulse.is-pulsing {
+  opacity: 1;
+}
+.blueblazer-cursor-pulse span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  border: 1px solid oklch(0.78 0.14 250 / 0.7);
+  border-radius: 999px;
+  background: radial-gradient(circle, oklch(0.74 0.16 250 / 0.18), transparent 58%);
+  opacity: 0;
+}
+.blueblazer-cursor-pulse.is-pulsing span {
+  animation: blueblazer-cursor-click-pulse 420ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+@keyframes blueblazer-cursor-click-pulse {
+  0% { transform: scale(0.38); opacity: 0.85; }
+  55% { opacity: 0.28; }
+  100% { transform: scale(1.55); opacity: 0; }
+}
 .blueblazer-cursor-trail {
   height: calc(4px - var(--trail-index) * 0.35px);
   width: calc(4px - var(--trail-index) * 0.35px);
@@ -534,7 +559,8 @@
 @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
   .blueblazer-cursor-core,
   .blueblazer-cursor-glow,
-  .blueblazer-cursor-trail {
+  .blueblazer-cursor-trail,
+  .blueblazer-cursor-pulse {
     display: none !important;
   }
 }

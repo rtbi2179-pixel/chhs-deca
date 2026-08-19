@@ -16,7 +16,9 @@ describe("Blue Blazer cursor effect", () => {
     expect(cursor).toContain("blueblazer-cursor-burn");
     expect(cursor).toContain("blueblazer-cursor-ring");
     expect(cursor).toContain("blueblazer-cursor-trail");
+    expect(cursor).toContain("blueblazer-cursor-pulse");
     expect(cursor).toContain('window.addEventListener("pointermove"');
+    expect(cursor).toContain('window.addEventListener("pointerdown"');
     expect(cursor).toContain("window.requestAnimationFrame(render)");
   });
 
@@ -30,5 +32,6 @@ describe("Blue Blazer cursor effect", () => {
     expect(css).toContain("html.blueblazer-cursor-active");
     expect(css).toContain("@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce)");
     expect(css).toContain('[contenteditable="true"]');
+    expect(css).toContain("blueblazer-cursor-click-pulse");
   });
 });
