@@ -8738,3 +8738,6 @@
 - [x] Audit the existing primary-event preference flow and the Overview Your Study Path compass control
 - [x] Add an accessible compass-triggered event selector that persists the member's study focus
 - [x] Refresh Overview study-path and PI links after selection, add coverage, validate, and checkpoint the update
+- [x] Move Events & Community into the top position of Main Navigation
+- [x] Place Leaderboard second-to-last and PI Study Library last in Main Navigation
+- [x] Update navigation regression coverage, validate the reordered sidebar, and checkpoint the change

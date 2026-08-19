@@ -27,15 +27,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 const BLUE_BLAZER_LOGO = '/manus-storage/Untitleddesign_c1fb0d88.png';
 
 const mainNavLinks = [
+  { href: '/events', label: 'Events & Community', icon: Calendar, group: 'MAIN' },
   { href: '/', label: 'Overview', icon: Home, group: 'MAIN' },
-  { href: '/pi-quizlet', label: 'PI Study Library', icon: BookOpen, group: 'MAIN' },
   { href: '/practice', label: 'Practice', icon: Target, group: 'MAIN' },
-  { href: '/leaderboard', label: 'Leaderboard', icon: TrendingUp, group: 'MAIN' },
   { href: '/speech-ai', label: 'AI Study & Roleplay', icon: Zap, group: 'MAIN' },
+  { href: '/leaderboard', label: 'Leaderboard', icon: TrendingUp, group: 'MAIN' },
+  { href: '/pi-quizlet', label: 'PI Study Library', icon: BookOpen, group: 'MAIN' },
 ];
 
 const chapterNavLinks = [
-  { href: '/events', label: 'Events & Community', icon: Calendar, group: 'CHAPTER' },
   { href: '/calendar', label: 'Calendar', icon: Calendar, group: 'CHAPTER' },
   { href: '/announcements', label: 'Announcements', icon: Bell, group: 'CHAPTER' },
   { href: '/discussions', label: 'Discussion Posts', icon: MessageSquare, group: 'CHAPTER' },
