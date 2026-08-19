@@ -2,6 +2,7 @@ import { router, protectedProcedure } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import * as db from "./db";
+import { getBlazerBuddyConversation, sendGuidedBlazerBuddyMessage } from "./blazerBuddy";
 
 export const membersRouter = router({
   // Get all members in a chapter (admin only)
@@ -235,6 +236,22 @@ export const membersRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'School code is required' })
       }
             return db.getConversationList(ctx.user.id, schoolCode)
+    }),
+
+  getBlazerBuddyMessages: protectedProcedure
+    .input(z.object({ schoolCode: z.string().optional() }))
+    .query(async ({ input, ctx }) => {
+      const schoolCode = ctx.user.role === 'super_admin' ? input.schoolCode : ctx.user.schoolCode;
+      if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'School code is required' });
+      return getBlazerBuddyConversation(ctx.user.id, schoolCode);
+    }),
+
+  sendBlazerBuddyMessage: protectedProcedure
+    .input(z.object({ body: z.string().trim().min(1).max(1000), schoolCode: z.string().optional() }))
+    .mutation(async ({ input, ctx }) => {
+      const schoolCode = ctx.user.role === 'super_admin' ? input.schoolCode : ctx.user.schoolCode;
+      if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'School code is required' });
+      return sendGuidedBlazerBuddyMessage(ctx.user.id, schoolCode, input.body);
     }),
 
   searchUsers: protectedProcedure

@@ -8744,3 +8744,7 @@
 - [x] Remove Transaction History from Banking Activity on the Banking & Cards page
 - [x] Remove Spending by Category, Monthly Spending Trend, and Collector Card interfaces from Banking & Cards
 - [x] Update banking regression coverage, validate the streamlined page, and checkpoint the change
+- [x] Audit Direct Messages storage, UI composition, and the existing daily credit-score refresh job
+- [x] Add a guided Blazer Buddy conversation with curated study, practice, PI, event, banking, and credit-score help
+- [x] Post idempotent credit-score refresh notifications from the existing daily update workflow
+- [x] Add regression coverage, validate guided Blazer Buddy, and checkpoint the feature

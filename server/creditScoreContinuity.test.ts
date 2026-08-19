@@ -9,6 +9,7 @@ describe("credit-score continuity and portfolio truthfulness", () => {
     expect(updater).toContain("updateCreditScore(user.id, schoolCode");
     expect(server).toContain("/api/scheduled/credit-score-update");
     expect(server).toContain("creditScoreUpdateSchedule.taskUid");
+    expect(server).toContain("postCreditScoreRefreshNotifications");
   });
 
   it("does not expose retired cost basis as stock market performance", () => {

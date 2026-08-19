@@ -11,6 +11,7 @@ import { serveStatic, setupVite } from "./vite";
 import { sdk } from "./sdk";
 import { advanceBbxSimulation, createBbxEvent } from "../bbxSimulation";
 import { updateAllCreditScores } from "../creditScoreUpdater";
+import { postCreditScoreRefreshNotifications } from "../blazerBuddy";
 import { getDb } from "../db";
 import { bbxCompanies, bbxMarketState, bbxNews, creditScoreUpdateSchedule, savingsInterestSchedule } from "../../drizzle/schema";
 import { eq, lt } from "drizzle-orm";
@@ -129,9 +130,10 @@ async function startServer() {
       const [schedule] = await database.select().from(creditScoreUpdateSchedule).where(eq(creditScoreUpdateSchedule.taskUid, caller.taskUid)).limit(1);
       if (!schedule) return res.json({ ok: true, skipped: "orphan" });
       await updateAllCreditScores();
+      const buddyNotifications = await postCreditScoreRefreshNotifications();
       const ranAt = new Date();
       await database.update(creditScoreUpdateSchedule).set({ lastRunAt: ranAt }).where(eq(creditScoreUpdateSchedule.id, schedule.id));
-      return res.json({ ok: true, taskUid: caller.taskUid, ranAt: ranAt.toISOString() });
+      return res.json({ ok: true, taskUid: caller.taskUid, ranAt: ranAt.toISOString(), buddyNotifications });
     } catch (error) {
       console.error("[Credit Score Heartbeat]", error);
       return res.status(500).json({ error: error instanceof Error ? error.message : "Unable to refresh credit scores", context: { url: req.originalUrl }, timestamp: new Date().toISOString() });

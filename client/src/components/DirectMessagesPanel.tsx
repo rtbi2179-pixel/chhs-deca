@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2, Send, Search, X, MessageCircle, ChevronLeft } from 'lucide-react';
+import { Loader2, Send, Search, X, MessageCircle, ChevronLeft, Sparkles } from 'lucide-react';
 import { useAuth } from '@/_core/hooks/useAuth';
 
 interface User {
@@ -25,6 +25,15 @@ interface Message {
   createdAt: Date;
 }
 
+const BLAZER_BUDDY: User = {
+  id: -1,
+  name: 'Blazer Buddy',
+  firstName: 'Blazer',
+  lastName: 'Buddy',
+  email: '',
+  role: 'assistant',
+};
+
 // Inner component that handles messaging logic
 function MessagesContent() {
   const { user: currentUser } = useAuth();
@@ -37,6 +46,7 @@ function MessagesContent() {
   const [selectedSchool, setSelectedSchool] = useState<string | null>(null);
   const [messagesText, setMessagesText] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const isBlazerBuddy = selectedUser?.id === BLAZER_BUDDY.id;
 
   // Get super admin's selected school
   const { data: selectedSchoolData } = trpc.superAdmin.getSelectedSchool.useQuery(
@@ -67,11 +77,16 @@ function MessagesContent() {
   // Get messages with selected user
   const { data: conversationMessages } = trpc.members.getMessages.useQuery(
     { otherUserId: selectedUser?.id || 0 },
-    { enabled: !!selectedUser }
+    { enabled: !!selectedUser && !isBlazerBuddy }
+  );
+  const { data: buddyMessages } = trpc.members.getBlazerBuddyMessages.useQuery(
+    { schoolCode: activeSchoolCode || undefined },
+    { enabled: !!isBlazerBuddy && !!activeSchoolCode }
   );
 
   // Send message mutation
   const sendMessageMutation = trpc.members.sendMessage.useMutation();
+  const sendBlazerBuddyMessageMutation = trpc.members.sendBlazerBuddyMessage.useMutation();
 
   // Get conversations
   const { data: conversations } = trpc.members.getConversations.useQuery(
@@ -81,11 +96,12 @@ function MessagesContent() {
 
   // Update messages when conversation changes
   useEffect(() => {
-    if (conversationMessages) {
-      setMessages(conversationMessages);
+    const activeMessages = isBlazerBuddy ? buddyMessages : conversationMessages;
+    if (activeMessages) {
+      setMessages(activeMessages);
       scrollToBottom();
     }
-  }, [conversationMessages]);
+  }, [buddyMessages, conversationMessages, isBlazerBuddy]);
 
   // Scroll to bottom when new messages arrive
   const scrollToBottom = () => {
@@ -98,6 +114,17 @@ function MessagesContent() {
     if (!messageText.trim() || !selectedUser || !currentUser) return;
 
     try {
+      if (isBlazerBuddy) {
+        const updatedMessages = await sendBlazerBuddyMessageMutation.mutateAsync({
+          body: messageText,
+          schoolCode: activeSchoolCode || undefined,
+        });
+        setMessages(updatedMessages);
+        setMessageText('');
+        scrollToBottom();
+        return;
+      }
+
       await sendMessageMutation.mutateAsync({
         recipientId: selectedUser.id,
         body: messageText,
@@ -233,6 +260,14 @@ function MessagesContent() {
 
               {/* Search Bar */}
               <div className="p-4 border-b border-border">
+                <button
+                  type="button"
+                  onClick={() => handleSelectUser(BLAZER_BUDDY)}
+                  className="mb-3 flex w-full items-center gap-3 rounded-lg border border-blue-500/30 bg-blue-500/10 px-3 py-3 text-left transition-colors hover:bg-blue-500/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                >
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-blue-300/35 bg-blue-400/10 text-blue-300"><Sparkles className="h-4 w-4" /></span>
+                  <span className="min-w-0"><span className="block text-sm font-semibold text-foreground">Blazer Buddy</span><span className="block truncate text-xs text-foreground/65">Guided help, study tips, and credit-score refresh notices</span></span>
+                </button>
                 <div className="relative">
                   <Search className="absolute left-3 top-3 w-4 h-4 text-foreground/50" />
                   <Input
@@ -362,7 +397,7 @@ function MessagesContent() {
                 <div className="flex gap-2">
                   <Input
                     type="text"
-                    placeholder="Type a message..."
+                    placeholder={isBlazerBuddy ? "Ask Blazer Buddy about study tools, Blue Bucks, or credit score..." : "Type a message..."}
                     value={messageText}
                     onChange={(e) => setMessageText(e.target.value)}
                     onKeyPress={(e) => {
@@ -375,11 +410,11 @@ function MessagesContent() {
                   />
                   <Button
                     onClick={handleSendMessage}
-                    disabled={!messageText.trim() || sendMessageMutation.isPending}
+                    disabled={!messageText.trim() || sendMessageMutation.isPending || sendBlazerBuddyMessageMutation.isPending}
                     className="bg-blue-600 hover:bg-blue-700"
                     size="sm"
                   >
-                    {sendMessageMutation.isPending ? (
+                    {sendMessageMutation.isPending || sendBlazerBuddyMessageMutation.isPending ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
                     ) : (
                       <Send className="w-4 h-4" />

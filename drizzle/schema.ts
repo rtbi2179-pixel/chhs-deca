@@ -654,6 +654,26 @@ export type DirectMessage = typeof directMessages.$inferSelect;
 export type InsertDirectMessage = typeof directMessages.$inferInsert;
 
 /**
+ * Durable system-assistant conversation for the guided Blazer Buddy.
+ * Kept separate from member-to-member messages so the assistant never
+ * impersonates a chapter member or gains member account permissions.
+ */
+export const blazerBuddyMessages = mysqlTable("blazerBuddyMessages", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  speaker: mysqlEnum("speaker", ["member", "buddy"]).notNull(),
+  body: text("body").notNull(),
+  notificationKey: varchar("notificationKey", { length: 100 }),
+  readAt: timestamp("readAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  uniqueUserNotification: unique("blazer_buddy_user_notification").on(table.userId, table.notificationKey),
+  userSchoolCreatedIdx: index("blazer_buddy_user_school_created").on(table.userId, table.schoolCode, table.createdAt),
+}));
+export type BlazerBuddyMessage = typeof blazerBuddyMessages.$inferSelect;
+
+/**
  * PI Learning Modules - Performance Indicator mastery system
  */
 export const piLearningModules = mysqlTable("piLearningModules", {
