@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, Building2, CalendarClock, Check, ClipboardCheck,
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { IndividualMockExamHistory } from "@/components/IndividualMockExamHistory";
+import { getEventExamGuidance } from "@/lib/eventExamEligibility";
 
 const MOCK_EXAM_CLUSTERS = [
   { value: "Marketing", label: "Marketing" },
@@ -86,6 +87,7 @@ export default function ChapterMockExam() {
   const [questionStartedAt, setQuestionStartedAt] = useState(() => Date.now());
 
   const chapterAvailability = trpc.mockExams.getChapterAvailability.useQuery();
+  const primaryEventQuery = trpc.preferences.getPrimaryEvent.useQuery();
   const createIndividual = trpc.mockExams.createIndividualMock.useMutation({ onSuccess: (result) => startExam(result, "Your 100-question individual mock exam is ready."), onError: (error) => { setPreparationProgress(0); toast.error(error.message); } });
   const createChapter = trpc.mockExams.createChapterMock.useMutation({ onSuccess: (result) => startExam(result, "Your administrator-assigned chapter mock exam is ready."), onError: (error) => { setPreparationProgress(0); toast.error(error.message); } });
   const submitAnswer = trpc.mockExams.submitAnswer.useMutation({
@@ -109,6 +111,7 @@ export default function ChapterMockExam() {
   const isPreparing = createIndividual.isPending || createChapter.isPending;
   const currentQuestion = exam?.questions[currentIndex];
   const selectedClusterLabel = MOCK_EXAM_CLUSTERS.find((cluster) => cluster.value === selectedCluster)?.label;
+  const eventExamGuidance = getEventExamGuidance(primaryEventQuery.data?.primaryEventCode);
   const configuredChapter = chapterAvailability.data?.config;
   const chapterIsAvailable = Boolean(chapterAvailability.data?.isAvailable);
   const expiresAtMs = exam?.mode === "chapter" && exam.expiresAt ? new Date(exam.expiresAt).getTime() : null;
@@ -175,6 +178,9 @@ export default function ChapterMockExam() {
             </div>
           </div>
 
+          {eventExamGuidance && !eventExamGuidance.isTested && <div className="mt-5 flex items-start gap-3 rounded-md border border-amber-400/30 bg-amber-500/[0.08] p-4 text-sm leading-relaxed text-amber-100" role="status" data-event-exam-notice><ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-200" /><p><strong>{eventExamGuidance.eventName} ({eventExamGuidance.eventCode}) is not tested.</strong> This event is prepared through its project, written, role-play, or presentation work rather than a DECA cluster exam.</p></div>}
+          {eventExamGuidance?.isTested && !eventExamGuidance.questionBankCluster && <div className="mt-5 flex items-start gap-3 rounded-md border border-blue-400/25 bg-blue-500/[0.06] p-4 text-sm leading-relaxed text-blue-100" role="status" data-event-exam-guidance><Target className="mt-0.5 h-4 w-4 shrink-0 text-blue-300" /><p><strong>{eventExamGuidance.eventCode}</strong> is tested with the <strong>{eventExamGuidance.eventCluster}</strong> exam. The individual mock-exam bank currently offers the four core cluster banks.</p></div>}
+
           {!exam && !isPreparing && <IndividualMockExamHistory />}
 
           {!exam && isPreparing ? (
@@ -196,7 +202,7 @@ export default function ChapterMockExam() {
               </button>
             </div>
           ) : !exam && mode === "individual" ? (
-            <div className="mt-8"><button type="button" onClick={() => setMode(null)} className="inline-flex items-center gap-2 text-sm text-slate-400 transition hover:text-white"><ArrowLeft className="h-4 w-4" />All mock exam options</button><fieldset className="mt-5"><legend className="data-label">Choose an individual-exam cluster</legend><div className="mt-3 grid gap-2 sm:grid-cols-2">{MOCK_EXAM_CLUSTERS.map((cluster) => <button key={cluster.value} type="button" onClick={() => setSelectedCluster(cluster.value)} className={`editorial-tab px-4 py-3 text-left text-sm font-medium ${selectedCluster === cluster.value ? "editorial-tab-active" : "bg-white/[0.02]"}`}>{cluster.label}</button>)}</div></fieldset><div className="mt-5 flex flex-wrap items-center gap-3"><button onClick={() => selectedCluster && createIndividual.mutate({ cluster: selectedCluster })} disabled={!selectedCluster} className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-500 active:scale-[0.97] disabled:opacity-60"><Target className="h-4 w-4" />{selectedCluster ? `Build ${selectedClusterLabel} Mock Exam` : "Choose a cluster to continue"}</button><p className="text-xs text-slate-400">100 questions · 25 easy · 50 medium · 25 hard</p></div></div>
+            <div className="mt-8"><button type="button" onClick={() => setMode(null)} className="inline-flex items-center gap-2 text-sm text-slate-400 transition hover:text-white"><ArrowLeft className="h-4 w-4" />All mock exam options</button><fieldset className="mt-5"><legend className="data-label">Choose an individual-exam cluster</legend><div className="mt-3 grid gap-2 sm:grid-cols-2">{MOCK_EXAM_CLUSTERS.map((cluster) => { const isTestedForEvent = eventExamGuidance?.isTested && eventExamGuidance.questionBankCluster === cluster.value; return <button key={cluster.value} type="button" onClick={() => setSelectedCluster(cluster.value)} className={`editorial-tab px-4 py-3 text-left text-sm font-medium ${selectedCluster === cluster.value ? "editorial-tab-active" : "bg-white/[0.02]"}`}><span className="flex items-center justify-between gap-3"><span>{cluster.label}</span>{isTestedForEvent && <span className="rounded-full border border-blue-300/30 bg-blue-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-blue-100">Tested for {eventExamGuidance.eventCode}</span>}</span></button>; })}</div></fieldset><div className="mt-5 flex flex-wrap items-center gap-3"><button onClick={() => selectedCluster && createIndividual.mutate({ cluster: selectedCluster })} disabled={!selectedCluster} className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-500 active:scale-[0.97] disabled:opacity-60"><Target className="h-4 w-4" />{selectedCluster ? `Build ${selectedClusterLabel} Mock Exam` : "Choose a cluster to continue"}</button><p className="text-xs text-slate-400">100 questions · 25 easy · 50 medium · 25 hard</p></div></div>
           ) : !exam && mode === "chapter" ? (
             <div className="mt-8"><button type="button" onClick={() => setMode(null)} className="inline-flex items-center gap-2 text-sm text-slate-400 transition hover:text-white"><ArrowLeft className="h-4 w-4" />All mock exam options</button><div className="mt-5 rounded-lg border border-emerald-400/25 bg-emerald-500/[0.04] p-5"><div className="flex flex-wrap items-start justify-between gap-4"><div><p className="page-eyebrow text-emerald-300">Chapter assignment</p><h2 className="mt-2 text-xl font-semibold text-white">{configuredChapter?.cluster} chapter mock exam</h2><p className="mt-2 text-sm text-slate-300">Your chapter has assigned a {configuredChapter?.questionCount}-question exam. Activity flags are provided to administrators for review; they do not automatically determine an outcome.</p></div><Timer className="h-6 w-6 text-emerald-200" /></div><div className="mt-5 grid gap-3 sm:grid-cols-3"><p className="rounded-md border border-white/10 bg-slate-950/30 p-3 text-sm text-slate-300"><span className="data-label block">Questions</span><span className="mt-1 block font-semibold text-white">{configuredChapter?.questionCount}</span></p><p className="rounded-md border border-white/10 bg-slate-950/30 p-3 text-sm text-slate-300"><span className="data-label block">Extra time</span><span className="mt-1 block font-semibold text-white">+{configuredChapter?.extraTimeMinutes ?? 0} min</span></p><p className="rounded-md border border-white/10 bg-slate-950/30 p-3 text-sm text-slate-300"><span className="data-label block">Score release</span><span className="mt-1 block font-semibold text-white">{configuredChapter?.scoreVisible ? "After completion" : "Advisor release"}</span></p></div><button onClick={() => createChapter.mutate({})} className="mt-5 inline-flex items-center gap-2 rounded-md bg-emerald-600 px-5 py-3 font-semibold text-white transition hover:bg-emerald-500 active:scale-[0.97]"><Building2 className="h-4 w-4" />Begin chapter exam</button></div></div>
           ) : finished ? (

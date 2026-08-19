@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { PRACTICE_CLUSTERS } from "@/lib/practiceClusters";
+import { getEventExamGuidance } from "@/lib/eventExamEligibility";
 
 export default function PracticeQuestions() {
   const [selectedCluster, setSelectedCluster] = useState<string | null>(null);
@@ -35,6 +36,8 @@ export default function PracticeQuestions() {
   const [reportMessage, setReportMessage] = useState('');
   const sendReportMutation = trpc.practice.submitQuestionReport.useMutation();
   const [blueBucksChange, setBlueBucksChange] = useState<{ amount: number; timestamp: number } | null>(null);
+  const primaryEventQuery = trpc.preferences.getPrimaryEvent.useQuery();
+  const eventExamGuidance = getEventExamGuidance(primaryEventQuery.data?.primaryEventCode);
 
   // Timer effect
   useEffect(() => {
@@ -399,7 +402,7 @@ export default function PracticeQuestions() {
             >
               {PRACTICE_CLUSTERS.map((cluster) => (
                 <option key={cluster.value} value={cluster.value}>
-                  {cluster.label}
+                  {cluster.label}{eventExamGuidance?.isTested && eventExamGuidance.questionBankCluster === cluster.value ? ` — Tested for ${eventExamGuidance.eventCode}` : ""}
                 </option>
               ))}
             </select>
@@ -482,6 +485,12 @@ export default function PracticeQuestions() {
             </div>
           </div>
         </div>
+        {eventExamGuidance && (
+          <div className={`mt-3 flex items-start gap-2 rounded-md border px-3 py-2 text-xs leading-relaxed ${eventExamGuidance.isTested ? "border-blue-400/25 bg-blue-500/[0.06] text-blue-100" : "border-amber-400/30 bg-amber-500/[0.08] text-amber-100"}`} role="status" data-event-exam-guidance>
+            <Info className={`mt-0.5 h-4 w-4 shrink-0 ${eventExamGuidance.isTested ? "text-blue-300" : "text-amber-200"}`} />
+            <p>{eventExamGuidance.isTested ? eventExamGuidance.questionBankCluster ? <><strong>{eventExamGuidance.questionBankCluster}</strong> is <strong>tested for {eventExamGuidance.eventCode}</strong>. The matching cluster is labeled in the selector.</> : <><strong>{eventExamGuidance.eventCode}</strong> is tested with the <strong>{eventExamGuidance.eventCluster}</strong> exam. This question bank currently offers the four core cluster banks.</> : <><strong>{eventExamGuidance.eventName} ({eventExamGuidance.eventCode}) is not tested.</strong> Use the event’s role-play, written, project, or presentation preparation resources instead.</>}</p>
+          </div>
+        )}
       </div>
 
       {/* Main Content */}
