@@ -9,6 +9,7 @@ import { motion } from 'framer-motion'
 import { ExternalLink, Search, ChevronDown, ChevronUp, BookOpen, FileText, Video, Globe, Target, Loader2, ArrowUpRight, LibraryBig, CheckCircle2 } from 'lucide-react'
 import { trpc } from '@/lib/trpc'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { useAuth } from '@/_core/hooks/useAuth'
 
 const EVENTS_BG = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663512099215/gkmjm4geRMb8GU58vHezuc/deca-events-bg-F7GzUTZoYD495mEMhM979L.webp'
 
@@ -663,7 +664,7 @@ function EventPiStudyDialog({ event, open, onOpenChange }: EventPiStudyDialogPro
   )
 }
 
-function EventCard({ event }: { event: DECAEvent }) {
+function EventCard({ event, isFocusedEvent, canSelectEvent, isSelecting, onSelectEvent }: { event: DECAEvent; isFocusedEvent: boolean; canSelectEvent: boolean; isSelecting: boolean; onSelectEvent: (eventCode: string) => void }) {
   const [expanded, setExpanded] = useState(false)
   const [piDialogOpen, setPiDialogOpen] = useState(false)
   const clusterColor = clusterColors[event.cluster]
@@ -704,9 +705,14 @@ function EventCard({ event }: { event: DECAEvent }) {
               <p className="text-sm font-semibold text-blue-100">Event-linked PI Study Library</p>
               <p className="mt-0.5 text-xs leading-5 text-slate-400">View the performance indicators required for {event.code} and open any complete PI learning module.</p>
             </div>
-            <button type="button" onClick={() => setPiDialogOpen(true)} className="mt-3 inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-lg border border-blue-400/30 bg-blue-500/10 px-3.5 py-2 text-xs font-semibold text-blue-100 transition hover:border-blue-300/60 hover:bg-blue-500/20 sm:mt-0 sm:w-auto">
-              <LibraryBig className="h-4 w-4" /> View {event.code} PIs
-            </button>
+            <div className="mt-3 flex w-full flex-col gap-2 sm:mt-0 sm:w-auto sm:flex-row">
+              <button type="button" onClick={() => onSelectEvent(event.code)} disabled={!canSelectEvent || isSelecting || isFocusedEvent} title={!canSelectEvent ? 'Sign in to select an event' : undefined} className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-lg border border-emerald-300/30 bg-emerald-400/10 px-3.5 py-2 text-xs font-semibold text-emerald-100 transition hover:border-emerald-200/70 hover:bg-emerald-400/20 disabled:cursor-not-allowed disabled:opacity-65 sm:w-auto">
+                {isFocusedEvent ? <CheckCircle2 className="h-4 w-4" /> : <Target className="h-4 w-4" />} {isFocusedEvent ? 'Focused Event' : isSelecting ? 'Selecting…' : 'Select This Event'}
+              </button>
+              <button type="button" onClick={() => setPiDialogOpen(true)} className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-lg border border-blue-400/30 bg-blue-500/10 px-3.5 py-2 text-xs font-semibold text-blue-100 transition hover:border-blue-300/60 hover:bg-blue-500/20 sm:w-auto">
+                <LibraryBig className="h-4 w-4" /> View {event.code} PIs
+              </button>
+            </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {event.resources.map((res, idx) => {
@@ -750,6 +756,12 @@ function AnimatedExpand({ expanded, children }: { expanded: boolean; children: R
 export default function Events() {
   const [activeCluster, setActiveCluster] = useState<Cluster>('All')
   const [search, setSearch] = useState('')
+  const { user } = useAuth()
+  const utils = trpc.useUtils()
+  const primaryEventQuery = trpc.preferences.getPrimaryEvent.useQuery(undefined, { enabled: Boolean(user?.id) })
+  const setPrimaryEvent = trpc.preferences.setPrimaryEvent.useMutation({
+    onSuccess: async () => { await utils.preferences.getPrimaryEvent.invalidate() },
+  })
 
   const filtered = allEvents.filter((e) => {
     const matchCluster = activeCluster === 'All' || e.cluster === activeCluster
@@ -843,7 +855,7 @@ export default function Events() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 gap-3">
           {filtered.map((event) => (
-            <EventCard key={event.code} event={event} />
+            <EventCard key={event.code} event={event} isFocusedEvent={primaryEventQuery.data?.primaryEventCode === event.code} canSelectEvent={Boolean(user?.id)} isSelecting={setPrimaryEvent.isPending && setPrimaryEvent.variables?.eventCode === event.code} onSelectEvent={(eventCode) => setPrimaryEvent.mutate({ eventCode })} />
           ))}
         </div>
 

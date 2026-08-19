@@ -56,6 +56,11 @@ describe("event-linked PI Study Library", () => {
     expect(eventsPage).toContain('href="/event-match?retake=1"');
     expect(eventsPage).toContain('Competition planning');
     expect(eventsPage).toContain("View {event.code} PIs");
+    expect(eventsPage).toContain("getPrimaryEvent.useQuery");
+    expect(eventsPage).toContain("setPrimaryEvent.useMutation");
+    expect(eventsPage).toContain("Select This Event");
+    expect(eventsPage).toContain("Focused Event");
+    expect(eventsPage).toContain("onSelectEvent={(eventCode) => setPrimaryEvent.mutate({ eventCode })}");
     expect(eventsPage).toContain("/pi-quizlet?event=${encodeURIComponent(event.code)}");
     expect(piQuizletPage).toContain("PI_PAGE_SIZE = 24");
     expect(piQuizletPage).toContain("Next indicators");
