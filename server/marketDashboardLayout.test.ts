@@ -27,6 +27,17 @@ describe("BBX market dashboard organization", () => {
     expect(overview).toContain("Refresh in {refreshRemaining}s");
   });
 
+  it("provides an accessible simulated economic-condition range guide beside the Exchange heading", () => {
+    expect(overview).toContain('aria-label="Open BBX economic condition range guide"');
+    expect(overview).toContain("<MarketConditionExplainer />");
+    expect(overview).toContain("Reading simulated economic conditions");
+    expect(overview).toContain("Recessionary decline");
+    expect(overview).toContain("Contraction");
+    expect(overview).toContain("Stable / mixed");
+    expect(overview).toContain("Strong expansion");
+    expect(overview).toContain("not real-world economic forecasts or investment guidance");
+  });
+
   it("uses one persistent navigator across Overview, Market Board, Portfolio, News, and Learn", () => {
     for (const label of ["Overview", "Market Board", "Portfolio", "News", "Learn"]) {
       expect(navigation).toContain(`label: "${label}"`);

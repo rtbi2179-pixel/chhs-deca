@@ -8758,3 +8758,4 @@
 - [x] Audit Blue’s News event selection, impact weights, and BBX average-growth calibration
 - [x] Calibrate the positive-to-negative event distribution and market impact rules for approximately 10% average monthly BBX growth
 - [x] Add deterministic projection coverage, validate the market model, and checkpoint the update
+- [x] Add an accessible Blue Blazer Exchange information control explaining simulated market-performance ranges and economic conditions
