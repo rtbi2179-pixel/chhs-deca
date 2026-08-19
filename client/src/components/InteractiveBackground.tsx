@@ -93,17 +93,18 @@ export function InteractiveBackground({ variant = "hero" }: { variant?: Backgrou
     let prefersReducedMotion = motionQuery.matches;
     const stars: Star[] = [];
     const nodes: Node[] = [];
+    const isInteractive = variant === "overview";
     const lowPowerDevice = (navigator as Navigator & { deviceMemory?: number }).deviceMemory !== undefined
       && (navigator as Navigator & { deviceMemory?: number }).deviceMemory! <= 4;
     const dpr = Math.min(window.devicePixelRatio || 1, lowPowerDevice ? 1 : 1.5);
-    const targetFrameMs = lowPowerDevice ? 1000 / 24 : 1000 / 30;
+    const targetFrameMs = isInteractive ? (lowPowerDevice ? 1000 / 24 : 1000 / 30) : 1000 / 18;
     let lastDrawTime = -Infinity;
     const configuration = configurationByVariant[variant];
 
     const createScene = () => {
       stars.length = 0;
       nodes.length = 0;
-      const densityScale = clamp((width * height) / 700_000, 0.65, 1.2) * (lowPowerDevice ? 0.72 : 0.86);
+      const densityScale = clamp((width * height) / 700_000, 0.65, 1.2) * (isInteractive ? (lowPowerDevice ? 0.72 : 0.86) : (lowPowerDevice ? 0.52 : 0.62));
       const starCount = Math.round(configuration.starCount * densityScale);
       const nodeCount = Math.round(configuration.nodeCount * densityScale);
 
@@ -196,7 +197,7 @@ export function InteractiveBackground({ variant = "hero" }: { variant?: Backgrou
       const pointer = pointerRef.current;
       const normalizedPointerX = clamp(pointer.x / Math.max(width, 1), 0, 1);
       const normalizedPointerY = clamp(pointer.y / Math.max(height, 1), 0, 1);
-      const pointerIsNear = pointer.x > -1000 && pointer.y > -1000;
+      const pointerIsNear = isInteractive && pointer.x > -1000 && pointer.y > -1000;
       const coreX = width * configuration.coreX + (pointerIsNear ? (normalizedPointerX - 0.5) * 22 : 0);
       const coreY = height * configuration.coreY + (pointerIsNear ? (normalizedPointerY - 0.5) * 18 : 0);
       const coreRadius = Math.min(width, height) * (variant === "overview" ? 0.33 : variant === "hero" ? 0.39 : 0.29);
@@ -353,8 +354,10 @@ export function InteractiveBackground({ variant = "hero" }: { variant?: Backgrou
       start();
     });
     resizeObserver.observe(canvas);
-    window.addEventListener("pointermove", onPointerMove, { passive: true });
-    window.addEventListener("pointerout", onPointerLeave, { passive: true });
+    if (isInteractive) {
+      window.addEventListener("pointermove", onPointerMove, { passive: true });
+      window.addEventListener("pointerout", onPointerLeave, { passive: true });
+    }
     document.addEventListener("visibilitychange", onVisibilityChange);
     motionQuery.addEventListener("change", onMotionChange);
     resize();
@@ -363,8 +366,10 @@ export function InteractiveBackground({ variant = "hero" }: { variant?: Backgrou
     return () => {
       window.cancelAnimationFrame(animationFrame);
       resizeObserver.disconnect();
-      window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerout", onPointerLeave);
+      if (isInteractive) {
+        window.removeEventListener("pointermove", onPointerMove);
+        window.removeEventListener("pointerout", onPointerLeave);
+      }
       document.removeEventListener("visibilitychange", onVisibilityChange);
       motionQuery.removeEventListener("change", onMotionChange);
     };
