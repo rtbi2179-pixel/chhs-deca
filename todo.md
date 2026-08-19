@@ -8774,3 +8774,4 @@
 - [x] Add matching Find Your DECA Event buttons in Events and Profile Event Selection, reorganize Profile into focused tabs, and remove obsolete Profile actions
 - [x] Restore the Overview background constellation to its original circular orbit shape while preserving all other route-specific shapes
 - [x] Preserve the current Glass style, create a more colorful Blazer style, and add a persistent Profile Settings theme toggle
+- [x] Rename all member-facing Find Your DECA Event action labels to Start Event Finder

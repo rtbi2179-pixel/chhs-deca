@@ -98,7 +98,8 @@ describe("DECA Event Match Quiz", () => {
     expect(quizSource).toContain("Skip for now");
     expect(quizSource).toContain("Browse all DECA events");
     expect(quizSource).toContain("chooseEvent.mutate");
-    expect(profileSource).toContain("Find Your DECA Event");
+    expect(profileSource).toContain("Start Event Finder");
+    expect(profileSource).not.toContain("Find Your DECA Event");
     expect(profileSource).toContain('href="/event-match?retake=1"');
   });
 });

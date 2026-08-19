@@ -59,7 +59,8 @@ describe('Profile data integrity and navigation', () => {
     expect(profile).toContain('const focusedEvent = allEvents.find');
     expect(profile).toContain('Event Selection');
     expect(profile).toContain('No event selected');
-    expect(profile).toContain('Find Your DECA Event');
+    expect(profile).toContain('Start Event Finder');
+    expect(profile).not.toContain('Find Your DECA Event');
     expect(profile).toContain('Learning summary');
     expect(profile).toContain('Banking information');
     expect(profile).toContain('Manage Banking &amp; Cards');

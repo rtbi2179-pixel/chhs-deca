@@ -237,7 +237,7 @@ export default function Profile() {
               <div className="mt-6 rounded-2xl border border-blue-300/25 bg-[linear-gradient(135deg,oklch(0.22_0.1_255/0.4),oklch(0.07_0.018_265/0.72))] p-5">
                 <p className="data-label text-blue-200">Focused event</p>
                 {focusedEvent ? <><h3 className="mt-2 text-xl font-semibold text-white">{focusedEvent.code} — {focusedEvent.name}</h3><p className="mt-2 text-sm text-blue-100/70">{focusedEvent.cluster} · {focusedEvent.type}</p></> : <><h3 className="mt-2 text-xl font-semibold text-white">No event selected</h3><p className="mt-2 text-sm text-blue-100/70">Take the short survey to receive event suggestions, then choose the event that fits your competition plan.</p></>}
-                <a href="/event-match?retake=1" className="mt-5 inline-flex h-10 items-center rounded-md border border-blue-300/35 bg-blue-400/10 px-4 text-sm font-semibold text-blue-100 transition hover:bg-blue-400/20 focus:outline-none focus:ring-2 focus:ring-blue-300"><Target className="mr-2 h-4 w-4" />Find Your DECA Event</a>
+                <a href="/event-match?retake=1" className="mt-5 inline-flex h-10 items-center rounded-md border border-blue-300/35 bg-blue-400/10 px-4 text-sm font-semibold text-blue-100 transition hover:bg-blue-400/20 focus:outline-none focus:ring-2 focus:ring-blue-300"><Target className="mr-2 h-4 w-4" />Start Event Finder</a>
               </div>
             </section>}
 
