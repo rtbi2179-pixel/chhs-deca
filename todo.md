@@ -8748,3 +8748,6 @@
 - [x] Add a guided Blazer Buddy conversation with curated study, practice, PI, event, banking, and credit-score help
 - [x] Post idempotent credit-score refresh notifications from the existing daily update workflow
 - [x] Add regression coverage, validate guided Blazer Buddy, and checkpoint the feature
+- [x] Inspect the Events & Community header and existing PI Study Library route behavior
+- [x] Add a prominent top-level PI Library button to Events & Community
+- [x] Add regression coverage, validate the link, and checkpoint the entry-point update

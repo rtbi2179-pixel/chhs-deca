@@ -45,6 +45,8 @@ describe("event-linked PI Study Library", () => {
 
     expect(eventsPage).toContain("EventPiStudyDialog");
     expect(eventsPage).toContain("getEventStudyGuide.useQuery");
+    expect(eventsPage).toContain('href="/pi-quizlet"');
+    expect(eventsPage).toContain("PI Library");
     expect(eventsPage).toContain("View {event.code} PIs");
     expect(eventsPage).toContain("/pi-quizlet?event=${encodeURIComponent(event.code)}");
     expect(eventsPage).not.toContain("displayedModules.slice(0, 24)");
