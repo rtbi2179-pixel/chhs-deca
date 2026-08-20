@@ -8789,3 +8789,5 @@
 - [x] Replace the current practice-question dataset with the supplied DECA Cluster Exam 39,000-question master release
 - [x] Fix the Overview canvas background crash caused by NaN color opacity values
 - [x] Update the footer to 2026 and credit Sahan Mallampati and Ricardo Burciaga, Class of 2027
+- [x] Allow members to change their focused event from Profile Event Selection
+- [x] Match Profile Event Selection controls to the selected event's cluster color

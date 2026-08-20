@@ -31,6 +31,23 @@ describe('Profile interactive navigation', () => {
     expect(profile).toContain('My Portfolio');
     expect(profile).toContain('Achievements');
   });
+
+  it('allows members to change their focused event directly from Event Selection', () => {
+    expect(profile).toContain('trpc.preferences.setPrimaryEvent.useMutation');
+    expect(profile).toContain('setSelectedEventCode');
+    expect(profile).toContain('Change focused event');
+    expect(profile).toContain("setPrimaryEvent.mutate({ eventCode: selectedEventCode })");
+    expect(profile).toContain('Focused event updated');
+  });
+
+  it('uses the selected event cluster to color Event Selection controls', () => {
+    expect(profile).toContain('PROFILE_EVENT_CLUSTER_STYLES');
+    expect(profile).toContain("'Hospitality & Tourism'");
+    expect(profile).toContain("'Business Management'");
+    expect(profile).toContain('eventSelectionStyle');
+    expect(profile).toContain('${eventSelectionStyle.action}');
+    expect(profile).toContain('${eventSelectionStyle.finder}');
+  });
 });
 
 // Keep the test explicit so a future refactor cannot silently remove keyboard-facing button semantics.

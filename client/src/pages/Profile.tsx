@@ -25,6 +25,17 @@ const ACCENT_STYLES = {
   rose: 'from-rose-600/20 via-slate-950/70 to-slate-950 border-rose-500/25',
 } as const
 
+const PROFILE_EVENT_CLUSTER_STYLES: Record<string, { panel: string; label: string; muted: string; select: string; action: string; finder: string }> = {
+  Marketing: { panel: 'border-blue-300/25 bg-[linear-gradient(135deg,oklch(0.22_0.1_255/0.4),oklch(0.07_0.018_265/0.72))]', label: 'text-blue-200', muted: 'text-blue-100/70', select: 'border-blue-200/25 focus:border-blue-300 focus:ring-blue-300/35', action: 'bg-blue-600 text-white hover:bg-blue-500', finder: 'border-blue-300/35 bg-blue-400/10 text-blue-100 hover:bg-blue-400/20 focus:ring-blue-300' },
+  Finance: { panel: 'border-green-300/25 bg-[linear-gradient(135deg,oklch(0.22_0.09_150/0.38),oklch(0.07_0.018_265/0.72))]', label: 'text-green-200', muted: 'text-green-100/70', select: 'border-green-200/25 focus:border-green-300 focus:ring-green-300/35', action: 'bg-green-600 text-white hover:bg-green-500', finder: 'border-green-300/35 bg-green-400/10 text-green-100 hover:bg-green-400/20 focus:ring-green-300' },
+  'Hospitality & Tourism': { panel: 'border-orange-300/25 bg-[linear-gradient(135deg,oklch(0.22_0.09_65/0.38),oklch(0.07_0.018_265/0.72))]', label: 'text-orange-200', muted: 'text-orange-100/70', select: 'border-orange-200/25 focus:border-orange-300 focus:ring-orange-300/35', action: 'bg-orange-500 text-slate-950 hover:bg-orange-400', finder: 'border-orange-300/35 bg-orange-400/10 text-orange-100 hover:bg-orange-400/20 focus:ring-orange-300' },
+  'Business Management': { panel: 'border-purple-300/25 bg-[linear-gradient(135deg,oklch(0.21_0.1_305/0.38),oklch(0.07_0.018_265/0.72))]', label: 'text-purple-200', muted: 'text-purple-100/70', select: 'border-purple-200/25 focus:border-purple-300 focus:ring-purple-300/35', action: 'bg-purple-600 text-white hover:bg-purple-500', finder: 'border-purple-300/35 bg-purple-400/10 text-purple-100 hover:bg-purple-400/20 focus:ring-purple-300' },
+  Entrepreneurship: { panel: 'border-yellow-300/25 bg-[linear-gradient(135deg,oklch(0.23_0.09_95/0.38),oklch(0.07_0.018_265/0.72))]', label: 'text-yellow-200', muted: 'text-yellow-100/70', select: 'border-yellow-200/25 focus:border-yellow-300 focus:ring-yellow-300/35', action: 'bg-yellow-400 text-slate-950 hover:bg-yellow-300', finder: 'border-yellow-300/35 bg-yellow-400/10 text-yellow-100 hover:bg-yellow-400/20 focus:ring-yellow-300' },
+  'Personal Finance': { panel: 'border-cyan-300/25 bg-[linear-gradient(135deg,oklch(0.22_0.08_220/0.38),oklch(0.07_0.018_265/0.72))]', label: 'text-cyan-200', muted: 'text-cyan-100/70', select: 'border-cyan-200/25 focus:border-cyan-300 focus:ring-cyan-300/35', action: 'bg-cyan-500 text-slate-950 hover:bg-cyan-400', finder: 'border-cyan-300/35 bg-cyan-400/10 text-cyan-100 hover:bg-cyan-400/20 focus:ring-cyan-300' },
+}
+
+const DEFAULT_PROFILE_EVENT_STYLE = PROFILE_EVENT_CLUSTER_STYLES.Marketing
+
 const statCards = [
   { key: 'questionsAnswered', label: 'Questions Answered', detail: 'Total practice questions', icon: BookOpen, valueClass: 'text-blue-300', iconClass: 'text-blue-300' },
   { key: 'accuracy', label: 'Accuracy', detail: 'Overall accuracy rate', icon: CheckCircle, valueClass: 'text-emerald-300', iconClass: 'text-emerald-300' },
@@ -51,6 +62,7 @@ export default function Profile() {
   const [editingPortfolioItem, setEditingPortfolioItem] = useState<any>(null)
   const [portfolioFormData, setPortfolioFormData] = useState({ title: '', category: '', description: '', fileUrl: '', externalUrl: '', memberProgressNotes: '' })
   const [profileCustomization, setProfileCustomization] = useState({ displayName: '', bio: '', accentColor: 'blue' as 'blue' | 'violet' | 'emerald' | 'rose', websiteTheme: 'glass' as WebsiteTheme, avatarKey: DEFAULT_PROFILE_AVATAR as ProfileAvatarKey, bannerKey: DEFAULT_PROFILE_BANNER as ProfileBannerKey, showOnLeaderboard: true })
+  const [selectedEventCode, setSelectedEventCode] = useState('')
 
   const profileMetricsQuery = trpc.practice.getProfileMetrics.useQuery(undefined, { enabled: !!user?.id })
   const { data: portfolio = [], refetch: refetchPortfolio } = trpc.members.getPortfolioItems.useQuery({ userId: user?.id }, { enabled: !!user?.id })
@@ -75,6 +87,14 @@ export default function Profile() {
     onSuccess: async () => { await utils.preferences.getProfileSettings.invalidate(); toast.success('Website style saved') },
     onError: (error) => toast.error(error.message),
   })
+  const setPrimaryEvent = trpc.preferences.setPrimaryEvent.useMutation({
+    onSuccess: async ({ primaryEventCode }) => {
+      setSelectedEventCode(primaryEventCode)
+      await utils.preferences.getPrimaryEvent.invalidate()
+      toast.success('Focused event updated')
+    },
+    onError: (error) => toast.error(error.message),
+  })
   const createPortfolioMutation = trpc.members.createPortfolioItem.useMutation({
     onSuccess: () => { resetPortfolioForm(); refetchPortfolio(); toast.success('Portfolio item added') },
     onError: (error) => toast.error(error.message),
@@ -94,6 +114,10 @@ export default function Profile() {
     setProfileCustomization({ displayName: settings.displayName || '', bio: settings.bio || '', accentColor: settings.accentColor, websiteTheme: settings.websiteTheme, avatarKey: settings.avatarKey, bannerKey: settings.bannerKey, showOnLeaderboard: settings.showOnLeaderboard })
     setWebsiteTheme(settings.websiteTheme)
   }, [profileSettingsQuery.data])
+
+  useEffect(() => {
+    setSelectedEventCode(primaryEventQuery.data?.primaryEventCode ?? '')
+  }, [primaryEventQuery.data?.primaryEventCode])
 
   const setNotificationPreference = (key: 'announcementsEnabled' | 'feedbackResponsesEnabled' | 'systemUpdatesEnabled' | 'studyRemindersEnabled', checked: boolean) => {
     const current = notificationPreferencesQuery.data
@@ -156,6 +180,8 @@ export default function Profile() {
   }
   const primaryEventCode = primaryEventQuery.data?.primaryEventCode
   const focusedEvent = allEvents.find((event) => event.code === primaryEventCode)
+  const selectedEvent = allEvents.find((event) => event.code === selectedEventCode)
+  const eventSelectionStyle = PROFILE_EVENT_CLUSTER_STYLES[selectedEvent?.cluster ?? focusedEvent?.cluster ?? ''] ?? DEFAULT_PROFILE_EVENT_STYLE
   const selectedAvatar = getProfileAvatar(profileCustomization.avatarKey)
   const selectedBanner = getProfileBanner(profileCustomization.bannerKey)
   const formatAccountBalance = (value: unknown) => Number(value ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
@@ -226,10 +252,15 @@ export default function Profile() {
 
             {activeSection === 'event-selection' && <section id="event-selection" role="tabpanel" className="rounded-2xl border border-white/10 bg-slate-950/65 p-5 shadow-[0_16px_42px_oklch(0_0_0/0.2)] backdrop-blur-xl sm:p-7">
               <div className="flex items-start justify-between gap-4"><div><p className="page-eyebrow">Competition focus</p><h2 className="mt-2 text-2xl font-semibold text-white">Event Selection</h2><p className="mt-1 text-sm text-white/60">Keep your Blue Blazer practice, PI study, and event guidance aligned with the event you plan to compete in.</p></div><Target className="mt-1 h-5 w-5 text-blue-300" /></div>
-              <div className="mt-6 rounded-2xl border border-blue-300/25 bg-[linear-gradient(135deg,oklch(0.22_0.1_255/0.4),oklch(0.07_0.018_265/0.72))] p-5">
-                <p className="data-label text-blue-200">Focused event</p>
-                {focusedEvent ? <><h3 className="mt-2 text-xl font-semibold text-white">{focusedEvent.code} — {focusedEvent.name}</h3><p className="mt-2 text-sm text-blue-100/70">{focusedEvent.cluster} · {focusedEvent.type}</p></> : <><h3 className="mt-2 text-xl font-semibold text-white">No event selected</h3><p className="mt-2 text-sm text-blue-100/70">Take the short survey to receive event suggestions, then choose the event that fits your competition plan.</p></>}
-                <a href="/event-match?retake=1" className="mt-5 inline-flex h-10 items-center rounded-md border border-blue-300/35 bg-blue-400/10 px-4 text-sm font-semibold text-blue-100 transition hover:bg-blue-400/20 focus:outline-none focus:ring-2 focus:ring-blue-300"><Target className="mr-2 h-4 w-4" />Start Event Finder</a>
+              <div className={`mt-6 rounded-2xl border p-5 ${eventSelectionStyle.panel}`}>
+                <p className={`data-label ${eventSelectionStyle.label}`}>Focused event</p>
+                {focusedEvent ? <><h3 className="mt-2 text-xl font-semibold text-white">{focusedEvent.code} — {focusedEvent.name}</h3><p className={`mt-2 text-sm ${eventSelectionStyle.muted}`}>{focusedEvent.cluster} · {focusedEvent.type}</p></> : <><h3 className="mt-2 text-xl font-semibold text-white">No event selected</h3><p className={`mt-2 text-sm ${eventSelectionStyle.muted}`}>Take the short survey to receive event suggestions, then choose the event that fits your competition plan.</p></>}
+                <div className="mt-5 grid gap-3 border-t border-blue-200/15 pt-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+                  <label className="block text-sm font-medium text-white">Change focused event<select value={selectedEventCode} onChange={(event) => setSelectedEventCode(event.target.value)} disabled={primaryEventQuery.isLoading || setPrimaryEvent.isPending} className={`mt-1.5 w-full rounded-md border bg-slate-950/80 px-3 py-2 text-sm text-white outline-none transition focus:ring-2 disabled:cursor-wait disabled:opacity-70 ${eventSelectionStyle.select}`}><option value="">Choose an event</option>{allEvents.map((event) => <option key={event.code} value={event.code}>{event.code} — {event.name}</option>)}</select></label>
+                  <Button type="button" onClick={() => selectedEventCode && setPrimaryEvent.mutate({ eventCode: selectedEventCode })} disabled={!selectedEvent || selectedEventCode === primaryEventCode || setPrimaryEvent.isPending} className={`min-w-44 ${eventSelectionStyle.action}`}>{setPrimaryEvent.isPending ? 'Saving focus...' : focusedEvent ? 'Change Focused Event' : 'Save Focused Event'}</Button>
+                </div>
+                <p className={`mt-3 text-xs leading-5 ${eventSelectionStyle.muted}`}>Changing your focus updates event-aligned practice guidance, PI study links, and mock-exam recommendations.</p>
+                <a href="/event-match?retake=1" className={`mt-4 inline-flex h-10 items-center rounded-md border px-4 text-sm font-semibold transition focus:outline-none focus:ring-2 ${eventSelectionStyle.finder}`}><Target className="mr-2 h-4 w-4" />Start Event Finder</a>
               </div>
             </section>}
 
