@@ -15,6 +15,7 @@ import { Toast, useToast } from "./components/Toast";
 import { useLocation } from "wouter";
 import { BlueBlazerCursor } from "./components/BlueBlazerCursor";
 import { WebsiteInteractionTracker } from "./components/WebsiteInteractionTracker";
+import { AchievementUnlockNotifier } from "./components/AchievementUnlockNotifier";
 import { isStaleDynamicImportError, recoverStaleDynamicImportInBrowser } from "./lib/dynamicImportRecovery";
 
 const NotFound = lazy(() => import("@/pages/NotFound"));
@@ -179,6 +180,7 @@ function App() {
               {user ? (
                 <SidebarNavigation>
                   <WebsiteInteractionTracker />
+                  <AchievementUnlockNotifier />
                   <Router />
                   <Suspense fallback={null}><DirectMessagesPanel /></Suspense>
                   <Footer />

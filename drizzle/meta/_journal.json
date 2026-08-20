@@ -197,6 +197,13 @@
       "when": 1787266261021,
       "tag": "0027_polite_cammi",
       "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "5",
+      "when": 1787268177456,
+      "tag": "0028_married_tarantula",
+      "breakpoints": true
     }
   ]
 }

@@ -696,6 +696,23 @@ export const blazerBuddyMessages = mysqlTable("blazerBuddyMessages", {
 export type BlazerBuddyMessage = typeof blazerBuddyMessages.$inferSelect;
 
 /**
+ * Server-verified achievement tiers. The uniqueness constraint prevents a
+ * previously unlocked tier from notifying a member more than once.
+ */
+export const achievementUnlocks = mysqlTable("achievementUnlocks", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  achievementId: varchar("achievementId", { length: 50 }).notNull(),
+  tier: mysqlEnum("tier", ["bronze", "silver", "gold"]).notNull(),
+  unlockedAt: timestamp("unlockedAt").defaultNow().notNull(),
+}, (table) => ({
+  uniqueUserAchievementTier: unique("achievement_unlock_user_tier").on(table.userId, table.achievementId, table.tier),
+  userUnlockedIndex: index("achievement_unlock_user_time_idx").on(table.userId, table.unlockedAt),
+}));
+export type AchievementUnlock = typeof achievementUnlocks.$inferSelect;
+export type InsertAchievementUnlock = typeof achievementUnlocks.$inferInsert;
+
+/**
  * PI Learning Modules - Performance Indicator mastery system
  */
 export const piLearningModules = mysqlTable("piLearningModules", {

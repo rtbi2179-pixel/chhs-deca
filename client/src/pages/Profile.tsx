@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { toast } from 'sonner'
 import { CreditScoreChart } from '@/components/CreditScoreChart'
 import { PortfolioChart } from '@/components/PortfolioChart'
+import { AchievementTierPanel } from '@/components/AchievementTierPanel'
 import { allEvents } from '@/pages/Events'
 import { useTheme, type WebsiteTheme } from '@/contexts/ThemeContext'
 import { DEFAULT_PROFILE_AVATAR, DEFAULT_PROFILE_BANNER, getProfileAvatar, getProfileBanner, PROFILE_AVATAR_OPTIONS, PROFILE_BANNER_OPTIONS, type ProfileAvatarKey, type ProfileBannerKey } from '@/lib/profileVisuals'
@@ -49,7 +50,7 @@ const PROFILE_SECTIONS = [
   { id: 'progress', label: 'Progress', description: 'Credit and BBX performance', icon: LineChart },
   { id: 'preferences', label: 'Notifications', description: 'Control your updates', icon: SlidersHorizontal },
   { id: 'portfolio', label: 'My portfolio', description: 'Your DECA work', icon: BriefcaseBusiness },
-  { id: 'achievements', label: 'Achievements', description: 'Milestones and badges', icon: Medal },
+  { id: 'achievements-tiered', label: 'Achievements', description: 'Bronze, Silver, and Gold tiers', icon: Medal },
 ] as const
 
 export default function Profile() {
@@ -58,7 +59,7 @@ export default function Profile() {
   const utils = trpc.useUtils()
   const [, setLocation] = useLocation()
   const [showAddPortfolioDialog, setShowAddPortfolioDialog] = useState(false)
-  const [activeSection, setActiveSection] = useState<(typeof PROFILE_SECTIONS)[number]['id']>('profile-settings')
+  const [activeSection, setActiveSection] = useState<(typeof PROFILE_SECTIONS)[number]['id'] | 'achievements'>('profile-settings')
   const [editingPortfolioItem, setEditingPortfolioItem] = useState<any>(null)
   const [portfolioFormData, setPortfolioFormData] = useState({ title: '', category: '', description: '', fileUrl: '', externalUrl: '', memberProgressNotes: '' })
   const [profileCustomization, setProfileCustomization] = useState({ displayName: '', bio: '', accentColor: 'blue' as 'blue' | 'violet' | 'emerald' | 'rose', websiteTheme: 'glass' as WebsiteTheme, avatarKey: DEFAULT_PROFILE_AVATAR as ProfileAvatarKey, bannerKey: DEFAULT_PROFILE_BANNER as ProfileBannerKey, showOnLeaderboard: true })
@@ -185,26 +186,12 @@ export default function Profile() {
   const selectedAvatar = getProfileAvatar(profileCustomization.avatarKey)
   const selectedBanner = getProfileBanner(profileCustomization.bannerKey)
   const formatAccountBalance = (value: unknown) => Number(value ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-  const achievementMetrics = {
-    questionsAnswered: metrics?.questionsAnswered ?? 0,
-    accuracy: metrics?.accuracyPercent ?? 0,
-    studyStreak: metrics?.studyStreak ?? 0,
-    savedQuestions: metrics?.savedQuestions ?? 0,
-    hasFocusedEvent: Boolean(focusedEvent),
-    portfolioItems: portfolio.length,
-  }
-  const accuracyQualifies = achievementMetrics.questionsAnswered >= 10
-  const achievementDefinitions = [
-    { id: 'first-step', title: 'First Step', description: 'Record your first practice question.', criteria: 'Answer 1 practice question', icon: BookOpen, tone: 'blue', value: Math.min(achievementMetrics.questionsAnswered, 1), target: 1, progressLabel: `${achievementMetrics.questionsAnswered} of 1 question` },
-    { id: 'practice-builder', title: 'Practice Builder', description: 'Build a reliable base of practice experience.', criteria: 'Answer 25 practice questions', icon: Target, tone: 'violet', value: Math.min(achievementMetrics.questionsAnswered, 25), target: 25, progressLabel: `${achievementMetrics.questionsAnswered} of 25 questions` },
-    { id: 'precision', title: 'Precision Practice', description: 'Demonstrate accurate work across a meaningful sample.', criteria: 'Maintain 80% accuracy after 10 questions', icon: CheckCircle, tone: 'emerald', value: accuracyQualifies ? Math.min(achievementMetrics.accuracy, 80) : 0, target: 80, progressLabel: accuracyQualifies ? `${achievementMetrics.accuracy.toFixed(1)}% of 80% accuracy` : `${achievementMetrics.questionsAnswered} of 10 qualifying questions` },
-    { id: 'consistency', title: 'Consistency', description: 'Keep your study habit active across several days.', criteria: 'Reach a 3-day study streak', icon: Flame, tone: 'amber', value: Math.min(achievementMetrics.studyStreak, 3), target: 3, progressLabel: `${achievementMetrics.studyStreak} of 3 consecutive days` },
-    { id: 'knowledge-keeper', title: 'Knowledge Keeper', description: 'Save questions you want to revisit deliberately.', criteria: 'Save 5 practice questions', icon: Medal, tone: 'blue', value: Math.min(achievementMetrics.savedQuestions, 5), target: 5, progressLabel: `${achievementMetrics.savedQuestions} of 5 saved questions` },
-    { id: 'event-ready', title: 'Event Ready', description: 'Set the DECA event you want Blue Blazer to support.', criteria: 'Choose a focused event', icon: BriefcaseBusiness, tone: 'violet', value: achievementMetrics.hasFocusedEvent ? 1 : 0, target: 1, progressLabel: achievementMetrics.hasFocusedEvent ? `${focusedEvent?.code} selected` : 'No focused event selected' },
-    { id: 'portfolio-starter', title: 'Portfolio Starter', description: 'Add an artifact that documents your DECA development.', criteria: 'Add 1 portfolio item', icon: FileText, tone: 'emerald', value: Math.min(achievementMetrics.portfolioItems, 1), target: 1, progressLabel: `${achievementMetrics.portfolioItems} of 1 portfolio item` },
-  ]
-  const earnedAchievements = achievementDefinitions.filter((achievement) => achievement.value >= achievement.target)
-  const nextAchievement = achievementDefinitions.filter((achievement) => achievement.value < achievement.target).sort((left, right) => (right.value / right.target) - (left.value / left.target))[0]
+  // The legacy one-level panel below remains unreachable while the tiered panel
+  // is now served by AchievementTierPanel. Keep its stale local inputs empty
+  // until the old markup is removed in the next Profile layout consolidation.
+  const achievementDefinitions: any[] = []
+  const earnedAchievements: any[] = []
+  const nextAchievement: any = null
   const selectSection = (id: (typeof PROFILE_SECTIONS)[number]['id']) => {
     setActiveSection(id)
   }
@@ -256,6 +243,7 @@ export default function Profile() {
           </aside>
 
           <div className="min-w-0 space-y-7">
+            {activeSection === 'achievements-tiered' && <AchievementTierPanel />}
             {activeSection === 'profile-settings' && <section id="profile-settings" role="tabpanel" className="rounded-2xl border border-white/10 bg-slate-950/65 p-5 shadow-[0_16px_42px_oklch(0_0_0/0.2)] backdrop-blur-xl sm:p-7">
               <div className="flex items-start justify-between gap-4"><div><p className="page-eyebrow">Member profile</p><h2 className="mt-2 text-2xl font-semibold text-white">Profile Customization</h2><p className="mt-1 text-sm text-white/60">Personalize what other members see on your profile.</p></div><Sparkles className="mt-1 h-5 w-5 text-blue-300" /></div>
               <div className="mt-6 grid gap-4 md:grid-cols-2">
