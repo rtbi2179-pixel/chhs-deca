@@ -36,4 +36,14 @@ describe("InteractiveBackground", () => {
     expect(background).toContain('document.addEventListener("visibilitychange"');
     expect(background).toContain('aria-hidden="true"');
   });
+
+  it("guards dynamic gradient opacity values so canvas colors cannot contain NaN", () => {
+    const background = readProjectFile("client/src/components/InteractiveBackground.tsx");
+
+    expect(background).toContain("const finite =");
+    expect(background).toContain("const alpha =");
+    expect(background).toContain("!Number.isFinite(width) || !Number.isFinite(height)");
+    expect(background).toContain("const opacity = alpha(");
+    expect(background).toContain("alpha(opacity * 1.45)");
+  });
 });

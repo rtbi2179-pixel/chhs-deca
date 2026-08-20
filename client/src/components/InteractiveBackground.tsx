@@ -23,6 +23,8 @@ type Node = {
 type PointerPosition = { x: number; y: number };
 
 const clamp = (value: number, minimum: number, maximum: number) => Math.min(Math.max(value, minimum), maximum);
+const finite = (value: number, fallback = 0) => Number.isFinite(value) ? value : fallback;
+const alpha = (value: number) => clamp(finite(value), 0, 1);
 
 type ConstellationShape = "horizon" | "orbit" | "compass" | "book" | "target" | "shield" | "dialogue" | "crown" | "library" | "starburst" | "calendar" | "beacon" | "speech" | "heart" | "quill" | "vault" | "chart" | "broadcast" | "people" | "grid" | "flag" | "profile";
 type BackgroundConfiguration = { starCount: number; nodeCount: number; coreX: number; coreY: number; strength: number; shape: ConstellationShape; spread: number };
@@ -193,6 +195,7 @@ export function InteractiveBackground({ variant = "hero" }: { variant?: Backgrou
     };
 
     const drawScene = (time: number) => {
+      if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) return;
       context.clearRect(0, 0, width, height);
       const pointer = pointerRef.current;
       const normalizedPointerX = clamp(pointer.x / Math.max(width, 1), 0, 1);
@@ -251,13 +254,13 @@ export function InteractiveBackground({ variant = "hero" }: { variant?: Backgrou
         for (let candidate = index + 1; candidate < activeNodes.length; candidate += 1) {
           const to = activeNodes[candidate];
           const distance = Math.hypot(from.x - to.x, from.y - to.y);
-          const connectionRange = Math.min(width, height) * 0.32;
+          const connectionRange = Math.max(Math.min(width, height) * 0.32, 1);
           if (distance > connectionRange) continue;
-          const opacity = (1 - distance / connectionRange) * 0.18 * configuration.strength;
+          const opacity = alpha((1 - distance / connectionRange) * 0.18 * finite(configuration.strength, 1));
           const beam = context.createLinearGradient(from.x, from.y, to.x, to.y);
           beam.addColorStop(0, `rgba(96, 165, 250, ${opacity})`);
-          beam.addColorStop(0.5, `rgba(186, 230, 253, ${opacity * 1.45})`);
-          beam.addColorStop(1, `rgba(59, 130, 246, ${opacity * 0.7})`);
+          beam.addColorStop(0.5, `rgba(186, 230, 253, ${alpha(opacity * 1.45)})`);
+          beam.addColorStop(1, `rgba(59, 130, 246, ${alpha(opacity * 0.7)})`);
           context.strokeStyle = beam;
           context.lineWidth = 0.7;
           context.beginPath();
