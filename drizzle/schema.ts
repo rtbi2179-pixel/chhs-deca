@@ -39,6 +39,28 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
+/**
+ * Password reset requests are deliberately separate from the user record so
+ * chapter admins can approve a request without ever seeing or setting a password.
+ */
+export const passwordResetRequests = mysqlTable("passwordResetRequests", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  status: mysqlEnum("status", ["pending", "approved", "completed", "expired", "cancelled"]).default("pending").notNull(),
+  approvedByUserId: int("approvedByUserId").references(() => users.id, { onDelete: "set null" }),
+  requestedAt: timestamp("requestedAt").defaultNow().notNull(),
+  approvedAt: timestamp("approvedAt"),
+  resetTokenHash: varchar("resetTokenHash", { length: 64 }).unique(),
+  resetExpiresAt: timestamp("resetExpiresAt"),
+  completedAt: timestamp("completedAt"),
+}, (table) => ({
+  schoolStatusRequestedIndex: index("password_reset_request_school_status_requested_idx").on(table.schoolCode, table.status, table.requestedAt),
+  userStatusRequestedIndex: index("password_reset_request_user_status_requested_idx").on(table.userId, table.status, table.requestedAt),
+}));
+export type PasswordResetRequest = typeof passwordResetRequests.$inferSelect;
+export type InsertPasswordResetRequest = typeof passwordResetRequests.$inferInsert;
+
 export const eventPerformanceIndicators = mysqlTable("eventPerformanceIndicators", {
   id: int("id").autoincrement().primaryKey(),
   eventCode: varchar("eventCode", { length: 20 }).notNull(),

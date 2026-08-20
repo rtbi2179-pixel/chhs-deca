@@ -3,8 +3,29 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import * as db from "./db";
 import { getBlazerBuddyConversation, sendGuidedBlazerBuddyMessage } from "./blazerBuddy";
+import { sendPasswordResetEmail } from "./_core/email";
+
+function getChapterManagementSchoolCode(user: { role: string; schoolCode?: string | null; selectedSchoolCode?: string | null }, requestedSchoolCode?: string) {
+  if (user.role !== "admin" && user.role !== "super_admin") throw new TRPCError({ code: "FORBIDDEN", message: "Only chapter administrators can manage password reset requests." });
+  const schoolCode = user.role === "super_admin" ? requestedSchoolCode || user.selectedSchoolCode || user.schoolCode : user.schoolCode;
+  if (!schoolCode) throw new TRPCError({ code: "BAD_REQUEST", message: "School code is required" });
+  return schoolCode;
+}
 
 export const membersRouter = router({
+  getPasswordResetRequests: protectedProcedure
+    .input(z.object({ schoolCode: z.string().trim().min(1).max(50).optional() }).optional())
+    .query(async ({ input, ctx }) => db.getChapterPasswordResetRequests(getChapterManagementSchoolCode(ctx.user, input?.schoolCode))),
+
+  approvePasswordResetRequest: protectedProcedure
+    .input(z.object({ requestId: z.number().int().positive(), schoolCode: z.string().trim().min(1).max(50).optional() }))
+    .mutation(async ({ input, ctx }) => {
+      const schoolCode = getChapterManagementSchoolCode(ctx.user, input.schoolCode);
+      const approval = await db.approveChapterPasswordResetRequest(input.requestId, schoolCode, ctx.user.id);
+      const delivered = await sendPasswordResetEmail(approval.email, approval.token);
+      return { success: true, expiresAt: approval.expiresAt, emailDelivered: delivered, fallbackToken: delivered ? undefined : approval.token };
+    }),
+
   // Get all members in a chapter (admin only)
   getMembers: protectedProcedure
     .input(z.object({ schoolCode: z.string().optional() }))

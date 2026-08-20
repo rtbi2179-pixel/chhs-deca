@@ -1226,11 +1226,12 @@ export const appRouter = router({
     requestPasswordReset: publicProcedure
       .input(z.object({
         email: z.string().email("Valid email is required"),
+        schoolCode: z.string().trim().max(50).optional(),
       }))
       .mutation(async ({ input }) => {
         try {
-          const result = await db.requestPasswordReset(input.email);
-          return { success: true, message: "Password reset email sent" };
+          await db.createChapterPasswordResetRequest(input.email, input.schoolCode);
+          return { success: true, message: "If the account and school code match, a chapter administrator has been notified." };
         } catch (error: any) {
           throw new Error(error.message);
         }

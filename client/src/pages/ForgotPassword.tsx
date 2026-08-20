@@ -4,6 +4,7 @@ import { Loader2, CheckCircle } from "lucide-react";
 
 export function ForgotPassword() {
   const [email, setEmail] = useState("");
+  const [schoolCode, setSchoolCode] = useState("");
   const [status, setStatus] = useState<"form" | "loading" | "success">("form");
   const [error, setError] = useState("");
 
@@ -21,7 +22,7 @@ export function ForgotPassword() {
     setStatus("loading");
 
     try {
-      await requestResetMutation.mutateAsync({ email });
+      await requestResetMutation.mutateAsync({ email, schoolCode: schoolCode.trim() || undefined });
       setStatus("success");
     } catch (err: any) {
       setError(err.message || "Failed to send reset email");
@@ -39,7 +40,7 @@ export function ForgotPassword() {
             <CheckCircle className="w-12 h-12 mx-auto mb-4 text-green-500" />
             <h1 className="text-2xl font-bold text-foreground mb-2">Check Your Email</h1>
             <p className="text-foreground/70 mb-6">
-              We've sent a password reset link to <strong>{email}</strong>. Please check your email and follow the link to reset your password.
+              If your email and school code match an account, your chapter administrator has been notified. After approval, a one-time reset link will be sent to <strong>{email}</strong> and will expire after one hour.
             </p>
             <a
               href="/"
@@ -62,7 +63,7 @@ export function ForgotPassword() {
         <div className="bg-card border border-border rounded-lg p-8">
           <h1 className="text-2xl font-bold text-foreground mb-2">Reset Password</h1>
           <p className="text-foreground/70 mb-6">
-            Enter your email address and we'll send you a link to reset your password.
+            Enter your email and school code to request a secure, chapter-approved password reset. An administrator must approve the request before a one-hour reset link is sent.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -80,6 +81,20 @@ export function ForgotPassword() {
               />
             </div>
 
+            <div>
+              <label className="block text-foreground font-semibold mb-2 text-sm">
+                School Code
+              </label>
+              <input
+                type="text"
+                value={schoolCode}
+                onChange={(e) => setSchoolCode(e.target.value)}
+                className="w-full px-4 py-2 bg-background border border-border rounded text-foreground placeholder-foreground/50 focus:outline-none focus:border-blue-500"
+                placeholder="Your chapter school code"
+              />
+              <p className="mt-1 text-xs text-foreground/55">Sahan and Ricardo may leave this blank.</p>
+            </div>
+
             {error && (
               <div className="bg-red-500/10 border border-red-500/30 text-red-500 px-4 py-2 rounded text-sm">
                 {error}
@@ -92,7 +107,7 @@ export function ForgotPassword() {
               className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 text-white font-semibold py-2 rounded transition flex items-center justify-center gap-2"
             >
               {status === "loading" && <Loader2 className="w-4 h-4 animate-spin" />}
-              {status === "loading" ? "Sending..." : "Send Reset Link"}
+              {status === "loading" ? "Submitting..." : "Request Chapter Approval"}
             </button>
           </form>
 

@@ -1,7 +1,7 @@
-import { eq, and, or, inArray, desc, count, asc, ne, like, sql } from "drizzle-orm";
-import { randomBytes } from "crypto";
+import { eq, and, or, inArray, desc, count, asc, ne, like, sql, lt } from "drizzle-orm";
+import { createHash, randomBytes } from "crypto";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, userAnswers, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments, calendarEvents, CalendarEvent, InsertCalendarEvent, portfolioItems, portfolioUploads, adminMemberNotes, directMessages, blueBucks, blueBucksTransactions, userStudyCards } from "../drizzle/schema";
+import { InsertUser, users, volunteerOpportunities, volunteerSignups, discussionThreads, discussionReplies, VolunteerSignup, DiscussionThread, DiscussionReply, bookmarks, leaderboard, questions, studySessions, sessionQuestions, userAnswers, schoolCodes, emailBlacklist, schoolCodeAttempts, ipRateLimits, announcements, announcementLikes, announcementComments, calendarEvents, CalendarEvent, InsertCalendarEvent, portfolioItems, portfolioUploads, adminMemberNotes, directMessages, blueBucks, blueBucksTransactions, userStudyCards, passwordResetRequests } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import bcrypt from 'bcryptjs';
 import { calculateStudyCardLevel, type StudyCardKey } from "./studyCardEngine";
@@ -637,33 +637,106 @@ export async function getUserById(id: number) {
 }
 
 
+export const CHAPTER_RESET_LINK_TTL_MS = 60 * 60 * 1000;
+
+export function hashPasswordResetToken(token: string) {
+  return createHash("sha256").update(token).digest("hex");
+}
+
+function isSchoolCodeExemptResetEmail(email: string) {
+  return ADMIN_EMAILS.includes(email.toLowerCase());
+}
+
 /**
- * Request password reset
+ * Creates a chapter-admin approval request; no reset credential exists until
+ * an eligible administrator approves an actual member request.
  */
-export async function requestPasswordReset(email: string) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
+export async function createChapterPasswordResetRequest(email: string, requestedSchoolCode?: string) {
+  const database = await getDb();
+  if (!database) throw new Error("Database not available");
 
-  const user = await db.select()
-    .from(users)
-    .where(eq(users.email, email))
+  const normalizedEmail = email.trim().toLowerCase();
+  const matches = await database.select().from(users).where(eq(users.email, normalizedEmail)).limit(1);
+  const member = matches[0];
+  if (!member) return { accepted: true, created: false };
+
+  const schoolCode = requestedSchoolCode?.trim() || (isSchoolCodeExemptResetEmail(normalizedEmail) ? member.schoolCode : "");
+  if (!schoolCode || member.schoolCode !== schoolCode) return { accepted: true, created: false };
+
+  const now = new Date();
+  await database.update(passwordResetRequests)
+    .set({ status: "expired" })
+    .where(and(
+      eq(passwordResetRequests.userId, member.id),
+      eq(passwordResetRequests.status, "approved"),
+      lt(passwordResetRequests.resetExpiresAt, now),
+    ));
+  const activeRequest = await database.select({ id: passwordResetRequests.id })
+    .from(passwordResetRequests)
+    .where(and(eq(passwordResetRequests.userId, member.id), or(eq(passwordResetRequests.status, "pending"), eq(passwordResetRequests.status, "approved"))))
     .limit(1);
+  if (activeRequest[0]) return { accepted: true, created: false, alreadyPending: true };
 
-  if (user.length === 0) {
-    throw new Error("Email not found");
+  await database.insert(passwordResetRequests).values({ userId: member.id, schoolCode, status: "pending" });
+  const chapterAdmins = await database.select({ id: users.id })
+    .from(users)
+    .where(and(eq(users.schoolCode, schoolCode), or(eq(users.role, "admin"), eq(users.role, "super_admin"))));
+  if (chapterAdmins.length) {
+    const memberName = member.name || [member.firstName, member.lastName].filter(Boolean).join(" ") || member.email || "A chapter member";
+    await database.insert(directMessages).values(chapterAdmins.map((admin) => ({
+      senderId: member.id,
+      recipientId: admin.id,
+      schoolCode,
+      body: `${memberName} requested a password reset. Review the pending request in Member Management to issue a one-hour reset link.`,
+    })));
   }
+  return { accepted: true, created: true };
+}
 
-  const token = randomBytes(32).toString('hex');
-  const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+export async function getChapterPasswordResetRequests(schoolCode: string) {
+  const database = await getDb();
+  if (!database) throw new Error("Database not available");
+  return database.select({
+    id: passwordResetRequests.id,
+    memberId: users.id,
+    name: users.name,
+    firstName: users.firstName,
+    lastName: users.lastName,
+    email: users.email,
+    requestedAt: passwordResetRequests.requestedAt,
+  })
+    .from(passwordResetRequests)
+    .innerJoin(users, eq(passwordResetRequests.userId, users.id))
+    .where(and(eq(passwordResetRequests.schoolCode, schoolCode), eq(passwordResetRequests.status, "pending")))
+    .orderBy(desc(passwordResetRequests.requestedAt));
+}
 
-  await db.update(users)
-    .set({
-      passwordResetToken: token,
-      passwordResetExpiresAt: expiresAt,
-    })
-    .where(eq(users.id, user[0].id));
+/** Approval generates a fresh opaque token and makes it valid for exactly one hour. */
+export async function approveChapterPasswordResetRequest(requestId: number, schoolCode: string, adminId: number) {
+  const database = await getDb();
+  if (!database) throw new Error("Database not available");
+  const request = await database.select().from(passwordResetRequests).where(and(
+    eq(passwordResetRequests.id, requestId),
+    eq(passwordResetRequests.schoolCode, schoolCode),
+    eq(passwordResetRequests.status, "pending"),
+  )).limit(1);
+  const resetRequest = request[0];
+  if (!resetRequest) throw new Error("This password reset request is no longer pending");
+  const member = await database.select({ id: users.id, email: users.email }).from(users)
+    .where(and(eq(users.id, resetRequest.userId), eq(users.schoolCode, schoolCode))).limit(1);
+  if (!member[0]?.email) throw new Error("The member no longer has an email address for secure password reset delivery");
 
-  return { token, email: user[0].email };
+  const token = randomBytes(32).toString("hex");
+  const approvedAt = new Date();
+  const expiresAt = new Date(approvedAt.getTime() + CHAPTER_RESET_LINK_TTL_MS);
+  await database.update(passwordResetRequests).set({
+    status: "approved",
+    approvedByUserId: adminId,
+    approvedAt,
+    resetTokenHash: hashPasswordResetToken(token),
+    resetExpiresAt: expiresAt,
+  }).where(eq(passwordResetRequests.id, resetRequest.id));
+  return { email: member[0].email, token, expiresAt };
 }
 
 /**
@@ -672,6 +745,21 @@ export async function requestPasswordReset(email: string) {
 export async function resetPassword(token: string, newPassword: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
+
+  const tokenHash = hashPasswordResetToken(token);
+  const approvedRequest = await db.select().from(passwordResetRequests)
+    .where(eq(passwordResetRequests.resetTokenHash, tokenHash)).limit(1);
+  if (approvedRequest[0]) {
+    const request = approvedRequest[0];
+    if (request.status !== "approved" || !request.resetExpiresAt || new Date() > request.resetExpiresAt) {
+      if (request.status === "approved") await db.update(passwordResetRequests).set({ status: "expired" }).where(eq(passwordResetRequests.id, request.id));
+      throw new Error("Invalid or expired reset token");
+    }
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+    await db.update(users).set({ passwordHash, passwordResetToken: null, passwordResetExpiresAt: null }).where(eq(users.id, request.userId));
+    await db.update(passwordResetRequests).set({ status: "completed", completedAt: new Date(), resetTokenHash: null }).where(and(eq(passwordResetRequests.id, request.id), eq(passwordResetRequests.status, "approved")));
+    return { success: true };
+  }
 
   const user = await db.select()
     .from(users)

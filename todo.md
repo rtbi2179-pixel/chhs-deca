@@ -8814,3 +8814,4 @@
 - [x] Add a Sahan/Ricardo-only Super Admin Diagnostics panel with chapter roster, learning accuracy, engagement, and real interaction analytics
 - [x] Fix the nested-anchor markup error on the Practice page while preserving its navigation behavior
 - [x] Update normal Blazer Events surfaces to use a blue background and white text while preserving Glass and Light Blazer
+- [x] Add school-code password reset requests with chapter-admin notification, one-time approval, and one-hour reset expiry
