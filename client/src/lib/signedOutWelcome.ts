@@ -13,5 +13,5 @@ export function isAuthEntryRoute(location: string) {
 }
 
 export function shouldShowSignedOutWelcome({ location, isAuthenticated, isLoading, hasSeenThisSession = false }: { location: string; isAuthenticated: boolean; isLoading: boolean; hasSeenThisSession?: boolean }) {
-  return !hasSeenThisSession && !isLoading && !isAuthenticated && !isAuthEntryRoute(location);
+  return !hasSeenThisSession && !isLoading && !isAuthEntryRoute(location);
 }

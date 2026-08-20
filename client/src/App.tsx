@@ -146,7 +146,8 @@ function App() {
     setWelcomeGate({ resolved: true, shouldShow });
   }, [loading, user, sessionStartLocation, welcomeGate.resolved]);
 
-  const showWelcomeGate = welcomeGate.shouldShow && !user;
+  const showWelcomeGate = welcomeGate.shouldShow;
+  const dismissWelcomeGate = () => setWelcomeGate((current) => ({ ...current, shouldShow: false }));
 
   return (
     <ErrorBoundary>
@@ -157,7 +158,7 @@ function App() {
             <BlueBlazerCursor />
             <Toaster />
             <Toast toasts={toasts} onRemove={removeToast} />
-            {loading || !welcomeGate.resolved ? <SignedOutWelcome isChecking /> : showWelcomeGate ? <SignedOutWelcome /> : <>
+            {loading || !welcomeGate.resolved ? <SignedOutWelcome isChecking /> : showWelcomeGate ? <SignedOutWelcome isAuthenticated={Boolean(user)} onContinue={dismissWelcomeGate} /> : <>
               {user ? (
                 <SidebarNavigation>
                   <Router />

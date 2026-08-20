@@ -10,12 +10,12 @@ describe("signed-out Blue Blazer welcome gate", () => {
     expect(isAuthEntryRoute("/school-code")).toBe(true);
   });
 
-  it("shows the welcome gate only at the start of a fresh signed-out session and never blocks authenticated or loading states", () => {
+  it("shows the welcome page at the start of every fresh browser session while leaving account-entry and loading states alone", () => {
     expect(shouldShowSignedOutWelcome({ location: "/practice", isAuthenticated: false, isLoading: false })).toBe(true);
     expect(shouldShowSignedOutWelcome({ location: "/", isAuthenticated: false, isLoading: false })).toBe(true);
     expect(shouldShowSignedOutWelcome({ location: "/practice", isAuthenticated: false, isLoading: false, hasSeenThisSession: true })).toBe(false);
     expect(shouldShowSignedOutWelcome({ location: "/login", isAuthenticated: false, isLoading: false })).toBe(false);
-    expect(shouldShowSignedOutWelcome({ location: "/practice", isAuthenticated: true, isLoading: false })).toBe(false);
+    expect(shouldShowSignedOutWelcome({ location: "/practice", isAuthenticated: true, isLoading: false })).toBe(true);
     expect(shouldShowSignedOutWelcome({ location: "/practice", isAuthenticated: false, isLoading: true })).toBe(false);
   });
 
@@ -26,6 +26,19 @@ describe("signed-out Blue Blazer welcome gate", () => {
     expect(app).toContain("window.sessionStorage.getItem(SIGNED_OUT_WELCOME_SESSION_KEY)");
     expect(app).toContain("window.sessionStorage.setItem(SIGNED_OUT_WELCOME_SESSION_KEY, \"true\")");
     expect(app).toContain("location: sessionStartLocation");
+    expect(app).toContain("const showWelcomeGate = welcomeGate.shouldShow");
+    expect(app).toContain("isAuthenticated={Boolean(user)}");
+    expect(app).toContain("onContinue={dismissWelcomeGate}");
     expect(SIGNED_OUT_WELCOME_SESSION_KEY).toBe("blueblazer:signed-out-welcome-seen");
+  });
+
+  it("provides signed-in members an entry action while keeping signed-out visitors on secure sign-in", () => {
+    const welcome = readFileSync(join(process.cwd(), "client/src/components/SignedOutWelcome.tsx"), "utf8");
+
+    expect(welcome).toContain("isAuthenticated = false");
+    expect(welcome).toContain("onContinue?.()");
+    expect(welcome).toContain("if (!isAuthenticated) setLocation(\"/login\")");
+    expect(welcome).toContain("Enter Blue Blazer");
+    expect(welcome).toContain("Sign in to Blue Blazer");
   });
 });

@@ -8,8 +8,12 @@ const platformHighlights = [
   { icon: Trophy, label: "Chapter momentum", detail: "One connected space for progress and competition readiness." },
 ];
 
-export function SignedOutWelcome({ isChecking = false }: { isChecking?: boolean }) {
+export function SignedOutWelcome({ isChecking = false, isAuthenticated = false, onContinue }: { isChecking?: boolean; isAuthenticated?: boolean; onContinue?: () => void }) {
   const [, setLocation] = useLocation();
+  const handlePrimaryAction = () => {
+    onContinue?.();
+    if (!isAuthenticated) setLocation("/login");
+  };
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[oklch(0.07_0.01_265)] px-4 py-6 sm:px-6 lg:px-8">
@@ -54,8 +58,8 @@ export function SignedOutWelcome({ isChecking = false }: { isChecking?: boolean 
 
             <div className="mt-9 border-t border-white/10 pt-6 lg:mt-auto">
               {isChecking ? <div className="flex h-12 items-center justify-center rounded-xl border border-blue-300/15 bg-blue-500/10 text-sm text-blue-100"><Loader2 className="mr-2 h-4 w-4 animate-spin" />Checking secure access</div> : <>
-                <motion.button type="button" onClick={() => setLocation("/login")} whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 text-sm font-semibold text-white transition-colors hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2 focus:ring-offset-slate-950">Sign in to Blue Blazer <ArrowRight className="h-4 w-4" /></motion.button>
-                <p className="mt-4 flex items-center justify-center gap-2 text-center text-xs leading-5 text-white/45"><ShieldCheck className="h-4 w-4 shrink-0 text-blue-300" />Blue Blazer is available through secure chapter access.</p>
+                <motion.button type="button" onClick={handlePrimaryAction} whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 text-sm font-semibold text-white transition-colors hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2 focus:ring-offset-slate-950">{isAuthenticated ? 'Enter Blue Blazer' : 'Sign in to Blue Blazer'} <ArrowRight className="h-4 w-4" /></motion.button>
+                <p className="mt-4 flex items-center justify-center gap-2 text-center text-xs leading-5 text-white/45"><ShieldCheck className="h-4 w-4 shrink-0 text-blue-300" />{isAuthenticated ? 'Your secure Blue Blazer workspace is ready.' : 'Blue Blazer is available through secure chapter access.'}</p>
               </>}
             </div>
           </div>
