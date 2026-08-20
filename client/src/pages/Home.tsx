@@ -536,10 +536,10 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { name: 'Marketing', events: '15+', color: 'border-blue-500/30 bg-blue-500/5', tag: 'text-blue-300', desc: 'Advertising, retail, sports & entertainment marketing' },
+              { name: 'Marketing', events: '15+', color: 'border-red-500/30 bg-red-500/5', tag: 'text-red-300', desc: 'Advertising, retail, sports & entertainment marketing' },
               { name: 'Finance', events: '8+', color: 'border-green-500/30 bg-green-500/5', tag: 'text-green-300', desc: 'Accounting, business finance, financial services' },
-              { name: 'Hospitality & Tourism', events: '8+', color: 'border-orange-500/30 bg-orange-500/5', tag: 'text-orange-300', desc: 'Hotels, restaurants, travel & tourism management' },
-              { name: 'Business Management', events: '10+', color: 'border-purple-500/30 bg-purple-500/5', tag: 'text-purple-300', desc: 'HR, entrepreneurship, international business' },
+              { name: 'Hospitality & Tourism', events: '8+', color: 'border-blue-500/30 bg-blue-500/5', tag: 'text-blue-300', desc: 'Hotels, restaurants, travel & tourism management' },
+              { name: 'Business Management', events: '10+', color: 'border-amber-500/30 bg-amber-500/5', tag: 'text-amber-300', desc: 'HR, entrepreneurship, international business' },
             ].map(({ name, events, color, tag, desc }) => (
               <Link key={name} href="/events">
                 <div className={`group p-6 rounded-xl border ${color} hover:scale-[1.02] transition-all duration-200 cursor-pointer`}>
