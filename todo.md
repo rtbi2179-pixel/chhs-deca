@@ -8816,3 +8816,4 @@
 - [x] Update normal Blazer Events surfaces to use a blue background and white text while preserving Glass and Light Blazer
 - [x] Add school-code password reset requests with chapter-admin notification, one-time approval, and one-hour reset expiry
 - [x] Move the BBX Learning Guide information control next to the Exchange Benchmark label
+- [x] Add exact price-and-time hover inspection to individual BBX stock charts with touch support

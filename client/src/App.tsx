@@ -44,7 +44,7 @@ const PIQuizlet = lazy(() => import("./pages/PIQuizlet"));
 const ChapterMockExam = lazy(() => import("./pages/ChapterMockExam"));
 const BlueMarket = lazy(() => import("./pages/BlueMarket"));
 const BbxMarketBoard = lazy(() => import("./pages/BbxMarketBoard").then((module) => ({ default: module.BbxMarketBoard })));
-const BbxCompanyPage = lazy(() => import("./pages/BbxMarketViews").then((module) => ({ default: module.BbxCompanyPage })));
+const BbxCompanyPage = lazy(() => import("./pages/BbxCompanyPage").then((module) => ({ default: module.BbxCompanyPage })));
 const BbxLearnPage = lazy(() => import("./pages/BbxMarketViews").then((module) => ({ default: module.BbxLearnPage })));
 const BbxNewsPage = lazy(() => import("./pages/BbxMarketViews").then((module) => ({ default: module.BbxNewsPage })));
 const BbxPortfolioPage = lazy(() => import("./pages/BbxMarketViews").then((module) => ({ default: module.BbxPortfolioPage })));
