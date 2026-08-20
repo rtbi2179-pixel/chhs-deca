@@ -944,6 +944,75 @@
 :root[data-website-theme="light-blazer"] .blueblazer-shell button[class*="bg-yellow-"],
 :root[data-website-theme="light-blazer"] .blueblazer-shell a[class*="bg-yellow-"],
 :root[data-website-theme="light-blazer"] .blueblazer-shell button[class*="bg-lime-"] { background-color: var(--blazer-yellow) !important; color: #132233 !important; }
+
+/* Light Blazer navigation: preserve the light editorial surface without inheriting dark-mode white opacity utilities. */
+:root[data-website-theme="light-blazer"] .blueblazer-sidebar,
+:root[data-website-theme="light-blazer"] .blueblazer-mobile-drawer {
+  color: #20384d;
+}
+:root[data-website-theme="light-blazer"] .blueblazer-sidebar > div:not(.blueblazer-sidebar-header) [class*="text-white"],
+:root[data-website-theme="light-blazer"] .blueblazer-mobile-drawer [class*="text-white"] {
+  color: #20384d !important;
+}
+:root[data-website-theme="light-blazer"] .blueblazer-sidebar [class*="text-white/40"],
+:root[data-website-theme="light-blazer"] .blueblazer-mobile-drawer [class*="text-white/40"] {
+  color: #617589 !important;
+}
+:root[data-website-theme="light-blazer"] .blueblazer-sidebar a:not([class*="bg-blue-600"]),
+:root[data-website-theme="light-blazer"] .blueblazer-mobile-drawer a:not([class*="bg-blue-600"]) {
+  color: #20384d !important;
+}
+:root[data-website-theme="light-blazer"] .blueblazer-sidebar a:not([class*="bg-blue-600"]):hover,
+:root[data-website-theme="light-blazer"] .blueblazer-mobile-drawer a:not([class*="bg-blue-600"]):hover {
+  background-color: #dceaf6 !important;
+  color: #102d45 !important;
+}
+:root[data-website-theme="light-blazer"] .blueblazer-sidebar a[class*="bg-blue-600"],
+:root[data-website-theme="light-blazer"] .blueblazer-mobile-drawer a[class*="bg-blue-600"] {
+  background-color: #0B74BF !important;
+  border-color: #075f9d !important;
+  box-shadow: 0 8px 18px #0B74BF2e !important;
+  color: #fff !important;
+}
+:root[data-website-theme="light-blazer"] .blueblazer-sidebar a[class*="bg-blue-600"] svg,
+:root[data-website-theme="light-blazer"] .blueblazer-mobile-drawer a[class*="bg-blue-600"] svg {
+  color: #fff !important;
+}
+:root[data-website-theme="light-blazer"] [data-nav-group="main"] a:not([class*="bg-blue-600"]) svg,
+:root[data-website-theme="light-blazer"] [data-nav-group="chapter"] a:not([class*="bg-blue-600"]) svg {
+  color: #075f9d !important;
+}
+:root[data-website-theme="light-blazer"] [data-nav-group="financial"] a:not([class*="bg-blue-600"]) svg {
+  color: #08773a !important;
+}
+:root[data-website-theme="light-blazer"] [data-nav-group="management"] a:not([class*="bg-blue-600"]) svg {
+  color: #8b5a00 !important;
+}
+:root[data-website-theme="light-blazer"] .blueblazer-sidebar > div:last-child {
+  background: #e4eef7 !important;
+  border-color: #c4d4e3 !important;
+}
+:root[data-website-theme="light-blazer"] .blueblazer-sidebar > div:last-child [class*="bg-blue-600/10"] {
+  background: #fff !important;
+  border-color: #bad0e5 !important;
+  box-shadow: 0 8px 20px #173b5a12 !important;
+}
+:root[data-website-theme="light-blazer"] .blueblazer-sidebar > div:last-child [class*="text-blue-"] {
+  color: #075f9d !important;
+}
+:root[data-website-theme="light-blazer"] .blueblazer-sidebar .bg-blue-500,
+:root[data-website-theme="light-blazer"] .blueblazer-mobile-drawer .bg-blue-500 {
+  background-color: #0B74BF !important;
+  color: #fff !important;
+}
+:root[data-website-theme="light-blazer"] .blueblazer-sidebar a:focus-visible,
+:root[data-website-theme="light-blazer"] .blueblazer-sidebar button:focus-visible,
+:root[data-website-theme="light-blazer"] .blueblazer-mobile-bar button:focus-visible,
+:root[data-website-theme="light-blazer"] .blueblazer-mobile-drawer a:focus-visible,
+:root[data-website-theme="light-blazer"] .blueblazer-mobile-drawer button:focus-visible {
+  outline: 3px solid #0B74BF !important;
+  outline-offset: 2px;
+}
 :root[data-website-theme="blazer"] .event-cluster-filter[data-active="true"] { background-image: none !important; box-shadow: 0 0 16px color-mix(in srgb, currentColor 20%, transparent); }
 :root[data-website-theme="blazer"] .event-cluster-filter[data-cluster="all"][data-active="true"] { background-color: color-mix(in srgb, var(--blazer-yellow) 68%, transparent) !important; border-color: color-mix(in srgb, var(--blazer-yellow) 72%, transparent) !important; color: #151b21 !important; }
 :root[data-website-theme="blazer"] .event-cluster-filter[data-cluster="marketing"][data-active="true"] { background-color: var(--blazer-red) !important; border-color: var(--blazer-red) !important; color: #fff !important; }

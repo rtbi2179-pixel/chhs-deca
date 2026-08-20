@@ -45,4 +45,20 @@ describe("Glass, Blazer, and Light Blazer website themes", () => {
     expect(profile).toContain('Light Blazer brings the same palette into a clean, high-contrast light mode');
     expect(router).toContain("z.enum(['glass', 'blazer', 'light-blazer'])");
   });
+
+  it("keeps every Light Blazer navigation state readable without flattening section color cues", () => {
+    const shell = readProjectFile("client/src/components/SidebarNavigation.tsx");
+    const css = readProjectFile("client/src/index.css");
+
+    for (const group of ["main", "chapter", "financial", "management"]) {
+      expect(shell).toContain(`data-nav-group=\"${group}\"`);
+    }
+    expect(css).toContain('.blueblazer-sidebar a:not([class*="bg-blue-600"])');
+    expect(css).toContain('color: #20384d !important');
+    expect(css).toContain('background-color: #0B74BF !important');
+    expect(css).toContain('color: #fff !important');
+    expect(css).toContain('[data-nav-group="financial"]');
+    expect(css).toContain('[data-nav-group="management"]');
+    expect(css).toContain('outline: 3px solid #0B74BF !important');
+  });
 });

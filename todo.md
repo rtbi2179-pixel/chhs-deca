@@ -8799,3 +8799,4 @@
 - [x] Simplify non-Overview ambient backgrounds to the lowest-cost visual treatment while preserving Overview interaction
 - [x] Make chat blue in Blazer mode and soften yellow treatments with transparent tints
 - [x] Add website-action explanations and improvement tips to every Credit Score Breakdown hover target
+- [x] Restore accessible, balanced Light Blazer navigation contrast for labels, icons, controls, and active states

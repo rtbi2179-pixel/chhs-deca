@@ -152,9 +152,9 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Navigation Items */}
-        <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
-          {/* Main Section */}
-          <div>
+	        <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
+	          {/* Main Section */}
+	          <div data-nav-group="main">
             {!collapsed && (
               <p className="px-3 text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">MAIN NAVIGATION</p>
             )}
@@ -183,9 +183,9 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
             </div>
           </div>
 
-          <div>
-            {!collapsed && (
-              <p className="px-3 text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">CHAPTER</p>
+	          <div data-nav-group="chapter">
+	            {!collapsed && (
+	              <p className="px-3 text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">CHAPTER</p>
             )}
             <div className="space-y-1">
               {chapterNavLinks.map(({ href, label, icon: Icon }) => {
@@ -210,8 +210,8 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
             </div>
           </div>
 
-          {/* Financial Section */}
-          <div>
+	          {/* Financial Section */}
+	          <div data-nav-group="financial">
             {!collapsed && (
               <p className="px-3 text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">FINANCIAL SYSTEMS</p>
             )}
@@ -245,9 +245,9 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
             </div>
           </div>
 
-          {/* Chapter Management Section if applicable */}
-          {user && (user.role === 'admin' || user.role === 'super_admin' || user.email === 'rtbi2179@gmail.com' || user.email === 'sahan.mallampati@gmail.com') && (
-            <div>
+	          {/* Chapter Management Section if applicable */}
+	          {user && (user.role === 'admin' || user.role === 'super_admin' || user.email === 'rtbi2179@gmail.com' || user.email === 'sahan.mallampati@gmail.com') && (
+	            <div data-nav-group="management">
               {!collapsed && (
                 <p className="px-3 text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">CHAPTER MANAGEMENT</p>
               )}
@@ -353,9 +353,9 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             className="blueblazer-mobile-drawer md:hidden fixed inset-0 top-14 z-40 bg-[oklch(0.06_0.012_265/0.98)] backdrop-blur-2xl p-4 overflow-y-auto"
-          >
-            <nav className="space-y-4 pb-12">
-              <div>
+	          >
+	            <nav className="space-y-4 pb-12">
+	              <div data-nav-group="main">
                 <p className="text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">MAIN NAVIGATION</p>
                 <div className="space-y-1">
                   {mainNavLinks.map(({ href, label, icon: Icon }) => (
@@ -378,8 +378,8 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                 </div>
               </div>
 
-              <div>
-                <p className="text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">FINANCIAL SYSTEMS</p>
+	              <div data-nav-group="financial">
+	                <p className="text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">FINANCIAL SYSTEMS</p>
                 <div className="space-y-1">
                   {financialNavLinks.map(({ href, label, icon: Icon }) => (
                     <a
@@ -400,8 +400,8 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                 </div>
               </div>
 
-              <div>
-                <p className="text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">CHAPTER</p>
+	              <div data-nav-group="chapter">
+	                <p className="text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">CHAPTER</p>
                 <div className="space-y-1">
                   {chapterNavLinks.map(({ href, label, icon: Icon }) => (
                     <a
@@ -419,8 +419,8 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                 </div>
               </div>
 
-              {user && (user.role === 'admin' || user.role === 'super_admin' || user.email === 'rtbi2179@gmail.com' || user.email === 'sahan.mallampati@gmail.com') && (
-                <div>
+	              {user && (user.role === 'admin' || user.role === 'super_admin' || user.email === 'rtbi2179@gmail.com' || user.email === 'sahan.mallampati@gmail.com') && (
+	                <div data-nav-group="management">
                   <p className="text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">CHAPTER MANAGEMENT</p>
                   <div className="space-y-1">
                     {chapterManagementNavLinks.map(({ href, label, icon: Icon }) => (
