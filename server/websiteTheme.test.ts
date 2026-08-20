@@ -61,4 +61,23 @@ describe("Glass, Blazer, and Light Blazer website themes", () => {
     expect(css).toContain('[data-nav-group="management"]');
     expect(css).toContain('outline: 3px solid #0B74BF !important');
   });
+
+  it("applies readable palette-based hierarchy to Light Blazer metrics and supporting dashboard panels", () => {
+    const home = readProjectFile("client/src/pages/Home.tsx");
+    const profile = readProjectFile("client/src/pages/Profile.tsx");
+    const css = readProjectFile("client/src/index.css");
+
+    for (const tone of ["blue", "green", "yellow", "slate"]) {
+      expect(home).toContain(`tone: '${tone}'`);
+      expect(css).toContain(`[data-metric-tone="${tone}"]`);
+      expect(profile).toContain(`tone: '${tone}'`);
+      expect(css).toContain(`[data-profile-metric-tone="${tone}"]`);
+    }
+    expect(home).toContain('data-overview-panel="financial"');
+    expect(home).toContain('data-overview-panel="news"');
+    expect(home).toContain('data-overview-panel="chapter"');
+    expect(css).toContain('.overview-metric-value { color: #132233 !important; }');
+    expect(css).toContain('.overview-support-panel[data-overview-panel="financial"]');
+    expect(css).toContain('.overview-support-panel[data-overview-panel="chapter"]');
+  });
 });

@@ -1013,6 +1013,82 @@
   outline: 3px solid #0B74BF !important;
   outline-offset: 2px;
 }
+
+/* Light Blazer dashboard hierarchy: restrained tinted surfaces, strong metrics, and palette-based meaning. */
+:root[data-website-theme="light-blazer"] .overview-metric-card {
+  position: relative;
+  overflow: hidden;
+  border-color: #bdd2e4 !important;
+  background: linear-gradient(145deg, #ffffff 0%, #edf5fb 100%) !important;
+  box-shadow: 0 10px 26px #173b5a0d !important;
+}
+:root[data-website-theme="light-blazer"] .overview-metric-card::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  content: "";
+  background: #0B74BF;
+}
+:root[data-website-theme="light-blazer"] .overview-metric-card::after {
+  position: absolute;
+  top: -2rem;
+  right: -1rem;
+  width: 6rem;
+  height: 6rem;
+  border-radius: 999px;
+  content: "";
+  background: radial-gradient(circle, #0B74BF18 0 5%, transparent 6% 100%);
+  pointer-events: none;
+}
+:root[data-website-theme="light-blazer"] .overview-metric-card:hover {
+  box-shadow: 0 16px 34px #173b5a18 !important;
+}
+:root[data-website-theme="light-blazer"] .overview-metric-icon { color: #075f9d !important; }
+:root[data-website-theme="light-blazer"] .overview-metric-label { color: #62758a !important; }
+:root[data-website-theme="light-blazer"] .overview-metric-value { color: #132233 !important; }
+:root[data-website-theme="light-blazer"] .overview-metric-detail { color: #64778a !important; }
+:root[data-website-theme="light-blazer"] .overview-metric-card[data-metric-tone="blue"] { border-color: #bdd2e4 !important; background: linear-gradient(145deg, #ffffff 0%, #edf5fb 100%) !important; }
+:root[data-website-theme="light-blazer"] .overview-metric-card[data-metric-tone="blue"]::before { background: #0B74BF; }
+:root[data-website-theme="light-blazer"] .overview-metric-card[data-metric-tone="blue"]::after { background: radial-gradient(circle, #0B74BF18 0 5%, transparent 6% 100%); }
+:root[data-website-theme="light-blazer"] .overview-metric-card[data-metric-tone="blue"] .overview-metric-icon { color: #075f9d !important; }
+:root[data-website-theme="light-blazer"] .overview-metric-card[data-metric-tone="green"] { border-color: #a9d4b8 !important; background: linear-gradient(145deg, #ffffff 0%, #eaf7ef 100%) !important; }
+:root[data-website-theme="light-blazer"] .overview-metric-card[data-metric-tone="green"]::before { background: #009B46; }
+:root[data-website-theme="light-blazer"] .overview-metric-card[data-metric-tone="green"]::after { background: radial-gradient(circle, #009B4618 0 5%, transparent 6% 100%); }
+:root[data-website-theme="light-blazer"] .overview-metric-card[data-metric-tone="green"] .overview-metric-icon { color: #08773a !important; }
+:root[data-website-theme="light-blazer"] .overview-metric-card[data-metric-tone="yellow"] { border-color: #e4cd85 !important; background: linear-gradient(145deg, #fffdf6 0%, #fff5cb 100%) !important; }
+:root[data-website-theme="light-blazer"] .overview-metric-card[data-metric-tone="yellow"]::before { background: #c89900; }
+:root[data-website-theme="light-blazer"] .overview-metric-card[data-metric-tone="yellow"]::after { background: radial-gradient(circle, #F8C52424 0 5%, transparent 6% 100%); }
+:root[data-website-theme="light-blazer"] .overview-metric-card[data-metric-tone="yellow"] .overview-metric-icon { color: #806000 !important; }
+:root[data-website-theme="light-blazer"] .overview-metric-card[data-metric-tone="slate"] { border-color: #c7d1db !important; background: linear-gradient(145deg, #ffffff 0%, #edf1f5 100%) !important; }
+:root[data-website-theme="light-blazer"] .overview-metric-card[data-metric-tone="slate"]::before { background: #5c6d7a; }
+:root[data-website-theme="light-blazer"] .overview-metric-card[data-metric-tone="slate"]::after { background: radial-gradient(circle, #7C86891f 0 5%, transparent 6% 100%); }
+:root[data-website-theme="light-blazer"] .overview-metric-card[data-metric-tone="slate"] .overview-metric-icon { color: #526777 !important; }
+:root[data-website-theme="light-blazer"] .overview-support-panel {
+  border-color: #c4d8e7 !important;
+  background: linear-gradient(145deg, #ffffff 0%, #edf5fb 100%) !important;
+  box-shadow: 0 12px 28px #173b5a0d !important;
+}
+:root[data-website-theme="light-blazer"] .overview-support-panel[data-overview-panel="financial"] { border-top: 3px solid #009B46 !important; background: linear-gradient(145deg, #ffffff 0%, #ebf8f0 100%) !important; }
+:root[data-website-theme="light-blazer"] .overview-support-panel[data-overview-panel="news"] { border-top: 3px solid #0B74BF !important; }
+:root[data-website-theme="light-blazer"] .overview-support-panel[data-overview-panel="chapter"] { border-top: 3px solid #7C8689 !important; background: linear-gradient(145deg, #ffffff 0%, #f0f3f6 100%) !important; }
+:root[data-website-theme="light-blazer"] .overview-support-panel [class*="bg-white/"] { background-color: #ffffff !important; }
+:root[data-website-theme="light-blazer"] .profile-progress-metric {
+  border-color: #bdd2e4 !important;
+  background: #eef6fc !important;
+}
+:root[data-website-theme="light-blazer"] .profile-progress-metric-value { color: #132233 !important; }
+:root[data-website-theme="light-blazer"] .profile-progress-metric-label { color: #5d7184 !important; }
+:root[data-website-theme="light-blazer"] .profile-progress-metric-icon { color: #075f9d !important; }
+:root[data-website-theme="light-blazer"] .profile-progress-metric[data-profile-metric-tone="blue"] { border-color: #bdd2e4 !important; background: #eef6fc !important; }
+:root[data-website-theme="light-blazer"] .profile-progress-metric[data-profile-metric-tone="blue"] .profile-progress-metric-icon { color: #075f9d !important; }
+:root[data-website-theme="light-blazer"] .profile-progress-metric[data-profile-metric-tone="green"] { border-color: #a9d4b8 !important; background: #eaf7ef !important; }
+:root[data-website-theme="light-blazer"] .profile-progress-metric[data-profile-metric-tone="green"] .profile-progress-metric-icon { color: #08773a !important; }
+:root[data-website-theme="light-blazer"] .profile-progress-metric[data-profile-metric-tone="yellow"] { border-color: #e4cd85 !important; background: #fff5cb !important; }
+:root[data-website-theme="light-blazer"] .profile-progress-metric[data-profile-metric-tone="yellow"] .profile-progress-metric-icon { color: #806000 !important; }
+:root[data-website-theme="light-blazer"] .profile-progress-metric[data-profile-metric-tone="slate"] { border-color: #c7d1db !important; background: #edf1f5 !important; }
+:root[data-website-theme="light-blazer"] .profile-progress-metric[data-profile-metric-tone="slate"] .profile-progress-metric-icon { color: #526777 !important; }
 :root[data-website-theme="blazer"] .event-cluster-filter[data-active="true"] { background-image: none !important; box-shadow: 0 0 16px color-mix(in srgb, currentColor 20%, transparent); }
 :root[data-website-theme="blazer"] .event-cluster-filter[data-cluster="all"][data-active="true"] { background-color: color-mix(in srgb, var(--blazer-yellow) 68%, transparent) !important; border-color: color-mix(in srgb, var(--blazer-yellow) 72%, transparent) !important; color: #151b21 !important; }
 :root[data-website-theme="blazer"] .event-cluster-filter[data-cluster="marketing"][data-active="true"] { background-color: var(--blazer-red) !important; border-color: var(--blazer-red) !important; color: #fff !important; }

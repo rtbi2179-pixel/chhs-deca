@@ -8800,3 +8800,4 @@
 - [x] Make chat blue in Blazer mode and soften yellow treatments with transparent tints
 - [x] Add website-action explanations and improvement tips to every Credit Score Breakdown hover target
 - [x] Restore accessible, balanced Light Blazer navigation contrast for labels, icons, controls, and active states
+- [x] Apply a readable, section-level Light Blazer color hierarchy to dashboard metric cards and related panels
