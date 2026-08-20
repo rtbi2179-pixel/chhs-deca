@@ -166,7 +166,9 @@ export default function Leaderboard() {
               <button
                 key={cluster.value}
                 onClick={() => setSelectedCluster(cluster.value)}
-                className={`px-4 py-2 rounded-lg transition-colors ${
+                data-cluster={cluster.value.toLowerCase().replaceAll(' ', '-').replaceAll('&', 'and')}
+                data-active={selectedCluster === cluster.value}
+                className={`leaderboard-cluster-tab px-4 py-2 rounded-lg transition-colors ${
                   selectedCluster === cluster.value
                     ? "editorial-tab editorial-tab-active"
                     : "editorial-tab bg-white/[0.025]"
