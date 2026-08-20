@@ -1106,3 +1106,24 @@
 :root[data-website-theme="blazer"] .leaderboard-cluster-tab[data-cluster="business-management-and-administration"][data-active="true"] { background-color: var(--blazer-gray) !important; border-color: var(--blazer-gray) !important; color: #fff !important; }
 :root[data-website-theme="blazer"] .leaderboard-cluster-tab[data-cluster="finance"][data-active="true"] { background-color: var(--blazer-green) !important; border-color: var(--blazer-green) !important; color: #fff !important; }
 :root[data-website-theme="blazer"] .leaderboard-cluster-tab[data-cluster="hospitality-and-tourism"][data-active="true"] { background-color: var(--blazer-blue) !important; border-color: var(--blazer-blue) !important; color: #fff !important; }
+
+/* Phone usability pass: preserve readable data, reachable controls, and safe-area spacing without compressing dense tools. */
+@media (max-width: 767px) {
+  html { -webkit-text-size-adjust: 100%; }
+  .page-shell { min-width: 0; overflow-x: clip; }
+  .page-content { padding: 1.25rem 0.875rem calc(5.5rem + env(safe-area-inset-bottom)); }
+  .page-title { font-size: clamp(1.9rem, 10vw, 2.45rem); }
+  .page-intro { font-size: 0.9375rem; line-height: 1.6; }
+  .editorial-panel { border-radius: 0.75rem; }
+  .leaderboard-table-shell { overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
+  .leaderboard-table-shell table { min-width: 38rem; }
+  .banking-hero-status, .leaderboard-hero-status { width: 100%; min-width: 0; }
+  .banking-metric, .leaderboard-metric { min-height: 9.5rem; }
+  .bbx-market-tabs { scrollbar-width: none; }
+  .bbx-market-tabs::-webkit-scrollbar { display: none; }
+  .blueblazer-mobile-drawer a,
+  .blueblazer-mobile-drawer button { min-height: 3rem; }
+  .app-atmosphere[data-atmosphere="practice"] select { width: 100%; min-height: 2.75rem; }
+  .app-atmosphere[data-atmosphere="practice"] [class*="sticky"] button { min-height: 2.75rem; }
+  [data-blueblazer-chat="true"] textarea { font-size: 16px; }
+}

@@ -389,11 +389,11 @@ export default function PracticeQuestions() {
   return (
     <div className="min-h-screen bg-background flex flex-col mt-16">
       {/* Top Header - Two Row Layout */}
-      <div className="bg-background border-b border-border px-6 py-3 sticky top-0 z-50 shadow-md">
+      <div className="sticky top-0 z-50 border-b border-border bg-background px-3 py-3 shadow-md sm:px-6">
         {/* Row 1: Left and Center */}
-        <div className="flex items-center justify-between gap-6 mb-3">
+        <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
           {/* Left Section */}
-          <div className="flex items-center gap-3 flex-shrink-0">
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
             <Button variant="ghost" size="sm" onClick={() => window.history.back()} className="text-foreground/70">
               ← Go back
             </Button>
@@ -432,8 +432,8 @@ export default function PracticeQuestions() {
           </div>
 
           {/* Center Section - Timer */}
-          <div className="flex items-center gap-6 flex-shrink-0">
-            <p className="text-xl font-bold text-foreground whitespace-nowrap">{formatTime(elapsedSeconds)}</p>
+          <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-start sm:gap-6">
+            <p className="whitespace-nowrap text-xl font-bold text-foreground">{formatTime(elapsedSeconds)}</p>
             <Button 
               variant="ghost" 
               size="sm"
@@ -729,13 +729,13 @@ export default function PracticeQuestions() {
       </div>
 
       {/* Bottom Navigation Bar */}
-      <div className="bg-background border-t border-border px-6 py-4 flex items-center justify-between sticky bottom-0 z-40 shadow-md">
-        <Button variant="outline" size="sm" className="bg-foreground text-background">
+      <div className="sticky bottom-0 z-40 flex flex-col gap-3 border-t border-border bg-background px-3 py-3 shadow-md sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-4">
+        <Button variant="outline" size="sm" className="w-full justify-between bg-foreground text-background sm:w-auto">
           {currentQuestionNumber} of {totalQuestions}
           <ChevronDown className="w-4 h-4 ml-2" />
         </Button>
 
-        <div className="flex items-center gap-3">
+        <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:items-center sm:gap-3">
           <Button 
             variant="ghost" 
             size="sm"

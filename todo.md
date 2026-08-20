@@ -8807,3 +8807,4 @@
 - [x] Restore selected-event exam guidance on the Practice cluster-selection screen
 - [x] Remove the nested navigation anchor in the Practice cluster back link
 - [x] Prevent previously generated Blue’s News copy from exposing stock-change magnitudes
+- [x] Improve phone-sized navigation, touch targets, action wrapping, and high-use screen layouts so controls remain accessible

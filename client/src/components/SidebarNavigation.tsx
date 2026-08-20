@@ -330,8 +330,8 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Mobile Top Bar */}
-      <div className="blueblazer-mobile-bar md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between border-b border-white/[0.08] bg-black px-4 py-3 backdrop-blur-xl">
-        <button type="button" onClick={restartOnboardingTour} aria-label="Restart Blue Blazer tour" title="Blue Blazer tour" className="flex items-center gap-3 rounded-lg text-left transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-blue-300">
+      <div className="blueblazer-mobile-bar md:hidden fixed top-0 left-0 right-0 z-50 flex min-h-16 items-center justify-between border-b border-white/[0.08] bg-black px-3 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] backdrop-blur-xl">
+        <button type="button" onClick={restartOnboardingTour} aria-label="Restart Blue Blazer tour" title="Blue Blazer tour" className="flex min-h-11 items-center gap-3 rounded-xl px-1 text-left transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-blue-300">
           <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg border border-blue-300/30 bg-black p-0.5 shadow-md">
             <img src={BLUE_BLAZER_LOGO} alt="Blue Blazer logo" className="h-full w-full object-contain" />
           </div>
@@ -339,7 +339,7 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
         </button>
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="p-2 text-white/80 hover:text-white"
+          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl p-2 text-white/80 transition hover:bg-white/[0.06] hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-300"
         >
           {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
@@ -352,9 +352,9 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="blueblazer-mobile-drawer md:hidden fixed inset-0 top-14 z-40 bg-[oklch(0.06_0.012_265/0.98)] backdrop-blur-2xl p-4 overflow-y-auto"
+            className="blueblazer-mobile-drawer md:hidden fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto bg-[oklch(0.06_0.012_265/0.98)] p-3 pb-[calc(1rem+env(safe-area-inset-bottom))] backdrop-blur-2xl"
 	          >
-	            <nav className="space-y-4 pb-12">
+	            <nav className="space-y-5 pb-10">
 	              <div data-nav-group="main">
                 <p className="text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">MAIN NAVIGATION</p>
                 <div className="space-y-1">
@@ -473,7 +473,7 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
       </AnimatePresence>
 
       {/* Main Content Area */}
-      <main className="app-atmosphere relative isolate flex-1 min-w-0 overflow-hidden md:pt-0 pt-14" data-atmosphere={atmosphere}>
+      <main className="app-atmosphere relative isolate flex-1 min-w-0 overflow-hidden pt-16 md:pt-0" data-atmosphere={atmosphere}>
         {location !== '/' && <InteractiveBackground variant={atmosphere} />}
         <div className="relative z-10 min-h-full">
           {children}
