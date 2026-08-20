@@ -8809,3 +8809,4 @@
 - [x] Prevent previously generated Blue’s News copy from exposing stock-change magnitudes
 - [x] Improve phone-sized navigation, touch targets, action wrapping, and high-use screen layouts so controls remain accessible
 - [x] Align cluster-specific UI colors with the supplied Business, Entrepreneurship, Finance, Hospitality, Marketing, and Personal Finance reference palette
+- [x] Apply reference-aligned cluster colors to Blazer-mode Overview sections, cards, and cluster-linked actions
