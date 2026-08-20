@@ -21,7 +21,7 @@ describe("InteractiveBackground", () => {
     expect(background).toContain("drawRoundedFrame");
   });
 
-  it("keeps Overview pointer-responsive while using lighter ambient animation on every other route", () => {
+  it("keeps Overview pointer-responsive while freezing non-Overview canvas scenes after one draw", () => {
     const background = readProjectFile("client/src/components/InteractiveBackground.tsx");
 
     expect(background).toContain("pointerRef = useRef");
@@ -29,12 +29,24 @@ describe("InteractiveBackground", () => {
     expect(background).toContain("Math.min(window.devicePixelRatio || 1, lowPowerDevice ? 1 : 1.5)");
     expect(background).toContain("time - lastDrawTime >= targetFrameMs");
     expect(background).toContain('const isInteractive = variant === "overview"');
+    expect(background).toContain("if (!isInteractive || prefersReducedMotion) drawScene(0)");
+    expect(background).toContain("if (isInteractive && isPageVisible && !prefersReducedMotion)");
+    expect(background).toContain('data-interactive={variant === "overview"}');
     expect(background).toContain("if (isInteractive) {");
     expect(background).toContain("pointerIsNear = isInteractive");
     expect(background).toContain("new ResizeObserver");
     expect(background).toContain("prefers-reduced-motion: reduce");
     expect(background).toContain('document.addEventListener("visibilitychange"');
     expect(background).toContain('aria-hidden="true"');
+  });
+
+  it("keeps a low-cost CSS ambient treatment outside Overview instead of a continuous canvas loop", () => {
+    const css = readProjectFile("client/src/index.css");
+
+    expect(css).toContain('.app-atmosphere:not([data-atmosphere="overview"])::after');
+    expect(css).toContain('blueblazer-ambient-drift');
+    expect(css).toContain('animation: blueblazer-ambient-drift 22s');
+    expect(css).toContain('prefers-reduced-motion: reduce');
   });
 
   it("guards dynamic gradient opacity values so canvas colors cannot contain NaN", () => {

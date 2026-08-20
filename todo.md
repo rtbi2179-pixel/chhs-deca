@@ -8796,3 +8796,4 @@
 - [x] Apply cluster-specific Blazer colors to the Overview/Marketing/Business Management/Finance/Hospitality dashboard tabs
 - [x] Add a “Blue Blazer tour” hover label to the clickable Blue Blazer icon
 - [x] Ensure the welcome page appears at the start of each new browser session without returning during in-app navigation
+- [x] Simplify non-Overview ambient backgrounds to the lowest-cost visual treatment while preserving Overview interaction

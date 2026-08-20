@@ -99,7 +99,7 @@ export function InteractiveBackground({ variant = "hero" }: { variant?: Backgrou
     const lowPowerDevice = (navigator as Navigator & { deviceMemory?: number }).deviceMemory !== undefined
       && (navigator as Navigator & { deviceMemory?: number }).deviceMemory! <= 4;
     const dpr = Math.min(window.devicePixelRatio || 1, lowPowerDevice ? 1 : 1.5);
-    const targetFrameMs = isInteractive ? (lowPowerDevice ? 1000 / 24 : 1000 / 30) : 1000 / 18;
+    const targetFrameMs = lowPowerDevice ? 1000 / 24 : 1000 / 30;
     let lastDrawTime = -Infinity;
     const configuration = configurationByVariant[variant];
 
@@ -328,13 +328,13 @@ export function InteractiveBackground({ variant = "hero" }: { variant?: Backgrou
         drawScene(time);
         lastDrawTime = time;
       }
-      if (isPageVisible && !prefersReducedMotion) animationFrame = window.requestAnimationFrame(render);
+      if (isInteractive && isPageVisible && !prefersReducedMotion) animationFrame = window.requestAnimationFrame(render);
     };
 
     const start = () => {
       window.cancelAnimationFrame(animationFrame);
       lastDrawTime = -Infinity;
-      if (prefersReducedMotion) drawScene(0);
+      if (!isInteractive || prefersReducedMotion) drawScene(0);
       else if (isPageVisible) animationFrame = window.requestAnimationFrame(render);
     };
 
@@ -378,7 +378,7 @@ export function InteractiveBackground({ variant = "hero" }: { variant?: Backgrou
     };
   }, [variant]);
 
-  return <canvas ref={canvasRef} aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full" />;
+  return <canvas ref={canvasRef} aria-hidden="true" data-interactive={variant === "overview"} className="pointer-events-none absolute inset-0 h-full w-full" />;
 }
 
 export default InteractiveBackground;

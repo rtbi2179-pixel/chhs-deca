@@ -181,6 +181,25 @@
     background-size: 4rem 4rem;
     mask-image: linear-gradient(to bottom, black, transparent 68%);
   }
+  .app-atmosphere:not([data-atmosphere="overview"])::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.18;
+    background: radial-gradient(circle at 72% 24%, oklch(0.7 0.16 250 / 0.16), transparent 1px), radial-gradient(circle at 24% 72%, oklch(0.6 0.13 250 / 0.11), transparent 1px);
+    background-size: 13rem 13rem, 19rem 19rem;
+    animation: blueblazer-ambient-drift 22s ease-in-out infinite alternate;
+    will-change: opacity;
+  }
+  @keyframes blueblazer-ambient-drift {
+    from { opacity: 0.12; }
+    to { opacity: 0.2; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .app-atmosphere:not([data-atmosphere="overview"])::after { animation: none; opacity: 0.12; }
+  }
   .app-atmosphere[data-atmosphere="study"] .page-shell,
   .app-atmosphere[data-atmosphere="piLibrary"] .page-shell {
     background-image: radial-gradient(circle at 82% 12%, oklch(0.56 0.18 270 / 0.12), transparent 25rem), radial-gradient(circle at 18% 80%, oklch(0.42 0.13 245 / 0.08), transparent 27rem);
