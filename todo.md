@@ -8815,3 +8815,4 @@
 - [x] Fix the nested-anchor markup error on the Practice page while preserving its navigation behavior
 - [x] Update normal Blazer Events surfaces to use a blue background and white text while preserving Glass and Light Blazer
 - [x] Add school-code password reset requests with chapter-admin notification, one-time approval, and one-hour reset expiry
+- [x] Move the BBX Learning Guide information control next to the Exchange Benchmark label

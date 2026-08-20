@@ -27,9 +27,11 @@ describe("BBX market dashboard organization", () => {
     expect(overview).toContain("Refresh in {refreshRemaining}s");
   });
 
-  it("provides an accessible simulated economic-condition range guide beside the Exchange heading", () => {
+  it("provides an accessible simulated economic-condition range guide beside the Exchange Benchmark label", () => {
     expect(overview).toContain('aria-label="Open BBX economic condition range guide"');
     expect(overview).toContain("<MarketConditionExplainer />");
+    const benchmarkCard = overview.slice(overview.indexOf('Exchange benchmark'), overview.indexOf('Market regime'));
+    expect(benchmarkCard).toContain("<MarketConditionExplainer />");
     expect(overview).toContain("Reading simulated economic conditions");
     expect(overview).toContain("Recessionary decline");
     expect(overview).toContain("Contraction");

@@ -95,7 +95,6 @@ export default function BlueMarket() {
             <div className="mt-2 flex flex-wrap items-center gap-3">
               <h1 className="page-title">BlueBlazer Exchange</h1>
               <span className="rounded-full border border-blue-400/30 bg-blue-400/10 px-2.5 py-1 text-xs font-semibold tracking-wide text-blue-200">SIMULATED</span>
-              <MarketConditionExplainer />
             </div>
             <p className="page-intro mt-3 max-w-2xl">Practice reading company news, risk, diversification, and execution costs with fictional BBX companies. Available BBX buying power matches your Banking Investment Account and has no cash value.</p>
           </div>
@@ -109,7 +108,10 @@ export default function BlueMarket() {
             <p className="mt-1 text-xs text-foreground/55">Banking-backed BBX buying power</p>
           </Card>
           <Card className="editorial-panel p-5">
-            <p className="data-label">Exchange benchmark</p>
+            <div className="flex items-center gap-2">
+              <p className="data-label">Exchange benchmark</p>
+              <MarketConditionExplainer />
+            </div>
             <p className="mt-3 text-2xl font-semibold text-foreground">{data.state.benchmarkLevel.toFixed(2)}</p>
             <div className="mt-1"><Change value={data.state.benchmarkChangePercent} /></div>
           </Card>
