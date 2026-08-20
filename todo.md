@@ -8792,3 +8792,4 @@
 - [x] Allow members to change their focused event from Profile Event Selection
 - [x] Match Profile Event Selection controls to the selected event's cluster color
 - [x] Add a persisted Light Blazer light-mode theme alongside Glass and Blazer
+- [x] Color each Blazer cluster filter by its respective cluster, with Marketing in red

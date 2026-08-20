@@ -843,7 +843,9 @@ export default function Events() {
                 <button
                   key={c}
                   onClick={() => setActiveCluster(c)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all duration-200 ${
+                  data-cluster={c.toLowerCase().replaceAll(' ', '-').replaceAll('&', 'and')}
+                  data-active={activeCluster === c}
+                  className={`event-cluster-filter px-3 py-1.5 rounded-lg text-xs font-medium border transition-all duration-200 ${
                     activeCluster === c
                       ? 'bg-blue-600 border-blue-500 text-white'
                       : 'bg-white/5 border-white/10 text-white/60 hover:text-white hover:border-white/20'
