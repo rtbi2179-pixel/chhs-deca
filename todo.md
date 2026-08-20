@@ -8786,3 +8786,4 @@
 - [x] Replace every failed avatar and banner gallery image with a working selectable visual
 - [x] Profile and reduce site-wide client and server lag without removing features
 - [x] Keep interaction in the Overview background only, use lighter animated backgrounds elsewhere, and simplify the cursor effect
+- [x] Replace the current practice-question dataset with the supplied DECA Cluster Exam 39,000-question master release
