@@ -24,6 +24,7 @@ import {
   Bell,
   Zap,
   MessageSquarePlus,
+  ChartNoAxesCombined,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -55,6 +56,8 @@ const chapterManagementNavLinks = [
   { href: '/chapter/members', label: 'Member Management', icon: Users, group: 'CHAPTER_MANAGEMENT' },
   { href: '/admin', label: 'Chapter Management', icon: ShieldAlert, group: 'CHAPTER_MANAGEMENT' },
 ];
+
+const designatedDiagnosticsEmails = new Set(['sahan.mallampati@gmail.com', 'rtbi2179@gmail.com']);
 
 function atmosphereForRoute(location: string): Exclude<BackgroundVariant, "hero" | "overview"> {
   if (location.startsWith('/events')) return 'events';
@@ -90,6 +93,12 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
   const unreadNews = trpc.bbx.getUnreadNewsCount.useQuery(undefined, { enabled: !!user, refetchInterval: 60_000 });
   const atmosphere = atmosphereForRoute(location);
   const profileAvatar = getProfileAvatar(profileSettingsQuery.data?.avatarKey);
+  const canManageChapter = Boolean(user && (user.role === 'admin' || user.role === 'super_admin'));
+  const canViewDiagnostics = Boolean(user?.role === 'super_admin' && user.email && designatedDiagnosticsEmails.has(user.email.toLowerCase()));
+  const managementNavLinks = [
+    ...chapterManagementNavLinks.map((link) => link),
+    ...(canViewDiagnostics ? [{ href: '/super-admin/diagnostics', label: 'Chapter Diagnostics', icon: ChartNoAxesCombined, group: 'CHAPTER_MANAGEMENT' }] : []),
+  ];
 
   const handleLogout = async () => {
     try {
@@ -246,13 +255,13 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
           </div>
 
 	          {/* Chapter Management Section if applicable */}
-	          {user && (user.role === 'admin' || user.role === 'super_admin' || user.email === 'rtbi2179@gmail.com' || user.email === 'sahan.mallampati@gmail.com') && (
+	          {canManageChapter && (
 	            <div data-nav-group="management">
               {!collapsed && (
                 <p className="px-3 text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">CHAPTER MANAGEMENT</p>
               )}
               <div className="space-y-1">
-                {chapterManagementNavLinks.map(({ href, label, icon: Icon }) => {
+                {managementNavLinks.map(({ href, label, icon: Icon }) => {
                   const isActive = location === href;
                   return (
                     <a
@@ -419,11 +428,11 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                 </div>
               </div>
 
-	              {user && (user.role === 'admin' || user.role === 'super_admin' || user.email === 'rtbi2179@gmail.com' || user.email === 'sahan.mallampati@gmail.com') && (
+	              {canManageChapter && (
 	                <div data-nav-group="management">
                   <p className="text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">CHAPTER MANAGEMENT</p>
                   <div className="space-y-1">
-                    {chapterManagementNavLinks.map(({ href, label, icon: Icon }) => (
+                    {managementNavLinks.map(({ href, label, icon: Icon }) => (
                       <a
                         key={href}
                         href={href}

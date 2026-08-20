@@ -921,6 +921,26 @@ export type DailyPracticeStat = typeof dailyPracticeStats.$inferSelect;
 export type InsertDailyPracticeStat = typeof dailyPracticeStats.$inferInsert;
 
 /**
+ * First-party, authenticated website diagnostics. Events intentionally capture
+ * only route and control labels—never form inputs, messages, question answers,
+ * or other member-entered content.
+ */
+export const websiteInteractionEvents = mysqlTable("websiteInteractionEvents", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  eventType: mysqlEnum("eventType", ["page_view", "control_click"]).notNull(),
+  path: varchar("path", { length: 255 }).notNull(),
+  label: varchar("label", { length: 120 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  schoolTimeIndex: index("website_interaction_school_time_idx").on(table.schoolCode, table.createdAt),
+  userTimeIndex: index("website_interaction_user_time_idx").on(table.userId, table.createdAt),
+}));
+export type WebsiteInteractionEvent = typeof websiteInteractionEvents.$inferSelect;
+export type InsertWebsiteInteractionEvent = typeof websiteInteractionEvents.$inferInsert;
+
+/**
  * Economic Settings - Game economy configuration
  */
 export const economicSettings = mysqlTable("economicSettings", {

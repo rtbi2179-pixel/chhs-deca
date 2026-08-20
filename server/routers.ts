@@ -27,6 +27,7 @@ import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leader
 import { and, eq, sql, inArray, desc, asc, lte, gte } from "drizzle-orm";
 import { piLearningRouter } from "./piLearningRouter";
 import { bbxRouter } from "./bbxRouter";
+import { superAdminDiagnosticsRouter } from "./superAdminDiagnosticsRouter";
 
 const mockExamClusterSchema = z.enum(CHAPTER_EXAM_CLUSTERS);
 const chapterExamQuestionCountSchema = z.union(CHAPTER_EXAM_QUESTION_COUNTS.map((count) => z.literal(count)) as [z.ZodLiteral<25>, z.ZodLiteral<50>, z.ZodLiteral<75>, z.ZodLiteral<100>]);
@@ -508,6 +509,7 @@ export const gachaRouter = router({
 });
 
 export const appRouter = router({
+  superAdminDiagnostics: superAdminDiagnosticsRouter,
   announcements: announcementsRouter,
   system: systemRouter,
   gacha: gachaRouter,

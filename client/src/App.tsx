@@ -14,6 +14,7 @@ import { lazy, Suspense, useState, useEffect } from "react";
 import { Toast, useToast } from "./components/Toast";
 import { useLocation } from "wouter";
 import { BlueBlazerCursor } from "./components/BlueBlazerCursor";
+import { WebsiteInteractionTracker } from "./components/WebsiteInteractionTracker";
 import { isStaleDynamicImportError, recoverStaleDynamicImportInBrowser } from "./lib/dynamicImportRecovery";
 
 const NotFound = lazy(() => import("@/pages/NotFound"));
@@ -54,6 +55,7 @@ const BankingDashboard = lazy(() => import("./pages/BankingDashboard").then((mod
 const PracticeDebug = lazy(() => import("./pages/PracticeDebug"));
 const SpendingPatterns = lazy(() => import("./pages/SpendingPatterns"));
 const SuperAdminDashboard = lazy(() => import("./pages/SuperAdminDashboard"));
+const SuperAdminDiagnostics = lazy(() => import("./pages/SuperAdminDiagnostics"));
 const Feedback = lazy(() => import("./pages/Feedback"));
 const BluesNews = lazy(() => import("./pages/BluesNews"));
 const EventMatchQuiz = lazy(() => import("./pages/EventMatchQuiz"));
@@ -97,6 +99,7 @@ function Router() {
       <Route path="/banking" component={BankingDashboard} />
       <Route path="/spending-patterns" component={SpendingPatterns} />
       <Route path="/super-admin" component={SuperAdminDashboard} />
+      <Route path="/super-admin/diagnostics" component={SuperAdminDiagnostics} />
       <Route path="/market-analytics" component={BbxPortfolioPage} />
       <Route path="/feedback" component={Feedback} />
       <Route path="/event-match" component={EventMatchQuiz} />
@@ -175,6 +178,7 @@ function App() {
             {loading || !welcomeGate.resolved ? <SignedOutWelcome isChecking /> : showWelcomeGate ? <SignedOutWelcome isAuthenticated={Boolean(user)} onContinue={dismissWelcomeGate} /> : <>
               {user ? (
                 <SidebarNavigation>
+                  <WebsiteInteractionTracker />
                   <Router />
                   <Suspense fallback={null}><DirectMessagesPanel /></Suspense>
                   <Footer />
