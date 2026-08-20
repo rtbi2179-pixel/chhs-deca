@@ -8812,3 +8812,4 @@
 - [x] Apply reference-aligned cluster colors to Blazer-mode Overview sections, cards, and cluster-linked actions
 - [x] Refine Blazer contrast across Events, Overview, Leaderboard, and Banking with background-matched surfaces, cluster outlines, and light heading zones
 - [x] Add a Sahan/Ricardo-only Super Admin Diagnostics panel with chapter roster, learning accuracy, engagement, and real interaction analytics
+- [x] Fix the nested-anchor markup error on the Practice page while preserving its navigation behavior

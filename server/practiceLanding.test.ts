@@ -14,6 +14,8 @@ describe('Unified Practice navigation', () => {
     expect(landingPage).toContain("href: '/mock-exams'");
     expect(landingPage).toContain("title: 'Mock Exams'");
     expect(landingPage).toContain('Open {card.title}');
+    expect(landingPage).toContain('<Link href={card.href} className=');
+    expect(landingPage).not.toContain('<Link href={card.href}>\n                      <a');
   });
 
   it('registers the question-bank sub-route while preserving the mock-exam route', () => {
