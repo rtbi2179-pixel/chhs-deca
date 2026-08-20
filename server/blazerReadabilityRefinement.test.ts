@@ -13,9 +13,10 @@ describe("Blazer readability refinement", () => {
     expect(events).toContain("data-event-cluster={event.cluster.toLowerCase()");
   });
 
-  it("uses background-led surfaces with high-contrast headings in Blazer and Light Blazer", () => {
+  it("uses a blue, white-text Events heading zone in normal Blazer while preserving distinct Light Blazer surfaces", () => {
     expect(styles).toContain(':root[data-website-theme="blazer"] .events-heading-zone');
-    expect(styles).toContain('background: #e9f1f8 !important;');
+    expect(styles).toContain('background: linear-gradient(135deg, #0b74bf 0%, #075f9d 56%, #064b7f 100%) !important;');
+    expect(styles).toContain('events-heading-zone :is(h1, h2, h3, p, .page-title, .page-intro) { color: #fff !important;');
     expect(styles).toContain(':root[data-website-theme="blazer"] .event-outline-card');
     expect(styles).toContain('background: #0b121b !important;');
     expect(styles).toContain(':root[data-website-theme="light-blazer"] .event-outline-card');

@@ -8813,3 +8813,4 @@
 - [x] Refine Blazer contrast across Events, Overview, Leaderboard, and Banking with background-matched surfaces, cluster outlines, and light heading zones
 - [x] Add a Sahan/Ricardo-only Super Admin Diagnostics panel with chapter roster, learning accuracy, engagement, and real interaction analytics
 - [x] Fix the nested-anchor markup error on the Practice page while preserving its navigation behavior
+- [x] Update normal Blazer Events surfaces to use a blue background and white text while preserving Glass and Light Blazer

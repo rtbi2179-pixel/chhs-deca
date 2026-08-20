@@ -1151,7 +1151,7 @@
 :root[data-website-theme="blazer"] .overview-account-row[data-overview-cluster] :is(svg, [class*="text-blue-"]) { color: var(--overview-cluster-color) !important; }
 :root[data-website-theme="blazer"] .overview-cluster-link[data-overview-cluster] { color: var(--overview-cluster-color) !important; }
 
-/* Contrast-first Blazer refinement: light heading zones and background-led content surfaces. */
+/* Contrast-first Blazer refinement: saturated Events heading, background-led content surfaces. */
 .event-outline-card[data-event-cluster="business-management"] { --event-cluster-color: var(--blazer-yellow); }
 .event-outline-card[data-event-cluster="entrepreneurship"] { --event-cluster-color: var(--blazer-gray); }
 .event-outline-card[data-event-cluster="finance"] { --event-cluster-color: var(--blazer-green); }
@@ -1160,18 +1160,17 @@
 .event-outline-card[data-event-cluster="personal-finance"] { --event-cluster-color: var(--blazer-lime); }
 
 :root[data-website-theme="blazer"] .events-heading-zone {
-  background: #e9f1f8 !important;
-  border-bottom: 1px solid #bdd0e1;
+  background: linear-gradient(135deg, #0b74bf 0%, #075f9d 56%, #064b7f 100%) !important;
+  border-bottom: 1px solid color-mix(in srgb, #ffffff 26%, #075f9d);
 }
-:root[data-website-theme="blazer"] .events-heading-zone h1 { color: #132233 !important; text-shadow: none !important; }
-:root[data-website-theme="blazer"] .events-heading-zone p { color: #42586c !important; }
-:root[data-website-theme="blazer"] .events-heading-zone [class*="bg-blue-500"] { background: #dcebf8 !important; border-color: #98bbd8 !important; color: #075f9d !important; }
+:root[data-website-theme="blazer"] .events-heading-zone :is(h1, h2, h3, p, .page-title, .page-intro) { color: #fff !important; text-shadow: none !important; }
+:root[data-website-theme="blazer"] .events-heading-zone [class*="bg-blue-500"] { background: rgb(255 255 255 / 12%) !important; border-color: rgb(255 255 255 / 34%) !important; color: #fff !important; }
 :root[data-website-theme="blazer"] .events-heading-zone a {
-  background: #f8fbfe !important;
-  border-color: #a7bfd3 !important;
+  background: rgb(255 255 255 / 12%) !important;
+  border-color: rgb(255 255 255 / 34%) !important;
   box-shadow: none !important;
 }
-:root[data-website-theme="blazer"] .events-heading-zone a :is([class*="text-white"], [class*="text-blue-"]) { color: #173b5a !important; }
+:root[data-website-theme="blazer"] .events-heading-zone :is(a, a :is([class*="text-white"], [class*="text-blue-"], h2, h3, p, span), a svg) { color: #fff !important; }
 :root[data-website-theme="blazer"] .events-filter-zone { background: #0b121b !important; border-color: #304356 !important; }
 :root[data-website-theme="blazer"] .events-list-surface { background: transparent; }
 :root[data-website-theme="blazer"] .event-outline-card {
