@@ -8810,3 +8810,4 @@
 - [x] Improve phone-sized navigation, touch targets, action wrapping, and high-use screen layouts so controls remain accessible
 - [x] Align cluster-specific UI colors with the supplied Business, Entrepreneurship, Finance, Hospitality, Marketing, and Personal Finance reference palette
 - [x] Apply reference-aligned cluster colors to Blazer-mode Overview sections, cards, and cluster-linked actions
+- [x] Refine Blazer contrast across Events, Overview, Leaderboard, and Banking with background-matched surfaces, cluster outlines, and light heading zones

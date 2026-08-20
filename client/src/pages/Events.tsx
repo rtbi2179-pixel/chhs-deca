@@ -671,7 +671,8 @@ function EventCard({ event, isFocusedEvent, canSelectEvent, isSelecting, onSelec
   return (
     <motion.div
       layout
-      className="glass-card overflow-hidden"
+      data-event-cluster={event.cluster.toLowerCase().replaceAll(' ', '-').replaceAll('&', 'and')}
+      className="event-outline-card glass-card overflow-hidden"
     >
       <button
         className="w-full text-left p-5 flex items-start justify-between gap-4"
@@ -782,10 +783,10 @@ export default function Events() {
   })
 
   return (
-    <div className="page-shell events-atmosphere">
+    <div className="page-shell events-atmosphere" data-events-surface="true">
       {/* Header */}
       <div
-        className="relative pt-32 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden"
+        className="events-heading-zone relative pt-32 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden"
         style={{
           backgroundImage: `linear-gradient(112deg, oklch(0.055 0.014 265 / 0.94) 4%, oklch(0.09 0.035 255 / 0.78) 48%, oklch(0.04 0.012 265 / 0.9) 100%), url(${EVENTS_BG})`,
           backgroundSize: 'cover',
@@ -823,7 +824,7 @@ export default function Events() {
       </div>
 
       {/* Filters */}
-      <div className="sticky top-16 z-30 border-b border-white/10 bg-[oklch(0.055_0.012_265/0.76)] px-4 py-4 backdrop-blur-xl sm:px-6 lg:px-8">
+      <div className="events-filter-zone sticky top-16 z-30 border-b border-white/10 bg-[oklch(0.055_0.012_265/0.76)] px-4 py-4 backdrop-blur-xl sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col sm:flex-row gap-3">
             {/* Search */}
@@ -863,7 +864,7 @@ export default function Events() {
       </div>
 
       {/* Events List */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="events-list-surface max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 gap-3">
           {filtered.map((event) => (
             <EventCard key={event.code} event={event} isFocusedEvent={primaryEventQuery.data?.primaryEventCode === event.code} canSelectEvent={Boolean(user?.id)} isSelecting={setPrimaryEvent.isPending && setPrimaryEvent.variables?.eventCode === event.code} onSelectEvent={(eventCode) => setPrimaryEvent.mutate({ eventCode })} />

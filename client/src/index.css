@@ -1112,8 +1112,8 @@
 :root[data-website-theme="blazer"] .overview-metric-card[data-overview-cluster],
 :root[data-website-theme="blazer"] .overview-account-row[data-overview-cluster],
 :root[data-website-theme="blazer"] .overview-cluster-action[data-overview-cluster] {
-  border-color: color-mix(in srgb, var(--overview-cluster-color) 48%, transparent) !important;
-  background-color: color-mix(in srgb, var(--overview-cluster-color) 11%, #101923) !important;
+  border-color: color-mix(in srgb, var(--overview-cluster-color) 54%, #263544) !important;
+  background: #101923 !important;
 }
 :root[data-website-theme="blazer"] .overview-cluster-section[data-overview-cluster="business-management"],
 :root[data-website-theme="blazer"] .overview-metric-card[data-overview-cluster="business-management"],
@@ -1142,13 +1142,100 @@
 :root[data-website-theme="blazer"] .overview-cluster-section::before,
 :root[data-website-theme="blazer"] .overview-metric-card[data-overview-cluster]::before {
   background: var(--overview-cluster-color) !important;
+  opacity: 0.9 !important;
 }
 :root[data-website-theme="blazer"] .overview-cluster-action[data-overview-cluster] {
-  box-shadow: inset 3px 0 0 var(--overview-cluster-color), 0 12px 28px color-mix(in srgb, var(--overview-cluster-color) 12%, transparent) !important;
+  box-shadow: inset 3px 0 0 var(--overview-cluster-color) !important;
 }
 :root[data-website-theme="blazer"] .overview-cluster-action[data-overview-cluster] :is(svg, [class*="text-blue-"]) { color: var(--overview-cluster-color) !important; }
 :root[data-website-theme="blazer"] .overview-account-row[data-overview-cluster] :is(svg, [class*="text-blue-"]) { color: var(--overview-cluster-color) !important; }
 :root[data-website-theme="blazer"] .overview-cluster-link[data-overview-cluster] { color: var(--overview-cluster-color) !important; }
+
+/* Contrast-first Blazer refinement: light heading zones and background-led content surfaces. */
+.event-outline-card[data-event-cluster="business-management"] { --event-cluster-color: var(--blazer-yellow); }
+.event-outline-card[data-event-cluster="entrepreneurship"] { --event-cluster-color: var(--blazer-gray); }
+.event-outline-card[data-event-cluster="finance"] { --event-cluster-color: var(--blazer-green); }
+.event-outline-card[data-event-cluster="hospitality-and-tourism"] { --event-cluster-color: var(--blazer-blue); }
+.event-outline-card[data-event-cluster="marketing"] { --event-cluster-color: var(--blazer-red); }
+.event-outline-card[data-event-cluster="personal-finance"] { --event-cluster-color: var(--blazer-lime); }
+
+:root[data-website-theme="blazer"] .events-heading-zone {
+  background: #e9f1f8 !important;
+  border-bottom: 1px solid #bdd0e1;
+}
+:root[data-website-theme="blazer"] .events-heading-zone h1 { color: #132233 !important; text-shadow: none !important; }
+:root[data-website-theme="blazer"] .events-heading-zone p { color: #42586c !important; }
+:root[data-website-theme="blazer"] .events-heading-zone [class*="bg-blue-500"] { background: #dcebf8 !important; border-color: #98bbd8 !important; color: #075f9d !important; }
+:root[data-website-theme="blazer"] .events-heading-zone a {
+  background: #f8fbfe !important;
+  border-color: #a7bfd3 !important;
+  box-shadow: none !important;
+}
+:root[data-website-theme="blazer"] .events-heading-zone a :is([class*="text-white"], [class*="text-blue-"]) { color: #173b5a !important; }
+:root[data-website-theme="blazer"] .events-filter-zone { background: #0b121b !important; border-color: #304356 !important; }
+:root[data-website-theme="blazer"] .events-list-surface { background: transparent; }
+:root[data-website-theme="blazer"] .event-outline-card {
+  background: #0b121b !important;
+  border: 1px solid color-mix(in srgb, var(--event-cluster-color) 62%, #3b4a58) !important;
+  box-shadow: none !important;
+}
+:root[data-website-theme="blazer"] .event-outline-card:hover { border-color: var(--event-cluster-color) !important; background: #111b25 !important; }
+:root[data-website-theme="blazer"] .event-outline-card [class*="bg-blue-500"] { background: transparent !important; border-color: color-mix(in srgb, var(--event-cluster-color) 56%, #41505e) !important; }
+:root[data-website-theme="blazer"] .event-outline-card [class*="text-blue-"] { color: var(--event-cluster-color) !important; }
+:root[data-website-theme="blazer"] .banking-hero,
+:root[data-website-theme="blazer"] .leaderboard-hero {
+  padding: 1.35rem 1.5rem;
+  border: 1px solid #41566b;
+  border-radius: 1rem;
+  background: #192839;
+}
+:root[data-website-theme="blazer"] .banking-hero [class*="text-white"],
+:root[data-website-theme="blazer"] .leaderboard-hero [class*="text-white"],
+:root[data-website-theme="blazer"] .banking-hero .page-title,
+:root[data-website-theme="blazer"] .leaderboard-hero .page-title { color: #fff !important; }
+:root[data-website-theme="blazer"] .banking-section-card,
+:root[data-website-theme="blazer"] .leaderboard-section-card,
+:root[data-website-theme="blazer"] .leaderboard-table-shell,
+:root[data-website-theme="blazer"] .editorial-panel { background: #0f1721 !important; border-color: #35495c !important; box-shadow: none !important; }
+:root[data-website-theme="blazer"] .banking-metric,
+:root[data-website-theme="blazer"] .leaderboard-metric,
+:root[data-website-theme="blazer"] .banking-hero-status,
+:root[data-website-theme="blazer"] .leaderboard-hero-status { background: #111c27 !important; border-color: #3e5368 !important; }
+:root[data-website-theme="blazer"] .banking-metric::after,
+:root[data-website-theme="blazer"] .leaderboard-metric::after { opacity: 0.35; }
+:root[data-website-theme="blazer"] .leaderboard-table-shell thead tr { background: #1b2b3b !important; }
+
+:root[data-website-theme="light-blazer"] .events-heading-zone {
+  background: #e9f1f8 !important;
+  border-bottom: 1px solid #bdd0e1;
+}
+:root[data-website-theme="light-blazer"] .events-heading-zone h1 { color: #132233 !important; text-shadow: none !important; }
+:root[data-website-theme="light-blazer"] .events-heading-zone p { color: #42586c !important; }
+:root[data-website-theme="light-blazer"] .events-heading-zone a { background: #fff !important; border-color: #a7bfd3 !important; box-shadow: none !important; }
+:root[data-website-theme="light-blazer"] .events-heading-zone a :is([class*="text-white"], [class*="text-blue-"]) { color: #173b5a !important; }
+:root[data-website-theme="light-blazer"] .events-filter-zone { background: #fff !important; border-color: #cbd8e5 !important; }
+:root[data-website-theme="light-blazer"] .event-outline-card {
+  background: #f4f8fc !important;
+  border: 1px solid color-mix(in srgb, var(--event-cluster-color) 52%, #b7c8d8) !important;
+  box-shadow: none !important;
+}
+:root[data-website-theme="light-blazer"] .event-outline-card [class*="text-white"] { color: #173042 !important; }
+:root[data-website-theme="light-blazer"] .event-outline-card [class*="text-blue-"] { color: #075f9d !important; }
+:root[data-website-theme="light-blazer"] .banking-hero,
+:root[data-website-theme="light-blazer"] .leaderboard-hero { padding: 1.35rem 1.5rem; border: 1px solid #b8cbdb; border-radius: 1rem; background: #e9f1f8; }
+:root[data-website-theme="light-blazer"] .banking-hero [class*="text-white"],
+:root[data-website-theme="light-blazer"] .leaderboard-hero [class*="text-white"],
+:root[data-website-theme="light-blazer"] .banking-hero .page-title,
+:root[data-website-theme="light-blazer"] .leaderboard-hero .page-title { color: #132233 !important; }
+:root[data-website-theme="light-blazer"] .banking-section-card,
+:root[data-website-theme="light-blazer"] .leaderboard-section-card,
+:root[data-website-theme="light-blazer"] .leaderboard-table-shell,
+:root[data-website-theme="light-blazer"] .editorial-panel { background: #fff !important; border-color: #cbd8e5 !important; box-shadow: none !important; }
+:root[data-website-theme="light-blazer"] .banking-metric,
+:root[data-website-theme="light-blazer"] .leaderboard-metric,
+:root[data-website-theme="light-blazer"] .banking-hero-status,
+:root[data-website-theme="light-blazer"] .leaderboard-hero-status { background: #f7fafc !important; border-color: #cbd8e5 !important; }
+:root[data-website-theme="light-blazer"] .leaderboard-table-shell thead tr { background: #e9f1f8 !important; }
 
 /* Phone usability pass: preserve readable data, reachable controls, and safe-area spacing without compressing dense tools. */
 @media (max-width: 767px) {
