@@ -766,7 +766,7 @@ export const appRouter = router({
         displayName: z.string().trim().min(1).max(60).nullable(),
         bio: z.string().trim().max(280).nullable(),
         accentColor: z.enum(['blue', 'violet', 'emerald', 'rose']),
-        websiteTheme: z.enum(['glass', 'blazer']),
+        websiteTheme: z.enum(['glass', 'blazer', 'light-blazer']),
         avatarKey: z.enum(['deca-compass', 'deca-trophy', 'deca-presentation', 'mountain', 'orbit', 'botanical']),
         bannerKey: z.enum(['deca-strategy', 'deca-stage', 'aurora', 'city', 'studio']),
         showOnLeaderboard: z.boolean(),
@@ -780,7 +780,7 @@ export const appRouter = router({
       }),
 
     updateWebsiteTheme: protectedProcedure
-      .input(z.object({ websiteTheme: z.enum(['glass', 'blazer']) }))
+      .input(z.object({ websiteTheme: z.enum(['glass', 'blazer', 'light-blazer']) }))
       .mutation(async ({ ctx, input }) => {
         const database = await db.getDb();
         if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Profile settings storage is unavailable' });

@@ -176,6 +176,13 @@
       "when": 1787114020340,
       "tag": "0024_stale_frank_castle",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "5",
+      "when": 1787196405262,
+      "tag": "0025_swift_sumo",
+      "breakpoints": true
     }
   ]
 }

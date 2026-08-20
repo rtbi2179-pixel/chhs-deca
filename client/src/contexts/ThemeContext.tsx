@@ -3,7 +3,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 
 type Theme = "light" | "dark";
-export type WebsiteTheme = "glass" | "blazer";
+export type WebsiteTheme = "glass" | "blazer" | "light-blazer";
 
 interface ThemeContextType {
   theme: Theme;
@@ -36,13 +36,13 @@ export function ThemeProvider({
   });
   const [websiteTheme, setWebsiteTheme] = useState<WebsiteTheme>(() => {
     const stored = localStorage.getItem("blueblazer:website-theme");
-    return stored === "blazer" ? "blazer" : "glass";
+    return stored === "blazer" || stored === "light-blazer" ? stored : "glass";
   });
   const profileSettingsQuery = trpc.preferences.getProfileSettings.useQuery(undefined, { enabled: Boolean(user?.id), staleTime: 60_000 });
 
   useEffect(() => {
     const savedWebsiteTheme = profileSettingsQuery.data?.websiteTheme;
-    if (savedWebsiteTheme === "glass" || savedWebsiteTheme === "blazer") setWebsiteTheme(savedWebsiteTheme);
+    if (savedWebsiteTheme === "glass" || savedWebsiteTheme === "blazer" || savedWebsiteTheme === "light-blazer") setWebsiteTheme(savedWebsiteTheme);
   }, [profileSettingsQuery.data?.websiteTheme]);
 
   useEffect(() => {

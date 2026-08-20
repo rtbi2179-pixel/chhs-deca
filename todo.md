@@ -8791,3 +8791,4 @@
 - [x] Update the footer to 2026 and credit Sahan Mallampati and Ricardo Burciaga, Class of 2027
 - [x] Allow members to change their focused event from Profile Event Selection
 - [x] Match Profile Event Selection controls to the selected event's cluster color
+- [x] Add a persisted Light Blazer light-mode theme alongside Glass and Blazer

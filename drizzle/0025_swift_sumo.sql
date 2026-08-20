@@ -1,0 +1,1 @@
+ALTER TABLE `userProfileSettings` MODIFY COLUMN `websiteTheme` enum('glass','blazer','light-blazer') NOT NULL DEFAULT 'glass';
