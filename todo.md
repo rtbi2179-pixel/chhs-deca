@@ -8802,3 +8802,4 @@
 - [x] Restore accessible, balanced Light Blazer navigation contrast for labels, icons, controls, and active states
 - [x] Apply a readable, section-level Light Blazer color hierarchy to dashboard metric cards and related panels
 - [x] Fix stale dynamic-import asset failures for the deployed AI Study & Roleplay route
+- [x] Redesign the Blue Blazer welcome page with buyer-focused value messaging and a polished logo entrance animation
