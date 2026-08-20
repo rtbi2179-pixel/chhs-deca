@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { AlertTriangle, RotateCcw } from "lucide-react";
 import { Component, ReactNode } from "react";
+import { isStaleDynamicImportError, recoverStaleDynamicImportInBrowser } from "@/lib/dynamicImportRecovery";
 
 interface Props {
   children: ReactNode;
@@ -21,8 +22,13 @@ class ErrorBoundary extends Component<Props, State> {
     return { hasError: true, error };
   }
 
+  componentDidCatch(error: Error) {
+    if (isStaleDynamicImportError(error)) recoverStaleDynamicImportInBrowser();
+  }
+
   render() {
     if (this.state.hasError) {
+      const isStaleModule = isStaleDynamicImportError(this.state.error);
       return (
         <div className="flex items-center justify-center min-h-screen p-8 bg-background">
           <div className="flex flex-col items-center w-full max-w-2xl p-8">
@@ -31,13 +37,15 @@ class ErrorBoundary extends Component<Props, State> {
               className="text-destructive mb-6 flex-shrink-0"
             />
 
-            <h2 className="text-xl mb-4">An unexpected error occurred.</h2>
+	            <h2 className="text-xl mb-2">{isStaleModule ? "A newer Blue Blazer version is ready." : "An unexpected error occurred."}</h2>
+	            {isStaleModule && <p className="mb-4 text-center text-sm text-muted-foreground">We could not load an older page asset. Reload to open the latest version.</p>}
 
-            <div className="p-4 w-full rounded bg-muted overflow-auto mb-6">
-              <pre className="text-sm text-muted-foreground whitespace-break-spaces">
-                {this.state.error?.stack}
-              </pre>
-            </div>
+	            {!isStaleModule && <div className="p-4 w-full rounded bg-muted overflow-auto mb-6">
+	              <pre className="text-sm text-muted-foreground whitespace-break-spaces">
+	                {this.state.error?.stack}
+	              </pre>
+	            </div>
+	            }
 
             <button
               onClick={() => window.location.reload()}
@@ -48,7 +56,7 @@ class ErrorBoundary extends Component<Props, State> {
               )}
             >
               <RotateCcw size={16} />
-              Reload Page
+	              {isStaleModule ? "Load Latest Version" : "Reload Page"}
             </button>
           </div>
         </div>

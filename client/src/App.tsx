@@ -14,6 +14,7 @@ import { lazy, Suspense, useState, useEffect } from "react";
 import { Toast, useToast } from "./components/Toast";
 import { useLocation } from "wouter";
 import { BlueBlazerCursor } from "./components/BlueBlazerCursor";
+import { isStaleDynamicImportError, recoverStaleDynamicImportInBrowser } from "./lib/dynamicImportRecovery";
 
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const Home = lazy(() => import("./pages/Home"));
@@ -145,6 +146,19 @@ function App() {
     window.sessionStorage.setItem(SIGNED_OUT_WELCOME_SESSION_KEY, "true");
     setWelcomeGate({ resolved: true, shouldShow });
   }, [loading, user, sessionStartLocation, welcomeGate.resolved]);
+
+  useEffect(() => {
+    const handlePreloadError = (event: Event) => {
+      const preloadError = event as CustomEvent<unknown>;
+      if (!isStaleDynamicImportError(preloadError.detail)) return;
+
+      event.preventDefault();
+      recoverStaleDynamicImportInBrowser();
+    };
+
+    window.addEventListener("vite:preloadError", handlePreloadError);
+    return () => window.removeEventListener("vite:preloadError", handlePreloadError);
+  }, []);
 
   const showWelcomeGate = welcomeGate.shouldShow;
   const dismissWelcomeGate = () => setWelcomeGate((current) => ({ ...current, shouldShow: false }));
