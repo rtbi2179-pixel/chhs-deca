@@ -8794,3 +8794,4 @@
 - [x] Add a persisted Light Blazer light-mode theme alongside Glass and Blazer
 - [x] Color each Blazer cluster filter by its respective cluster, with Marketing in red
 - [x] Apply cluster-specific Blazer colors to the Overview/Marketing/Business Management/Finance/Hospitality dashboard tabs
+- [x] Add a “Blue Blazer tour” hover label to the clickable Blue Blazer icon

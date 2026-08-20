@@ -127,7 +127,7 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
         {/* Header / Brand */}
         <div className="blueblazer-sidebar-header flex items-center justify-between border-b border-white/[0.08] bg-black p-4">
           {!collapsed ? (
-            <button type="button" onClick={restartOnboardingTour} aria-label="Restart Blue Blazer tour" className="flex items-center gap-3 rounded-xl text-left transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-blue-300">
+            <button type="button" onClick={restartOnboardingTour} aria-label="Restart Blue Blazer tour" title="Blue Blazer tour" className="flex items-center gap-3 rounded-xl text-left transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-blue-300">
               <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl border border-blue-300/30 bg-black p-1 shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)]">
                 <img src={BLUE_BLAZER_LOGO} alt="Blue Blazer logo" className="h-full w-full object-contain" />
               </div>
@@ -137,7 +137,7 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
               </div>
             </button>
           ) : (
-            <button type="button" onClick={restartOnboardingTour} aria-label="Restart Blue Blazer tour" className="mx-auto flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-blue-300/30 bg-black p-1 shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)] transition hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300">
+            <button type="button" onClick={restartOnboardingTour} aria-label="Restart Blue Blazer tour" title="Blue Blazer tour" className="mx-auto flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-blue-300/30 bg-black p-1 shadow-[0_0_20px_oklch(0.55_0.22_260/0.4)] transition hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300">
               <img src={BLUE_BLAZER_LOGO} alt="Blue Blazer logo" className="h-full w-full object-contain" />
             </button>
           )}
@@ -331,7 +331,7 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
 
       {/* Mobile Top Bar */}
       <div className="blueblazer-mobile-bar md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between border-b border-white/[0.08] bg-black px-4 py-3 backdrop-blur-xl">
-        <button type="button" onClick={restartOnboardingTour} aria-label="Restart Blue Blazer tour" className="flex items-center gap-3 rounded-lg text-left transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-blue-300">
+        <button type="button" onClick={restartOnboardingTour} aria-label="Restart Blue Blazer tour" title="Blue Blazer tour" className="flex items-center gap-3 rounded-lg text-left transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-blue-300">
           <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg border border-blue-300/30 bg-black p-0.5 shadow-md">
             <img src={BLUE_BLAZER_LOGO} alt="Blue Blazer logo" className="h-full w-full object-contain" />
           </div>
