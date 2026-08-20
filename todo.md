@@ -8818,3 +8818,4 @@
 - [x] Move the BBX Learning Guide information control next to the Exchange Benchmark label
 - [x] Add exact price-and-time hover inspection to individual BBX stock charts with touch support
 - [x] Fix the Direct Messages airplane send control so messages reach selected recipients
+- [x] Create profile achievements with transparent milestones based on real Blue Blazer activity
