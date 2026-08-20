@@ -177,6 +177,7 @@ function MessagesContent() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
+          data-blueblazer-chat="true"
           className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg transition-all hover:scale-110 z-40"
           title="Direct Messages"
           aria-label="Open Direct Messages"
@@ -187,7 +188,7 @@ function MessagesContent() {
 
       {/* Messages Panel */}
       {isOpen && (
-        <div className="fixed bottom-0 right-0 isolate flex h-screen w-96 max-w-full flex-col overflow-visible border-l border-border bg-background shadow-2xl z-[100]">
+        <div data-blueblazer-chat="true" className="fixed bottom-0 right-0 isolate flex h-screen w-96 max-w-full flex-col overflow-visible border-l border-border bg-background shadow-2xl z-[100]">
           {/* Header */}
           <div className="relative z-20 flex min-h-16 shrink-0 items-center border-b border-border bg-background px-4 py-3 pr-16 shadow-sm overflow-visible">
             <div className="min-w-0 flex-1 pr-2">

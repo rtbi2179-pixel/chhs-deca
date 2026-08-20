@@ -794,7 +794,7 @@
 :root[data-website-theme="blazer"] .blueblazer-shell[data-blazer-page="events"],
 :root[data-website-theme="blazer"] .blueblazer-shell[data-blazer-page="feedback"],
 :root[data-website-theme="blazer"] .blueblazer-shell[data-blazer-page="chapter"] {
-  --blazer-page-action: var(--blazer-yellow);
+  --blazer-page-action: color-mix(in srgb, var(--blazer-yellow) 72%, transparent);
   --blazer-page-action-foreground: #151b21;
 }
 :root[data-website-theme="blazer"] .blueblazer-shell[data-blazer-page="volunteer"] {
@@ -831,7 +831,7 @@
 :root[data-website-theme="blazer"] .page-shell {
   background-image: none;
 }
-:root[data-website-theme="blazer"] .page-eyebrow { color: var(--blazer-yellow); }
+:root[data-website-theme="blazer"] .page-eyebrow { color: color-mix(in srgb, var(--blazer-yellow) 72%, transparent); }
 :root[data-website-theme="blazer"] .editorial-panel,
 :root[data-website-theme="blazer"] .banking-section-card,
 :root[data-website-theme="blazer"] .leaderboard-section-card,
@@ -852,7 +852,7 @@
 }
 :root[data-website-theme="blazer"] .gradient-text {
   background-image: none;
-  color: var(--blazer-yellow);
+  color: color-mix(in srgb, var(--blazer-yellow) 72%, transparent);
   -webkit-text-fill-color: currentColor;
 }
 :root[data-website-theme="blazer"] .section-divider {
@@ -872,7 +872,7 @@
 :root[data-website-theme="blazer"] button[class*="bg-amber-"],
 :root[data-website-theme="blazer"] a[class*="bg-amber-"],
 :root[data-website-theme="blazer"] button[class*="bg-yellow-"],
-:root[data-website-theme="blazer"] a[class*="bg-yellow-"] { background-color: var(--blazer-yellow) !important; background-image: none !important; color: #151b21 !important; }
+:root[data-website-theme="blazer"] a[class*="bg-yellow-"] { background-color: color-mix(in srgb, var(--blazer-yellow) 68%, transparent) !important; background-image: none !important; color: #151b21 !important; }
 :root[data-website-theme="blazer"] button[class*="bg-lime-"],
 :root[data-website-theme="blazer"] a[class*="bg-lime-"] { background-color: var(--blazer-lime) !important; background-image: none !important; color: #151b21 !important; }
 :root[data-website-theme="blazer"] button[class*="bg-violet-"],
@@ -889,7 +889,7 @@
 .website-theme-choice[data-active="true"] { border-color: oklch(0.72 0.16 250 / 0.6); background: oklch(0.55 0.18 260 / 0.14); box-shadow: inset 0 0 0 1px oklch(0.72 0.16 250 / 0.14); }
 .website-theme-swatch { display: block; height: 3.5rem; border: 1px solid oklch(1 0 0 / 12%); border-radius: 0.65rem; background: radial-gradient(circle at 76% 20%, oklch(0.7 0.16 250 / 0.32), transparent 28%), linear-gradient(145deg, oklch(0.12 0.025 265), oklch(0.06 0.012 265)); }
 .website-theme-choice:nth-child(2) .website-theme-swatch { background: #0B74BF; border-color: #F8C524; }
-:root[data-website-theme="blazer"] .website-theme-choice[data-active="true"] { border-color: var(--blazer-yellow); background: color-mix(in srgb, var(--blazer-blue) 22%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--blazer-yellow) 34%, transparent); }
+:root[data-website-theme="blazer"] .website-theme-choice[data-active="true"] { border-color: color-mix(in srgb, var(--blazer-yellow) 68%, transparent); background: color-mix(in srgb, var(--blazer-blue) 22%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--blazer-yellow) 28%, transparent); }
 :root[data-website-theme="light-blazer"] .blueblazer-shell {
   --blazer-page-action: var(--blazer-blue);
   --blazer-page-action-foreground: #fff;
@@ -945,15 +945,18 @@
 :root[data-website-theme="light-blazer"] .blueblazer-shell a[class*="bg-yellow-"],
 :root[data-website-theme="light-blazer"] .blueblazer-shell button[class*="bg-lime-"] { background-color: var(--blazer-yellow) !important; color: #132233 !important; }
 :root[data-website-theme="blazer"] .event-cluster-filter[data-active="true"] { background-image: none !important; box-shadow: 0 0 16px color-mix(in srgb, currentColor 20%, transparent); }
-:root[data-website-theme="blazer"] .event-cluster-filter[data-cluster="all"][data-active="true"] { background-color: var(--blazer-yellow) !important; border-color: var(--blazer-yellow) !important; color: #151b21 !important; }
+:root[data-website-theme="blazer"] .event-cluster-filter[data-cluster="all"][data-active="true"] { background-color: color-mix(in srgb, var(--blazer-yellow) 68%, transparent) !important; border-color: color-mix(in srgb, var(--blazer-yellow) 72%, transparent) !important; color: #151b21 !important; }
 :root[data-website-theme="blazer"] .event-cluster-filter[data-cluster="marketing"][data-active="true"] { background-color: var(--blazer-red) !important; border-color: var(--blazer-red) !important; color: #fff !important; }
 :root[data-website-theme="blazer"] .event-cluster-filter[data-cluster="finance"][data-active="true"] { background-color: var(--blazer-green) !important; border-color: var(--blazer-green) !important; color: #fff !important; }
 :root[data-website-theme="blazer"] .event-cluster-filter[data-cluster="hospitality-and-tourism"][data-active="true"] { background-color: var(--blazer-blue) !important; border-color: var(--blazer-blue) !important; color: #fff !important; }
 :root[data-website-theme="blazer"] .event-cluster-filter[data-cluster="business-management"][data-active="true"] { background-color: var(--blazer-gray) !important; border-color: var(--blazer-gray) !important; color: #fff !important; }
 :root[data-website-theme="blazer"] .event-cluster-filter[data-cluster="entrepreneurship"][data-active="true"] { background-color: var(--blazer-lime) !important; border-color: var(--blazer-lime) !important; color: #151b21 !important; }
-:root[data-website-theme="blazer"] .event-cluster-filter[data-cluster="personal-finance"][data-active="true"] { background-color: var(--blazer-yellow) !important; border-color: var(--blazer-yellow) !important; color: #151b21 !important; }
+:root[data-website-theme="blazer"] .event-cluster-filter[data-cluster="personal-finance"][data-active="true"] { background-color: color-mix(in srgb, var(--blazer-yellow) 68%, transparent) !important; border-color: color-mix(in srgb, var(--blazer-yellow) 72%, transparent) !important; color: #151b21 !important; }
 :root[data-website-theme="blazer"] .leaderboard-cluster-tab[data-active="true"] { background-image: none !important; box-shadow: 0 0 16px color-mix(in srgb, currentColor 20%, transparent); }
-:root[data-website-theme="blazer"] .leaderboard-cluster-tab[data-cluster="all"][data-active="true"] { background-color: var(--blazer-yellow) !important; border-color: var(--blazer-yellow) !important; color: #151b21 !important; }
+:root[data-website-theme="blazer"] .leaderboard-cluster-tab[data-cluster="all"][data-active="true"] { background-color: color-mix(in srgb, var(--blazer-yellow) 68%, transparent) !important; border-color: color-mix(in srgb, var(--blazer-yellow) 72%, transparent) !important; color: #151b21 !important; }
+:root[data-website-theme="blazer"] [data-blueblazer-chat="true"] { --blazer-page-action: var(--blazer-blue); --blazer-page-action-foreground: #fff; }
+:root[data-website-theme="blazer"] [data-blueblazer-chat="true"] button[class*="bg-blue-"],
+:root[data-website-theme="blazer"] button[data-blueblazer-chat="true"] { background-color: var(--blazer-blue) !important; color: #fff !important; box-shadow: 0 0 18px color-mix(in srgb, var(--blazer-blue) 28%, transparent); }
 :root[data-website-theme="blazer"] .leaderboard-cluster-tab[data-cluster="marketing"][data-active="true"] { background-color: var(--blazer-red) !important; border-color: var(--blazer-red) !important; color: #fff !important; }
 :root[data-website-theme="blazer"] .leaderboard-cluster-tab[data-cluster="business-management-and-administration"][data-active="true"] { background-color: var(--blazer-gray) !important; border-color: var(--blazer-gray) !important; color: #fff !important; }
 :root[data-website-theme="blazer"] .leaderboard-cluster-tab[data-cluster="finance"][data-active="true"] { background-color: var(--blazer-green) !important; border-color: var(--blazer-green) !important; color: #fff !important; }
