@@ -307,22 +307,28 @@ export default function PracticeQuestions() {
       <main className="page-shell mt-16 min-h-[calc(100vh-4rem)]">
         <div className="page-content max-w-6xl py-10 sm:py-14">
           <header className="max-w-2xl">
-            <Link href="/practice">
-              <a className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-blue-300 transition-colors hover:text-blue-200">
-                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-                Back to Practice
-              </a>
+            <Link href="/practice" className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-blue-300 transition-colors hover:text-blue-200">
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              Back to Practice
             </Link>
             <p className="page-eyebrow">Practice question bank</p>
             <h1 className="page-title mt-2">Choose a cluster</h1>
             <p className="page-intro mt-3">Open a focused question bank for the competitive area you want to strengthen.</p>
           </header>
 
+          {eventExamGuidance && (
+            <div className={`mt-6 flex items-start gap-2 rounded-xl border px-4 py-3 text-sm leading-relaxed ${eventExamGuidance.isTested ? "border-blue-400/25 bg-blue-500/[0.06] text-blue-100" : "border-amber-400/30 bg-amber-500/[0.08] text-amber-100"}`} role="status" data-event-exam-guidance>
+              <Info className={`mt-0.5 h-4 w-4 shrink-0 ${eventExamGuidance.isTested ? "text-blue-300" : "text-amber-200"}`} />
+              <p>{eventExamGuidance.isTested ? <><strong>{eventExamGuidance.eventCode}</strong> uses the <strong>{eventExamGuidance.questionBankCluster ?? eventExamGuidance.eventCluster}</strong> exam. The matching cluster card is labeled for your event.</> : <><strong>{eventExamGuidance.eventName} ({eventExamGuidance.eventCode}) is not tested.</strong> Use the event’s role-play, written, project, or presentation preparation resources instead.</>}</p>
+            </div>
+          )}
+
           <section className="mt-9 grid grid-cols-1 gap-5 md:grid-cols-2" aria-label="Practice clusters">
             {PRACTICE_CLUSTERS.map((cluster) => {
               const progress = getClusterProgress(cluster.value);
               const answered = getTotalAnsweredByCluster(cluster.value);
               const Icon = cluster.Icon;
+              const isTestedCluster = eventExamGuidance?.isTested && eventExamGuidance.questionBankCluster === cluster.value;
               return (
                 <button
                   key={cluster.value}
@@ -333,7 +339,7 @@ export default function PracticeQuestions() {
                   <div className="relative flex h-full min-h-[200px] flex-col justify-between">
                     <div className="flex items-start justify-between gap-5">
                       <div className={`flex h-11 w-11 items-center justify-center rounded-xl border ${cluster.icon}`}><Icon className="h-5 w-5" /></div>
-                      <span className="data-label pt-1 text-foreground/45">{cluster.questions} questions</span>
+                      <div className="flex flex-col items-end gap-1.5"><span className="data-label pt-1 text-foreground/45">{cluster.questions} questions</span>{isTestedCluster && <span className="rounded-full border border-blue-300/25 bg-blue-400/10 px-2 py-1 font-mono-data text-[9px] tracking-[0.12em] text-blue-100" data-event-tested-cluster>Tested for {eventExamGuidance?.eventCode}</span>}</div>
                     </div>
                     <div>
                       <p className="data-label text-foreground/45">Cluster study bank</p>

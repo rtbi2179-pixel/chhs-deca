@@ -8803,3 +8803,7 @@
 - [x] Apply a readable, section-level Light Blazer color hierarchy to dashboard metric cards and related panels
 - [x] Fix stale dynamic-import asset failures for the deployed AI Study & Roleplay route
 - [x] Redesign the Blue Blazer welcome page with buyer-focused value messaging and a polished logo entrance animation
+- [x] Complete a production-readiness audit across public routes, sign-in, authenticated workflows, APIs, and client diagnostics
+- [x] Restore selected-event exam guidance on the Practice cluster-selection screen
+- [x] Remove the nested navigation anchor in the Practice cluster back link
+- [x] Prevent previously generated Blue’s News copy from exposing stock-change magnitudes

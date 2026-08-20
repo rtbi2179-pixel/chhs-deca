@@ -3,6 +3,7 @@ import { Check, CheckCheck, Loader2, Newspaper } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
+import { hideBbxMagnitude } from "@/lib/bbxNewsCopy";
 
 const severityClass: Record<string, string> = {
   low: "border-slate-400/30 bg-slate-400/10 text-slate-200",
@@ -72,9 +73,9 @@ export default function BluesNews() {
                     <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold capitalize ${severityClass[article.severity] ?? severityClass.low}`}>{article.severity}</span>
                     <span className="text-xs text-foreground/50">{article.scopeLabel} · {formatPublishedAt(article.publishedAt)}</span>
                   </div>
-                  <h2 className="mt-3 text-lg font-semibold text-foreground">{article.headline}</h2>
-                  <p className="mt-3 whitespace-pre-line leading-7 text-foreground/70">{article.body}</p>
-                  <div className="mt-4 border-l-2 border-blue-400/50 pl-4 text-sm leading-6 text-blue-100"><strong>Why it matters:</strong> {article.whyItMatters}</div>
+                  <h2 className="mt-3 text-lg font-semibold text-foreground">{hideBbxMagnitude(article.headline)}</h2>
+                  <p className="mt-3 whitespace-pre-line leading-7 text-foreground/70">{hideBbxMagnitude(article.body)}</p>
+                  <div className="mt-4 border-l-2 border-blue-400/50 pl-4 text-sm leading-6 text-blue-100"><strong>Why it matters:</strong> {hideBbxMagnitude(article.whyItMatters)}</div>
                   <div className="mt-5 flex items-center justify-between gap-3 border-t border-white/8 pt-4">
                     <span className="text-xs text-foreground/50">{article.isRead ? "Read" : "New BBX event"}</span>
                     {!article.isRead && <button className="inline-flex items-center gap-1.5 text-xs font-medium text-blue-200 transition-colors hover:text-white disabled:opacity-50" disabled={markRead.isPending} onClick={() => void markRead.mutateAsync({ newsId: article.id })}><Check className="h-3.5 w-3.5" />Mark read</button>}

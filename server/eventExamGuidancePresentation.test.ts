@@ -13,6 +13,8 @@ describe("event-aware assessment guidance presentation", () => {
     expect(practiceQuestions).toContain("Tested for ${eventExamGuidance.eventCode}");
     expect(practiceQuestions).toContain("is not tested.");
     expect(practiceQuestions).toContain("data-event-exam-guidance");
+    expect(practiceQuestions).toContain("data-event-tested-cluster");
+    expect(practiceQuestions).not.toContain("<Link href=\"/practice\">\n              <a");
   });
 
   it("labels the matching Mock Exam cluster and shows the non-exam-event notice at setup", () => {
