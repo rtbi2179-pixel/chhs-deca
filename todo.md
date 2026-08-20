@@ -8817,3 +8817,4 @@
 - [x] Add school-code password reset requests with chapter-admin notification, one-time approval, and one-hour reset expiry
 - [x] Move the BBX Learning Guide information control next to the Exchange Benchmark label
 - [x] Add exact price-and-time hover inspection to individual BBX stock charts with touch support
+- [x] Fix the Direct Messages airplane send control so messages reach selected recipients

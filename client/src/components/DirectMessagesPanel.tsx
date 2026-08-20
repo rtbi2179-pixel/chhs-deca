@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2, Send, Search, X, MessageCircle, ChevronLeft, Sparkles } from 'lucide-react';
 import { useAuth } from '@/_core/hooks/useAuth';
+import { toast } from 'sonner';
 
 interface User {
   id: number;
@@ -37,6 +38,7 @@ const BLAZER_BUDDY: User = {
 // Inner component that handles messaging logic
 function MessagesContent() {
   const { user: currentUser } = useAuth();
+  const utils = trpc.useUtils();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -76,8 +78,8 @@ function MessagesContent() {
 
   // Get messages with selected user
   const { data: conversationMessages } = trpc.members.getMessages.useQuery(
-    { otherUserId: selectedUser?.id || 0 },
-    { enabled: !!selectedUser && !isBlazerBuddy }
+    { otherUserId: selectedUser?.id || 0, schoolCode: activeSchoolCode || undefined },
+    { enabled: !!selectedUser && !isBlazerBuddy && !!activeSchoolCode }
   );
   const { data: buddyMessages } = trpc.members.getBlazerBuddyMessages.useQuery(
     { schoolCode: activeSchoolCode || undefined },
@@ -127,24 +129,30 @@ function MessagesContent() {
 
       await sendMessageMutation.mutateAsync({
         recipientId: selectedUser.id,
-        body: messageText,
+        body: messageText.trim(),
+        schoolCode: activeSchoolCode || undefined,
       });
 
-      // Add message to local state immediately
-      setMessages([
-        ...messages,
+      // Add the delivered message immediately, then reconcile from the server.
+      setMessages((currentMessages) => [
+        ...currentMessages,
         {
           id: Date.now(),
           senderId: currentUser.id,
           recipientId: selectedUser.id,
-          body: messageText,
+          body: messageText.trim(),
           createdAt: new Date(),
         },
       ]);
       setMessageText('');
       scrollToBottom();
+      await Promise.all([
+        utils.members.getMessages.invalidate({ otherUserId: selectedUser.id, schoolCode: activeSchoolCode || undefined }),
+        utils.members.getConversations.invalidate({ schoolCode: activeSchoolCode || '' }),
+      ]);
     } catch (error) {
       console.error('Failed to send message:', error);
+      toast.error(error instanceof Error ? error.message : 'Unable to send this message.');
     }
   };
 
@@ -401,7 +409,7 @@ function MessagesContent() {
                     placeholder={isBlazerBuddy ? "Ask Blazer Buddy about study tools, Blue Bucks, or credit score..." : "Type a message..."}
                     value={messageText}
                     onChange={(e) => setMessageText(e.target.value)}
-                    onKeyPress={(e) => {
+                    onKeyDown={(e) => {
                       if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
                         handleSendMessage();
@@ -411,9 +419,10 @@ function MessagesContent() {
                   />
                   <Button
                     onClick={handleSendMessage}
-                    disabled={!messageText.trim() || sendMessageMutation.isPending || sendBlazerBuddyMessageMutation.isPending}
+                    disabled={!messageText.trim() || !activeSchoolCode || sendMessageMutation.isPending || sendBlazerBuddyMessageMutation.isPending}
                     className="bg-blue-600 hover:bg-blue-700"
                     size="sm"
+                    aria-label="Send message"
                   >
                     {sendMessageMutation.isPending || sendBlazerBuddyMessageMutation.isPending ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
