@@ -8798,3 +8798,4 @@
 - [x] Ensure the welcome page appears at the start of each new browser session without returning during in-app navigation
 - [x] Simplify non-Overview ambient backgrounds to the lowest-cost visual treatment while preserving Overview interaction
 - [x] Make chat blue in Blazer mode and soften yellow treatments with transparent tints
+- [x] Add website-action explanations and improvement tips to every Credit Score Breakdown hover target

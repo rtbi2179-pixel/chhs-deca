@@ -9,6 +9,56 @@ import { toast } from "sonner";
 import { CreditScoreChart } from "@/components/CreditScoreChart";
 import { CREDIT_SCORE_STAGES, getCreditScoreStage } from "@shared/creditScoreStages";
 
+const CREDIT_SCORE_FACTOR_GUIDANCE: Record<string, { action: string; tip: string }> = {
+  "Payment Reliability": {
+    action: "Affected when you use Make Payment on an issued Banking Study Card and keep payments on time.",
+    tip: "Pay a card balance before adding more purchases to build a dependable payment record.",
+  },
+  "Account History": {
+    action: "Affected by the age of your active banking relationship and continued responsible card activity.",
+    tip: "Keep an established Study Card active and make steady, on-time payments instead of repeatedly starting over.",
+  },
+  "Practice Consistency": {
+    action: "Affected by regular Practice Questions, PI Study, and Mock Exam activity across the site.",
+    tip: "Practice on several days each week to protect your study streak and avoid long inactive gaps.",
+  },
+  "Savings Discipline": {
+    action: "Affected when you transfer funds into Savings and maintain a healthy savings balance.",
+    tip: "Move a small portion of checking or earned Blue Bucks into Savings consistently before spending the rest.",
+  },
+  "Credit Utilization": {
+    action: "Affected by the portion of your issued Banking Study Card limit currently used by purchases.",
+    tip: "Keep balances low and make a payment before your card gets close to its limit.",
+  },
+};
+
+type CreditScoreTooltipEntry = {
+  name?: string;
+  value?: number | string;
+};
+
+function CreditScoreBreakdownTooltip({ active, payload }: { active?: boolean; payload?: Array<{ payload?: CreditScoreTooltipEntry; name?: string; value?: number | string }> }) {
+  const entry = payload?.[0];
+  const factorName = entry?.payload?.name ?? entry?.name;
+  if (!active || !factorName) return null;
+
+  const value = Number(entry?.payload?.value ?? entry?.value ?? 0);
+  const guidance = CREDIT_SCORE_FACTOR_GUIDANCE[factorName] ?? {
+    action: "This factor contributes to your Blue Blazer credit score composition.",
+    tip: "Use the Banking and Practice tools consistently to improve your overall credit-building habits.",
+  };
+
+  return (
+    <div className="max-w-xs rounded-xl border border-blue-300/30 bg-slate-950/95 p-3 shadow-2xl backdrop-blur-sm">
+      <p className="text-sm font-semibold text-white">{factorName} · {value.toFixed(1)}%</p>
+      <div className="mt-2 space-y-2 text-xs leading-5">
+        <p className="text-blue-100"><span className="font-semibold text-blue-300">Website action:</span> {guidance.action}</p>
+        <p className="text-emerald-100"><span className="font-semibold text-emerald-300">Improvement tip:</span> {guidance.tip}</p>
+      </div>
+    </div>
+  );
+}
+
 export function BankingDashboard() {
   const { user } = useAuth();
   const utils = trpc.useUtils();
@@ -205,12 +255,13 @@ export function BankingDashboard() {
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value) => `${(typeof value === 'number' ? value : parseFloat(value as string)).toFixed(1)}%`} />
+                  <Tooltip content={<CreditScoreBreakdownTooltip />} />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
               <p className="text-slate-400">Loading credit score composition...</p>
             )}
+            <p className="-mt-2 text-center text-xs text-slate-400">Hover over a factor to see the Blue Blazer action that affects it and an improvement tip.</p>
             <div className="mt-3 border-t border-white/10 pt-4">
               <div className="mb-3 flex items-center justify-between gap-3"><p className="text-sm font-semibold text-white">Blue Bucks reward stages</p><span className="text-xs text-slate-400">First-time correct answers</span></div>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-5">
