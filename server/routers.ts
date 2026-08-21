@@ -21,10 +21,12 @@ import { calculateStudyCardQuestionReward, getMaverickDailyFocus, STUDY_CARD_CAT
 import { getUserCreditScore } from "./creditScoreEngine";
 import { EVENT_MATCH_PROFILES, scoreEventMatchQuiz } from "../shared/eventMatchQuiz";
 import { calculateCreditScoreQuestionReward } from "../shared/creditScoreStages";
+import { buildCreditScoreMonthlyTrend, CREDIT_SCORE_TREND_WINDOW_DAYS } from "./creditScoreTrend";
+import { buildNetWorthLeaderboard } from "./netWorthLeaderboard";
 
 import { initializeBanksForSchool, getBanksForSchool, getCreditCardsForBank } from './bankInitializer';
 import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback, notificationPreferences, userProfileSettings, adminActivityLogs, studySessions, sessionQuestions, stocks, userPiProgress, chapterExamConfigs, chapterExamAttempts, chapterExamActivity, userEventQuizResults, chapterTabVisits, calendarEvents, announcements, discussionThreads, discussionReplies, volunteerOpportunities } from "../drizzle/schema";
-import { and, eq, sql, inArray, desc, asc, lte, gte, gt } from "drizzle-orm";
+import { and, eq, sql, inArray, desc, asc, lte, gte, gt, or, isNull } from "drizzle-orm";
 import { piLearningRouter } from "./piLearningRouter";
 import { bbxRouter } from "./bbxRouter";
 import { superAdminDiagnosticsRouter } from "./superAdminDiagnosticsRouter";
@@ -2313,15 +2315,10 @@ export const appRouter = router({
     }),
 
     getCreditScoreHistory: protectedProcedure
-      .input(z.object({ limit: z.number().default(30) }))
+      .input(z.object({ limit: z.number().int().min(1).max(180).default(120) }))
       .query(async ({ ctx, input }) => {
-        const history = await db.getCreditHistory(ctx.user.id, input.limit);
-        return history.slice().reverse().map(h => ({
-          date: new Date(h.calculatedAt ?? new Date()).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-          score: h.newScore,
-          change: h.scoreChange,
-          reason: h.reason,
-        }));
+        const history = await db.getCreditHistory(ctx.user.id, Math.max(input.limit, CREDIT_SCORE_TREND_WINDOW_DAYS * 4));
+        return buildCreditScoreMonthlyTrend(history, new Date());
       }),
 
     transferFunds: protectedProcedure
@@ -2399,13 +2396,29 @@ export const appRouter = router({
           investmentBalance: userBankAccounts.investmentBalance,
           updatedAt: userBankAccounts.updatedAt,
         }).from(userBankAccounts).innerJoin(userTable, eq(userBankAccounts.userId, userTable.id)).where(eq(userBankAccounts.schoolCode, schoolCode));
-        const value = (amount: string | number | null | undefined) => Number(amount ?? 0);
-        return accounts.map((account) => {
-          const checking = value(account.checkingBalance);
-          const savings = value(account.savingsBalance);
-          const investment = value(account.investmentBalance);
-          return { userId: account.userId, name: account.name || account.username || "Member", checking, savings, investment, netWorth: checking + savings + investment, updatedAt: account.updatedAt };
-        }).sort((left, right) => right.netWorth - left.netWorth || left.name.localeCompare(right.name)).slice(0, input?.limit ?? 50);
+        return buildNetWorthLeaderboard(accounts, input?.limit ?? 50);
+      }),
+
+    getGlobalNetWorthLeaderboard: protectedProcedure
+      .input(z.object({ limit: z.number().int().min(1).max(100).default(50) }).optional())
+      .query(async ({ input }) => {
+        const { userBankAccounts, users: userTable, userProfileSettings: profileSettings } = await import("../drizzle/schema");
+        const database = await db.getDb();
+        if (!database) return [];
+        const accounts = await database.select({
+          userId: userBankAccounts.userId,
+          name: userTable.name,
+          username: userTable.username,
+          schoolCode: userBankAccounts.schoolCode,
+          checkingBalance: userBankAccounts.checkingBalance,
+          savingsBalance: userBankAccounts.savingsBalance,
+          investmentBalance: userBankAccounts.investmentBalance,
+          updatedAt: userBankAccounts.updatedAt,
+        }).from(userBankAccounts)
+          .innerJoin(userTable, eq(userBankAccounts.userId, userTable.id))
+          .leftJoin(profileSettings, eq(profileSettings.userId, userBankAccounts.userId))
+          .where(or(isNull(profileSettings.showOnLeaderboard), eq(profileSettings.showOnLeaderboard, true)));
+        return buildNetWorthLeaderboard(accounts, input?.limit ?? 50);
       }),
 
     depositBlueBucksToChecking: protectedProcedure

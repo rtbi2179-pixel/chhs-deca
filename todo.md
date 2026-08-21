@@ -9,3 +9,4 @@
 - [x] Redesign the signed-out welcome page to explain Blue Blazer’s current offering persuasively and refine the achievements experience further
 - [x] Reconcile the DECA question bank to the verified 50,000-record source and make displayed difficulty totals database-authoritative
 - [x] Restrict tour chapters to member workflows, hide chapter-management from normal members, and restrict diagnostics to Ricardo and Sahan
+- [x] Make the chapter leaderboard visibly available, add a global leaderboard view, and display credit-score history as a monthly trend

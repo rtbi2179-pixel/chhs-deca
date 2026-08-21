@@ -69,7 +69,7 @@ export default function Profile() {
   const profileMetricsQuery = trpc.practice.getProfileMetrics.useQuery(undefined, { enabled: !!user?.id })
   const { data: portfolio = [], refetch: refetchPortfolio } = trpc.members.getPortfolioItems.useQuery({ userId: user?.id }, { enabled: !!user?.id })
   const creditScoreQuery = trpc.banking.getCreditScore.useQuery(undefined, { enabled: !!user?.id })
-  const creditScoreHistoryQuery = trpc.banking.getCreditScoreHistory.useQuery({ limit: 30 }, { enabled: !!user?.id })
+  const creditScoreHistoryQuery = trpc.banking.getCreditScoreHistory.useQuery({ limit: 120 }, { enabled: !!user?.id })
   const creditRefreshQuery = trpc.banking.getCreditScoreRefreshSchedule.useQuery(undefined, { enabled: !!user?.id })
   const bbxPortfolioQuery = trpc.bbx.getPortfolio.useQuery(undefined, { enabled: !!user?.id, refetchInterval: 20_000 })
   const bankAccountQuery = trpc.banking.getBankAccount.useQuery(undefined, { enabled: !!user?.id })

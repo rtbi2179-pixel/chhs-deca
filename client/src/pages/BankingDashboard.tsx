@@ -63,7 +63,8 @@ export function BankingDashboard() {
   const { user } = useAuth();
   const utils = trpc.useUtils();
   const creditScoreQuery = trpc.banking.getCreditScore.useQuery();
-  const creditHistoryQuery = trpc.banking.getCreditScoreHistory.useQuery({ limit: 30 });
+  const creditHistoryQuery = trpc.banking.getCreditScoreHistory.useQuery({ limit: 120 });
+  const creditRefreshQuery = trpc.banking.getCreditScoreRefreshSchedule.useQuery();
   const bankAccountQuery = trpc.banking.getBankAccount.useQuery();
   const transferMutation = trpc.banking.transferFunds.useMutation();
   const userCardsQuery = trpc.banking.getUserCards.useQuery();
@@ -288,7 +289,7 @@ export function BankingDashboard() {
         </div>
 
         <div className="mb-8">
-          <CreditScoreChart data={creditHistoryQuery.data ?? []} isLoading={creditHistoryQuery.isLoading} currentScore={creditScore} />
+          <CreditScoreChart data={creditHistoryQuery.data ?? []} isLoading={creditHistoryQuery.isLoading} currentScore={creditScore} refreshSchedule={{ lastRunAt: creditRefreshQuery.data?.lastRunAt, nextRunAt: creditRefreshQuery.data?.nextRunAt }} />
         </div>
 
         {/* Active Study Card with existing banking-card capabilities. */}
