@@ -8840,3 +8840,5 @@
 - [x] Update the Blue Blazer tour to walk through every active member and role-appropriate chapter feature, including current banking, roadmap, leaderboard, achievements, and portfolio tools
 - [x] Rigorously validate member, AI Judge, chapter-management, leaderboard, timeline, practice, mock-exam, calendar, announcement, and volunteer workflows; add unread chapter-update notification badges
 - [ ] Redesign the signed-out welcome page to explain Blue Blazer’s current offering persuasively and refine the achievements experience further
+- [x] Redesign the signed-out welcome page to explain Blue Blazer’s current offering persuasively and refine the achievements experience further
+- [ ] Reconcile the DECA question bank to the verified 50,000-record source and make displayed difficulty totals database-authoritative
