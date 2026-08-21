@@ -1,40 +1,59 @@
 import { describe, expect, it } from "vitest";
-import { ONBOARDING_WALKTHROUGH_STEPS } from "../client/src/lib/onboardingWalkthrough";
+import { getOnboardingWalkthroughSteps } from "../client/src/lib/onboardingWalkthrough";
 
 describe("expanded Blue Blazer onboarding walkthrough", () => {
   it("organizes every member-facing Practice, Chapter, and Blue Bucks tool into the three tour parts", () => {
-    expect(ONBOARDING_WALKTHROUGH_STEPS).toHaveLength(16);
-    expect(ONBOARDING_WALKTHROUGH_STEPS.map((step) => step.tabLabel)).toEqual([
+    const memberSteps = getOnboardingWalkthroughSteps("member");
+    expect(memberSteps).toHaveLength(21);
+    expect(memberSteps.map((step) => step.tabLabel)).toEqual([
       "Overview",
+      "Events & Event Finder",
       "PI Study Library",
       "Practice",
       "Mock Exams",
-      "Leaderboard",
+      "Project Workspace",
       "AI Study & Roleplay",
-      "Events & Community",
+      "My Timeline",
+      "Profile & Settings",
+      "Direct Messages",
       "Calendar",
       "Announcements",
       "Discussion Posts",
       "Volunteer Sign-Ups",
       "Feedback",
+      "My Portfolio",
       "Blue Bucks",
       "Banking & Cards",
       "Blue’s News",
       "Stock Market (BBX)",
+      "Leaderboard",
     ]);
-    expect([...new Set(ONBOARDING_WALKTHROUGH_STEPS.map((step) => step.part))]).toEqual(["MAIN PRACTICE TOOLS", "CHAPTER TOOLS", "BLUE BUCKS"]);
+    expect([...new Set(memberSteps.map((step) => step.part))]).toEqual(["MAIN PRACTICE TOOLS", "CHAPTER TOOLS", "BLUE BUCKS"]);
   });
 
   it("explains Blue Bucks earning, automatic checking credit, Blue's News rewards, and Investment Account BBX buying power", () => {
-    const blueBucks = ONBOARDING_WALKTHROUGH_STEPS.find((step) => step.tabLabel === "Blue Bucks");
-    const banking = ONBOARDING_WALKTHROUGH_STEPS.find((step) => step.tabLabel === "Banking & Cards");
-    const news = ONBOARDING_WALKTHROUGH_STEPS.find((step) => step.tabLabel === "Blue’s News");
-    const market = ONBOARDING_WALKTHROUGH_STEPS.find((step) => step.tabLabel === "Stock Market (BBX)");
-    expect(blueBucks?.body).toContain("once per question");
+    const memberSteps = getOnboardingWalkthroughSteps("member");
+    const blueBucks = memberSteps.find((step) => step.tabLabel === "Blue Bucks");
+    const banking = memberSteps.find((step) => step.tabLabel === "Banking & Cards");
+    const news = memberSteps.find((step) => step.tabLabel === "Blue’s News");
+    const market = memberSteps.find((step) => step.tabLabel === "Stock Market (BBX)");
+    const leaderboard = memberSteps.find((step) => step.tabLabel === "Leaderboard");
+    expect(blueBucks?.body).toContain("once");
     expect(blueBucks?.body).toContain("no cash value");
-    expect(banking?.body).toContain("Checking balance automatically");
+    expect(banking?.body).toContain("credit Checking automatically");
     expect(banking?.body).toContain("7% monthly simulation return");
     expect(news?.body).toContain("Blue Bucks reward");
-    expect(market?.body).toContain("Investment Account balance");
+    expect(market?.body).toContain("Investment Account");
+    expect(leaderboard?.body).toContain("Checking + Savings + Investment");
+  });
+
+  it("adds management and diagnostics only to the roles that can access those protected workspaces", () => {
+    const memberLabels = getOnboardingWalkthroughSteps("member").map((step) => step.tabLabel);
+    const adminLabels = getOnboardingWalkthroughSteps("admin").map((step) => step.tabLabel);
+    const superAdminLabels = getOnboardingWalkthroughSteps("super_admin").map((step) => step.tabLabel);
+    expect(memberLabels).not.toContain("Member Management");
+    expect(adminLabels).toEqual(expect.arrayContaining(["Member Management", "Chapter Management"]));
+    expect(adminLabels).not.toContain("Chapter Diagnostics");
+    expect(superAdminLabels).toEqual(expect.arrayContaining(["Member Management", "Chapter Management", "Chapter Diagnostics"]));
   });
 });

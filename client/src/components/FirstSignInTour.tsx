@@ -1,16 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, BarChart3, Bell, BookOpenCheck, Calendar, Check, ClipboardCheck, Coins, Compass, Flag, Home, Landmark, MessageSquare, MessageSquarePlus, Newspaper, PartyPopper, Sparkles, TrendingUp, Trophy, Users, X, Zap } from "lucide-react";
+import { ArrowLeft, ArrowRight, BarChart3, Bell, BookOpenCheck, Calendar, Check, ClipboardCheck, Coins, Compass, Flag, Home, Landmark, Map, MessageSquare, MessageSquarePlus, Newspaper, PartyPopper, ShieldAlert, Sparkles, TrendingUp, Trophy, Users, X, Zap } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { getOnboardingProgress, ONBOARDING_CELEBRATION_DURATION_MS, ONBOARDING_SKIP_FADE_DURATION_MS, ONBOARDING_TOUR_ACTIONS } from "@/lib/onboardingTour";
-import { ONBOARDING_WALKTHROUGH_STEPS } from "@/lib/onboardingWalkthrough";
+import { getOnboardingWalkthroughSteps } from "@/lib/onboardingWalkthrough";
+import { useAuth } from "@/_core/hooks/useAuth";
 
-const TOUR_STEPS = ONBOARDING_WALKTHROUGH_STEPS;
 const TOUR_PARTS = ["MAIN PRACTICE TOOLS", "CHAPTER TOOLS", "BLUE BUCKS"] as const;
-const TOUR_PART_START_INDEX = Object.fromEntries(TOUR_PARTS.map((part) => [part, TOUR_STEPS.findIndex((step) => step.part === part)])) as Record<(typeof TOUR_PARTS)[number], number>;
 const TOUR_STEP_ICONS = {
   home: Home,
   study: BookOpenCheck,
@@ -28,9 +27,19 @@ const TOUR_STEP_ICONS = {
   banking: Landmark,
   news: Newspaper,
   market: TrendingUp,
+  mockExam: ClipboardCheck,
+  workspace: BookOpenCheck,
+  timeline: Map,
+  profile: Users,
+  messages: MessageSquare,
+  portfolio: ClipboardCheck,
+  members: Users,
+  management: ShieldAlert,
+  diagnostics: BarChart3,
 } as const;
 
 export function FirstSignInTour() {
+  const { user } = useAuth();
   const [, setLocation] = useLocation();
   const utils = trpc.useUtils();
   const { data: onboarding, isLoading } = trpc.preferences.getOnboardingStatus.useQuery(undefined, { staleTime: Infinity, retry: false });
@@ -43,14 +52,20 @@ export function FirstSignInTour() {
   const [tourOpenVersion, setTourOpenVersion] = useState(0);
   const celebrationTimerRef = useRef<number | null>(null);
   const reduceMotion = useReducedMotion();
-  const step = TOUR_STEPS[stepIndex];
+  const tourSteps = useMemo(() => getOnboardingWalkthroughSteps(user?.role), [user?.role]);
+  const tourPartStartIndex = useMemo(() => Object.fromEntries(TOUR_PARTS.map((part) => [part, tourSteps.findIndex((candidate) => candidate.part === part)])) as Record<(typeof TOUR_PARTS)[number], number>, [tourSteps]);
+  const step = tourSteps[stepIndex] ?? tourSteps[0];
   const StepIcon = TOUR_STEP_ICONS[step.icon];
-  const progress = getOnboardingProgress(stepIndex, TOUR_STEPS.length);
+  const progress = getOnboardingProgress(stepIndex, tourSteps.length);
   const currentPartIndex = TOUR_PARTS.indexOf(step.part as (typeof TOUR_PARTS)[number]);
 
   useEffect(() => {
     if (!isLoading && onboarding?.shouldShow) setIsOpen(true);
   }, [isLoading, onboarding?.shouldShow]);
+
+  useEffect(() => {
+    setStepIndex((current) => Math.min(current, Math.max(0, tourSteps.length - 1)));
+  }, [tourSteps.length]);
 
   useEffect(() => {
     const restartTour = () => {
@@ -107,7 +122,7 @@ export function FirstSignInTour() {
   };
 
   const jumpToPart = (part: (typeof TOUR_PARTS)[number]) => {
-    const destinationIndex = TOUR_PART_START_INDEX[part];
+    const destinationIndex = tourPartStartIndex[part];
     if (destinationIndex >= 0 && !isCelebrating && !isSkipping) setStepIndex(destinationIndex);
   };
 
@@ -119,7 +134,7 @@ export function FirstSignInTour() {
 
   if (isLoading || (!onboarding?.shouldShow && !isOpen)) return null;
 
-  const isFinalStep = stepIndex === TOUR_STEPS.length - 1;
+  const isFinalStep = stepIndex === tourSteps.length - 1;
 
   return (
     <Dialog modal={false} open={isOpen} onOpenChange={handleOpenChange}>
@@ -140,7 +155,7 @@ export function FirstSignInTour() {
                   return <button key={part} type="button" aria-current={isActivePart ? "step" : undefined} onClick={() => jumpToPart(part)} disabled={isCelebrating || isSkipping} className={`min-w-0 rounded-lg px-2 py-2 text-left transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:opacity-40 ${isActivePart ? "bg-blue-400/20 text-blue-100 shadow-[inset_0_0_0_1px_oklch(0.68_0.15_245/0.32)]" : "text-white/45 hover:bg-white/[0.06] hover:text-white/75"}`}><span className="block font-mono-data text-[8px] tracking-[0.12em]">PART {index + 1}</span><span className="mt-0.5 block truncate text-[10px] font-semibold">{shortLabel}</span></button>;
                 })}
               </nav>
-              <div><div className="mb-2 flex items-center justify-between text-[10px] font-medium uppercase tracking-[0.12em] text-blue-100/70"><span>TOUR PROGRESS</span><span>{progress.percentage}%</span></div><div role="progressbar" aria-label="Onboarding tour progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress.percentage} className="h-2.5 overflow-hidden rounded-full border border-white/5 bg-slate-950/55"><div className="h-full origin-left rounded-full bg-[linear-gradient(90deg,oklch(0.66_0.16_250),oklch(0.84_0.1_230))] transition-transform duration-200 ease-out motion-reduce:transition-none" style={{ transform: `scaleX(${progress.scale})` }} /></div><div className="mt-3 flex gap-2">{TOUR_STEPS.map((item, index) => <span key={item.title} className={`h-1.5 rounded-full transition-[width,background-color] duration-200 ${index === stepIndex ? "w-9 bg-blue-200" : index < stepIndex ? "w-4 bg-blue-300/50" : "w-4 bg-white/15"}`} />)}</div></div>
+              <div><div className="mb-2 flex items-center justify-between text-[10px] font-medium uppercase tracking-[0.12em] text-blue-100/70"><span>TOUR PROGRESS</span><span>{progress.percentage}%</span></div><div role="progressbar" aria-label="Onboarding tour progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress.percentage} className="h-2.5 overflow-hidden rounded-full border border-white/5 bg-slate-950/55"><div className="h-full origin-left rounded-full bg-[linear-gradient(90deg,oklch(0.66_0.16_250),oklch(0.84_0.1_230))] transition-transform duration-200 ease-out motion-reduce:transition-none" style={{ transform: `scaleX(${progress.scale})` }} /></div><div className="mt-3 flex flex-wrap gap-1.5">{tourSteps.map((item, index) => <span key={item.title} className={`h-1.5 rounded-full transition-[width,background-color] duration-200 ${index === stepIndex ? "w-8 bg-blue-200" : index < stepIndex ? "w-2.5 bg-blue-300/50" : "w-2.5 bg-white/15"}`} />)}</div></div>
             </div>
           </div>
 
@@ -153,7 +168,7 @@ export function FirstSignInTour() {
 
             <div className="mt-5 border-t border-white/10 pt-5">
               <div className="mb-4 flex items-center justify-between text-xs text-white/45"><span>Part {currentPartIndex + 1} of {TOUR_PARTS.length} · Step {progress.currentStep} of {progress.totalSteps}</span><Button type="button" variant="outline" size="sm" onClick={startSkipExit} disabled={completeOnboarding.isPending || isCelebrating || isSkipping} className="h-8 border-white/15 bg-white/[0.03] px-3 text-xs text-white/80 hover:bg-white/[0.08] hover:text-white disabled:opacity-30">{ONBOARDING_TOUR_ACTIONS.skipLabel}</Button></div>
-              <Button type="button" onClick={() => isFinalStep ? startCelebration() : setStepIndex((current) => current + 1)} disabled={completeOnboarding.isPending || isCelebrating || isSkipping} className="h-11 w-full bg-blue-600 text-white hover:bg-blue-500 active:scale-[0.98]">{isFinalStep ? <><Check className="mr-2 h-4 w-4" />Start my study plan</> : <>Continue <ArrowRight className="ml-2 h-4 w-4" /></>}</Button>
+              <div className="grid gap-2 sm:grid-cols-[auto_1fr]">{stepIndex > 0 && <Button type="button" variant="outline" onClick={() => setStepIndex((current) => current - 1)} disabled={completeOnboarding.isPending || isCelebrating || isSkipping} className="h-11 border-white/15 bg-white/[0.03] px-4 text-white/80 hover:bg-white/[0.08] hover:text-white"><ArrowLeft className="mr-2 h-4 w-4" />Back</Button>}<Button type="button" onClick={() => isFinalStep ? startCelebration() : setStepIndex((current) => current + 1)} disabled={completeOnboarding.isPending || isCelebrating || isSkipping} className="h-11 w-full bg-blue-600 text-white hover:bg-blue-500 active:scale-[0.98]">{isFinalStep ? <><Check className="mr-2 h-4 w-4" />Start my study plan</> : <>Continue <ArrowRight className="ml-2 h-4 w-4" /></>}</Button></div>
             </div>
           </div>
 
