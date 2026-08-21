@@ -8820,3 +8820,4 @@
 - [x] Fix the Direct Messages airplane send control so messages reach selected recipients
 - [x] Create profile achievements with transparent milestones based on real Blue Blazer activity
 - [x] Add Bronze, Silver, and Gold achievement tiers with one-time celebratory unlock toast notifications
+- [x] Remove the “Simulated:” text from Blue’s News displays

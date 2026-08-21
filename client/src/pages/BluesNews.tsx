@@ -69,7 +69,6 @@ export default function BluesNews() {
                 <div className="mt-0.5 rounded-lg border border-blue-400/20 bg-blue-400/10 p-2 text-blue-200"><Newspaper className="h-5 w-5" /></div>
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-full border border-blue-400/30 bg-blue-400/10 px-2 py-0.5 text-xs font-semibold text-blue-200">SIMULATED</span>
                     <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold capitalize ${severityClass[article.severity] ?? severityClass.low}`}>{article.severity}</span>
                     <span className="text-xs text-foreground/50">{article.scopeLabel} · {formatPublishedAt(article.publishedAt)}</span>
                   </div>
