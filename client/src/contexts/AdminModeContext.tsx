@@ -49,17 +49,18 @@ export function AdminModeProvider({ children }: AdminModeProviderProps) {
       }}
     >
       {children}
-      {/* Neon ring rendered via React portal so it persists across page navigation */}
+      {/* Subtle administrative perimeter rendered through a portal so it persists across page navigation. */}
       {adminModeActive && createPortal(
         <div
+          aria-hidden="true"
           style={{
             position: "fixed",
             inset: 0,
             pointerEvents: "none",
             zIndex: 9999,
-            background: "radial-gradient(circle at center, rgba(59,130,246,0.12) 0%, transparent 70%)",
-            boxShadow: "inset 0 0 80px rgba(59,130,246,0.5), inset 0 0 30px rgba(59,130,246,0.3)",
-            border: "2px solid rgba(59,130,246,0.8)",
+            background: "radial-gradient(circle at center, rgba(59,130,246,0.035) 0%, transparent 68%)",
+            boxShadow: "inset 0 0 42px rgba(59,130,246,0.18), inset 0 0 16px rgba(59,130,246,0.08)",
+            border: "1px solid rgba(96,165,250,0.32)",
           }}
         />,
         document.body
