@@ -31,6 +31,7 @@ import { superAdminDiagnosticsRouter } from "./superAdminDiagnosticsRouter";
 import { achievementsRouter } from "./achievementsRouter";
 import { timelineRouter } from "./timelineRouter";
 import { aiJudgeRouter } from "./aiJudgeRouter";
+import { roleplayRouter } from "./roleplayRouter";
 
 const mockExamClusterSchema = z.enum(CHAPTER_EXAM_CLUSTERS);
 const chapterExamQuestionCountSchema = z.union(CHAPTER_EXAM_QUESTION_COUNTS.map((count) => z.literal(count)) as [z.ZodLiteral<25>, z.ZodLiteral<50>, z.ZodLiteral<75>, z.ZodLiteral<100>]);
@@ -516,6 +517,7 @@ export const appRouter = router({
   achievements: achievementsRouter,
   timeline: timelineRouter,
   aiJudge: aiJudgeRouter,
+  roleplay: roleplayRouter,
   announcements: announcementsRouter,
   system: systemRouter,
   gacha: gachaRouter,

@@ -91,6 +91,148 @@ export const decaAiJudgeSessions = mysqlTable("decaAiJudgeSessions", {
 export type DecaAiJudgeSession = typeof decaAiJudgeSessions.$inferSelect;
 
 /**
+ * Versioned simulator configuration. The rubric JSON contains the active,
+ * database-configurable preparation/interview timing and Blue Blazer practice
+ * score configuration for a season and event.
+ */
+export const decaEventRubrics = mysqlTable("decaEventRubrics", {
+  id: int("id").autoincrement().primaryKey(),
+  eventCode: varchar("eventCode", { length: 20 }).notNull(),
+  season: varchar("season", { length: 20 }).notNull(),
+  version: varchar("version", { length: 80 }).notNull(),
+  rubricType: mysqlEnum("rubricType", ["roleplay_practice"]).default("roleplay_practice").notNull(),
+  rubricJson: json("rubricJson").$type<Record<string, unknown>>().notNull(),
+  sourceUrl: varchar("sourceUrl", { length: 1024 }).notNull(),
+  sourceVersion: varchar("sourceVersion", { length: 255 }).notNull(),
+  verificationStatus: mysqlEnum("verificationStatus", ["verified", "unverified"]).default("unverified").notNull(),
+  verifiedAt: timestamp("verifiedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  eventSeasonVersionUnique: unique("deca_event_rubric_event_season_version_unique").on(table.eventCode, table.season, table.version),
+  eventSeasonIndex: index("deca_event_rubric_event_season_idx").on(table.eventCode, table.season),
+}));
+export type DecaEventRubric = typeof decaEventRubrics.$inferSelect;
+
+/** Original or user-authorized simulator scenario content. */
+export const roleplayScenarios = mysqlTable("roleplayScenarios", {
+  id: int("id").autoincrement().primaryKey(),
+  eventCode: varchar("eventCode", { length: 20 }).notNull(),
+  careerCluster: varchar("careerCluster", { length: 80 }).notNull(),
+  instructionalArea: varchar("instructionalArea", { length: 255 }).notNull(),
+  difficulty: mysqlEnum("difficulty", ["foundational", "competition", "stretch"]).default("competition").notNull(),
+  participantRole: varchar("participantRole", { length: 255 }).notNull(),
+  judgeRole: varchar("judgeRole", { length: 255 }).notNull(),
+  companyContext: text("companyContext").notNull(),
+  situation: text("situation").notNull(),
+  task: text("task").notNull(),
+  performanceIndicators: json("performanceIndicators").$type<Array<{ moduleId: number; piId: string; performanceIndicator: string; instructionalArea: string }>>().notNull(),
+  judgeContext: text("judgeContext").notNull(),
+  judgeQuestions: json("judgeQuestions").$type<string[]>().notNull(),
+  expectedBusinessConcepts: json("expectedBusinessConcepts").$type<string[]>().notNull(),
+  scenarioData: json("scenarioData").$type<Record<string, unknown>>(),
+  sourceType: mysqlEnum("sourceType", ["official_public_sample", "blue_blazer_original", "ai_generated"]).notNull(),
+  sourceYear: varchar("sourceYear", { length: 20 }).notNull(),
+  sourceAttribution: varchar("sourceAttribution", { length: 1024 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  eventSourceCreatedIndex: index("roleplay_scenario_event_source_created_idx").on(table.eventCode, table.sourceType, table.createdAt),
+}));
+export type RoleplayScenario = typeof roleplayScenarios.$inferSelect;
+
+/** A resumable, user-owned simulator run. */
+export const roleplayAttempts = mysqlTable("roleplayAttempts", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  eventCode: varchar("eventCode", { length: 20 }).notNull(),
+  scenarioId: int("scenarioId").notNull().references(() => roleplayScenarios.id, { onDelete: "restrict" }),
+  rubricId: int("rubricId").notNull().references(() => decaEventRubrics.id, { onDelete: "restrict" }),
+  trainingMode: mysqlEnum("trainingMode", ["competition", "practice", "coach"]).notNull(),
+  status: mysqlEnum("status", ["briefing", "preparing", "judge_intro", "interview", "follow_up", "submitted", "transcribing", "evaluating", "completed", "failed", "abandoned"]).default("briefing").notNull(),
+  prepStartedAt: timestamp("prepStartedAt"),
+  interviewStartedAt: timestamp("interviewStartedAt"),
+  submittedAt: timestamp("submittedAt"),
+  completedAt: timestamp("completedAt"),
+  prepDurationSeconds: int("prepDurationSeconds").notNull(),
+  interviewDurationSeconds: int("interviewDurationSeconds").notNull(),
+  scratchpad: text("scratchpad"),
+  activeState: json("activeState").$type<Record<string, unknown>>(),
+  totalScore: int("totalScore"),
+  performanceLevel: varchar("performanceLevel", { length: 50 }),
+  rubricVersion: varchar("rubricVersion", { length: 80 }).notNull(),
+  failureReason: varchar("failureReason", { length: 512 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  userCreatedIndex: index("roleplay_attempt_user_created_idx").on(table.userId, table.createdAt),
+  userStatusIndex: index("roleplay_attempt_user_status_idx").on(table.userId, table.status),
+  scenarioIndex: index("roleplay_attempt_scenario_idx").on(table.scenarioId),
+}));
+export type RoleplayAttempt = typeof roleplayAttempts.$inferSelect;
+
+/** Private object-storage metadata. API procedures never return a storage URL without ownership checks. */
+export const roleplayRecordings = mysqlTable("roleplayRecordings", {
+  id: int("id").autoincrement().primaryKey(),
+  attemptId: int("attemptId").notNull().references(() => roleplayAttempts.id, { onDelete: "cascade" }),
+  phase: mysqlEnum("phase", ["interview"]).default("interview").notNull(),
+  audioStorageKey: varchar("audioStorageKey", { length: 1024 }).notNull(),
+  contentType: varchar("contentType", { length: 100 }).notNull(),
+  durationSeconds: int("durationSeconds").notNull(),
+  fileSizeBytes: int("fileSizeBytes").notNull(),
+  uploadedAt: timestamp("uploadedAt").defaultNow().notNull(),
+}, (table) => ({
+  attemptPhaseUnique: unique("roleplay_recording_attempt_phase_unique").on(table.attemptId, table.phase),
+}));
+export type RoleplayRecording = typeof roleplayRecordings.$inferSelect;
+
+export const roleplayTranscripts = mysqlTable("roleplayTranscripts", {
+  id: int("id").autoincrement().primaryKey(),
+  attemptId: int("attemptId").notNull().references(() => roleplayAttempts.id, { onDelete: "cascade" }),
+  phase: mysqlEnum("phase", ["interview"]).default("interview").notNull(),
+  rawText: text("rawText").notNull(),
+  cleanedText: text("cleanedText").notNull(),
+  segments: json("segments").$type<unknown[]>(),
+  whisperModel: varchar("whisperModel", { length: 100 }),
+  transcribedAt: timestamp("transcribedAt").defaultNow().notNull(),
+}, (table) => ({
+  attemptPhaseUnique: unique("roleplay_transcript_attempt_phase_unique").on(table.attemptId, table.phase),
+}));
+export type RoleplayTranscript = typeof roleplayTranscripts.$inferSelect;
+
+/** Preserves judge-turn state for scenario-relevant, recoverable follow-up questions. */
+export const roleplayJudgeTurns = mysqlTable("roleplayJudgeTurns", {
+  id: int("id").autoincrement().primaryKey(),
+  attemptId: int("attemptId").notNull().references(() => roleplayAttempts.id, { onDelete: "cascade" }),
+  sequence: int("sequence").notNull(),
+  turnType: mysqlEnum("turnType", ["introduction", "follow_up"]).notNull(),
+  question: text("question").notNull(),
+  basis: text("basis").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  attemptSequenceUnique: unique("roleplay_judge_turn_attempt_sequence_unique").on(table.attemptId, table.sequence),
+}));
+export type RoleplayJudgeTurn = typeof roleplayJudgeTurns.$inferSelect;
+
+export const roleplayEvaluations = mysqlTable("roleplayEvaluations", {
+  id: int("id").autoincrement().primaryKey(),
+  attemptId: int("attemptId").notNull().references(() => roleplayAttempts.id, { onDelete: "cascade" }),
+  piScores: json("piScores").$type<unknown[]>().notNull(),
+  deliveryAnalysis: json("deliveryAnalysis").$type<Record<string, unknown>>().notNull(),
+  overallScore: int("overallScore").notNull(),
+  performanceLevel: varchar("performanceLevel", { length: 50 }).notNull(),
+  strengths: json("strengths").$type<string[]>().notNull(),
+  improvements: json("improvements").$type<string[]>().notNull(),
+  trainingRecommendations: json("trainingRecommendations").$type<unknown[]>().notNull(),
+  modelMetadata: json("modelMetadata").$type<Record<string, unknown>>().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  attemptUnique: unique("roleplay_evaluation_attempt_unique").on(table.attemptId),
+}));
+export type RoleplayEvaluation = typeof roleplayEvaluations.$inferSelect;
+
+/**
  * Password reset requests are deliberately separate from the user record so
  * chapter admins can approve a request without ever seeing or setting a password.
  */

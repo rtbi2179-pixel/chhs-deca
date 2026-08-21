@@ -8830,3 +8830,4 @@
 - [x] Refine the personalized timeline into an adaptive weekly DECA training roadmap with saved intensity and fixed calendar anchors
 - [x] Validate and import the uploaded 11,000 hard DECA questions into the practice and mock-exam question bank
 - [x] Validate and replace the practice bank with the uploaded 50,000-question DECA master dataset
+- [x] Replace the standalone roleplay/speech coach with a native Blue Blazer DECA roleplay simulator, scoring pipeline, and learning integration

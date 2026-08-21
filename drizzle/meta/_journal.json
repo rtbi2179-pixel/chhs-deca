@@ -239,6 +239,13 @@
       "when": 1787281324451,
       "tag": "0033_nasty_loners",
       "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "5",
+      "when": 1787285466824,
+      "tag": "0034_far_lethal_legion",
+      "breakpoints": true
     }
   ]
 }

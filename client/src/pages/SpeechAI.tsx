@@ -14,13 +14,13 @@ const fadeUp = {
 const aiTools = [
   {
     href: '/ai/roleplay',
-    title: 'Roleplay Event AI',
-    description: 'Practice roleplay scenarios with AI feedback. Get real-time coaching and performance analysis for roleplay competitive events.',
+    title: 'DECA Competition Simulation',
+    description: 'Run a native, timed roleplay with original scenarios, recorded responses, evidence-based PI scoring, separate delivery coaching, and saved training recommendations.',
     icon: '',
     color: 'from-blue-600/20 to-blue-800/10',
     border: 'border-blue-500/20 hover:border-blue-500/50',
     glow: 'hover:shadow-[0_0_30px_oklch(0.55_0.22_260/0.2)]',
-    tag: 'Roleplay',
+    tag: 'Native Simulator',
   },
   {
     href: '/ai/written',
@@ -124,7 +124,7 @@ export default function SpeechAI() {
               <div>
                 <h3 className="text-blue-400 font-semibold mb-2">For Roleplay Events</h3>
                 <p className="text-sm leading-relaxed">
-                  Practice your roleplay scenarios in a realistic environment. Get instant feedback on your performance, communication skills, and business knowledge application.
+                  Run a timed preparation and interview round using your Blue Blazer account. Your recorded response is transcribed, scored from PI evidence, and connected to the PI Library; delivery coaching remains separate from the practice score.
                 </p>
               </div>
               <div>
