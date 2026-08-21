@@ -1,0 +1,1 @@
+ALTER TABLE `eventTimelineCalendarEvents` MODIFY COLUMN `eventType` enum('meeting','mock_competition','testing','written_deadline','pitchdeck_deadline','district_conference','state_conference','icdc_conference','campaign_deadline','leadership_conference','other') NOT NULL;

@@ -591,7 +591,7 @@ export const eventTimelineCalendarEvents = mysqlTable("eventTimelineCalendarEven
   schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
   competitionYear: varchar("competitionYear", { length: 20 }).notNull(),
   title: varchar("title", { length: 255 }).notNull(),
-  eventType: mysqlEnum("eventType", ["meeting", "mock_competition", "testing", "written_deadline", "pitchdeck_deadline", "district_conference", "state_conference", "campaign_deadline", "leadership_conference", "other"]).notNull(),
+  eventType: mysqlEnum("eventType", ["meeting", "mock_competition", "testing", "written_deadline", "pitchdeck_deadline", "district_conference", "state_conference", "icdc_conference", "campaign_deadline", "leadership_conference", "other"]).notNull(),
   startDate: varchar("startDate", { length: 10 }),
   endDate: varchar("endDate", { length: 10 }),
   isTbd: boolean("isTbd").default(false).notNull(),

@@ -3,7 +3,7 @@ import { deleteTimelineCalendarEvent, getOrGenerateTimeline, listTimelineCalenda
 import { protectedProcedure, router } from "./_core/trpc";
 
 const calendarEventInput = z.object({
-  id: z.number().optional(), title: z.string().trim().min(1).max(255), eventType: z.enum(["meeting", "mock_competition", "testing", "written_deadline", "pitchdeck_deadline", "district_conference", "state_conference", "campaign_deadline", "leadership_conference", "other"]), startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(), endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(), isTbd: z.boolean().optional(), description: z.string().max(2000).optional(), priority: z.enum(["low", "normal", "high", "critical"]).optional(), color: z.string().max(30).optional(), applicableEventTypes: z.array(z.string().max(30)).max(5).optional(), hardDeadline: z.boolean().optional(),
+  id: z.number().optional(), title: z.string().trim().min(1).max(255), eventType: z.enum(["meeting", "mock_competition", "testing", "written_deadline", "pitchdeck_deadline", "district_conference", "state_conference", "icdc_conference", "campaign_deadline", "leadership_conference", "other"]), startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(), endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(), isTbd: z.boolean().optional(), description: z.string().max(2000).optional(), priority: z.enum(["low", "normal", "high", "critical"]).optional(), color: z.string().max(30).optional(), applicableEventTypes: z.array(z.string().max(30)).max(5).optional(), hardDeadline: z.boolean().optional(),
 });
 
 export const timelineRouter = router({

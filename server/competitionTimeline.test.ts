@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { clusterForEvent, getTimelineStrategy } from "../shared/timelineRequirements";
+import { calculateCompetitionReadinessScore } from "./timelineEngine";
 
 describe("personalized competition timeline", () => {
   const schema = readFileSync(resolve(process.cwd(), "drizzle/schema.ts"), "utf8");
@@ -57,6 +58,16 @@ describe("personalized competition timeline", () => {
     expect(weeklyRoadmap).toContain("buildAdaptiveWeeklyRoadmap");
   });
 
+  it("calculates a transparent readiness score from recorded accuracy, practice volume, PI mastery, and milestone task completion", () => {
+    expect(calculateCompetitionReadinessScore({ accuracyPercent: 92, practicePercent: 100, piPercent: 100, roadmapPercent: 100 })).toBe(97);
+    expect(calculateCompetitionReadinessScore({ accuracyPercent: 45, practicePercent: 20, piPercent: 0, roadmapPercent: 0 })).toBe(22);
+    expect(calculateCompetitionReadinessScore({ accuracyPercent: 140, practicePercent: -5, piPercent: 100, roadmapPercent: 100 })).toBe(70);
+    expect(engine).toContain("competitionMilestones");
+    expect(engine).toContain("readinessPeriodStart");
+    expect(engine).toContain("icdc_conference");
+    expect(engine).toContain("Event-cluster accuracy");
+  });
+
   it("exposes the roadmap in the main timeline view, selected event, and Profile preview", () => {
     expect(page).toContain("My Weekly DECA Roadmap");
     expect(page).toContain("Your next step");
@@ -67,6 +78,8 @@ describe("personalized competition timeline", () => {
     expect(page).toContain("My Weekly DECA Roadmap");
     expect(page).toContain("Update upcoming weeks");
     expect(page).toContain("Manage dates");
+    expect(page).toContain("Next competition readiness");
+    expect(page).toContain("Readiness for");
     expect(projectWorkspace).toContain("Competition Project Workspace");
     expect(projectWorkspace).toContain("Deliverable checklist");
     expect(piQuizlet).toContain("getEventStudyGuide");
@@ -74,6 +87,7 @@ describe("personalized competition timeline", () => {
     expect(home).toContain("Your DECA roadmap");
     expect(home).toContain("trpc.timeline.getMine.useQuery");
     expect(profilePreview).toContain("My weekly DECA roadmap");
+    expect(profilePreview).toContain("Readiness target");
     expect(profilePreview).toContain('href="/timeline"');
     expect(events).toContain("Open Timeline");
   });
