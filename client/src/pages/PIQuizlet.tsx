@@ -10,6 +10,7 @@ import {
   GraduationCap, ListChecks, FlipHorizontal, ClipboardList, Layers, Link2, Map, SkipBack, SkipForward, Search, X
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { clusterForEvent } from "@shared/timelineRequirements";
 
 const PI_PAGE_SIZE = 24;
 
@@ -50,10 +51,20 @@ function getRequestedModuleId() {
   return Number.isInteger(parsedModuleId) && parsedModuleId > 0 ? parsedModuleId : null;
 }
 
+function getRequestedEventCode() {
+  if (typeof window === "undefined") return null;
+  const eventCode = new URLSearchParams(window.location.search).get("event")?.trim().toUpperCase();
+  return eventCode && /^[A-Z0-9]{2,20}$/.test(eventCode) ? eventCode : null;
+}
+
 export default function PIQuizlet() {
   const { user } = useAuth();
   const utils = trpc.useUtils();
-  const [selectedCluster, setSelectedCluster] = useState<(typeof CLUSTERS)[number]>(CLUSTERS[0]);
+  const requestedEventCode = getRequestedEventCode();
+  const [selectedCluster, setSelectedCluster] = useState<(typeof CLUSTERS)[number]>(() => {
+    const eventCluster = requestedEventCode ? EVENT_CLUSTER_TO_PI_CLUSTER[clusterForEvent(requestedEventCode)] : undefined;
+    return eventCluster ?? CLUSTERS[0];
+  });
   const [selectedModuleId, setSelectedModuleId] = useState<number | null>(getRequestedModuleId);
   const [activeTab, setActiveTab] = useState("lesson");
   const [searchQuery, setSearchQuery] = useState("");
@@ -76,8 +87,10 @@ export default function PIQuizlet() {
 
   // ── Data fetching ──────────────────────────────────────────────────────────
   const moduleListInput = useMemo(() => ({ cluster: selectedCluster, search: deferredSearchQuery, offset: moduleOffset, limit: PI_PAGE_SIZE }), [selectedCluster, deferredSearchQuery, moduleOffset]);
-  const modulesQuery = trpc.piLearning.getModulesByCluster.useQuery(moduleListInput, { staleTime: 5 * 60 * 1000 });
-  const modulesLoading = modulesQuery.isLoading;
+  const eventStudyInput = useMemo(() => ({ eventCode: requestedEventCode ?? "", search: deferredSearchQuery, offset: moduleOffset, limit: PI_PAGE_SIZE }), [requestedEventCode, deferredSearchQuery, moduleOffset]);
+  const modulesQuery = trpc.piLearning.getModulesByCluster.useQuery(moduleListInput, { staleTime: 5 * 60 * 1000, enabled: !requestedEventCode });
+  const eventStudyQuery = trpc.piLearning.getEventStudyGuide.useQuery(eventStudyInput, { staleTime: 5 * 60 * 1000, enabled: Boolean(requestedEventCode) });
+  const modulesLoading = requestedEventCode ? eventStudyQuery.isLoading : modulesQuery.isLoading;
 
   useEffect(() => {
     setModuleOffset(0);
@@ -95,12 +108,13 @@ export default function PIQuizlet() {
     { enabled: !!selectedModuleId }
   );
 
-  const activeModuleList = modulesQuery.data?.modules ?? [];
-  const filteredModules = modulesQuery.data?.modules ?? [];
+  const eventModules = eventStudyQuery.data?.instructionalAreas.flatMap((area: any) => area.modules) ?? [];
+  const activeModuleList = requestedEventCode ? eventModules : modulesQuery.data?.modules ?? [];
+  const filteredModules = activeModuleList;
   const isSearching = Boolean(searchQuery.trim());
-  const totalVisibleModules = modulesQuery.data?.totalModules ?? 0;
+  const totalVisibleModules = requestedEventCode ? eventStudyQuery.data?.totalModules ?? 0 : modulesQuery.data?.totalModules ?? 0;
   const currentPageModuleCount = filteredModules.length;
-  const hasMoreModules = Boolean(modulesQuery.data?.hasMore);
+  const hasMoreModules = Boolean(requestedEventCode ? eventStudyQuery.data?.hasMore : modulesQuery.data?.hasMore);
   const showingFrom = totalVisibleModules ? moduleOffset + 1 : 0;
   const showingTo = Math.min(moduleOffset + currentPageModuleCount, totalVisibleModules);
   const currentModuleIndex = selectedModuleId === null ? -1 : activeModuleList.findIndex((module: any) => module.id === selectedModuleId);
@@ -337,7 +351,7 @@ export default function PIQuizlet() {
             </div>
             <h1 className="page-title mb-2">Performance Indicator Study</h1>
             <p className="page-intro">
-              Choose a career cluster, then work through lessons, vocabulary, flashcards, review questions, and scenarios at your own pace. Selected-event performance indicators are available directly in Event Resources.
+              {requestedEventCode ? `Study the performance indicators mapped to ${requestedEventCode}, then work through lessons, vocabulary, flashcards, review questions, and scenarios at your own pace.` : "Choose a career cluster, then work through lessons, vocabulary, flashcards, review questions, and scenarios at your own pace. Selected-event performance indicators are available directly in Event Resources."}
             </p>
             <div className="editorial-panel-muted mt-4 max-w-2xl p-3">
               <label htmlFor="pi-study-search" className="data-label">Search this study path</label>
@@ -352,12 +366,12 @@ export default function PIQuizlet() {
                 />
                 {searchQuery && <button type="button" onClick={() => setSearchQuery("")} className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded text-slate-400 hover:bg-white/5 hover:text-white" aria-label="Clear PI search"><X className="h-4 w-4" /></button>}
               </div>
-              <p className="mt-2 text-xs text-slate-500">Results update as you type within the current career cluster. The library loads 24 indicators at a time for a smoother start.</p>
+              <p className="mt-2 text-xs text-slate-500">{requestedEventCode ? `Results update as you type within ${requestedEventCode}'s mapped performance indicators.` : "Results update as you type within the current career cluster."} The library loads 24 indicators at a time for a smoother start.</p>
             </div>
           </div>
 
           {/* Cluster Tabs */}
-          <div className="mb-8 flex max-w-full gap-1.5 overflow-x-auto border-b border-white/10 pb-3">
+          {!requestedEventCode ? <div className="mb-8 flex max-w-full gap-1.5 overflow-x-auto border-b border-white/10 pb-3">
             {CLUSTERS.map((cluster) => (
               <button
                 key={cluster}
@@ -371,7 +385,7 @@ export default function PIQuizlet() {
                 {cluster}
               </button>
             ))}
-          </div>
+          </div> : <div className="mb-8 rounded-lg border border-blue-400/20 bg-blue-500/[0.06] px-4 py-3 text-sm text-blue-100/85"><span className="font-semibold">Event study path:</span> {requestedEventCode} · {eventStudyQuery.data?.completedModules ?? 0} of {eventStudyQuery.data?.totalModules ?? 0} mapped indicators mastered.</div>}
 
           {/* Modules Grid */}
           {modulesLoading ? (

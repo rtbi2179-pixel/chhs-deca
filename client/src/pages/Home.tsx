@@ -110,6 +110,7 @@ function AuthenticatedOverview({ user }: { user: NonNullable<ReturnType<typeof u
   const bbxPortfolioQuery = trpc.bbx.getPortfolio.useQuery(undefined, { staleTime: 45_000, refetchInterval: 60_000, refetchIntervalInBackground: false, refetchOnWindowFocus: false })
   const unreadNewsQuery = trpc.bbx.getUnreadNewsCount.useQuery(undefined, { staleTime: 90_000, refetchInterval: 120_000, refetchIntervalInBackground: false, refetchOnWindowFocus: false })
   const recentNewsQuery = trpc.bbx.getBluesNews.useQuery({ limit: 1 }, { staleTime: 90_000, refetchInterval: 120_000, refetchIntervalInBackground: false, refetchOnWindowFocus: false })
+  const roadmapQuery = trpc.timeline.getMine.useQuery(undefined, { staleTime: 60_000, refetchOnWindowFocus: false })
 
   const metrics = profileMetricsQuery.data
   const bankAccount = bankAccountQuery.data
@@ -122,7 +123,9 @@ function AuthenticatedOverview({ user }: { user: NonNullable<ReturnType<typeof u
       setEventSearch('')
     },
   })
-  const studyDestination = primaryEvent ? '/pi-quizlet' : '/event-match'
+  const studyDestination = primaryEvent ? `/pi-quizlet?event=${encodeURIComponent(primaryEvent)}` : '/event-match'
+  const roadmap = roadmapQuery.data?.timeline
+  const roadmapNextTask = roadmapQuery.data?.preview?.nextTask
   const firstName = user.name?.trim().split(/\s+/)[0] || user.email?.split('@')[0] || 'Competitor'
   const latestNews = recentNewsQuery.data?.[0]
   const normalizedEventSearch = eventSearch.trim().toLocaleLowerCase()
@@ -185,6 +188,8 @@ function AuthenticatedOverview({ user }: { user: NonNullable<ReturnType<typeof u
             {practiceMetrics.map(({ label, value, detail, icon: Icon, tone, cluster }) => <Link key={label} href="/profile" data-metric-tone={tone} data-overview-cluster={cluster} className="overview-metric-card group rounded-2xl border border-white/10 bg-slate-950/55 p-5 transition-all hover:-translate-y-0.5 hover:border-blue-300/30 hover:bg-slate-900/80 focus:outline-none focus:ring-2 focus:ring-blue-300"><Icon className="overview-metric-icon h-5 w-5 text-blue-300" /><p className="overview-metric-label mt-6 text-[10px] font-mono-data uppercase tracking-[0.14em] text-white/45">{label}</p><p className="overview-metric-value mt-1 font-display text-3xl tracking-tight text-white">{value}</p><p className="overview-metric-detail mt-2 text-xs text-white/45">{detail}</p></Link>)}
           </div>
         </section>
+
+        {primaryEvent && <section aria-labelledby="roadmap-heading" data-overview-cluster="finance" className="overview-support-panel overview-cluster-section mt-5 rounded-2xl border border-blue-300/20 bg-[linear-gradient(135deg,oklch(0.17_0.07_255/0.56),oklch(0.085_0.018_265/0.9))] p-6 sm:p-7"><div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-start"><div><div className="flex items-center gap-2 text-[10px] font-mono-data uppercase tracking-[0.16em] text-blue-200/75"><Compass className="h-3.5 w-3.5" />Your DECA roadmap</div><h2 id="roadmap-heading" className="mt-2 font-display text-3xl tracking-tight">{roadmap ? `READY FOR ${roadmap.eventCode}` : 'SET YOUR START DATE'}</h2><p className="mt-3 max-w-2xl text-sm leading-6 text-white/65">{roadmap ? roadmapNextTask ? `Next: ${roadmapNextTask.title}` : 'Your current roadmap milestones are complete. Review your next competition phase.' : 'Tell Blue Blazer when you began preparing so it can build a saved, deadline-aware path for your selected event.'}</p></div><Link href="/timeline" className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200">{roadmap ? 'Continue roadmap' : 'Build roadmap'} <ArrowRight className="h-4 w-4" /></Link></div>{roadmap ? <div className="mt-6 grid gap-3 border-t border-white/10 pt-5 sm:grid-cols-4"><div><p className="text-[10px] font-mono-data uppercase tracking-[0.14em] text-white/45">Readiness</p><p className="mt-1 text-xl font-semibold text-white">{roadmap.readinessScore}%</p></div><div><p className="text-[10px] font-mono-data uppercase tracking-[0.14em] text-white/45">Days remaining</p><p className="mt-1 text-xl font-semibold text-white">{roadmap.daysRemaining}</p></div><div><p className="text-[10px] font-mono-data uppercase tracking-[0.14em] text-white/45">Task progress</p><p className="mt-1 text-xl font-semibold text-white">{roadmap.progressPercent}%</p></div><div><p className="text-[10px] font-mono-data uppercase tracking-[0.14em] text-white/45">Current phase</p><p className="mt-1 text-sm font-semibold text-white">{roadmap.currentPhase}</p></div></div> : <p className="mt-5 text-xs leading-5 text-blue-100/70">Your event selection is saved. The preparation date is only requested once and stays attached to this event’s roadmap.</p>}</section>}
 
         <div className="mt-8 grid gap-5 xl:grid-cols-[1.2fr_0.8fr]">
           <section aria-labelledby="next-step-heading" data-overview-cluster="hospitality-and-tourism" className="overview-cluster-section rounded-2xl border border-blue-300/20 bg-[linear-gradient(135deg,oklch(0.18_0.08_255/0.55),oklch(0.09_0.02_265/0.85))] p-6 sm:p-7">

@@ -41,7 +41,7 @@ describe("event-linked PI Study Library", () => {
     expect(modules[0]?.performanceIndicator).toBeTruthy();
   });
 
-  it("keeps PI presentation in the PI Library and gives Event Resources a generic library route", () => {
+  it("keeps PI presentation in the PI Library and supports event-aware roadmap study routes", () => {
     const eventsPage = readFileSync(join(process.cwd(), "client/src/pages/Events.tsx"), "utf8");
     const piQuizletPage = readFileSync(join(process.cwd(), "client/src/pages/PIQuizlet.tsx"), "utf8");
 
@@ -67,8 +67,10 @@ describe("event-linked PI Study Library", () => {
     expect(piQuizletPage).toContain("Showing {showingFrom}–{showingTo} of {totalVisibleModules} indicators");
     expect(piQuizletPage).toContain("getRequestedModuleId");
     expect(piQuizletPage).toContain("query.get(\"module\")");
+    expect(piQuizletPage).toContain("getRequestedEventCode");
+    expect(piQuizletPage).toContain("getEventStudyGuide.useQuery");
+    expect(piQuizletPage).toContain("Event study path:");
     expect(piQuizletPage).not.toContain("Study for a specific competitive event");
-    expect(piQuizletPage).not.toContain("getEventStudyGuide.useQuery");
   });
 
   it("keeps Event Resources free of event-specific PI search and modal state", () => {

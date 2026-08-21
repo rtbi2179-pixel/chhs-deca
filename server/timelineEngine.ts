@@ -18,7 +18,8 @@ type CalendarInput = {
 };
 
 type TimelineItemType = "pi_learning" | "practice_questions" | "practice_exam" | "roleplay" | "written_project" | "pitch_deck" | "presentation" | "review" | "mock_competition" | "testing" | "conference" | "meeting" | "deadline" | "general";
-type TimelineTask = { title: string; description: string; dueDate: string; priority: "low" | "normal" | "high" | "critical"; estimatedMinutes: number; deepLink: string; generatedReason: string; itemType: TimelineItemType };
+type TimelineCompletionMetric = "manual" | "pi_mastery" | "practice_questions";
+type TimelineTask = { title: string; description: string; dueDate: string; priority: "low" | "normal" | "high" | "critical"; estimatedMinutes: number; deepLink: string; generatedReason: string; itemType: TimelineItemType; completionMetric?: TimelineCompletionMetric; completionTarget?: number; completionBaseline?: number; successCriteria?: string };
 
 const CURRENT_COMPETITION_YEAR = "2026-2027";
 
@@ -85,7 +86,18 @@ async function getProgressContext(userId: number, schoolCode: string) {
   answerRows.forEach((row) => { const current = areas.get(row.instructionalArea) ?? { correct: 0, total: 0 }; current.total += 1; current.correct += row.isCorrect ? 1 : 0; areas.set(row.instructionalArea, current); });
   const weakArea = Array.from(areas.entries()).filter(([, value]) => value.total >= 3).sort(([, left], [, right]) => (left.correct / left.total) - (right.correct / right.total))[0]?.[0] ?? null;
   const piMastery = piRows.length ? Math.round(piRows.reduce((sum, row) => sum + row.masteryScore, 0) / piRows.length) : 0;
-  return { ...learning, piMastery, weakArea };
+  const masteredPiCount = piRows.filter((row) => row.masteryScore >= 80).length;
+  return { ...learning, piMastery, masteredPiCount, practiceQuestionCount: answerRows.length, weakArea };
+}
+
+function progressValueForMetric(metric: string, progress: Awaited<ReturnType<typeof getProgressContext>>) {
+  if (metric === "pi_mastery") return progress.masteredPiCount;
+  if (metric === "practice_questions") return progress.practiceQuestionCount;
+  return 0;
+}
+
+function readinessFromProgress(progress: Awaited<ReturnType<typeof getProgressContext>>) {
+  return Math.round(Math.min(100, progress.piMastery * 0.35 + progress.accuracyPercent * 0.35 + (progress.studyStreak >= 3 ? 20 : progress.studyStreak * 6) + 10));
 }
 
 function taskDate(target: Date, daysBefore: number, start: Date) {
@@ -104,18 +116,22 @@ function generatedTasks(strategy: TimelineStrategy, eventCode: string, start: Da
   const cluster = clusterForEvent(eventCode);
   const practiceLink = `/practice?cluster=${encodeURIComponent(cluster)}`;
   const piLink = `/pi-quizlet?event=${encodeURIComponent(eventCode)}`;
+  const piTarget = mode === "gradual" ? 4 : 3;
+  const practiceTarget = mode === "gradual" ? 30 : 20;
   const weakReason = progress.weakArea ? `Your practice history identifies ${progress.weakArea} as an area to reinforce.` : "This establishes the event knowledge base needed for the next phase.";
   const common: TimelineTask[] = [
-    { title: "Complete event PI foundation", description: `Study the priority performance indicators for ${eventCode}.`, dueDate: taskDate(target, mode === "gradual" ? 50 : 21, start), priority: "high", estimatedMinutes: 45, deepLink: piLink, generatedReason: weakReason, itemType: "pi_learning" },
-    { title: `Targeted ${cluster} practice`, description: `Complete a focused practice set and review every incorrect answer.`, dueDate: taskDate(target, mode === "gradual" ? 35 : 14, start), priority: "high", estimatedMinutes: 35, deepLink: practiceLink, generatedReason: progress.accuracyPercent < 75 ? `Your recorded accuracy is ${progress.accuracyPercent.toFixed(1)}%, so targeted practice is a high-value next step.` : "Use timed practice to retain event knowledge.", itemType: "practice_questions" },
+    { title: `Master ${piTarget} event PI modules`, description: `Complete priority performance indicators for ${eventCode} and reach the mastery threshold.`, dueDate: taskDate(target, mode === "gradual" ? 50 : 21, start), priority: "high", estimatedMinutes: 45, deepLink: piLink, generatedReason: weakReason, itemType: "pi_learning", completionMetric: "pi_mastery", completionTarget: piTarget, completionBaseline: progress.masteredPiCount, successCriteria: `${piTarget} additional PI modules reach at least 80% mastery.` },
+    { title: `Complete ${practiceTarget} focused ${cluster} questions`, description: `Practice your event cluster, then review every incorrect answer before continuing.`, dueDate: taskDate(target, mode === "gradual" ? 35 : 14, start), priority: "high", estimatedMinutes: 35, deepLink: practiceLink, generatedReason: progress.accuracyPercent < 75 ? `Your recorded accuracy is ${progress.accuracyPercent.toFixed(1)}%, so targeted practice is a high-value next step.` : "Use timed practice to retain event knowledge.", itemType: "practice_questions", completionMetric: "practice_questions", completionTarget: practiceTarget, completionBaseline: progress.practiceQuestionCount, successCriteria: `${practiceTarget} additional answered questions in Blue Blazer.` },
   ];
   const strategyTasks: TimelineTask[] = strategy === "written" ? [
-    { title: "Choose project scope and rubric path", description: "Confirm the project, review the rubric, and define evidence you need to collect.", dueDate: taskDate(target, 42, start), priority: "critical", estimatedMinutes: 50, deepLink: "/events", generatedReason: "Written events require a defined project and rubric plan before drafting.", itemType: "written_project" },
-    { title: "Draft executive summary and market analysis", description: "Create a complete first-pass executive summary and target-market analysis.", dueDate: taskDate(target, 21, start), priority: "critical", estimatedMinutes: 70, deepLink: "/events", generatedReason: "A full draft must exist at least 14 days before the submission deadline.", itemType: "written_project" },
-    { title: "Rubric audit and final formatting", description: "Check evidence, page requirements, formatting, and every scoring criterion.", dueDate: taskDate(target, 3, start), priority: "critical", estimatedMinutes: 45, deepLink: "/events", generatedReason: "Hard deadlines do not move; final quality control belongs immediately before submission.", itemType: "review" },
+    { title: "Choose project scope and rubric path", description: "Confirm the project, review the rubric, and define evidence you need to collect.", dueDate: taskDate(target, 42, start), priority: "critical", estimatedMinutes: 50, deepLink: "/project-workspace", generatedReason: "Written events require a defined project and rubric plan before drafting.", itemType: "written_project", successCriteria: "Project scope, requirements, and research plan documented." },
+    { title: "Complete research and source collection", description: "Collect market, competitor, and supporting evidence before drafting the written submission.", dueDate: taskDate(target, 30, start), priority: "critical", estimatedMinutes: 70, deepLink: "/project-workspace", generatedReason: "Evidence collection needs to finish before the first full written draft can be built.", itemType: "written_project", successCriteria: "Required research evidence and sources gathered." },
+    { title: "Draft executive summary and market analysis", description: "Create a complete first-pass executive summary and target-market analysis.", dueDate: taskDate(target, 21, start), priority: "critical", estimatedMinutes: 70, deepLink: "/project-workspace", generatedReason: "A full draft must exist at least 14 days before the submission deadline.", itemType: "written_project", successCriteria: "Executive summary and market analysis have a complete first draft." },
+    { title: "Complete financial or implementation plan", description: "Document the calculations, resources, implementation steps, and evaluation method required for your project.", dueDate: taskDate(target, 12, start), priority: "critical", estimatedMinutes: 60, deepLink: "/project-workspace", generatedReason: "A written plan is only competition-ready once recommendations are supported by an executable plan.", itemType: "written_project", successCriteria: "Required financials or implementation plan is complete." },
+    { title: "Rubric audit and final formatting", description: "Check evidence, page requirements, formatting, and every scoring criterion.", dueDate: taskDate(target, 3, start), priority: "critical", estimatedMinutes: 45, deepLink: "/project-workspace", generatedReason: "Hard deadlines do not move; final quality control belongs immediately before submission.", itemType: "review", successCriteria: "Every rubric item, format requirement, and submission file is verified." },
   ] : strategy === "pitch" ? [
-    { title: "Define the problem, solution, and target customer", description: "Write the story that anchors your pitch deck and validate each assumption.", dueDate: taskDate(target, 42, start), priority: "critical", estimatedMinutes: 50, deepLink: "/events", generatedReason: "Pitch events need a clear problem-solution story before slides are built.", itemType: "pitch_deck" },
-    { title: "Build the first pitch deck", description: "Create a complete deck with market, model, financial, and implementation slides.", dueDate: taskDate(target, 21, start), priority: "critical", estimatedMinutes: 75, deepLink: "/events", generatedReason: "A complete first deck is required early enough to practice and improve visual storytelling.", itemType: "pitch_deck" },
+    { title: "Define the problem, solution, and target customer", description: "Write the story that anchors your pitch deck and validate each assumption.", dueDate: taskDate(target, 42, start), priority: "critical", estimatedMinutes: 50, deepLink: "/project-workspace", generatedReason: "Pitch events need a clear problem-solution story before slides are built.", itemType: "pitch_deck", successCriteria: "Problem, solution, and target customer are clearly defined." },
+    { title: "Build the first pitch deck", description: "Create a complete deck with market, model, financial, and implementation slides.", dueDate: taskDate(target, 21, start), priority: "critical", estimatedMinutes: 75, deepLink: "/project-workspace", generatedReason: "A complete first deck is required early enough to practice and improve visual storytelling.", itemType: "pitch_deck", successCriteria: "Pitch deck includes the required story, market, model, and financial slides." },
     { title: "Practice the timed pitch and judge questions", description: "Run a timed presentation and rehearse concise answers to likely judge questions.", dueDate: taskDate(target, 7, start), priority: "high", estimatedMinutes: 40, deepLink: "/ai/roleplay", generatedReason: "A pitch deck only succeeds when the live delivery is practiced under timing.", itemType: "presentation" },
   ] : strategy === "prepared" ? [
     { title: "Build your presentation structure", description: "Organize the opening, business recommendation, objection handling, and close.", dueDate: taskDate(target, 35, start), priority: "high", estimatedMinutes: 45, deepLink: "/ai/roleplay", generatedReason: "Prepared presentations require a repeatable structure before timing practice.", itemType: "presentation" },
@@ -131,24 +147,30 @@ function generatedTasks(strategy: TimelineStrategy, eventCode: string, start: Da
   return { tasks: [...common, ...strategyTasks, ...mockTask], targetDate: isoDate(target), mode, daysRemaining, cluster };
 }
 
-export async function getOrGenerateTimeline(user: TimelineUser) {
+export async function getOrGenerateTimeline(user: TimelineUser, requestedStartDate?: string) {
   const database = await db.getDb();
   const schoolCode = effectiveSchoolCode(user);
   if (!database || !schoolCode) throw new Error("A school code is required to build a competition timeline.");
   const [account] = await database.select({ primaryEventCode: users.primaryEventCode, eventSelectedAt: users.eventSelectedAt }).from(users).where(eq(users.id, user.id)).limit(1);
-  if (!account?.primaryEventCode) return { timeline: null, calendar: await ensureTimelineCalendar(schoolCode), preview: null };
+  if (!account?.primaryEventCode) return { timeline: null, calendar: await ensureTimelineCalendar(schoolCode), preview: null, requiresStartDate: false };
   const calendar = await ensureTimelineCalendar(schoolCode);
   const eventCode = account.primaryEventCode;
   const strategy = getTimelineStrategy(eventCode);
-  const start = account.eventSelectedAt ?? new Date();
   const latestCalendarEdit = calendar.reduce<Date | null>((latest, event) => !latest || event.updatedAt > latest ? event.updatedAt : latest, null);
   let [timeline] = await database.select().from(userEventTimelines).where(and(eq(userEventTimelines.userId, user.id), eq(userEventTimelines.eventCode, eventCode), eq(userEventTimelines.status, "active"))).orderBy(desc(userEventTimelines.updatedAt)).limit(1);
-  const stale = Boolean(timeline && latestCalendarEdit && timeline.updatedAt < latestCalendarEdit);
+  if (!timeline && !requestedStartDate) return { timeline: null, calendar, preview: null, requiresStartDate: true, eventCode };
+  const requestedStart = requestedStartDate ? parseDate(requestedStartDate) : null;
+  if (requestedStartDate && (!requestedStart || requestedStart > addDays(new Date(), 1))) throw new Error("Choose today or an earlier preparation start date.");
+  const start = timeline ? parseDate(timeline.startDate)! : requestedStart ?? account.eventSelectedAt ?? new Date();
+  const [measuredTask] = timeline ? await database.select({ id: timelineItems.id }).from(timelineItems)
+    .where(and(eq(timelineItems.timelineId, timeline.id), ne(timelineItems.completionMetric, "manual")))
+    .limit(1) : [];
+  const stale = Boolean(timeline && ((latestCalendarEdit && timeline.updatedAt < latestCalendarEdit) || !measuredTask));
   if (!timeline || stale) {
     if (timeline) await database.delete(timelineItems).where(and(eq(timelineItems.timelineId, timeline.id), ne(timelineItems.status, "completed")));
     const progress = await getProgressContext(user.id, schoolCode);
     const generation = generatedTasks(strategy, eventCode, start, calendar, progress);
-    const readinessScore = Math.round(Math.min(100, progress.piMastery * 0.35 + progress.accuracyPercent * 0.35 + (progress.studyStreak >= 3 ? 20 : progress.studyStreak * 6) + 10));
+    const readinessScore = readinessFromProgress(progress);
     if (!timeline) {
       const created = await database.insert(userEventTimelines).values({ userId: user.id, eventCode, schoolCode, competitionYear: CURRENT_COMPETITION_YEAR, startDate: isoDate(start), targetDate: generation.targetDate, timelineMode: generation.mode, status: "active", readinessScore, currentPhase: strategyLabel(strategy) });
       const timelineId = Number(created[0].insertId);
@@ -157,17 +179,30 @@ export async function getOrGenerateTimeline(user: TimelineUser) {
       await database.update(userEventTimelines).set({ targetDate: generation.targetDate, timelineMode: generation.mode, readinessScore, currentPhase: strategyLabel(strategy), updatedAt: new Date() }).where(eq(userEventTimelines.id, timeline.id));
       timeline = (await database.select().from(userEventTimelines).where(eq(userEventTimelines.id, timeline.id)).limit(1))[0];
     }
-    await database.insert(timelineItems).values(generation.tasks.map((task, index) => ({ timelineId: timeline!.id, title: task.title, description: task.description, itemType: task.itemType, dueDate: task.dueDate, priority: task.priority, status: "upcoming" as const, estimatedMinutes: task.estimatedMinutes, deepLink: task.deepLink, hardDeadline: false, generatedReason: task.generatedReason, sortOrder: index })));
+    await database.insert(timelineItems).values(generation.tasks.map((task, index) => ({ timelineId: timeline!.id, title: task.title, description: task.description, itemType: task.itemType, dueDate: task.dueDate, priority: task.priority, status: "upcoming" as const, estimatedMinutes: task.estimatedMinutes, deepLink: task.deepLink, completionMetric: task.completionMetric ?? "manual", completionTarget: task.completionTarget ?? 0, completionBaseline: task.completionBaseline ?? 0, successCriteria: task.successCriteria ?? null, hardDeadline: false, generatedReason: task.generatedReason, sortOrder: index })));
   }
-  const [items, progress] = await Promise.all([
+  let [items, progress] = await Promise.all([
     database.select().from(timelineItems).where(eq(timelineItems.timelineId, timeline.id)).orderBy(asc(timelineItems.dueDate), asc(timelineItems.sortOrder)),
     getProgressContext(user.id, schoolCode),
   ]);
-  const completed = items.filter((item) => item.status === "completed").length;
-  const readiness = timeline.readinessScore;
+  const automaticallyCompleted = items.filter((item) => item.status !== "completed" && item.completionMetric !== "manual" && item.completionTarget > 0 && Math.max(0, progressValueForMetric(item.completionMetric, progress) - item.completionBaseline) >= item.completionTarget);
+  if (automaticallyCompleted.length) {
+    await Promise.all(automaticallyCompleted.map((item) => database.update(timelineItems).set({ status: "completed", completedAt: new Date(), updatedAt: new Date() }).where(eq(timelineItems.id, item.id))));
+    items = await database.select().from(timelineItems).where(eq(timelineItems.timelineId, timeline.id)).orderBy(asc(timelineItems.dueDate), asc(timelineItems.sortOrder));
+  }
+  const readiness = readinessFromProgress(progress);
+  if (timeline.readinessScore !== readiness) {
+    await database.update(userEventTimelines).set({ readinessScore: readiness, updatedAt: new Date() }).where(eq(userEventTimelines.id, timeline.id));
+    timeline = { ...timeline, readinessScore: readiness };
+  }
+  const enrichedItems = items.map((item) => {
+    const completedValue = item.completionMetric === "manual" ? 0 : Math.max(0, progressValueForMetric(item.completionMetric, progress) - item.completionBaseline);
+    return { ...item, completedValue, completionPercent: item.completionTarget > 0 ? Math.min(100, Math.round((completedValue / item.completionTarget) * 100)) : null };
+  });
+  const completed = enrichedItems.filter((item) => item.status === "completed").length;
   const now = new Date();
-  const nextTask = items.find((item) => item.status !== "completed" && (!item.dueDate || parseDate(item.dueDate)! >= now)) ?? items.find((item) => item.status !== "completed") ?? null;
-  return { timeline: { ...timeline, strategy, strategyLabel: strategyLabel(strategy), daysRemaining: daysBetween(now, parseDate(timeline.targetDate) ?? now), progressPercent: items.length ? Math.round((completed / items.length) * 100) : 0, readinessScore: readiness, progressContext: progress, nextTask }, items, calendar, preview: { eventCode, currentPhase: timeline.currentPhase, readinessScore: readiness, nextTask, daysRemaining: daysBetween(now, parseDate(timeline.targetDate) ?? now) } };
+  const nextTask = enrichedItems.find((item) => item.status !== "completed" && (!item.dueDate || parseDate(item.dueDate)! >= now)) ?? enrichedItems.find((item) => item.status !== "completed") ?? null;
+  return { timeline: { ...timeline, strategy, strategyLabel: strategyLabel(strategy), daysRemaining: daysBetween(now, parseDate(timeline.targetDate) ?? now), progressPercent: enrichedItems.length ? Math.round((completed / enrichedItems.length) * 100) : 0, readinessScore: readiness, progressContext: progress, nextTask }, items: enrichedItems, calendar, preview: { eventCode, currentPhase: timeline.currentPhase, readinessScore: readiness, nextTask, daysRemaining: daysBetween(now, parseDate(timeline.targetDate) ?? now) } };
 }
 
 export async function updateTimelineItem(user: TimelineUser, itemId: number, status?: "upcoming" | "current" | "completed" | "skipped" | "rescheduled", dueDate?: string) {

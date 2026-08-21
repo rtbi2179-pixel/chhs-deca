@@ -24,6 +24,7 @@ describe("authenticated Overview dashboard", () => {
       "trpc.bbx.getPortfolio.useQuery",
       "trpc.bbx.getUnreadNewsCount.useQuery",
       "trpc.bbx.getBluesNews.useQuery",
+      "trpc.timeline.getMine.useQuery",
     ]) expect(source).toContain(query);
 
     expect(source).toContain("formatCurrency(bankAccount?.checkingBalance)");
@@ -35,7 +36,7 @@ describe("authenticated Overview dashboard", () => {
     const source = homeSource();
 
     for (const destination of [
-      "const studyDestination = primaryEvent ? '/pi-quizlet' : '/event-match'",
+      "const studyDestination = primaryEvent ? `/pi-quizlet?event=${encodeURIComponent(primaryEvent)}` : '/event-match'",
       'href="/practice"',
       'href="/mock-exams"',
       'href="/banking"',
@@ -44,6 +45,7 @@ describe("authenticated Overview dashboard", () => {
       'href="/calendar"',
       'href="/announcements"',
       'href="/discussions"',
+      'href="/timeline"',
     ]) expect(source).toContain(destination);
   });
 

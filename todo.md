@@ -8825,3 +8825,4 @@
 - [x] Fix discussion thread and reply posting, including immediate sender-visible updates without reload
 - [x] Fix volunteer opportunity remaining-spots displays and add administrator-configured volunteer hours
 - [x] Make the Admin Mode lighting more subtle while preserving a clear active-state cue
+- [x] Expand the personalized DECA timeline into a measurable, deadline-driven roadmap with Blue Blazer action links and adaptive progress

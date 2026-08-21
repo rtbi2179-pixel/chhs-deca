@@ -8,6 +8,7 @@ const calendarEventInput = z.object({
 
 export const timelineRouter = router({
   getMine: protectedProcedure.query(({ ctx }) => getOrGenerateTimeline(ctx.user)),
+  start: protectedProcedure.input(z.object({ startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/) })).mutation(({ ctx, input }) => getOrGenerateTimeline(ctx.user, input.startDate)),
   updateItem: protectedProcedure.input(z.object({ itemId: z.number(), status: z.enum(["upcoming", "current", "completed", "skipped", "rescheduled"]).optional(), dueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional() })).mutation(({ ctx, input }) => updateTimelineItem(ctx.user, input.itemId, input.status, input.dueDate)),
   getCalendar: protectedProcedure.query(({ ctx }) => listTimelineCalendar(ctx.user)),
   saveCalendarEvent: protectedProcedure.input(calendarEventInput).mutation(({ ctx, input }) => saveTimelineCalendarEvent(ctx.user, input)),
