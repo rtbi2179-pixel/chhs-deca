@@ -2075,11 +2075,11 @@ export const appRouter = router({
   discussions: router({
     getThreads: publicProcedure
       .input(z.object({ category: z.string().optional(), discussionType: z.enum(["universal", "chapter"]).optional() }).optional())
-      .query(({ input, ctx }) => db.getDiscussionThreads(input?.category, input?.discussionType, ctx.user?.schoolCode || undefined)),
+      .query(({ input, ctx }) => db.getDiscussionThreads(input?.category, input?.discussionType, ctx.user?.selectedSchoolCode || ctx.user?.schoolCode || undefined)),
 
     createThread: protectedProcedure
       .input(z.object({ title: z.string(), content: z.string(), category: z.string().default("general"), discussionType: z.enum(["universal", "chapter"]).default("universal") }))
-      .mutation(({ input, ctx }) => db.createDiscussionThread(ctx.user.id, input.title, input.content, input.category, input.discussionType, ctx.user.schoolCode || undefined)),
+      .mutation(({ input, ctx }) => db.createDiscussionThread(ctx.user.id, input.title.trim(), input.content.trim(), input.category, input.discussionType, ctx.user.selectedSchoolCode || ctx.user.schoolCode || undefined)),
 
     getReplies: publicProcedure
       .input(z.object({ threadId: z.number() }))
@@ -2087,7 +2087,7 @@ export const appRouter = router({
 
     createReply: protectedProcedure
       .input(z.object({ threadId: z.number(), content: z.string() }))
-      .mutation(({ input, ctx }) => db.createDiscussionReply(ctx.user.id, input.threadId, input.content)),
+      .mutation(({ input, ctx }) => db.createDiscussionReply(input.threadId, ctx.user.id, input.content.trim(), ctx.user.selectedSchoolCode || ctx.user.schoolCode || undefined)),
 
     deleteThread: protectedProcedure
       .input(z.object({ threadId: z.number() }))

@@ -32,6 +32,7 @@ export default function Discussions() {
   const [newThreadTitle, setNewThreadTitle] = useState('')
   const [newThreadContent, setNewThreadContent] = useState('')
   const [newReplyContent, setNewReplyContent] = useState('')
+  const utils = trpc.useUtils()
 
   // Fetch threads
   const { data: threads = [] } = trpc.discussions.getThreads.useQuery({
@@ -62,18 +63,23 @@ export default function Discussions() {
     }
 
     try {
-      await createThreadMutation.mutateAsync({
+      const created = await createThreadMutation.mutateAsync({
         title: newThreadTitle,
         content: newThreadContent,
         category: selectedCategory,
         discussionType: newDiscussionType,
       })
+      const createdInput = { category: selectedCategory, discussionType: newDiscussionType }
+      utils.discussions.getThreads.setData(createdInput, (current = []) => [created, ...current.filter((entry) => entry.thread.id !== created.thread.id)])
+      setDiscussionType(newDiscussionType)
+      setSelectedThreadId(created.thread.id)
       setNewThreadTitle('')
       setNewThreadContent('')
       setShowNewThread(false)
+      await utils.discussions.getThreads.invalidate(createdInput)
       toast.success('Thread created successfully!')
     } catch (error) {
-      toast.error('Failed to create thread')
+      toast.error(error instanceof Error ? error.message : 'Failed to create thread')
     }
   }
 
@@ -91,14 +97,16 @@ export default function Discussions() {
     }
 
     try {
-      await createReplyMutation.mutateAsync({
+      const created = await createReplyMutation.mutateAsync({
         threadId: selectedThreadId,
         content: newReplyContent,
       })
+      utils.discussions.getReplies.setData({ threadId: selectedThreadId }, (current = []) => [...current, created])
       setNewReplyContent('')
+      await utils.discussions.getReplies.invalidate({ threadId: selectedThreadId })
       toast.success('Reply posted!')
     } catch (error) {
-      toast.error('Failed to post reply')
+      toast.error(error instanceof Error ? error.message : 'Failed to post reply')
     }
   }
 
@@ -114,6 +122,7 @@ export default function Discussions() {
     try {
       await deleteThreadMutation.mutateAsync({ threadId })
       setSelectedThreadId(null)
+      await utils.discussions.getThreads.invalidate({ category: selectedCategory, discussionType })
       toast.success('Thread deleted')
     } catch (error) {
       toast.error('Failed to delete thread')
@@ -126,6 +135,7 @@ export default function Discussions() {
     
     try {
       await deleteReplyMutation.mutateAsync({ replyId })
+      if (selectedThreadId) await utils.discussions.getReplies.invalidate({ threadId: selectedThreadId })
       toast.success('Reply deleted')
     } catch (error) {
       toast.error('Failed to delete reply')

@@ -156,7 +156,7 @@ export async function createDiscussionThread(userId: number, title: string, cont
   const filteredContent = filterContent(content);
   const filteredTitle = filterContent(title);
   
-  const result = await db.insert(discussionThreads).values({
+  const [result] = await db.insert(discussionThreads).values({
     userId,
     title: filteredTitle,
     content: filteredContent,
@@ -164,7 +164,11 @@ export async function createDiscussionThread(userId: number, title: string, cont
     discussionType: discussionType as "universal" | "chapter",
     schoolCode: discussionType === "chapter" ? schoolCode : null,
   });
-  return result;
+  const [created] = await db.select({ thread: discussionThreads, author: users }).from(discussionThreads)
+    .innerJoin(users, eq(discussionThreads.userId, users.id))
+    .where(eq(discussionThreads.id, Number(result.insertId))).limit(1);
+  if (!created) throw new Error("The discussion thread could not be retrieved after posting.");
+  return created;
 }
 
 export async function getDiscussionThreads(category?: string, discussionType?: string, userSchoolCode?: string) {
@@ -183,7 +187,8 @@ export async function getDiscussionThreads(category?: string, discussionType?: s
   }
   if (discussionType === "universal") {
     conditions.push(eq(discussionThreads.discussionType, "universal"));
-  } else if (discussionType === "chapter" && userSchoolCode) {
+  } else if (discussionType === "chapter") {
+    if (!userSchoolCode) return [];
     conditions.push(eq(discussionThreads.discussionType, "chapter"));
     conditions.push(eq(discussionThreads.schoolCode, userSchoolCode));
   }
@@ -195,20 +200,31 @@ export async function getDiscussionThreads(category?: string, discussionType?: s
   return query;
 }
 
-export async function createDiscussionReply(threadId: number, userId: number, content: string) {
+export async function createDiscussionReply(threadId: number, userId: number, content: string, userSchoolCode?: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
   // Import and apply content filter
   const { filterContent } = await import("./_core/contentFilter");
   const filteredContent = filterContent(content);
+
+  const [thread] = await db.select({ id: discussionThreads.id, discussionType: discussionThreads.discussionType, schoolCode: discussionThreads.schoolCode })
+    .from(discussionThreads).where(eq(discussionThreads.id, threadId)).limit(1);
+  if (!thread) throw new Error("That discussion thread is no longer available.");
+  if (thread.discussionType === "chapter" && (!userSchoolCode || thread.schoolCode !== userSchoolCode)) {
+    throw new Error("You can only reply to discussions in your chapter.");
+  }
   
-  const result = await db.insert(discussionReplies).values({
+  const [result] = await db.insert(discussionReplies).values({
     threadId,
     userId,
     content: filteredContent,
   });
-  return result;
+  const [created] = await db.select({ reply: discussionReplies, author: users }).from(discussionReplies)
+    .innerJoin(users, eq(discussionReplies.userId, users.id))
+    .where(eq(discussionReplies.id, Number(result.insertId))).limit(1);
+  if (!created) throw new Error("The reply could not be retrieved after posting.");
+  return created;
 }
 
 export async function getDiscussionReplies(threadId: number) {
