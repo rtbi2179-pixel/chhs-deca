@@ -32,7 +32,10 @@ describe("client performance optimizations", () => {
 
     expect(piLibrary).toContain('activeTab === "lesson"');
     expect(piLibrary).toContain('activeTab === "flashcards"');
-    expect(piLibrary).toContain('activeTab === "teach-back"');
+    expect(piLibrary).toContain('activeTab === "quiz"');
+    expect(piLibrary).toContain('activeTab === "scenarios"');
+    expect(piLibrary).not.toContain('activeTab === "teach-back"');
+    expect(piLibrary).not.toContain('activeTab === "vocabulary"');
     expect(piLibrary).toContain("const isQuizActivity");
   });
 

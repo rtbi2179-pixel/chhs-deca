@@ -13,6 +13,8 @@ interface PIModuleViewerProps {
   moduleId: number;
 }
 
+const RETAINED_SECTION_TYPES = new Set(["theory", "flashcards", "quiz", "scenario_challenge"]);
+
 export default function PIModuleViewer({ moduleId }: PIModuleViewerProps) {
   const [selectedSectionId, setSelectedSectionId] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState("content");
@@ -48,18 +50,15 @@ export default function PIModuleViewer({ moduleId }: PIModuleViewerProps) {
     );
   }
 
-  const sections = module.sections || [];
+  const sections = (module.sections || []).filter((section) => RETAINED_SECTION_TYPES.has(section.sectionType));
   const currentSection = sections.find((s) => s.id === selectedSectionId);
 
   const getSectionIcon = (type: string) => {
     const icons: Record<string, string> = {
       theory: "📚",
-      vocabulary: "📝",
-      examples: "💡",
       flashcards: "🎴",
       quiz: "❓",
       scenario_challenge: "🎯",
-      ai_coach_feedback: "🤖",
     };
     return icons[type] || "📌";
   };
@@ -152,10 +151,10 @@ export default function PIModuleViewer({ moduleId }: PIModuleViewerProps) {
                     <CardDescription>{currentSection.sectionType.replace(/_/g, " ")}</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    {currentSection.content ? (
+                    {sectionContent?.content ? (
                       <div className="prose dark:prose-invert max-w-none">
                         <p className="text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
-                          {currentSection.content}
+                          {sectionContent.content}
                         </p>
                       </div>
                     ) : (

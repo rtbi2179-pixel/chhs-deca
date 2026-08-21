@@ -2,7 +2,6 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { and, asc, count, desc, eq, gte, inArray, like, lte, or } from "drizzle-orm";
 import { protectedProcedure, router } from "./_core/trpc";
-import { invokeLLM } from "./_core/llm";
 import * as db from "./db";
 import {
   piFlashcards,
@@ -25,15 +24,23 @@ export const PI_CLUSTERS = [
   "Personal Financial Literacy",
 ] as const;
 
+const RETAINED_SECTION_TYPES = ["theory", "flashcards", "quiz", "scenario_challenge"] as const;
+
 const sectionWeights: Record<string, number> = {
-  theory: 10,
-  vocabulary: 10,
-  flashcards: 20,
-  quiz: 25,
+  theory: 15,
+  flashcards: 25,
+  quiz: 40,
   scenario_challenge: 20,
-  examples: 0,
-  ai_coach_feedback: 15,
 };
+
+export function conciseMainIdeas(content: string) {
+  return content
+    .split(/\r?\n\s*\r?\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("\n\n");
+}
 
 function moduleSearchCondition(search: string) {
   const normalized = search.trim();
@@ -230,7 +237,7 @@ export const piLearningRouter = router({
       const sections = await database
         .select()
         .from(piModuleSections)
-        .where(eq(piModuleSections.moduleId, module.id))
+        .where(and(eq(piModuleSections.moduleId, module.id), inArray(piModuleSections.sectionType, RETAINED_SECTION_TYPES)))
         .orderBy(asc(piModuleSections.order));
       return { ...module, sections };
     }),
@@ -245,6 +252,9 @@ export const piLearningRouter = router({
         .where(eq(piModuleSections.id, input.sectionId))
         .limit(1);
       if (!section) throw new TRPCError({ code: "NOT_FOUND", message: "PI section not found." });
+      if (!RETAINED_SECTION_TYPES.includes(section.sectionType as (typeof RETAINED_SECTION_TYPES)[number])) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "This PI activity is no longer available." });
+      }
 
       const [flashcards, quizQuestions, scenarios] = await Promise.all([
         section.sectionType === "flashcards"
@@ -258,7 +268,8 @@ export const piLearningRouter = router({
           : Promise.resolve([]),
       ]);
 
-      return { ...section, content: section.content ?? "", flashcards, quizQuestions, scenarios };
+      const rawContent = section.content ?? "";
+      return { ...section, content: section.sectionType === "theory" ? conciseMainIdeas(rawContent) : rawContent, flashcards, quizQuestions, scenarios };
     }),
 
   getUserModuleProgress: protectedProcedure
@@ -335,11 +346,14 @@ export const piLearningRouter = router({
     .mutation(async ({ ctx, input }) => {
       const database = await requireDatabase();
       const [section] = await database
-        .select({ moduleId: piModuleSections.moduleId })
+        .select({ moduleId: piModuleSections.moduleId, sectionType: piModuleSections.sectionType })
         .from(piModuleSections)
         .where(eq(piModuleSections.id, input.sectionId))
         .limit(1);
       if (!section) throw new TRPCError({ code: "NOT_FOUND", message: "PI section not found." });
+      if (!RETAINED_SECTION_TYPES.includes(section.sectionType as (typeof RETAINED_SECTION_TYPES)[number])) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "This PI activity is no longer available." });
+      }
       const now = new Date();
       await database
         .insert(userPiSectionProgress)
@@ -358,34 +372,6 @@ export const piLearningRouter = router({
         .values({ userId: ctx.user.id, moduleId: input.moduleId, masteryScore: input.masteryScore, reviewStatus: reviewStatusFor(input.masteryScore), lastReviewedAt: now, nextReviewAt: nextReviewFor(input.masteryScore) })
         .onDuplicateKeyUpdate({ set: { masteryScore: input.masteryScore, reviewStatus: reviewStatusFor(input.masteryScore), lastReviewedAt: now, nextReviewAt: nextReviewFor(input.masteryScore), updatedAt: now } });
       return { success: true };
-    }),
-
-  submitTeachBack: protectedProcedure
-    .input(z.object({ moduleId: z.number().int().positive(), response: z.string().trim().min(20).max(5000) }))
-    .mutation(async ({ input }) => {
-      const database = await requireDatabase();
-      const [module] = await database.select().from(piLearningModules).where(eq(piLearningModules.id, input.moduleId)).limit(1);
-      if (!module) throw new TRPCError({ code: "NOT_FOUND", message: "PI module not found." });
-      try {
-        const response = await invokeLLM({
-          messages: [
-            {
-              role: "system",
-              content: "You are an expert DECA business educator. Give concise, constructive feedback in 2-3 sentences. Identify a strength, one precise improvement, and one concrete business or competition application. Do not invent facts outside the student's response.",
-            },
-            {
-              role: "user",
-              content: `Performance Indicator: ${module.performanceIndicator}\nInstructional area: ${module.instructionalArea}\n\nStudent teach-back:\n${input.response}`,
-            },
-          ],
-        });
-        const feedback = response.choices[0]?.message?.content;
-        if (!feedback) throw new Error("The AI provider returned no feedback.");
-        return { feedback: typeof feedback === "string" ? feedback : JSON.stringify(feedback) };
-      } catch (error) {
-        console.error("PI teach-back feedback failed", error);
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "AI feedback could not be generated. Please try again." });
-      }
     }),
 
   createModule: protectedProcedure

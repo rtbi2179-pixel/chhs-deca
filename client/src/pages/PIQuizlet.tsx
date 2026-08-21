@@ -5,9 +5,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import {
-  ChevronLeft, ChevronRight, BookOpen, Loader2, RotateCw, Send, CheckCircle, XCircle,
-  Brain, Lightbulb, Zap, Target, MessageSquare, Award, ArrowRight, AlertCircle,
-  GraduationCap, ListChecks, FlipHorizontal, ClipboardList, Layers, Link2, Map, SkipBack, SkipForward, Search, X
+  ChevronLeft, ChevronRight, BookOpen, Loader2, RotateCw, CheckCircle, XCircle,
+  Brain, Lightbulb, Target, Award, ArrowRight, AlertCircle,
+  FlipHorizontal, ClipboardList, Layers, Map, SkipBack, SkipForward, Search, X
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { clusterForEvent } from "@shared/timelineRequirements";
@@ -25,14 +25,10 @@ const CLUSTERS = [
 ] as const;
 
 const TABS = [
-  { id: "lesson",       label: "Lesson",        icon: BookOpen,      color: "blue" },
-  { id: "vocabulary",   label: "Vocabulary",    icon: Zap,           color: "emerald" },
-  { id: "flashcards",   label: "Flashcards",    icon: FlipHorizontal,color: "purple" },
-  { id: "quick-review", label: "Quick Review",  icon: ListChecks,    color: "amber" },
-  { id: "quiz",         label: "Quiz",          icon: ClipboardList, color: "red" },
-  { id: "scenarios",    label: "Scenarios",     icon: Layers,        color: "cyan" },
-  { id: "related",      label: "Related",       icon: Link2,         color: "green" },
-  { id: "teach-back",   label: "Teach-Back",    icon: GraduationCap, color: "orange" },
+  { id: "lesson",     label: "Main ideas", icon: BookOpen,       color: "blue" },
+  { id: "flashcards", label: "Flashcards", icon: FlipHorizontal, color: "purple" },
+  { id: "quiz",       label: "Quiz",       icon: ClipboardList,  color: "red" },
+  { id: "scenarios",  label: "Scenarios",  icon: Layers,          color: "cyan" },
 ];
 
 const EVENT_CLUSTER_TO_PI_CLUSTER: Record<string, (typeof CLUSTERS)[number]> = {
@@ -80,11 +76,6 @@ export default function PIQuizlet() {
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [showQuizResults, setShowQuizResults] = useState(false);
 
-  // Teach-back state
-  const [teachBackText, setTeachBackText] = useState("");
-  const [teachBackFeedback, setTeachBackFeedback] = useState("");
-  const [loadingFeedback, setLoadingFeedback] = useState(false);
-
   // ── Data fetching ──────────────────────────────────────────────────────────
   const moduleListInput = useMemo(() => ({ cluster: selectedCluster, search: deferredSearchQuery, offset: moduleOffset, limit: PI_PAGE_SIZE }), [selectedCluster, deferredSearchQuery, moduleOffset]);
   const eventStudyInput = useMemo(() => ({ eventCode: requestedEventCode ?? "", search: deferredSearchQuery, offset: moduleOffset, limit: PI_PAGE_SIZE }), [requestedEventCode, deferredSearchQuery, moduleOffset]);
@@ -101,7 +92,6 @@ export default function PIQuizlet() {
     { enabled: !!selectedModuleId }
   );
 
-  const submitTeachBackMutation = trpc.piLearning.submitTeachBack.useMutation();
   const updateSectionProgressMutation = trpc.piLearning.updateSectionProgress.useMutation();
   const { data: moduleProgress } = trpc.piLearning.getUserModuleProgress.useQuery(
     { moduleId: selectedModuleId! },
@@ -126,22 +116,16 @@ export default function PIQuizlet() {
     moduleWithSections?.sections?.find((s: any) => s.sectionType === type);
 
   const theorySection       = getSectionByType("theory");
-  const vocabSection        = getSectionByType("vocabulary");
   const flashcardSection    = getSectionByType("flashcards");
   const quizSection         = getSectionByType("quiz");
   const scenarioSection     = getSectionByType("scenario_challenge");
-  const relatedSection      = getSectionByType("examples");       // stored as 'examples'
-  const teachBackSection    = getSectionByType("ai_coach_feedback");
 
   const queryOptions = { staleTime: 5 * 60 * 1000, refetchOnWindowFocus: false };
-  const isQuizActivity = activeTab === "quick-review" || activeTab === "quiz" || activeTab === "quiz-results";
+  const isQuizActivity = activeTab === "quiz" || activeTab === "quiz-results";
   const { data: theoryContent }   = trpc.piLearning.getSectionContent.useQuery({ sectionId: theorySection?.id! },    { ...queryOptions, enabled: !!theorySection?.id && activeTab === "lesson" });
-  const { data: vocabContent }    = trpc.piLearning.getSectionContent.useQuery({ sectionId: vocabSection?.id! },     { ...queryOptions, enabled: !!vocabSection?.id && activeTab === "vocabulary" });
   const { data: flashcardContent }= trpc.piLearning.getSectionContent.useQuery({ sectionId: flashcardSection?.id! }, { ...queryOptions, enabled: !!flashcardSection?.id && activeTab === "flashcards" });
   const { data: quizContent }     = trpc.piLearning.getSectionContent.useQuery({ sectionId: quizSection?.id! },      { ...queryOptions, enabled: !!quizSection?.id && isQuizActivity });
   const { data: scenarioContent } = trpc.piLearning.getSectionContent.useQuery({ sectionId: scenarioSection?.id! },  { ...queryOptions, enabled: !!scenarioSection?.id && activeTab === "scenarios" });
-  const { data: relatedContent }  = trpc.piLearning.getSectionContent.useQuery({ sectionId: relatedSection?.id! },   { ...queryOptions, enabled: !!relatedSection?.id && activeTab === "related" });
-  const { data: teachBackContent }= trpc.piLearning.getSectionContent.useQuery({ sectionId: teachBackSection?.id! }, { ...queryOptions, enabled: !!teachBackSection?.id && activeTab === "teach-back" });
 
   // ── Helpers ────────────────────────────────────────────────────────────────
   const parseOptions = (opts: any): string[] => {
@@ -154,63 +138,7 @@ export default function PIQuizlet() {
     return [];
   };
 
-  const parseVocab = (content: string): { term: string; definition: string }[] => {
-    if (!content) return [];
-    return content
-      .split("\n")
-      .filter(Boolean)
-      .map((line) => {
-        const colonIdx = line.indexOf(":");
-        if (colonIdx > -1) {
-          return { term: line.slice(0, colonIdx).trim(), definition: line.slice(colonIdx + 1).trim() };
-        }
-        const dashIdx = line.indexOf(" – ");
-        if (dashIdx > -1) {
-          return { term: line.slice(0, dashIdx).trim(), definition: line.slice(dashIdx + 3).trim() };
-        }
-        return { term: line.trim(), definition: "" };
-      })
-      .filter((v) => v.term);
-  };
-
-  const parseRelated = (content: string) => {
-    if (!content) return { relatedPIs: [] as string[], mistakes: [] as string[] };
-    const lines = content.split("\n").filter(Boolean);
-    const relatedPIs: string[] = [];
-    const mistakes: string[] = [];
-    let inMistakes = false;
-    for (const line of lines) {
-      if (line.toLowerCase().includes("common mistake") || line.toLowerCase().includes("pitfall")) {
-        inMistakes = true; continue;
-      }
-      if (line.startsWith("-") || line.match(/^\d+\./)) {
-        const clean = line.replace(/^[-\d.]\s*/, "").trim();
-        if (inMistakes) mistakes.push(clean);
-        else relatedPIs.push(clean);
-      }
-    }
-    return { relatedPIs, mistakes };
-  };
-
-  const parseQuickReview = (content: string) => {
-    try {
-      const source = JSON.parse(content) as { quickReview?: Array<{ number: number; question: string; answer: string }> };
-      return source.quickReview ?? [];
-    } catch {
-      return [];
-    }
-  };
-
   const allQuestions = quizContent?.quizQuestions || [];
-  const sourceQuickReview = parseQuickReview(quizContent?.content || "");
-  const quickReviewQs = sourceQuickReview.length
-    ? sourceQuickReview
-    : allQuestions.slice(0, 10).map((question: any, index: number) => ({
-        number: index + 1,
-        question: question.question,
-        answer: question.correctAnswer,
-        explanation: question.explanation || question.rationale || "",
-      }));
   const fullQuizQs    = allQuestions.slice(0, 15);
 
   const correctCount = Object.entries(quizAnswers).filter(([qId, answer]) => {
@@ -241,23 +169,6 @@ export default function PIQuizlet() {
     setActiveTab("quiz-results");
   };
 
-  const handleSubmitTeachBack = async () => {
-    if (!teachBackText.trim() || !selectedModuleId) return;
-    setLoadingFeedback(true);
-    try {
-      const result = await submitTeachBackMutation.mutateAsync({
-        moduleId: selectedModuleId,
-        response: teachBackText,
-      });
-      setTeachBackFeedback(result.feedback);
-      await saveSectionProgress(teachBackSection?.id, 100);
-    } catch {
-      setTeachBackFeedback("Error generating feedback. Please try again.");
-    } finally {
-      setLoadingFeedback(false);
-    }
-  };
-
   const resetModule = () => {
     setSelectedModuleId(null);
     setActiveTab("lesson");
@@ -266,8 +177,6 @@ export default function PIQuizlet() {
     setQuizAnswers({});
     setQuizSubmitted(false);
     setShowQuizResults(false);
-    setTeachBackText("");
-    setTeachBackFeedback("");
   };
 
   const openModule = (moduleId: number) => {
@@ -278,8 +187,6 @@ export default function PIQuizlet() {
     setQuizAnswers({});
     setQuizSubmitted(false);
     setShowQuizResults(false);
-    setTeachBackText("");
-    setTeachBackFeedback("");
   };
 
   const moveModule = (direction: -1 | 1) => {
@@ -351,7 +258,7 @@ export default function PIQuizlet() {
             </div>
             <h1 className="page-title mb-2">Performance Indicator Study</h1>
             <p className="page-intro">
-              {requestedEventCode ? `Study the performance indicators mapped to ${requestedEventCode}, then work through lessons, vocabulary, flashcards, review questions, and scenarios at your own pace.` : "Choose a career cluster, then work through lessons, vocabulary, flashcards, review questions, and scenarios at your own pace. Selected-event performance indicators are available directly in Event Resources."}
+              {requestedEventCode ? `Study the performance indicators mapped to ${requestedEventCode} through concise main ideas, flashcards, quizzes, and business scenarios.` : "Choose a career cluster, then study concise main ideas, flashcards, quizzes, and business scenarios. Selected-event performance indicators are available directly in Event Resources."}
             </p>
             <div className="editorial-panel-muted mt-4 max-w-2xl p-3">
               <label htmlFor="pi-study-search" className="data-label">Search this study path</label>
@@ -434,8 +341,6 @@ export default function PIQuizlet() {
 
   const currentFlashcard = flashcardContent?.flashcards?.[currentFlashcardIndex];
   const totalFlashcards  = flashcardContent?.flashcards?.length || 0;
-  const vocabTerms       = parseVocab(vocabContent?.content || "");
-  const { relatedPIs, mistakes } = parseRelated(relatedContent?.content || "");
 
   // ── Module view ────────────────────────────────────────────────────────────
   return (
@@ -481,7 +386,7 @@ export default function PIQuizlet() {
               <p className="mt-1 truncate text-sm text-slate-200">
                 {currentModulePosition ? `Indicator ${currentModulePosition} of ${activeModuleList.length}` : "Current performance indicator"}
               </p>
-              <p className="mt-1 text-xs text-slate-500">Use the activity steps below, or move directly to the previous or next indicator in this study list.</p>
+              <p className="mt-1 text-xs text-slate-500">Review the main ideas, then use flashcards, a quiz, and scenarios to practice before moving to the next indicator.</p>
             </div>
           </div>
           <div className="flex shrink-0 gap-2">
@@ -496,7 +401,7 @@ export default function PIQuizlet() {
 
         {/* Tab navigation */}
         <div className="mb-3 flex items-center justify-between gap-3">
-          <div><p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">Module activities</p><p className="mt-1 text-xs text-slate-500">Follow the recommended sequence or jump to any activity.</p></div>
+          <div><p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">Core practice</p><p className="mt-1 text-xs text-slate-500">Review the main ideas, then practice with flashcards, a quiz, and scenarios.</p></div>
           <span className="shrink-0 text-xs font-medium text-slate-400">Step {Math.max(activeTabIndex + 1, 1)} of {visibleTabs.length}</span>
         </div>
         <div className="flex gap-1 mb-4 border-b border-slate-800 pb-3 overflow-x-auto" aria-label="Module activity navigation">
@@ -536,8 +441,8 @@ export default function PIQuizlet() {
                 <BookOpen className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h2 className="font-bold text-white">Lesson</h2>
-                <p className="text-xs text-slate-400">Plain-English explanation</p>
+                <h2 className="font-bold text-white">Main ideas</h2>
+                <p className="text-xs text-slate-400">The core concept to remember</p>
               </div>
             </div>
             <div className="p-8">
@@ -553,59 +458,6 @@ export default function PIQuizlet() {
                 >
                   <CheckCircle className="mr-2 h-4 w-4" /> Mark lesson complete
                 </Button>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* ── VOCABULARY ── */}
-        {activeTab === "vocabulary" && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-            <div className="flex items-center justify-between p-6 border-b border-slate-800 bg-gradient-to-r from-emerald-500/10 to-teal-500/10">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h2 className="font-bold text-white">Vocabulary</h2>
-                  <p className="text-xs text-slate-400">10 essential terms</p>
-                </div>
-              </div>
-              <Badge className="bg-emerald-600/20 text-emerald-400 border-emerald-600/30">
-                {vocabTerms.length} terms
-              </Badge>
-            </div>
-            <div className="p-6">
-              {vocabTerms.length > 0 ? (
-                <>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {vocabTerms.map((v, idx) => (
-                    <div key={idx} className="p-4 bg-slate-800 border border-slate-700 hover:border-emerald-500/40 rounded-xl transition">
-                      <div className="flex items-start gap-3">
-                        <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-lg flex-shrink-0">
-                          {idx + 1}
-                        </span>
-                        <div>
-                          <p className="font-bold text-white text-sm">{v.term}</p>
-                          {v.definition && <p className="text-slate-400 text-xs mt-1 leading-relaxed">{v.definition}</p>}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                {vocabSection?.id && (
-                  <Button
-                    variant="outline"
-                    onClick={() => saveSectionProgress(vocabSection.id, 100)}
-                    disabled={updateSectionProgressMutation.isPending}
-                    className="mt-6 border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/10"
-                  >
-                    <CheckCircle className="mr-2 h-4 w-4" /> Mark vocabulary complete
-                  </Button>
-                )}
-                </>
-              ) : (
-                <p className="text-slate-500 text-center py-12">No vocabulary terms available.</p>
               )}
             </div>
           </div>
@@ -728,48 +580,6 @@ export default function PIQuizlet() {
                 </div>
               ) : (
                 <p className="text-slate-500 text-center py-20">No flashcards available.</p>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* ── QUICK REVIEW ── */}
-        {activeTab === "quick-review" && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-            <div className="flex items-center justify-between p-6 border-b border-slate-800 bg-gradient-to-r from-amber-500/10 to-orange-500/10">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-amber-600 rounded-xl flex items-center justify-center">
-                  <ListChecks className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h2 className="font-bold text-white">Quick Review</h2>
-                  <p className="text-xs text-slate-400">10 review questions with answers</p>
-                </div>
-              </div>
-              <Badge className="bg-amber-600/20 text-amber-400 border-amber-600/30">{quickReviewQs.length} questions</Badge>
-            </div>
-            <div className="p-6 space-y-3">
-              {quickReviewQs.length > 0 ? (
-                quickReviewQs.map((q: any, idx: number) => (
-                  <div key={`${q.number}-${idx}`} className="p-5 bg-slate-800 border border-slate-700 hover:border-amber-500/30 rounded-xl transition">
-                    <div className="flex gap-3">
-                      <span className="text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-1 rounded-lg h-fit flex-shrink-0">
-                        Q{idx + 1}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-white text-sm mb-2">{q.question}</p>
-                        <p className="text-xs text-amber-300 font-medium">
-                          Answer: <span className="text-slate-300">{q.answer}</span>
-                        </p>
-                        {(q.explanation || q.rationale) && (
-                          <p className="text-xs text-slate-500 mt-1 leading-relaxed">{q.explanation || q.rationale}</p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-slate-500 text-center py-12">No review questions available.</p>
               )}
             </div>
           </div>
@@ -999,119 +809,6 @@ export default function PIQuizlet() {
                 </>
               ) : (
                 <p className="text-slate-500 text-center py-12">No scenario challenges available.</p>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* ── RELATED PIs ── */}
-        {activeTab === "related" && (
-          <div className="space-y-5">
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-              <div className="flex items-center gap-3 p-6 border-b border-slate-800 bg-gradient-to-r from-green-500/10 to-emerald-500/10">
-                <div className="w-10 h-10 bg-green-600 rounded-xl flex items-center justify-center">
-                  <Link2 className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h2 className="font-bold text-white">Related Performance Indicators</h2>
-                  <p className="text-xs text-slate-400">Connected concepts to study together</p>
-                </div>
-              </div>
-              <div className="p-6">
-                {relatedPIs.length > 0 ? (
-                  <div className="space-y-2">
-                    {relatedPIs.map((pi, idx) => (
-                      <div key={idx} className="flex items-start gap-3 p-3 bg-slate-800 border border-slate-700 rounded-lg">
-                        <ArrowRight className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" />
-                        <p className="text-sm text-slate-300">{pi}</p>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-slate-500 text-sm">{relatedContent?.content || "No related PIs listed."}</p>
-                )}
-              </div>
-            </div>
-
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-              <div className="flex items-center gap-3 p-6 border-b border-slate-800 bg-gradient-to-r from-red-500/10 to-orange-500/10">
-                <div className="w-10 h-10 bg-red-600 rounded-xl flex items-center justify-center">
-                  <AlertCircle className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h2 className="font-bold text-white">Common Mistakes</h2>
-                  <p className="text-xs text-slate-400">Pitfalls to avoid in competition</p>
-                </div>
-              </div>
-              <div className="p-6">
-                {mistakes.length > 0 ? (
-                  <div className="space-y-2">
-                    {mistakes.map((m, idx) => (
-                      <div key={idx} className="flex items-start gap-3 p-3 bg-red-500/5 border border-red-500/20 rounded-lg">
-                        <XCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
-                        <p className="text-sm text-slate-300">{m}</p>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-slate-500 text-sm">No common mistakes listed.</p>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ── TEACH-BACK ── */}
-        {activeTab === "teach-back" && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-            <div className="flex items-center gap-3 p-6 border-b border-slate-800 bg-gradient-to-r from-orange-500/10 to-amber-500/10">
-              <div className="w-10 h-10 bg-orange-600 rounded-xl flex items-center justify-center">
-                <GraduationCap className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h2 className="font-bold text-white">Teach-Back Activity</h2>
-                <p className="text-xs text-slate-400">Demonstrate mastery with real AI feedback</p>
-              </div>
-            </div>
-            <div className="p-8 space-y-6">
-              {/* Prompt */}
-              <div className="p-5 bg-orange-500/10 border border-orange-500/20 rounded-xl">
-                <p className="font-bold text-orange-300 mb-3 text-sm">
-                  {teachBackContent?.content || `Explain "${moduleWithSections?.performanceIndicator}" as if teaching it to a new DECA member.`}
-                </p>
-                <p className="text-xs text-slate-400">Your response should cover the concept, its business importance, a real-world example, and how to apply it.</p>
-              </div>
-
-              {/* Text area */}
-              <textarea
-                value={teachBackText}
-                onChange={(e) => setTeachBackText(e.target.value)}
-                placeholder="Write your comprehensive explanation here..."
-                className="w-full p-5 bg-slate-800 border-2 border-slate-700 focus:border-orange-500 rounded-xl min-h-44 text-white placeholder-slate-500 focus:outline-none focus:ring-0 transition font-medium resize-none text-sm leading-relaxed"
-              />
-
-              <Button
-                onClick={handleSubmitTeachBack}
-                disabled={!teachBackText.trim() || loadingFeedback}
-                className="w-full bg-orange-600 hover:bg-orange-700 py-6 text-base font-bold rounded-xl disabled:opacity-40"
-              >
-                {loadingFeedback ? (
-                  <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Generating AI Feedback...</>
-                ) : (
-                  <><Send className="w-5 h-5 mr-2" /> Submit for AI Feedback</>
-                )}
-              </Button>
-
-              {teachBackFeedback && (
-                <div className="p-6 bg-green-500/10 border border-green-500/30 rounded-xl">
-                  <div className="flex items-start gap-3">
-                    <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-bold text-green-300 mb-2 text-sm">AI Coach Feedback</p>
-                      <p className="text-sm text-slate-300 leading-relaxed">{teachBackFeedback}</p>
-                    </div>
-                  </div>
-                </div>
               )}
             </div>
           </div>

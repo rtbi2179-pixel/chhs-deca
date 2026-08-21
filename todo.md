@@ -8832,3 +8832,4 @@
 - [x] Validate and replace the practice bank with the uploaded 50,000-question DECA master dataset
 - [x] Replace the standalone roleplay/speech coach with a native Blue Blazer DECA roleplay simulator, scoring pipeline, and learning integration
 - [x] Make Competition Readiness use recorded preparation factors and display readiness for the member’s next district, state, or ICDC milestone
+- [x] Simplify all PI lessons to concise main ideas and remove vocabulary, quick review, related-PI, and teach-back activities

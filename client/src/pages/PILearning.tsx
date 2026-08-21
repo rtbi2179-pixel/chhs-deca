@@ -61,24 +61,24 @@ export default function PILearning() {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                Interactive Sections
+                Core Activities
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">7</div>
-              <p className="text-xs text-slate-500 mt-1">Theory, Flashcards, Quizzes, & More</p>
+                <div className="text-2xl font-bold">4</div>
+                <p className="text-xs text-slate-500 mt-1">Main ideas, flashcards, quizzes, and scenarios</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                Study Methods
+                Focused study
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">5+</div>
-              <p className="text-xs text-slate-500 mt-1">Adaptive learning paths</p>
+                <div className="text-2xl font-bold">4</div>
+                <p className="text-xs text-slate-500 mt-1">Core activities per PI module</p>
             </CardContent>
           </Card>
 
