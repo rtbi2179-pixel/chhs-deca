@@ -42,7 +42,12 @@ export default function Navigation({ onLoginRequired }: NavigationProps) {
   const unreadNews = trpc.bbx.getUnreadNewsCount.useQuery(undefined, { enabled: !!user, refetchInterval: 60_000 })
   const markNewsRead = trpc.bbx.markNewsRead.useMutation({
     onSuccess: async () => {
-      await Promise.all([utils.bbx.getBluesNews.invalidate(), utils.bbx.getUnreadNewsCount.invalidate()])
+      await Promise.all([
+        utils.bbx.getBluesNews.invalidate(),
+        utils.bbx.getUnreadNewsCount.invalidate(),
+        utils.practice.getBlueBucksBalance.invalidate(),
+        utils.banking.getBankAccount.invalidate(),
+      ])
     },
   })
 

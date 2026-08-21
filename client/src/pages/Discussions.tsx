@@ -76,8 +76,12 @@ export default function Discussions() {
       setNewThreadTitle('')
       setNewThreadContent('')
       setShowNewThread(false)
-      await utils.discussions.getThreads.invalidate(createdInput)
-      toast.success('Thread created successfully!')
+      await Promise.all([
+        utils.discussions.getThreads.invalidate(createdInput),
+        utils.practice.getBlueBucksBalance.invalidate(),
+        utils.banking.getBankAccount.invalidate(),
+      ])
+      toast.success(created.blueBucksAwarded > 0 ? `Thread created! +${created.blueBucksAwarded} Blue Bucks added to checking.` : 'Thread created successfully!')
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to create thread')
     }
@@ -103,8 +107,12 @@ export default function Discussions() {
       })
       utils.discussions.getReplies.setData({ threadId: selectedThreadId }, (current = []) => [...current, created])
       setNewReplyContent('')
-      await utils.discussions.getReplies.invalidate({ threadId: selectedThreadId })
-      toast.success('Reply posted!')
+      await Promise.all([
+        utils.discussions.getReplies.invalidate({ threadId: selectedThreadId }),
+        utils.practice.getBlueBucksBalance.invalidate(),
+        utils.banking.getBankAccount.invalidate(),
+      ])
+      toast.success(created.blueBucksAwarded > 0 ? `Reply posted! +${created.blueBucksAwarded} Blue Bucks added to checking.` : 'Reply posted!')
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to post reply')
     }

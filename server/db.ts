@@ -1891,49 +1891,43 @@ export async function getBlueBucksLeaderboard(schoolCode: string, limit: number 
   }
 }
 
-export async function awardBlueBucks(userId: number, amount: number, reason: 'correct_first_attempt' | 'discussion_post' | 'discussion_reply' | 'admin_award', schoolCode: string, relatedId?: number): Promise<boolean> {
+export type BlueBucksRewardReason = "correct_first_attempt" | "corrected_answer" | "discussion_post" | "discussion_reply" | "news_read" | "admin_award";
+
+export async function awardBlueBucks(userId: number, amount: number, reason: BlueBucksRewardReason, schoolCode: string, relatedId?: number, sourceKey?: string): Promise<boolean> {
   const db = await getDb();
   if (!db) return false;
 
   try {
-    // Check if user already earned points for this question (for correct_first_attempt)
-    if (reason === 'correct_first_attempt' && relatedId) {
-      const existing = await db.select().from(blueBucksTransactions).where(
-        and(
-          eq(blueBucksTransactions.userId, userId),
-          eq(blueBucksTransactions.relatedId, relatedId),
-          eq(blueBucksTransactions.reason, 'correct_first_attempt')
-        )
-      ).limit(1);
-      
-      if (existing.length > 0) {
-        console.log('[Blue Bucks] User already earned points for this question');
-        return false; // Already earned points for this question
+    const normalizedAmount = Math.max(0, Math.round(amount));
+    if (!normalizedAmount) return false;
+    const normalizedSourceKey = (sourceKey ?? (relatedId !== undefined ? `${reason}:${relatedId}` : ""))
+      .trim()
+      .slice(0, 191);
+    if (!normalizedSourceKey) throw new Error("Blue Bucks rewards require a stable source key.");
+
+    return await db.transaction(async (tx) => {
+      const [ledgerWrite] = await tx.execute(sql`
+        INSERT IGNORE INTO ${blueBucksTransactions}
+          (${blueBucksTransactions.userId}, ${blueBucksTransactions.amount}, ${blueBucksTransactions.reason}, ${blueBucksTransactions.relatedId}, ${blueBucksTransactions.sourceKey}, ${blueBucksTransactions.schoolCode})
+        VALUES (${userId}, ${normalizedAmount}, ${reason}, ${relatedId ?? null}, ${normalizedSourceKey}, ${schoolCode})
+      `);
+      if (Number((ledgerWrite as { affectedRows?: number }).affectedRows ?? 0) !== 1) return false;
+
+      const { userBankAccounts } = await import("../drizzle/schema");
+      const [account] = await tx.select().from(userBankAccounts)
+        .where(and(eq(userBankAccounts.userId, userId), eq(userBankAccounts.schoolCode, schoolCode)))
+        .limit(1);
+      const checkingAfter = Number((Number(account?.checkingBalance ?? 0) + normalizedAmount).toFixed(2));
+      if (account) {
+        await tx.update(userBankAccounts).set({ checkingBalance: checkingAfter.toFixed(2) }).where(eq(userBankAccounts.id, account.id));
+      } else {
+        await tx.insert(userBankAccounts).values({ userId, schoolCode, checkingBalance: checkingAfter.toFixed(2), savingsBalance: "0", investmentBalance: "0", totalDebt: "0" });
       }
-    }
-
-    const { userBankAccounts } = await import("../drizzle/schema");
-    const [account] = await db.select().from(userBankAccounts).where(and(eq(userBankAccounts.userId, userId), eq(userBankAccounts.schoolCode, schoolCode))).limit(1);
-    const checkingAfter = Number((Number(account?.checkingBalance ?? 0) + amount).toFixed(2));
-    if (account) {
-      await db.update(userBankAccounts).set({ checkingBalance: checkingAfter.toFixed(2) }).where(eq(userBankAccounts.id, account.id));
-    } else {
-      await db.insert(userBankAccounts).values({ userId, schoolCode, checkingBalance: checkingAfter.toFixed(2), savingsBalance: "0", investmentBalance: "0", totalDebt: "0" });
-    }
-
-    // Record the transaction
-    await db.insert(blueBucksTransactions).values({
-      userId,
-      amount,
-      reason,
-      relatedId,
-      schoolCode,
+      return true;
     });
-    
-    return true;
   } catch (error) {
     console.error('[Blue Bucks] Error awarding points:', error);
-    return false;
+    throw error;
   }
 }
 
@@ -1974,6 +1968,16 @@ export async function getUserAnsweredQuestions(userId: number): Promise<string[]
     console.error('[User Answers] Error getting answered questions:', error);
     return [];
   }
+}
+
+export async function getUserAnswerRecord(userId: number, questionId: string) {
+  const database = await getDb();
+  if (!database) return null;
+  const [answer] = await database.select({ isCorrect: userAnswers.isCorrect })
+    .from(userAnswers)
+    .where(and(eq(userAnswers.userId, userId), eq(userAnswers.questionId, questionId)))
+    .limit(1);
+  return answer ?? null;
 }
 
 // Check if user has answered a specific question

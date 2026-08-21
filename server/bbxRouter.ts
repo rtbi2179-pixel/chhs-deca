@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { and, asc, desc, eq, gte, inArray, sql } from "drizzle-orm";
 import { z } from "zod";
 import { protectedProcedure, router } from "./_core/trpc";
-import { ensureBbxSeeded, getDb, getOrCreateBbxAccount } from "./db";
+import { awardBlueBucks, ensureBbxSeeded, getDb, getOrCreateBbxAccount } from "./db";
 import { executionPrice, slippagePct, spreadPct } from "./bbxEngine";
 import { advanceBbxSimulation, createBbxEvent } from "./bbxSimulation";
 
@@ -140,27 +140,28 @@ export const bbxRouter = router({
     await ensureBbxSeeded();
     const db = await getDb();
     if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "BBX storage is unavailable" });
-    const { bbxNews, bbxNewsReads, userBankAccounts } = await import("../drizzle/schema");
+    const { bbxNews, bbxNewsReads } = await import("../drizzle/schema");
     const newsIds = input.markAll
       ? (await db.select({ id: bbxNews.id }).from(bbxNews)).map((article) => article.id)
       : [input.newsId!];
     if (newsIds.length === 0) return { marked: 0, rewarded: 0, rewardPerArticle: BLUE_NEWS_READ_REWARD };
-    await getOrCreateBbxAccount(ctx.user.id);
-    return db.transaction(async (tx) => {
+    const eligibleNewsIds = await db.transaction(async (tx) => {
       const existing = await tx.select({ newsId: bbxNewsReads.newsId, rewardedAt: bbxNewsReads.rewardedAt }).from(bbxNewsReads).where(and(eq(bbxNewsReads.userId, ctx.user.id), inArray(bbxNewsReads.newsId, newsIds)));
       const existingById = new Map(existing.map((row) => [row.newsId, row]));
       const unreadIds = newsIds.filter((newsId) => !existingById.has(newsId));
-      if (unreadIds.length) await tx.insert(bbxNewsReads).values(unreadIds.map((newsId) => ({ userId: ctx.user.id, newsId, rewardedAt: new Date() })));
+      if (unreadIds.length) await tx.insert(bbxNewsReads).values(unreadIds.map((newsId) => ({ userId: ctx.user.id, newsId })));
       const legacyUnrewardedIds = existing.filter((row) => !row.rewardedAt).map((row) => row.newsId);
-      if (legacyUnrewardedIds.length) await tx.update(bbxNewsReads).set({ rewardedAt: new Date() }).where(and(eq(bbxNewsReads.userId, ctx.user.id), inArray(bbxNewsReads.newsId, legacyUnrewardedIds)));
-      const rewardCount = unreadIds.length + legacyUnrewardedIds.length;
-      if (!rewardCount) return { marked: 0, rewarded: 0, rewardPerArticle: BLUE_NEWS_READ_REWARD };
-      const [account] = await tx.select().from(userBankAccounts).where(and(eq(userBankAccounts.userId, ctx.user.id), eq(userBankAccounts.schoolCode, ctx.user.schoolCode ?? ""))).limit(1);
-      const nextChecking = number(account?.checkingBalance) + rewardCount * BLUE_NEWS_READ_REWARD;
-      if (account) await tx.update(userBankAccounts).set({ checkingBalance: nextChecking.toFixed(2) }).where(eq(userBankAccounts.id, account.id));
-      else await tx.insert(userBankAccounts).values({ userId: ctx.user.id, schoolCode: ctx.user.schoolCode ?? "", checkingBalance: nextChecking.toFixed(2), savingsBalance: "0", investmentBalance: "0", totalDebt: "0" });
-      return { marked: unreadIds.length, rewarded: rewardCount * BLUE_NEWS_READ_REWARD, rewardPerArticle: BLUE_NEWS_READ_REWARD };
+      return { unreadIds, eligibleIds: [...unreadIds, ...legacyUnrewardedIds] };
     });
+    const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode || "global";
+    let rewarded = 0;
+    for (const newsId of eligibleNewsIds.eligibleIds) {
+      const credited = await awardBlueBucks(ctx.user.id, BLUE_NEWS_READ_REWARD, "news_read", schoolCode, newsId, `blue-news:${newsId}`);
+      if (credited) rewarded += BLUE_NEWS_READ_REWARD;
+      await db.update(bbxNewsReads).set({ rewardedAt: new Date() })
+        .where(and(eq(bbxNewsReads.userId, ctx.user.id), eq(bbxNewsReads.newsId, newsId)));
+    }
+    return { marked: eligibleNewsIds.unreadIds.length, rewarded, rewardPerArticle: BLUE_NEWS_READ_REWARD };
   }),
 
   getPortfolio: protectedProcedure.query(async ({ ctx }) => {

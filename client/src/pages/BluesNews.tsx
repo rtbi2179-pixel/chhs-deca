@@ -21,7 +21,12 @@ export default function BluesNews() {
   const news = trpc.bbx.getBluesNews.useQuery({ limit: 25 });
   const markRead = trpc.bbx.markNewsRead.useMutation({
     onSuccess: async (result) => {
-      await Promise.all([utils.bbx.getBluesNews.invalidate(), utils.bbx.getUnreadNewsCount.invalidate()]);
+      await Promise.all([
+        utils.bbx.getBluesNews.invalidate(),
+        utils.bbx.getUnreadNewsCount.invalidate(),
+        utils.practice.getBlueBucksBalance.invalidate(),
+        utils.banking.getBankAccount.invalidate(),
+      ]);
       if (result.rewarded > 0) toast.success(`+${result.rewarded} BBX BlueBucks for reading Blue’s News.`);
     },
     onError: (error) => toast.error(error.message || "Unable to update the article read state."),

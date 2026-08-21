@@ -9,10 +9,11 @@ describe("unified Blue Bucks, Banking, and BBX simulation balances", () => {
     expect(calculateMonthlySavingsInterest(1200)).toBe(84);
   });
 
-  it("uses the Banking investment account as BBX trading cash and credits news rewards to checking", () => {
+  it("uses the Banking investment account as BBX trading cash and credits news rewards through the canonical checking ledger", () => {
     const router = readFileSync(join(process.cwd(), "server/bbxRouter.ts"), "utf8");
     expect(router).toContain("investmentBalance: userBankAccounts.investmentBalance");
-    expect(router).toContain("checkingBalance: nextChecking.toFixed(2)");
+    expect(router).toContain("awardBlueBucks(ctx.user.id");
+    expect(router).toContain('"news_read"');
     expect(router).toContain("Insufficient investment-account funds for this simulated order.");
     expect(router).toContain("investmentBalance: nextCash.toFixed(2)");
   });

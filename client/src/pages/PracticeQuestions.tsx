@@ -11,6 +11,7 @@ import { PRACTICE_CLUSTERS } from "@/lib/practiceClusters";
 import { getEventExamGuidance } from "@/lib/eventExamEligibility";
 
 export default function PracticeQuestions() {
+  const utils = trpc.useUtils();
   const [selectedCluster, setSelectedCluster] = useState<string | null>(null);
   const [showClusterModal, setShowClusterModal] = useState(true);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("all");
@@ -205,8 +206,7 @@ export default function PracticeQuestions() {
         cluster: currentQuestion.cluster,
       });
       
-      const utils = trpc.useUtils();
-      utils.practice.getBlueBucksBalance.invalidate();
+      await utils.practice.getBlueBucksBalance.invalidate();
     } catch (error) {
       console.error("Failed to submit answer or update leaderboard", error);
       toast.error("Failed to process your answer");

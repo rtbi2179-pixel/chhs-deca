@@ -36,6 +36,69 @@ import { roleplayRouter } from "./roleplayRouter";
 const mockExamClusterSchema = z.enum(CHAPTER_EXAM_CLUSTERS);
 const chapterExamQuestionCountSchema = z.union(CHAPTER_EXAM_QUESTION_COUNTS.map((count) => z.literal(count)) as [z.ZodLiteral<25>, z.ZodLiteral<50>, z.ZodLiteral<75>, z.ZodLiteral<100>]);
 const CREDIT_SCORE_REFRESH_HOUR_UTC = 3;
+export const BLUE_BUCKS_CORRECTED_ANSWER_REWARD = 50;
+export const BLUE_BUCKS_FIRST_CORRECT_BASE_REWARD = 100;
+export const BLUE_BUCKS_DISCUSSION_THREAD_REWARD = 15;
+export const BLUE_BUCKS_DISCUSSION_REPLY_REWARD = 5;
+
+export function blueBucksRelatedIdForQuestion(questionId: string) {
+  return Math.abs(questionId.split("").reduce((sum, character) => sum + character.charCodeAt(0), 0)) % 1_000_000;
+}
+
+async function awardQuestionBlueBucks(params: {
+  userId: number;
+  schoolCode: string;
+  questionId: string;
+  difficulty: string | null;
+  isCorrect: boolean;
+  previousAnswer: { isCorrect: boolean } | null;
+}) {
+  const emptyReward = { blueBucksAwarded: 0, studyCardBonus: 0, creditScoreBonus: 0, creditScoreMultiplier: 1, creditScoreStage: "Foundation", rewardKind: "none" as const };
+  if (!params.isCorrect || params.previousAnswer?.isCorrect) return emptyReward;
+  const relatedId = blueBucksRelatedIdForQuestion(params.questionId);
+  if (params.previousAnswer) {
+    const awarded = await db.awardBlueBucks(
+      params.userId,
+      BLUE_BUCKS_CORRECTED_ANSWER_REWARD,
+      "corrected_answer",
+      params.schoolCode,
+      relatedId,
+      `question:corrected:${params.questionId}`,
+    );
+    return awarded
+      ? { ...emptyReward, blueBucksAwarded: BLUE_BUCKS_CORRECTED_ANSWER_REWARD, rewardKind: "corrected" as const }
+      : emptyReward;
+  }
+
+  const activeStudyCard = await db.getUserStudyCard(params.userId);
+  const cardKey = (activeStudyCard?.cardKey ?? "blazer") as StudyCardKey;
+  const studyCardReward = calculateStudyCardQuestionReward(BLUE_BUCKS_FIRST_CORRECT_BASE_REWARD, cardKey, params.difficulty ?? "Medium", params.userId);
+  let score = 300;
+  try {
+    score = await getUserCreditScore(params.userId, params.schoolCode);
+  } catch (error) {
+    console.warn("[Blue Bucks] Credit-score bonus unavailable; applying the base first-correct reward.", error);
+  }
+  const creditReward = calculateCreditScoreQuestionReward(studyCardReward.amount, score);
+  const awarded = await db.awardBlueBucks(
+    params.userId,
+    creditReward.amount,
+    "correct_first_attempt",
+    params.schoolCode,
+    relatedId,
+    `question:first-correct:${params.questionId}`,
+  );
+  if (!awarded) return emptyReward;
+  await db.recordStudyCardPracticeProgress(params.userId, studyCardReward.bonus);
+  return {
+    blueBucksAwarded: creditReward.amount,
+    studyCardBonus: studyCardReward.bonus,
+    creditScoreBonus: creditReward.bonus,
+    creditScoreMultiplier: creditReward.multiplier,
+    creditScoreStage: creditReward.stage.name,
+    rewardKind: "first_correct" as const,
+  };
+}
 
 function getNextCreditScoreRefresh(now = new Date()) {
   const next = new Date(now);
@@ -1661,12 +1724,21 @@ export const appRouter = router({
         const isCorrect = input.selectedAnswer === question.correctAnswer;
         const schoolCode = getMockExamSchoolCode(ctx.user);
         if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No school code' });
+        const previousAnswer = await db.getUserAnswerRecord(ctx.user.id, input.questionId);
         if (chapterAttempt && input.elapsedSeconds !== undefined && isRapidChapterExamAnswer(input.elapsedSeconds)) {
           await database.insert(chapterExamActivity).values({ attemptId: chapterAttempt.id, userId: ctx.user.id, eventType: 'rapid_answer', questionId: input.questionId, elapsedSeconds: input.elapsedSeconds });
           await database.update(chapterExamAttempts).set({ suspiciousActivityCount: chapterAttempt.suspiciousActivityCount + 1 }).where(eq(chapterExamAttempts.id, chapterAttempt.id));
         }
         await database.update(sessionQuestions).set({ userAnswer: input.selectedAnswer, isCorrect: isCorrect ? 1 : 0 }).where(eq(sessionQuestions.id, sessionQuestion.id));
         await db.recordUserAnswer(ctx.user.id, input.questionId, input.selectedAnswer, isCorrect, schoolCode);
+        const reward = await awardQuestionBlueBucks({
+          userId: ctx.user.id,
+          schoolCode,
+          questionId: input.questionId,
+          difficulty: null,
+          isCorrect,
+          previousAnswer,
+        });
         const answered = await database.select({ userAnswer: sessionQuestions.userAnswer, isCorrect: sessionQuestions.isCorrect }).from(sessionQuestions).where(eq(sessionQuestions.sessionId, input.sessionId));
         const progress = calculateMockExamProgress(answered);
         await database.update(studySessions).set(progress).where(eq(studySessions.id, input.sessionId));
@@ -1674,7 +1746,7 @@ export const appRouter = router({
           const accuracy = progress.questionsAnswered ? Math.round((progress.correctAnswers / progress.questionsAnswered) * 100) : 0;
           await database.update(chapterExamAttempts).set({ completedAt: new Date(), score: progress.correctAnswers, accuracy }).where(eq(chapterExamAttempts.id, chapterAttempt.id));
         }
-        return { isCorrect, ...progress, chapterExamExpiresAt: chapterAttempt?.expiresAt ?? null };
+        return { isCorrect, ...progress, blueBucksAwarded: reward.blueBucksAwarded, rewardKind: reward.rewardKind, chapterExamExpiresAt: chapterAttempt?.expiresAt ?? null };
       }),
   }),
 
@@ -1818,47 +1890,31 @@ export const appRouter = router({
         if (!question[0]) throw new TRPCError({ code: 'NOT_FOUND', message: 'Question not found' });
 
         const isCorrect = input.selectedAnswer === question[0].correctAnswer;
-        
-        // Record the answer
+        const previousAnswer = await db.getUserAnswerRecord(ctx.user.id, input.questionId);
         await db.recordUserAnswer(ctx.user.id, input.questionId, input.selectedAnswer, isCorrect, schoolCode);
-        
-        // Award Blue Bucks if correct (100 points for correct answer)
-        // Use a hash of the question ID as the relatedId for tracking duplicate rewards
-        let blueBucksAwarded = 0;
-        let studyCardBonus = 0;
-        let creditScoreBonus = 0;
-        let creditScoreMultiplier = 1;
-        let creditScoreStage = "Foundation";
-        if (isCorrect) {
-          const questionHash = Math.abs(input.questionId.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % 1000000;
-          const activeStudyCard = await db.getUserStudyCard(ctx.user.id);
-          const cardKey = (activeStudyCard?.cardKey ?? "blazer") as StudyCardKey;
-          const studyCardReward = calculateStudyCardQuestionReward(100, cardKey, question[0].difficulty, ctx.user.id);
-          const score = await getUserCreditScore(ctx.user.id, schoolCode);
-          const creditReward = calculateCreditScoreQuestionReward(studyCardReward.amount, score);
-          const awarded = await db.awardBlueBucks(ctx.user.id, creditReward.amount, 'correct_first_attempt', schoolCode, questionHash);
-          if (awarded) {
-            blueBucksAwarded = creditReward.amount;
-            studyCardBonus = studyCardReward.bonus;
-            creditScoreBonus = creditReward.bonus;
-            creditScoreMultiplier = creditReward.multiplier;
-            creditScoreStage = creditReward.stage.name;
-            await db.recordStudyCardPracticeProgress(ctx.user.id, studyCardReward.bonus);
-          }
-        }
+        const reward = await awardQuestionBlueBucks({
+          userId: ctx.user.id,
+          schoolCode,
+          questionId: input.questionId,
+          difficulty: question[0].difficulty,
+          isCorrect,
+          previousAnswer,
+        });
         
         // Get updated balance
         const balance = await db.getBlueBucksBalance(ctx.user.id);
         
         return {
           isCorrect,
-          blueBucksAwarded,
-          studyCardBonus,
-          creditScoreBonus,
-          creditScoreMultiplier,
-          creditScoreStage,
+          ...reward,
           newBalance: balance,
-          message: isCorrect ? `Correct! You earned ${blueBucksAwarded} Blue Bucks! (Total: ${balance})${creditScoreBonus > 0 ? ` Credit stage ${creditScoreStage}: +${creditScoreBonus}.` : ''}` : 'Incorrect answer.',
+          message: reward.rewardKind === "first_correct"
+            ? `Correct! You earned ${reward.blueBucksAwarded} Blue Bucks! (Total: ${balance})${reward.creditScoreBonus > 0 ? ` Credit stage ${reward.creditScoreStage}: +${reward.creditScoreBonus}.` : ''}`
+            : reward.rewardKind === "corrected"
+              ? `Corrected! You earned ${reward.blueBucksAwarded} Blue Bucks for improving your answer. (Total: ${balance})`
+              : isCorrect
+                ? `Correct answer recorded. This question has already earned its available Blue Bucks reward. (Total: ${balance})`
+                : 'Incorrect answer.',
         };
       }),
 
@@ -2089,7 +2145,12 @@ export const appRouter = router({
 
     createThread: protectedProcedure
       .input(z.object({ title: z.string(), content: z.string(), category: z.string().default("general"), discussionType: z.enum(["universal", "chapter"]).default("universal") }))
-      .mutation(({ input, ctx }) => db.createDiscussionThread(ctx.user.id, input.title.trim(), input.content.trim(), input.category, input.discussionType, ctx.user.selectedSchoolCode || ctx.user.schoolCode || undefined)),
+      .mutation(async ({ input, ctx }) => {
+        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode || "global";
+        const created = await db.createDiscussionThread(ctx.user.id, input.title.trim(), input.content.trim(), input.category, input.discussionType, schoolCode);
+        const rewarded = await db.awardBlueBucks(ctx.user.id, BLUE_BUCKS_DISCUSSION_THREAD_REWARD, "discussion_post", schoolCode, created.thread.id, `discussion:thread:${created.thread.id}`);
+        return { ...created, blueBucksAwarded: rewarded ? BLUE_BUCKS_DISCUSSION_THREAD_REWARD : 0 };
+      }),
 
     getReplies: publicProcedure
       .input(z.object({ threadId: z.number() }))
@@ -2097,7 +2158,12 @@ export const appRouter = router({
 
     createReply: protectedProcedure
       .input(z.object({ threadId: z.number(), content: z.string() }))
-      .mutation(({ input, ctx }) => db.createDiscussionReply(input.threadId, ctx.user.id, input.content.trim(), ctx.user.selectedSchoolCode || ctx.user.schoolCode || undefined)),
+      .mutation(async ({ input, ctx }) => {
+        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode || "global";
+        const created = await db.createDiscussionReply(input.threadId, ctx.user.id, input.content.trim(), schoolCode);
+        const rewarded = await db.awardBlueBucks(ctx.user.id, BLUE_BUCKS_DISCUSSION_REPLY_REWARD, "discussion_reply", schoolCode, created.reply.id, `discussion:reply:${created.reply.id}`);
+        return { ...created, blueBucksAwarded: rewarded ? BLUE_BUCKS_DISCUSSION_REPLY_REWARD : 0 };
+      }),
 
     deleteThread: protectedProcedure
       .input(z.object({ threadId: z.number() }))

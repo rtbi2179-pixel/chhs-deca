@@ -1139,11 +1139,15 @@ export const blueBucksTransactions = mysqlTable("blueBucksTransactions", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
   amount: int("amount").notNull(),
-  reason: mysqlEnum("reason", ["correct_first_attempt", "discussion_post", "discussion_reply", "admin_award", "bank_deposit"]).notNull(),
+  reason: mysqlEnum("reason", ["correct_first_attempt", "corrected_answer", "discussion_post", "discussion_reply", "news_read", "admin_award", "bank_deposit"]).notNull(),
   relatedId: int("relatedId"),
+  sourceKey: varchar("sourceKey", { length: 191 }),
   schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
   createdAt: timestamp("createdAt").defaultNow(),
-});
+}, (table) => ({
+  userSourceUnique: uniqueIndex("blue_bucks_transaction_user_source_unique").on(table.userId, table.sourceKey),
+  userReasonRelatedIndex: index("blue_bucks_transaction_user_reason_related_idx").on(table.userId, table.reason, table.relatedId),
+}));
 export type BlueBucksTransaction = typeof blueBucksTransactions.$inferSelect;
 export type InsertBlueBucksTransaction = typeof blueBucksTransactions.$inferInsert;
 

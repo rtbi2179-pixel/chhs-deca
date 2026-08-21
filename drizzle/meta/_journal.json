@@ -253,6 +253,13 @@
       "when": 1787286709131,
       "tag": "0035_exotic_marvel_apes",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "5",
+      "when": 1787288041214,
+      "tag": "0036_glossy_paper_doll",
+      "breakpoints": true
     }
   ]
 }

@@ -8833,3 +8833,4 @@
 - [x] Replace the standalone roleplay/speech coach with a native Blue Blazer DECA roleplay simulator, scoring pipeline, and learning integration
 - [x] Make Competition Readiness use recorded preparation factors and display readiness for the member’s next district, state, or ICDC milestone
 - [x] Simplify all PI lessons to concise main ideas and remove vocabulary, quick review, related-PI, and teach-back activities
+- [x] Ensure answered questions and every qualifying Blue Blazer action reliably award Blue Bucks directly to checking exactly once
