@@ -52,7 +52,7 @@ export function FirstSignInTour() {
   const [tourOpenVersion, setTourOpenVersion] = useState(0);
   const celebrationTimerRef = useRef<number | null>(null);
   const reduceMotion = useReducedMotion();
-  const tourSteps = useMemo(() => getOnboardingWalkthroughSteps(user?.role), [user?.role]);
+  const tourSteps = useMemo(() => getOnboardingWalkthroughSteps(user), [user?.role, user?.email]);
   const tourPartStartIndex = useMemo(() => Object.fromEntries(TOUR_PARTS.map((part) => [part, tourSteps.findIndex((candidate) => candidate.part === part)])) as Record<(typeof TOUR_PARTS)[number], number>, [tourSteps]);
   const step = tourSteps[stepIndex] ?? tourSteps[0];
   const StepIcon = TOUR_STEP_ICONS[step.icon];
