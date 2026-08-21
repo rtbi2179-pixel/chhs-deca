@@ -2325,6 +2325,32 @@ export const appRouter = router({
       return account[0] || { checkingBalance: "0", savingsBalance: "0", investmentBalance: "0", totalDebt: "0" };
     }),
 
+    getNetWorthLeaderboard: protectedProcedure
+      .input(z.object({ limit: z.number().int().min(1).max(100).default(50) }).optional())
+      .query(async ({ ctx, input }) => {
+        const { userBankAccounts, users: userTable } = await import("../drizzle/schema");
+        const database = await db.getDb();
+        if (!database) return [];
+        const schoolCode = ctx.user.role === "super_admin" ? ctx.user.selectedSchoolCode || ctx.user.schoolCode || "" : ctx.user.schoolCode || "";
+        if (!schoolCode) return [];
+        const accounts = await database.select({
+          userId: userBankAccounts.userId,
+          name: userTable.name,
+          username: userTable.username,
+          checkingBalance: userBankAccounts.checkingBalance,
+          savingsBalance: userBankAccounts.savingsBalance,
+          investmentBalance: userBankAccounts.investmentBalance,
+          updatedAt: userBankAccounts.updatedAt,
+        }).from(userBankAccounts).innerJoin(userTable, eq(userBankAccounts.userId, userTable.id)).where(eq(userBankAccounts.schoolCode, schoolCode));
+        const value = (amount: string | number | null | undefined) => Number(amount ?? 0);
+        return accounts.map((account) => {
+          const checking = value(account.checkingBalance);
+          const savings = value(account.savingsBalance);
+          const investment = value(account.investmentBalance);
+          return { userId: account.userId, name: account.name || account.username || "Member", checking, savings, investment, netWorth: checking + savings + investment, updatedAt: account.updatedAt };
+        }).sort((left, right) => right.netWorth - left.netWorth || left.name.localeCompare(right.name)).slice(0, input?.limit ?? 50);
+      }),
+
     depositBlueBucksToChecking: protectedProcedure
       .input(z.object({ amount: z.number().int().positive().max(100000) }))
       .mutation(async () => {

@@ -8836,3 +8836,4 @@
 - [x] Ensure answered questions and every qualifying Blue Blazer action reliably award Blue Bucks directly to checking exactly once
 - [x] Rebuild Roleplay and Written Event AI Judges around preserved browser-captured media, media-informed evaluation, and evidence-transparent results
 - [x] Extend Member Management with team-aware portfolios, checkpoints, versioned submissions, advisor review, and evidence-bound AI evaluation linked to timelines
+- [x] Remove debt presentation from Banking, declutter the Timeline, make roadmap refresh follow actual progress, rank the leaderboard by Blue Bucks net worth, and refine achievement presentation

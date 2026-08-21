@@ -2,7 +2,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
-import { ArrowDownLeft, ArrowUpRight, CreditCard, ReceiptText, Send, ShoppingBag, TrendingUp } from "lucide-react";
+import { ArrowDownLeft, ArrowUpRight, CreditCard, ReceiptText, Send, ShoppingBag, TrendingUp, WalletCards } from "lucide-react";
 import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { toast } from "sonner";
@@ -200,7 +200,7 @@ export function BankingDashboard() {
         <div className="banking-hero"><div><p className="page-eyebrow">Financial systems</p><h1 className="page-title mt-2">Banking Dashboard</h1><p className="page-intro mt-3">Track virtual accounts, credit-building habits, and active study rewards in one clear workspace.</p></div><div className="banking-hero-status"><p className="data-label">Current credit stage</p><p className="mt-1 text-lg font-semibold text-white">{creditStage.name}</p><p className="mt-1 font-mono-data text-xs text-blue-200">{creditScore} / 850</p></div></div>
 
         {/* Top Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 mb-8">
           {/* Credit Score Card */}
           <Card className={`editorial-panel banking-metric border p-6 ${getScoreBgColor(creditScore)}`}>
             <div className="flex items-center justify-between mb-4">
@@ -223,13 +223,11 @@ export function BankingDashboard() {
             <p className="text-slate-400 text-sm">Across all accounts</p>
           </Card>
 
-          {/* Total Debt Card */}
+          {/* Available account mix */}
           <Card className="editorial-panel banking-metric p-6">
-            <h2 className="data-label text-red-200 mb-4">Total Debt</h2>
-            <div className="banking-metric-value text-red-400 mb-2">
-              ${(typeof bankAccount?.totalDebt === 'string' ? parseFloat(bankAccount.totalDebt) : (bankAccount?.totalDebt || 0)).toFixed(2)}
-            </div>
-            <p className="text-slate-400 text-sm">Outstanding balances</p>
+            <div className="mb-4 flex items-center justify-between"><h2 className="data-label text-blue-200">Available Accounts</h2><WalletCards className="h-6 w-6 text-blue-300" /></div>
+            <div className="banking-metric-value mb-2 text-blue-300">{accountBalances.length}</div>
+            <p className="text-sm text-slate-400">Checking, savings, and investment</p>
           </Card>
         </div>
 
