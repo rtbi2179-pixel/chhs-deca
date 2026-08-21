@@ -8829,3 +8829,4 @@
 - [x] Build an evidence-based, versioned DECA AI Judge with verified event criteria, criterion-level scoring, and separate coaching analytics
 - [x] Refine the personalized timeline into an adaptive weekly DECA training roadmap with saved intensity and fixed calendar anchors
 - [x] Validate and import the uploaded 11,000 hard DECA questions into the practice and mock-exam question bank
+- [x] Validate and replace the practice bank with the uploaded 50,000-question DECA master dataset
