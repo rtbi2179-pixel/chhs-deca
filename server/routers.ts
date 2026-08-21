@@ -29,6 +29,7 @@ import { piLearningRouter } from "./piLearningRouter";
 import { bbxRouter } from "./bbxRouter";
 import { superAdminDiagnosticsRouter } from "./superAdminDiagnosticsRouter";
 import { achievementsRouter } from "./achievementsRouter";
+import { timelineRouter } from "./timelineRouter";
 
 const mockExamClusterSchema = z.enum(CHAPTER_EXAM_CLUSTERS);
 const chapterExamQuestionCountSchema = z.union(CHAPTER_EXAM_QUESTION_COUNTS.map((count) => z.literal(count)) as [z.ZodLiteral<25>, z.ZodLiteral<50>, z.ZodLiteral<75>, z.ZodLiteral<100>]);
@@ -512,6 +513,7 @@ export const gachaRouter = router({
 export const appRouter = router({
   superAdminDiagnostics: superAdminDiagnosticsRouter,
   achievements: achievementsRouter,
+  timeline: timelineRouter,
   announcements: announcementsRouter,
   system: systemRouter,
   gacha: gachaRouter,

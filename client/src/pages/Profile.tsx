@@ -11,6 +11,7 @@ import { toast } from 'sonner'
 import { CreditScoreChart } from '@/components/CreditScoreChart'
 import { PortfolioChart } from '@/components/PortfolioChart'
 import { AchievementTierPanel } from '@/components/AchievementTierPanel'
+import { CompetitionTimelinePreview } from '@/components/CompetitionTimelinePreview'
 import { allEvents } from '@/pages/Events'
 import { useTheme, type WebsiteTheme } from '@/contexts/ThemeContext'
 import { DEFAULT_PROFILE_AVATAR, DEFAULT_PROFILE_BANNER, getProfileAvatar, getProfileBanner, PROFILE_AVATAR_OPTIONS, PROFILE_BANNER_OPTIONS, type ProfileAvatarKey, type ProfileBannerKey } from '@/lib/profileVisuals'
@@ -270,6 +271,7 @@ export default function Profile() {
                 <p className={`mt-3 text-xs leading-5 ${eventSelectionStyle.muted}`}>Changing your focus updates event-aligned practice guidance, PI study links, and mock-exam recommendations.</p>
                 <a href="/event-match?retake=1" className={`mt-4 inline-flex h-10 items-center rounded-md border px-4 text-sm font-semibold transition focus:outline-none focus:ring-2 ${eventSelectionStyle.finder}`}><Target className="mr-2 h-4 w-4" />Start Event Finder</a>
               </div>
+              <div className="mt-5"><CompetitionTimelinePreview /></div>
             </section>}
 
             {activeSection === 'progress' && <section id="progress" role="tabpanel" className="space-y-4"><div className="flex items-end justify-between gap-4"><div><p className="page-eyebrow">Authoritative progress</p><h2 className="mt-2 text-2xl font-semibold text-white">Credit & BBX Performance</h2></div></div>

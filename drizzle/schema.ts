@@ -390,6 +390,60 @@ export const calendarEvents = mysqlTable("calendarEvents", {
 });
 export type CalendarEvent = typeof calendarEvents.$inferSelect;
 export type InsertCalendarEvent = typeof calendarEvents.$inferInsert;
+
+/** Chapter-managed competition deadlines that power personalized DECA timelines. */
+export const eventTimelineCalendarEvents = mysqlTable("eventTimelineCalendarEvents", {
+  id: int("id").autoincrement().primaryKey(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  competitionYear: varchar("competitionYear", { length: 20 }).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  eventType: mysqlEnum("eventType", ["meeting", "mock_competition", "testing", "written_deadline", "pitchdeck_deadline", "district_conference", "state_conference", "campaign_deadline", "leadership_conference", "other"]).notNull(),
+  startDate: varchar("startDate", { length: 10 }),
+  endDate: varchar("endDate", { length: 10 }),
+  isTbd: boolean("isTbd").default(false).notNull(),
+  description: text("description"),
+  priority: mysqlEnum("priority", ["low", "normal", "high", "critical"]).default("normal").notNull(),
+  color: varchar("color", { length: 30 }).default("blue").notNull(),
+  applicableEventTypes: json("applicableEventTypes").$type<string[] | null>(),
+  hardDeadline: boolean("hardDeadline").default(false).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({ schoolYearIndex: index("timeline_calendar_school_year_idx").on(table.schoolCode, table.competitionYear), schoolDateIndex: index("timeline_calendar_school_date_idx").on(table.schoolCode, table.startDate) }));
+
+export const userEventTimelines = mysqlTable("userEventTimelines", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  eventCode: varchar("eventCode", { length: 20 }).notNull(),
+  competitionYear: varchar("competitionYear", { length: 20 }).notNull(),
+  startDate: varchar("startDate", { length: 10 }).notNull(),
+  targetDate: varchar("targetDate", { length: 10 }).notNull(),
+  timelineMode: mysqlEnum("timelineMode", ["gradual", "accelerated", "emergency"]).notNull(),
+  status: mysqlEnum("status", ["active", "archived"]).default("active").notNull(),
+  readinessScore: int("readinessScore").default(0).notNull(),
+  currentPhase: varchar("currentPhase", { length: 100 }).notNull(),
+  generatedAt: timestamp("generatedAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({ userEventStatusIndex: index("timeline_user_event_status_idx").on(table.userId, table.eventCode, table.status), schoolIndex: index("timeline_school_idx").on(table.schoolCode) }));
+
+export const timelineItems = mysqlTable("timelineItems", {
+  id: int("id").autoincrement().primaryKey(),
+  timelineId: int("timelineId").notNull().references(() => userEventTimelines.id, { onDelete: "cascade" }),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description").notNull(),
+  itemType: mysqlEnum("itemType", ["pi_learning", "practice_questions", "practice_exam", "roleplay", "written_project", "pitch_deck", "presentation", "review", "mock_competition", "testing", "conference", "meeting", "deadline", "general"]).notNull(),
+  dueDate: varchar("dueDate", { length: 10 }),
+  priority: mysqlEnum("priority", ["low", "normal", "high", "critical"]).default("normal").notNull(),
+  status: mysqlEnum("status", ["upcoming", "current", "completed", "overdue", "skipped", "rescheduled"]).default("upcoming").notNull(),
+  estimatedMinutes: int("estimatedMinutes").default(30).notNull(),
+  deepLink: varchar("deepLink", { length: 500 }),
+  hardDeadline: boolean("hardDeadline").default(false).notNull(),
+  generatedReason: text("generatedReason").notNull(),
+  sortOrder: int("sortOrder").default(0).notNull(),
+  completedAt: timestamp("completedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({ timelineDueIndex: index("timeline_items_due_idx").on(table.timelineId, table.dueDate), timelineStatusIndex: index("timeline_items_status_idx").on(table.timelineId, table.status) }));
 /**
  * Portfolio items for member portfolios
  */

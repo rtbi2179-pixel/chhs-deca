@@ -6,7 +6,7 @@
 
 import { useDeferredValue, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ExternalLink, Search, ChevronDown, ChevronUp, BookOpen, FileText, Video, Globe, Target, Loader2, ArrowUpRight, LibraryBig, CheckCircle2 } from 'lucide-react'
+import { ExternalLink, Search, ChevronDown, ChevronUp, BookOpen, FileText, Video, Globe, Target, Loader2, ArrowUpRight, LibraryBig, CheckCircle2, CalendarClock } from 'lucide-react'
 import { trpc } from '@/lib/trpc'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useAuth } from '@/_core/hooks/useAuth'
@@ -710,6 +710,7 @@ function EventCard({ event, isFocusedEvent, canSelectEvent, isSelecting, onSelec
                 {isFocusedEvent ? <CheckCircle2 className="h-4 w-4" /> : <Target className="h-4 w-4" />} {isFocusedEvent ? 'Focused Event' : isSelecting ? 'Selecting…' : 'Select This Event'}
               </button>
               <a href="/pi-quizlet" className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-lg border border-blue-400/30 bg-blue-500/10 px-3.5 py-2 text-xs font-semibold text-blue-100 transition hover:border-blue-300/60 hover:bg-blue-500/20 sm:w-auto"><LibraryBig className="h-4 w-4" /> Open PI Library</a>
+              {isFocusedEvent && <a href="/timeline" className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-lg border border-violet-400/30 bg-violet-500/10 px-3.5 py-2 text-xs font-semibold text-violet-100 transition hover:border-violet-300/60 hover:bg-violet-500/20 sm:w-auto"><CalendarClock className="h-4 w-4" /> Open Timeline</a>}
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">

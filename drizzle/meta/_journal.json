@@ -204,6 +204,13 @@
       "when": 1787268177456,
       "tag": "0028_married_tarantula",
       "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "5",
+      "when": 1787272427026,
+      "tag": "0029_panoramic_ender_wiggin",
+      "breakpoints": true
     }
   ]
 }

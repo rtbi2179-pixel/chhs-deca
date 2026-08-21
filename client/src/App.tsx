@@ -60,6 +60,7 @@ const SuperAdminDiagnostics = lazy(() => import("./pages/SuperAdminDiagnostics")
 const Feedback = lazy(() => import("./pages/Feedback"));
 const BluesNews = lazy(() => import("./pages/BluesNews"));
 const EventMatchQuiz = lazy(() => import("./pages/EventMatchQuiz"));
+const CompetitionTimeline = lazy(() => import("./pages/CompetitionTimeline"));
 const DirectMessagesPanel = lazy(() => import("./components/DirectMessagesPanel").then((module) => ({ default: module.DirectMessagesPanel })));
 const FirstSignInTour = lazy(() => import("./components/FirstSignInTour").then((module) => ({ default: module.FirstSignInTour })));
 
@@ -104,6 +105,7 @@ function Router() {
       <Route path="/market-analytics" component={BbxPortfolioPage} />
       <Route path="/feedback" component={Feedback} />
       <Route path="/event-match" component={EventMatchQuiz} />
+      <Route path="/timeline" component={CompetitionTimeline} />
       <Route path="/debug/practice" component={PracticeDebug} />
       <Route path="/verify-email" component={VerifyEmail} />
       <Route path="/reset-password" component={ResetPassword} />

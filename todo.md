@@ -8821,3 +8821,4 @@
 - [x] Create profile achievements with transparent milestones based on real Blue Blazer activity
 - [x] Add Bronze, Silver, and Gold achievement tiers with one-time celebratory unlock toast notifications
 - [x] Remove the “Simulated:” text from Blue’s News displays
+- [x] Build the Priority 1 personalized DECA competition timeline with editable deadlines, event-aware tasks, late-start compression, and Events/Profile integration
