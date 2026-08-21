@@ -92,6 +92,7 @@ export const volunteerOpportunities = mysqlTable("volunteerOpportunities", {
   description: text("description"),
   date: timestamp("date").notNull(),
   spotsAvailable: int("spotsAvailable").default(10).notNull(),
+  hoursOffered: int("hoursOffered").default(0).notNull(),
   schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

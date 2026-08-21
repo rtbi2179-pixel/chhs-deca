@@ -13,6 +13,7 @@ import { useSchoolCode } from '@/contexts/SchoolCodeContext'
 import { trpc } from '@/lib/trpc'
 import { getLoginUrl } from '@/const'
 import { Link } from 'wouter'
+import { getVolunteerOpportunityMetrics } from '@shared/volunteerOpportunityMetrics'
 
 interface VolunteerOpportunity {
   id: number
@@ -154,20 +155,20 @@ const Volunteer = () => {
   const [showSignups, setShowSignups] = useState<number | null>(null)
   const [showAddModal, setShowAddModal] = useState(false)
   const [editingOpp, setEditingOpp] = useState<any | null>(null)
-  const [newOpp, setNewOpp] = useState({ title: '', description: '', date: '', spotsAvailable: 1 })
+  const [newOpp, setNewOpp] = useState({ title: '', description: '', date: '', spotsAvailable: 1, hoursOffered: 0 })
   
   // Load all signups from database
   const { data: allSignups = [] } = trpc.volunteers.getAllSignups.useQuery()
   const utils = trpc.useUtils()
   const { data: dbOpportunities = [] } = trpc.volunteers.getAll.useQuery(
-    { schoolCode: effectiveSchoolCode || undefined },
-    { enabled: !!effectiveSchoolCode }
+    undefined,
+    { enabled: isAuthenticated && !!effectiveSchoolCode }
   )
   const createOppMutation = trpc.volunteers.create.useMutation({
     onSuccess: () => { 
       utils.volunteers.getAll.invalidate()
       setShowAddModal(false)
-      setNewOpp({ title: '', description: '', date: '', spotsAvailable: 1 })
+      setNewOpp({ title: '', description: '', date: '', spotsAvailable: 1, hoursOffered: 0 })
       toast.success('Opportunity created successfully!')
     },
     onError: (error: any) => {
@@ -191,10 +192,10 @@ const Volunteer = () => {
   const opportunitiesWithRealCounts = useMemo(() => {
     const oppsToUse = dbOpportunities.length > 0 ? dbOpportunities : opportunities
     return oppsToUse.map((opp: any) => {
-      const signupCount = allSignups.filter((s: any) => s.signup?.opportunityId === opp.id).length
+      const signupCount = allSignups.filter((s: any) => s.signup?.opportunityId === opp.id && s.signup?.status !== 'cancelled').length
       return {
         ...opp,
-        spotsFilled: signupCount
+        ...getVolunteerOpportunityMetrics(opp, signupCount)
       }
     })
   }, [dbOpportunities, allSignups])
@@ -296,7 +297,8 @@ const Volunteer = () => {
           {opportunitiesWithRealCounts.map((opp, index) => {
             const Icon = categoryIcons[opp.category] || Trophy
             const isSigned = signedUpIds.includes(opp.id)
-            const spotsRemaining = opp.spotsTotal - opp.spotsFilled
+            const spotsRemaining = opp.spotsRemaining
+            const isFull = spotsRemaining <= 0
 
             return (
               <motion.div
@@ -345,7 +347,7 @@ const Volunteer = () => {
                       <div className="w-full bg-white/5 rounded-full h-2 mb-4">
                         <div
                           className="bg-gradient-to-r from-blue-500 to-blue-400 h-full rounded-full transition-all"
-                          style={{ width: `${(opp.spotsFilled / opp.spotsTotal) * 100}%` }}
+                          style={{ width: `${opp.spotsTotal > 0 ? (opp.spotsFilled / opp.spotsTotal) * 100 : 0}%` }}
                         />
                       </div>
 
@@ -391,16 +393,16 @@ const Volunteer = () => {
                               e.stopPropagation()
                               handleSignUp(opp.id)
                             }}
-                            disabled={isSigned || spotsRemaining === 0 || signUpMutation.isPending}
+                            disabled={isSigned || isFull || signUpMutation.isPending}
                             className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${
                               isSigned
                                 ? 'bg-green-600/20 text-green-300 cursor-default'
-                                : spotsRemaining === 0
+                                : isFull
                                 ? 'bg-gray-600/20 text-gray-300 cursor-not-allowed'
                                 : 'bg-blue-600 hover:bg-blue-500 text-white hover:shadow-[0_0_20px_oklch(0.55_0.22_260/0.3)]'
                             }`}
                           >
-                            {signUpMutation.isPending ? 'Signing up...' : isSigned ? 'Signed Up' : spotsRemaining === 0 ? 'Full' : 'Sign Up'}
+                            {signUpMutation.isPending ? 'Signing up...' : isSigned ? 'Signed Up' : isFull ? 'Full' : 'Sign Up'}
                           </button>
                         </div>
                       </div>
@@ -525,10 +527,23 @@ const Volunteer = () => {
                   <input
                     type="number"
                     value={newOpp.spotsAvailable}
-                    onChange={(e) => setNewOpp({ ...newOpp, spotsAvailable: parseInt(e.target.value) })}
+                    onChange={(e) => setNewOpp({ ...newOpp, spotsAvailable: Math.max(1, Number(e.target.value) || 1) })}
                     min="1"
                     className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-blue-500/50"
                   />
+                </div>
+                <div>
+                  <label className="block text-white/70 text-sm font-semibold mb-2">Volunteer Hours Offered</label>
+                  <input
+                    type="number"
+                    value={newOpp.hoursOffered}
+                    onChange={(e) => setNewOpp({ ...newOpp, hoursOffered: Math.max(0, Number(e.target.value) || 0) })}
+                    min="0"
+                    max="500"
+                    step="1"
+                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-blue-500/50"
+                  />
+                  <p className="mt-1 text-xs text-white/45">Set 0 when the opportunity does not provide verified volunteer hours.</p>
                 </div>
                 <div className="flex gap-2 pt-4">
                   <button
@@ -538,7 +553,8 @@ const Volunteer = () => {
                           title: newOpp.title,
                           description: newOpp.description,
                           date: new Date(newOpp.date),
-                          spotsAvailable: newOpp.spotsAvailable
+                          spotsAvailable: newOpp.spotsAvailable,
+                          hoursOffered: newOpp.hoursOffered,
                         }).then(() => {
                           toast.success('Opportunity created')
                         }).catch(() => {

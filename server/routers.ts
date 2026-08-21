@@ -1387,7 +1387,8 @@ export const appRouter = router({
     signUp: protectedProcedure
       .input(z.object({ opportunityId: z.number() }))
       .mutation(async ({ input, ctx }) => {
-        const signup = await db.createVolunteerSignup(ctx.user.id, input.opportunityId);
+        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode || undefined;
+        const signup = await db.createVolunteerSignup(ctx.user.id, input.opportunityId, schoolCode);
         
         // Notify admin
         await notifyOwner({
@@ -1404,22 +1405,26 @@ export const appRouter = router({
       .query(({ ctx }) => db.getUserVolunteerSignups(ctx.user.id)),
     getAllSignups: publicProcedure
       .query(() => db.getAllVolunteerSignups()),
-    getAll: publicProcedure
-      .input(z.object({ schoolCode: z.string().optional() }).optional())
-      .query(({ input }) => db.getAllVolunteerOpportunitiesAdmin(input?.schoolCode)),
+    getAll: protectedProcedure
+      .query(({ ctx }) => {
+        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode || undefined;
+        return schoolCode ? db.getAllVolunteerOpportunitiesAdmin(schoolCode) : [];
+      }),
     create: protectedProcedure
       .input(z.object({
         title: z.string().min(1),
         description: z.string().optional(),
         date: z.date(),
-        spotsAvailable: z.number().min(1),
+        spotsAvailable: z.number().int().min(1),
+        hoursOffered: z.number().int().min(0).max(500),
       }))
       .mutation(async ({ input, ctx }) => {
         if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {
           throw new TRPCError({ code: 'FORBIDDEN', message: 'Only admins can create opportunities' });
         }
-        const schoolCode = ctx.user.schoolCode || '';
-        return db.createVolunteerOpportunityAdmin(input.title, input.description || '', input.date, input.spotsAvailable, schoolCode);
+        const schoolCode = ctx.user.selectedSchoolCode || ctx.user.schoolCode || '';
+        if (!schoolCode) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Select a chapter before creating an opportunity.' });
+        return db.createVolunteerOpportunityAdmin(input.title, input.description || '', input.date, input.spotsAvailable, input.hoursOffered, schoolCode);
       }),
     update: protectedProcedure
       .input(z.object({
@@ -1427,7 +1432,8 @@ export const appRouter = router({
         title: z.string().optional(),
         description: z.string().optional(),
         date: z.date().optional(),
-        spotsAvailable: z.number().optional(),
+        spotsAvailable: z.number().int().min(1).optional(),
+        hoursOffered: z.number().int().min(0).max(500).optional(),
       }))
       .mutation(async ({ input, ctx }) => {
         if (ctx.user.role !== 'admin' && ctx.user.role !== 'super_admin') {

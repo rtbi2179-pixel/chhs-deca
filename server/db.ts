@@ -99,9 +99,26 @@ export async function getUserByOpenId(openId: string) {
 }
 
 // Volunteer queries
-export async function createVolunteerSignup(userId: number, opportunityId: number) {
+export async function createVolunteerSignup(userId: number, opportunityId: number, schoolCode?: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
+
+  const [opportunity] = await db.select({
+    id: volunteerOpportunities.id,
+    schoolCode: volunteerOpportunities.schoolCode,
+    spotsAvailable: volunteerOpportunities.spotsAvailable,
+  }).from(volunteerOpportunities).where(eq(volunteerOpportunities.id, opportunityId)).limit(1);
+  if (!opportunity) throw new Error("This volunteer opportunity is no longer available.");
+  if (schoolCode && opportunity.schoolCode !== schoolCode) throw new Error("This volunteer opportunity belongs to a different chapter.");
+
+  const [existingSignup] = await db.select({ id: volunteerSignups.id }).from(volunteerSignups)
+    .where(and(eq(volunteerSignups.userId, userId), eq(volunteerSignups.opportunityId, opportunityId), ne(volunteerSignups.status, "cancelled")))
+    .limit(1);
+  if (existingSignup) throw new Error("You are already signed up for this opportunity.");
+
+  const [signupCount] = await db.select({ total: count() }).from(volunteerSignups)
+    .where(and(eq(volunteerSignups.opportunityId, opportunityId), ne(volunteerSignups.status, "cancelled")));
+  if (Number(signupCount?.total ?? 0) >= opportunity.spotsAvailable) throw new Error("This volunteer opportunity is full.");
   
   const result = await db.insert(volunteerSignups).values({
     userId,
@@ -1391,7 +1408,7 @@ export async function deleteCalendarEvent(id: number) {
 
 
 // Volunteer Opportunity Management (Admin)
-export async function createVolunteerOpportunityAdmin(title: string, description: string, date: Date, spotsAvailable: number, schoolCode: string) {
+export async function createVolunteerOpportunityAdmin(title: string, description: string, date: Date, spotsAvailable: number, hoursOffered: number, schoolCode: string) {
   const db = await getDb()
   if (!db) throw new Error("Database connection failed")
   
@@ -1400,13 +1417,14 @@ export async function createVolunteerOpportunityAdmin(title: string, description
     description,
     date,
     spotsAvailable,
+    hoursOffered,
     schoolCode,
   })
   
   return result
 }
 
-export async function updateVolunteerOpportunityAdmin(id: number, updates: { title?: string; description?: string; date?: Date; spotsAvailable?: number }) {
+export async function updateVolunteerOpportunityAdmin(id: number, updates: { title?: string; description?: string; date?: Date; spotsAvailable?: number; hoursOffered?: number }) {
   const db = await getDb()
   if (!db) throw new Error("Database connection failed")
   

@@ -1,0 +1,1 @@
+ALTER TABLE `volunteerOpportunities` ADD `hoursOffered` int DEFAULT 0 NOT NULL;
