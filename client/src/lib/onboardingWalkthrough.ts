@@ -1,5 +1,3 @@
-type TourPart = "MAIN PRACTICE TOOLS" | "CHAPTER TOOLS" | "BLUE BUCKS";
-
 export const ONBOARDING_WALKTHROUGH_STEPS = [
   { part: "MAIN PRACTICE TOOLS", eyebrow: "Part 1 · Your command center", title: "Start from your Overview", body: "Overview brings your selected event, study path, practice history, personalized readiness, Blue Bucks accounts, and chapter updates together so you can choose the right next move.", icon: "home", tabLabel: "Overview", detail: "Your live study and chapter command center", path: "/", action: "Use the study path to move directly into the one activity that will help your next competition milestone." },
   { part: "MAIN PRACTICE TOOLS", eyebrow: "Part 1 · Choose a direction", title: "Set your focused DECA event", body: "Events helps you compare official competitive events, select the event you are preparing for, and launch the event finder when you are still deciding. Your choice personalizes PI study, readiness, and the roadmap.", icon: "events", tabLabel: "Events & Event Finder", detail: "Event selection and competition resources", path: "/events", action: "Choose Select this event when you are ready, or start the event finder to narrow your options." },
@@ -27,15 +25,23 @@ export const ONBOARDING_WALKTHROUGH_STEPS = [
 ] as const;
 
 const ADMIN_STEPS = [
-  { part: "CHAPTER TOOLS", eyebrow: "Chapter administration · Member support", title: "Manage members and portfolios", body: "Member Management is the chapter advisor workspace for roster support, teams, portfolio checkpoints, shared submissions, reviews, chapter progress, and advisor decisions on integrity findings.", icon: "members", tabLabel: "Member Management", detail: "Rosters, teams, portfolios, checkpoints, and reviews", path: "/chapter/members", action: "Use the sub-tabs to review member progress, publish checkpoints, inspect submissions, and release advisor feedback deliberately." },
-  { part: "CHAPTER TOOLS", eyebrow: "Chapter administration · Controls", title: "Run chapter systems", body: "Chapter Management contains administrator controls for chapter-wide configurations, mock-exam availability, BBX simulation settings, and other operational tools that members do not manage.", icon: "management", tabLabel: "Chapter Management", detail: "Chapter-wide administrative controls", path: "/admin", action: "Use these controls only when you are making a deliberate chapter decision, then confirm the member-facing result." },
+  { part: "CHAPTER ADMIN", eyebrow: "Chapter administration · Member support", title: "Manage members and portfolios", body: "Member Management is the chapter advisor workspace for roster support, teams, portfolio checkpoints, shared submissions, reviews, chapter progress, and advisor decisions on integrity findings.", icon: "members", tabLabel: "Member Management", detail: "Rosters, teams, portfolios, checkpoints, and reviews", path: "/chapter/members", action: "Use the sub-tabs to review member progress, publish checkpoints, inspect submissions, and release advisor feedback deliberately." },
+  { part: "CHAPTER ADMIN", eyebrow: "Chapter administration · Controls", title: "Run chapter systems", body: "Chapter Management contains administrator controls for chapter-wide configurations, mock-exam availability, BBX simulation settings, and other operational tools that members do not manage.", icon: "management", tabLabel: "Chapter Management", detail: "Chapter-wide administrative controls", path: "/admin", action: "Use these controls only when you are making a deliberate chapter decision, then confirm the member-facing result." },
 ] as const;
 
-const SUPER_ADMIN_STEP = { part: "CHAPTER TOOLS", eyebrow: "Super administrator · Diagnostics", title: "Inspect chapter diagnostics", body: "Chapter Diagnostics gives designated super administrators visibility into school-level activity, roster, accuracy, and usage signals across the platform.", icon: "diagnostics", tabLabel: "Chapter Diagnostics", detail: "Cross-chapter platform diagnostic workspace", path: "/super-admin/diagnostics", action: "Select a school code before reviewing diagnostic signals, and use the information to support—not surveil—chapter improvement." } as const;
+const SUPER_ADMIN_STEP = { part: "CHAPTER ADMIN", eyebrow: "Super administrator · Diagnostics", title: "Inspect chapter diagnostics", body: "Chapter Diagnostics gives designated super administrators visibility into school-level activity, roster, accuracy, and usage signals across the platform.", icon: "diagnostics", tabLabel: "Chapter Diagnostics", detail: "Cross-chapter platform diagnostic workspace", path: "/super-admin/diagnostics", action: "Select a school code before reviewing diagnostic signals, and use the information to support—not surveil—chapter improvement." } as const;
 
-export function getOnboardingWalkthroughSteps(role?: string | null) {
-  if (role === "super_admin") return [...ONBOARDING_WALKTHROUGH_STEPS, ...ADMIN_STEPS, SUPER_ADMIN_STEP];
-  if (role === "admin") return [...ONBOARDING_WALKTHROUGH_STEPS, ...ADMIN_STEPS];
+const DESIGNATED_DIAGNOSTIC_EMAILS = new Set(["sahan.mallampati@gmail.com", "rtbi2179@gmail.com"]);
+
+export function isDesignatedSuperAdmin(user?: { role?: string | null; email?: string | null } | null) {
+  return Boolean(user && user.role === "super_admin" && user.email && DESIGNATED_DIAGNOSTIC_EMAILS.has(user.email.toLowerCase()));
+}
+
+export function getOnboardingWalkthroughSteps(user?: { role?: string | null; email?: string | null } | null) {
+  const isSuper = isDesignatedSuperAdmin(user);
+  const isAdmin = user?.role === "admin" || isSuper;
+  if (isSuper) return [...ONBOARDING_WALKTHROUGH_STEPS, ...ADMIN_STEPS, SUPER_ADMIN_STEP];
+  if (isAdmin) return [...ONBOARDING_WALKTHROUGH_STEPS, ...ADMIN_STEPS];
   return ONBOARDING_WALKTHROUGH_STEPS;
 }
 

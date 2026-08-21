@@ -3,7 +3,7 @@ import { getOnboardingWalkthroughSteps } from "../client/src/lib/onboardingWalkt
 
 describe("expanded Blue Blazer onboarding walkthrough", () => {
   it("organizes every member-facing Practice, Chapter, and Blue Bucks tool into the three tour parts", () => {
-    const memberSteps = getOnboardingWalkthroughSteps("member");
+    const memberSteps = getOnboardingWalkthroughSteps({ role: "user", email: "member@example.com" });
     expect(memberSteps).toHaveLength(21);
     expect(memberSteps.map((step) => step.tabLabel)).toEqual([
       "Overview",
@@ -32,7 +32,7 @@ describe("expanded Blue Blazer onboarding walkthrough", () => {
   });
 
   it("explains Blue Bucks earning, automatic checking credit, Blue's News rewards, and Investment Account BBX buying power", () => {
-    const memberSteps = getOnboardingWalkthroughSteps("member");
+    const memberSteps = getOnboardingWalkthroughSteps({ role: "user", email: "member@example.com" });
     const blueBucks = memberSteps.find((step) => step.tabLabel === "Blue Bucks");
     const banking = memberSteps.find((step) => step.tabLabel === "Banking & Cards");
     const news = memberSteps.find((step) => step.tabLabel === "Blue’s News");
@@ -48,12 +48,16 @@ describe("expanded Blue Blazer onboarding walkthrough", () => {
   });
 
   it("adds management and diagnostics only to the roles that can access those protected workspaces", () => {
-    const memberLabels = getOnboardingWalkthroughSteps("member").map((step) => step.tabLabel);
-    const adminLabels = getOnboardingWalkthroughSteps("admin").map((step) => step.tabLabel);
-    const superAdminLabels = getOnboardingWalkthroughSteps("super_admin").map((step) => step.tabLabel);
+    const memberLabels = getOnboardingWalkthroughSteps({ role: "user", email: "member@example.com" }).map((step) => step.tabLabel);
+    const adminLabels = getOnboardingWalkthroughSteps({ role: "admin", email: "admin@example.com" }).map((step) => step.tabLabel);
+    const designatedSuperAdminLabels = getOnboardingWalkthroughSteps({ role: "super_admin", email: "sahan.mallampati@gmail.com" }).map((step) => step.tabLabel);
+
     expect(memberLabels).not.toContain("Member Management");
+    expect(memberLabels).not.toContain("Chapter Diagnostics");
+
     expect(adminLabels).toEqual(expect.arrayContaining(["Member Management", "Chapter Management"]));
     expect(adminLabels).not.toContain("Chapter Diagnostics");
-    expect(superAdminLabels).toEqual(expect.arrayContaining(["Member Management", "Chapter Management", "Chapter Diagnostics"]));
+
+    expect(designatedSuperAdminLabels).toEqual(expect.arrayContaining(["Member Management", "Chapter Management", "Chapter Diagnostics"]));
   });
 });

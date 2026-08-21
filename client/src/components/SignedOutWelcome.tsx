@@ -69,14 +69,20 @@ export function SignedOutWelcome({ isChecking = false, isAuthenticated = false, 
 
         <section className="grid gap-10 py-12 lg:grid-cols-[1.08fr_.92fr] lg:items-center lg:py-20">
           <motion.div {...fadeUp(0.08)} className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-blue-200/15 bg-white/[0.035] px-3 py-1.5 font-mono-data text-[10px] tracking-[0.16em] text-blue-100/75"><Sparkles className="h-3.5 w-3.5 text-blue-300" />ONE WORKSPACE. A CLEARER PATH TO COMPETITION.</div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-blue-200/15 bg-white/[0.035] px-3 py-1.5 font-mono-data text-[10px] tracking-[0.16em] text-blue-100/75"><Sparkles className="h-3.5 w-3.5 text-blue-300" />ROAD TO ICDC. ONE WORKSPACE. A CLEARER PATH TO COMPETITION.</div>
             <h1 className="mt-7 font-display text-5xl leading-[0.88] tracking-tight text-white sm:text-7xl xl:text-8xl">PREP WITH<br /><span className="text-blue-300">A PLAN.</span><br />PERFORM WITH<br />PURPOSE.</h1>
-            <p className="mt-7 max-w-2xl text-base leading-7 text-slate-200/70 sm:text-lg">Blue Blazer brings the tools a chapter actually uses into one focused experience—from event selection and PI study to chapter updates, portfolios, and competition-ready practice.</p>
+            <p className="mt-7 max-w-2xl text-base leading-7 text-slate-200/70 sm:text-lg">BLUE BLAZER brings the tools a chapter actually uses into one focused experience—from event selection and PI study to chapter updates, portfolios, and competition-ready practice.</p>
             <div className="mt-9 grid gap-3 sm:grid-cols-3">{journey.map(({ icon: Icon, label, detail }, index) => <motion.div key={label} {...fadeUp(0.22 + index * 0.08)} className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 backdrop-blur-sm"><Icon className="h-5 w-5 text-blue-200" /><p className="mt-5 text-sm font-semibold text-white">{label}</p><p className="mt-1 text-xs leading-5 text-slate-300/60">{detail}</p></motion.div>)}</div>
           </motion.div>
           <motion.aside {...fadeUp(0.16)} className="relative overflow-hidden rounded-[2rem] border border-blue-200/15 bg-[linear-gradient(150deg,rgba(24,62,132,.65),rgba(7,14,31,.96)_54%,rgba(12,28,65,.82))] p-6 shadow-[0_28px_100px_rgba(0,0,0,.42)] sm:p-8">
             <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full border border-blue-300/20 bg-blue-400/10 blur-sm" />
-            <div className="relative"><div className="flex items-start justify-between gap-5"><div><p className="page-eyebrow">Built for the full season</p><h2 className="mt-3 text-2xl font-semibold text-white">Every useful signal, in one place.</h2></div><span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-blue-200/20 bg-blue-300/[0.08]"><img src={logoUrl} alt="" className="h-9 w-9 object-contain" /></span></div><div className="mt-8 space-y-4">{[["Your next move", "Adaptive timelines turn progress into a practical weekly focus."], ["Your chapter pulse", "Updates, deadlines, and discussions stay visible without scattered tools."], ["Your competitive record", "Practice, portfolio versions, feedback, and achievements stay connected."]].map(([title, detail], index) => <div key={title} className="flex gap-4 border-l border-blue-300/30 pl-4"><span className="font-mono-data text-xs text-blue-200/60">0{index + 1}</span><div><p className="text-sm font-semibold text-white">{title}</p><p className="mt-1 text-xs leading-5 text-slate-200/60">{detail}</p></div></div>)}</div><div className="mt-8 rounded-2xl border border-white/10 bg-slate-950/35 p-4"><div className="flex items-center gap-2 text-sm font-medium text-blue-50"><CheckCircle2 className="h-4 w-4 text-blue-300" />Start with your chapter account</div><p className="mt-2 text-xs leading-5 text-slate-200/55">Your work, feedback, and chapter information are kept within your secure Blue Blazer workspace.</p></div></div>
+            <div className="relative flex flex-col items-center text-center">
+              <span className="flex h-52 w-52 items-center justify-center rounded-3xl border border-blue-200/30 bg-blue-950/40 p-4 shadow-[0_0_50px_rgba(59,130,246,.35)]">
+                <img src={logoUrl} alt="Blue Blazer Logo" className="h-44 w-44 object-contain" />
+              </span>
+              <h2 className="mt-6 text-2xl font-semibold text-white">Every useful signal, in one place.</h2>
+              <p className="mt-2 text-xs leading-5 text-slate-200/65 max-w-md">Your work, feedback, and chapter information are kept within your secure Blue Blazer workspace.</p>
+            </div>
           </motion.aside>
         </section>
 

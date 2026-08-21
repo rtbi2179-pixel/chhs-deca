@@ -8,3 +8,4 @@
 - [x] Rigorously validate member, AI Judge, chapter-management, leaderboard, timeline, practice, mock-exam, calendar, announcement, and volunteer workflows; add unread chapter-update notification badges
 - [x] Redesign the signed-out welcome page to explain Blue Blazer’s current offering persuasively and refine the achievements experience further
 - [x] Reconcile the DECA question bank to the verified 50,000-record source and make displayed difficulty totals database-authoritative
+- [ ] Restrict tour chapters to member workflows, hide chapter-management from normal members, and restrict diagnostics to Ricardo and Sahan
