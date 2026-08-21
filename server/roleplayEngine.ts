@@ -1,4 +1,5 @@
 import { invokeLLM } from "./_core/llm";
+import type { AcousticMetrics } from "./mediaAnalysis";
 
 export const ROLEPLAY_PROMPT_VERSION = "blue-blazer-roleplay-evaluator-v1";
 
@@ -104,10 +105,26 @@ export function calculateSafeRoleplayScore(
   };
 }
 
-export function buildDeliveryAnalysis(transcript: string, durationSeconds: number) {
+export function buildDeliveryAnalysis(transcript: string, durationSeconds: number, acoustic?: AcousticMetrics) {
+  const safeAcoustic: AcousticMetrics = acoustic ?? {
+    available: false,
+    source: "unavailable",
+    durationSeconds,
+    speakingSeconds: 0,
+    silenceSeconds: 0,
+    silencePercentage: 0,
+    pauseCount: 0,
+    averagePauseMs: 0,
+    longestPauseMs: 0,
+    averageLoudnessDbfs: null,
+    loudnessVariationDb: null,
+    clippingPercentage: 0,
+    analysisVersion: "legacy-transcript-only",
+    reason: "This legacy attempt has no saved recording waveform available for delivery analysis.",
+  };
   const words = transcript.match(/[A-Za-z0-9’'-]+/g) ?? [];
-  const durationMinutes = Math.max(durationSeconds / 60, 0.1);
-  const paceWpm = Math.round(words.length / durationMinutes);
+  const speakingMinutes = Math.max(safeAcoustic.speakingSeconds / 60, 0.1);
+  const paceWpm = safeAcoustic.available ? Math.round(words.length / speakingMinutes) : null;
   const fillerMatches = transcript.match(/\b(um|uh|like|you know|basically|actually)\b/gi) ?? [];
   const wordFrequency = new Map<string, number>();
   words.map((word) => word.toLowerCase()).filter((word) => word.length > 5).forEach((word) => {
@@ -118,18 +135,29 @@ export function buildDeliveryAnalysis(transcript: string, durationSeconds: numbe
     .sort((a, b) => b[1] - a[1])
     .slice(0, 3)
     .map(([word, count]) => ({ word, count }));
-  const paceBand = paceWpm < 105 ? "measured" : paceWpm <= 165 ? "conversational" : "fast";
+  const paceBand = paceWpm === null ? "unavailable" : paceWpm < 105 ? "measured" : paceWpm <= 165 ? "conversational" : "fast";
 
   return {
-    source: "transcript_and_recording_duration",
+    source: acoustic ? (safeAcoustic.available ? "stored_recording_waveform_and_transcript" : "recording_analysis_unavailable") : "transcript_and_recording_duration",
     wordCount: words.length,
     durationSeconds,
     paceWordsPerMinute: paceWpm,
     paceBand,
     fillerWordCount: fillerMatches.length,
     repeatedTerms,
-    timeUse: durationSeconds < 90 ? "Very short response; the judge may have received limited support and application." : "Time use was measured from the submitted recording.",
-    limitations: "This coaching analysis does not affect the DECA practice score. Transcript and duration cannot reliably assess eye contact, gestures, appearance, vocal variety, or confidence.",
+    speakingSeconds: safeAcoustic.speakingSeconds,
+    silenceSeconds: safeAcoustic.silenceSeconds,
+    silencePercentage: safeAcoustic.silencePercentage,
+    pauseCount: safeAcoustic.pauseCount,
+    averagePauseMs: safeAcoustic.averagePauseMs,
+    longestPauseMs: safeAcoustic.longestPauseMs,
+    averageLoudnessDbfs: safeAcoustic.averageLoudnessDbfs,
+    loudnessVariationDb: safeAcoustic.loudnessVariationDb,
+    clippingPercentage: safeAcoustic.clippingPercentage,
+    analysisAvailable: safeAcoustic.available,
+    analysisReason: safeAcoustic.reason ?? null,
+    timeUse: !safeAcoustic.available ? "Delivery analysis is unavailable because reliable acoustic evidence could not be derived from the saved recording." : durationSeconds < 90 ? "Very short recorded response; the judge may have received limited support and application." : "Time use was measured from the submitted recording.",
+    limitations: "This coaching analysis does not affect the DECA practice score. It uses saved-recording waveform metrics for pacing, pauses, silence, and loudness. It does not infer eye contact, gestures, appearance, or internal confidence.",
   };
 }
 
@@ -193,6 +221,7 @@ export async function evaluateRoleplayTranscript(input: {
   pis: ScenarioPi[];
   transcript: string;
   durationSeconds: number;
+  acousticMetrics: AcousticMetrics;
 }) {
   let lastError: unknown;
   for (let attempt = 0; attempt < 2; attempt += 1) {
@@ -213,8 +242,8 @@ export async function evaluateRoleplayTranscript(input: {
         ...score,
         strengths: Array.isArray(parsed.strengths) ? parsed.strengths.filter((item): item is string => typeof item === "string").map((item) => item.slice(0, 360)).slice(0, 3) : [],
         improvements: Array.isArray(parsed.improvements) ? parsed.improvements.filter((item): item is string => typeof item === "string").map((item) => item.slice(0, 360)).slice(0, 3) : [],
-        deliveryAnalysis: buildDeliveryAnalysis(input.transcript, input.durationSeconds),
-        modelMetadata: { model: response.model, promptVersion: ROLEPLAY_PROMPT_VERSION, evaluationAttempt: attempt + 1, scoring: "server-deterministic-equal-weighted-pi-levels" },
+        deliveryAnalysis: buildDeliveryAnalysis(input.transcript, input.durationSeconds, input.acousticMetrics),
+        modelMetadata: { model: response.model, promptVersion: ROLEPLAY_PROMPT_VERSION, evaluationAttempt: attempt + 1, scoring: "server-deterministic-equal-weighted-pi-levels", acousticEvidence: input.acousticMetrics.available ? "stored_recording_waveform" : "unavailable" },
       };
     } catch (error) {
       lastError = error;

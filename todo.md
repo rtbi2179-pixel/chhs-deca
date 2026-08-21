@@ -8834,3 +8834,4 @@
 - [x] Make Competition Readiness use recorded preparation factors and display readiness for the member’s next district, state, or ICDC milestone
 - [x] Simplify all PI lessons to concise main ideas and remove vocabulary, quick review, related-PI, and teach-back activities
 - [x] Ensure answered questions and every qualifying Blue Blazer action reliably award Blue Bucks directly to checking exactly once
+- [x] Rebuild Roleplay and Written Event AI Judges around preserved browser-captured media, media-informed evaluation, and evidence-transparent results

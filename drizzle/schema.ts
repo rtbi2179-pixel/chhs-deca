@@ -71,11 +71,14 @@ export const decaAiJudgeSessions = mysqlTable("decaAiJudgeSessions", {
   eventCode: varchar("eventCode", { length: 20 }).notNull(),
   ruleSetVersion: varchar("ruleSetVersion", { length: 80 }).notNull(),
   groupSize: int("groupSize").notNull(),
-  submissionMode: mysqlEnum("submissionMode", ["reviewed_transcript"]).default("reviewed_transcript").notNull(),
+  submissionMode: mysqlEnum("submissionMode", ["reviewed_transcript", "recorded_presentation"]).default("reviewed_transcript").notNull(),
   rawTranscript: text("rawTranscript").notNull(),
   correctedTranscript: text("correctedTranscript").notNull(),
   durationSeconds: int("durationSeconds"),
-  status: mysqlEnum("status", ["analyzing", "completed", "failed"]).default("analyzing").notNull(),
+  status: mysqlEnum("status", ["setup", "recording", "uploading", "processing", "analyzing", "completed", "failed"]).default("analyzing").notNull(),
+  recordingState: mysqlEnum("recordingState", ["idle", "requesting_permission", "ready", "recording", "finalizing", "uploading", "uploaded", "processing", "permission_denied", "device_error", "upload_paused", "upload_failed", "transcription_failed", "analysis_failed", "grading_failed"]).default("idle").notNull(),
+  sourceAvailability: json("sourceAvailability").$type<Record<string, unknown>>(),
+  failureReason: varchar("failureReason", { length: 512 }),
   observableScore: int("observableScore"),
   observableMaximumPoints: int("observableMaximumPoints"),
   fullEstimatedScore: int("fullEstimatedScore"),
@@ -89,6 +92,87 @@ export const decaAiJudgeSessions = mysqlTable("decaAiJudgeSessions", {
   ruleSetIndex: index("deca_ai_judge_session_rule_set_idx").on(table.ruleSetId, table.createdAt),
 }));
 export type DecaAiJudgeSession = typeof decaAiJudgeSessions.$inferSelect;
+
+/** Original student media remains the primary presentation artifact; transcripts and metrics remain derived evidence. */
+export const decaAiJudgeRecordings = mysqlTable("decaAiJudgeRecordings", {
+  id: int("id").autoincrement().primaryKey(),
+  sessionId: int("sessionId").notNull().references(() => decaAiJudgeSessions.id, { onDelete: "cascade" }),
+  recordingType: mysqlEnum("recordingType", ["presentation", "judge_question", "participant_response"]).default("presentation").notNull(),
+  storageKey: varchar("storageKey", { length: 1024 }).notNull(),
+  mimeType: varchar("mimeType", { length: 100 }).notNull(),
+  durationMs: int("durationMs").notNull(),
+  hasAudio: boolean("hasAudio").default(true).notNull(),
+  hasVideo: boolean("hasVideo").default(false).notNull(),
+  fileSizeBytes: int("fileSizeBytes").notNull(),
+  uploadStatus: mysqlEnum("uploadStatus", ["uploading", "uploaded", "processing", "failed"]).default("uploaded").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  sessionTypeUnique: unique("deca_ai_judge_recording_session_type_unique").on(table.sessionId, table.recordingType),
+  sessionIndex: index("deca_ai_judge_recording_session_idx").on(table.sessionId, table.createdAt),
+}));
+
+/** Chunk metadata allows the browser to persist progress during a long presentation and retry individual uploads. */
+export const decaAiJudgeRecordingChunks = mysqlTable("decaAiJudgeRecordingChunks", {
+  id: int("id").autoincrement().primaryKey(),
+  recordingId: int("recordingId").notNull().references(() => decaAiJudgeRecordings.id, { onDelete: "cascade" }),
+  sequence: int("sequence").notNull(),
+  storageKey: varchar("storageKey", { length: 1024 }).notNull(),
+  fileSizeBytes: int("fileSizeBytes").notNull(),
+  startMs: int("startMs").notNull(),
+  endMs: int("endMs").notNull(),
+  uploadStatus: mysqlEnum("uploadStatus", ["uploaded", "failed"]).default("uploaded").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  recordingSequenceUnique: unique("deca_ai_judge_recording_chunk_sequence_unique").on(table.recordingId, table.sequence),
+}));
+
+export const decaAiJudgeRecordingSegments = mysqlTable("decaAiJudgeRecordingSegments", {
+  id: int("id").autoincrement().primaryKey(),
+  recordingId: int("recordingId").notNull().references(() => decaAiJudgeRecordings.id, { onDelete: "cascade" }),
+  segmentType: mysqlEnum("segmentType", ["presentation", "judge_question", "participant_response"]).notNull(),
+  startMs: int("startMs").notNull(),
+  endMs: int("endMs").notNull(),
+  label: varchar("label", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({ recordingIndex: index("deca_ai_judge_segment_recording_idx").on(table.recordingId, table.startMs) }));
+
+export const decaAiJudgeRecordingTranscripts = mysqlTable("decaAiJudgeRecordingTranscripts", {
+  id: int("id").autoincrement().primaryKey(),
+  recordingId: int("recordingId").notNull().references(() => decaAiJudgeRecordings.id, { onDelete: "cascade" }),
+  rawTranscript: text("rawTranscript").notNull(),
+  segments: json("segments").$type<unknown[]>(),
+  language: varchar("language", { length: 20 }),
+  provider: varchar("provider", { length: 100 }).notNull(),
+  confidence: decimal("confidence", { precision: 4, scale: 2 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({ recordingUnique: unique("deca_ai_judge_transcript_recording_unique").on(table.recordingId) }));
+
+/** Acoustic metrics are computed from the stored recording signal; they are never inferred from transcript punctuation. */
+export const decaAiJudgeAcousticAnalyses = mysqlTable("decaAiJudgeAcousticAnalyses", {
+  id: int("id").autoincrement().primaryKey(),
+  recordingId: int("recordingId").notNull().references(() => decaAiJudgeRecordings.id, { onDelete: "cascade" }),
+  metrics: json("metrics").$type<Record<string, unknown>>().notNull(),
+  confidence: decimal("confidence", { precision: 4, scale: 2 }).notNull(),
+  analysisVersion: varchar("analysisVersion", { length: 80 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({ recordingUnique: unique("deca_ai_judge_acoustic_recording_unique").on(table.recordingId) }));
+
+/** The written entry remains independent primary evidence and is never replaced by a spoken transcript. */
+export const decaAiJudgeWrittenSubmissions = mysqlTable("decaAiJudgeWrittenSubmissions", {
+  id: int("id").autoincrement().primaryKey(),
+  sessionId: int("sessionId").notNull().references(() => decaAiJudgeSessions.id, { onDelete: "cascade" }),
+  storageKey: varchar("storageKey", { length: 1024 }).notNull(),
+  fileName: varchar("fileName", { length: 512 }).notNull(),
+  mimeType: varchar("mimeType", { length: 100 }).notNull(),
+  fileSizeBytes: int("fileSizeBytes").notNull(),
+  parsedContent: text("parsedContent"),
+  pageCount: int("pageCount"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({ sessionUnique: unique("deca_ai_judge_written_submission_session_unique").on(table.sessionId) }));
 
 /**
  * Versioned simulator configuration. The rubric JSON contains the active,
@@ -179,12 +263,50 @@ export const roleplayRecordings = mysqlTable("roleplayRecordings", {
   audioStorageKey: varchar("audioStorageKey", { length: 1024 }).notNull(),
   contentType: varchar("contentType", { length: 100 }).notNull(),
   durationSeconds: int("durationSeconds").notNull(),
+  durationMs: int("durationMs"),
+  hasAudio: boolean("hasAudio").default(true).notNull(),
+  hasVideo: boolean("hasVideo").default(false).notNull(),
+  uploadStatus: mysqlEnum("uploadStatus", ["uploading", "uploaded", "processing", "failed"]).default("uploaded").notNull(),
   fileSizeBytes: int("fileSizeBytes").notNull(),
   uploadedAt: timestamp("uploadedAt").defaultNow().notNull(),
 }, (table) => ({
   attemptPhaseUnique: unique("roleplay_recording_attempt_phase_unique").on(table.attemptId, table.phase),
 }));
 export type RoleplayRecording = typeof roleplayRecordings.$inferSelect;
+
+/** Recovery chunks retain an upload trail while the finalized original recording remains the scoring source. */
+export const roleplayRecordingChunks = mysqlTable("roleplayRecordingChunks", {
+  id: int("id").autoincrement().primaryKey(),
+  recordingId: int("recordingId").notNull().references(() => roleplayRecordings.id, { onDelete: "cascade" }),
+  sequence: int("sequence").notNull(),
+  storageKey: varchar("storageKey", { length: 1024 }).notNull(),
+  fileSizeBytes: int("fileSizeBytes").notNull(),
+  startMs: int("startMs").notNull(),
+  endMs: int("endMs").notNull(),
+  uploadStatus: mysqlEnum("uploadStatus", ["uploaded", "failed"]).default("uploaded").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({ recordingSequenceUnique: unique("roleplay_recording_chunk_sequence_unique").on(table.recordingId, table.sequence) }));
+
+export const roleplayRecordingSegments = mysqlTable("roleplayRecordingSegments", {
+  id: int("id").autoincrement().primaryKey(),
+  recordingId: int("recordingId").notNull().references(() => roleplayRecordings.id, { onDelete: "cascade" }),
+  segmentType: mysqlEnum("segmentType", ["presentation", "judge_question", "participant_response"]).notNull(),
+  startMs: int("startMs").notNull(),
+  endMs: int("endMs").notNull(),
+  label: varchar("label", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({ recordingIndex: index("roleplay_recording_segment_recording_idx").on(table.recordingId, table.startMs) }));
+
+/** Stores actual-signal acoustic analysis separately from transcript content scoring. */
+export const roleplayAcousticAnalyses = mysqlTable("roleplayAcousticAnalyses", {
+  id: int("id").autoincrement().primaryKey(),
+  recordingId: int("recordingId").notNull().references(() => roleplayRecordings.id, { onDelete: "cascade" }),
+  metrics: json("metrics").$type<Record<string, unknown>>().notNull(),
+  confidence: decimal("confidence", { precision: 4, scale: 2 }).notNull(),
+  analysisVersion: varchar("analysisVersion", { length: 80 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({ recordingUnique: unique("roleplay_acoustic_recording_unique").on(table.recordingId) }));
 
 export const roleplayTranscripts = mysqlTable("roleplayTranscripts", {
   id: int("id").autoincrement().primaryKey(),

@@ -7,9 +7,11 @@ import {
   eventPerformanceIndicators,
   piLearningModules,
   roleplayAttempts,
+  roleplayAcousticAnalyses,
   roleplayEvaluations,
   roleplayJudgeTurns,
   roleplayRecordings,
+  roleplayRecordingSegments,
   roleplayScenarios,
   roleplayTranscripts,
   userPiProgress,
@@ -20,12 +22,13 @@ import { invokeLLM } from "./_core/llm";
 import { protectedProcedure, router } from "./_core/trpc";
 import { transcribeAudio } from "./_core/voiceTranscription";
 import { getDb } from "./db";
+import { analyzeStoredRecording, audioAnalysisConfidence, extractAudioForTranscription } from "./mediaAnalysis";
 import { evaluateRoleplayTranscript, type ScenarioPi } from "./roleplayEngine";
 import { storageGet, storagePut } from "./storage";
 
 const ACTIVE_STATUSES = ["briefing", "preparing", "judge_intro", "interview", "follow_up", "submitted", "transcribing", "evaluating"] as const;
-const MAX_AUDIO_BYTES = 16 * 1024 * 1024;
-const AUDIO_CONTENT_TYPES = ["audio/webm", "audio/ogg", "audio/mp4", "audio/mpeg", "audio/wav"] as const;
+const MAX_MEDIA_BYTES = 24 * 1024 * 1024;
+const MEDIA_CONTENT_TYPES = ["audio/webm", "audio/ogg", "audio/mp4", "audio/mpeg", "audio/wav", "video/webm", "video/mp4"] as const;
 
 const scenarioOutputFormat = {
   type: "json_schema" as const,
@@ -279,22 +282,26 @@ async function ownedAttempt(database: NonNullable<Awaited<ReturnType<typeof getD
 
 async function attemptDetail(database: NonNullable<Awaited<ReturnType<typeof getDb>>>, userId: number, attemptId: number) {
   const attempt = await ownedAttempt(database, userId, attemptId);
-  const [[scenario], [rubric], turns, [transcript], [evaluation], [recording]] = await Promise.all([
+  const [[scenario], [rubric], turns, [transcript], [evaluation], [recording], [acoustic], recordingSegments] = await Promise.all([
     database.select().from(roleplayScenarios).where(eq(roleplayScenarios.id, attempt.scenarioId)).limit(1),
     database.select().from(decaEventRubrics).where(eq(decaEventRubrics.id, attempt.rubricId)).limit(1),
     database.select().from(roleplayJudgeTurns).where(eq(roleplayJudgeTurns.attemptId, attempt.id)).orderBy(roleplayJudgeTurns.sequence),
     database.select().from(roleplayTranscripts).where(eq(roleplayTranscripts.attemptId, attempt.id)).limit(1),
     database.select().from(roleplayEvaluations).where(eq(roleplayEvaluations.attemptId, attempt.id)).limit(1),
     database.select().from(roleplayRecordings).where(eq(roleplayRecordings.attemptId, attempt.id)).limit(1),
+    database.select().from(roleplayAcousticAnalyses).innerJoin(roleplayRecordings, eq(roleplayAcousticAnalyses.recordingId, roleplayRecordings.id)).where(eq(roleplayRecordings.attemptId, attempt.id)).limit(1),
+    database.select().from(roleplayRecordingSegments).innerJoin(roleplayRecordings, eq(roleplayRecordingSegments.recordingId, roleplayRecordings.id)).where(eq(roleplayRecordings.attemptId, attempt.id)).orderBy(roleplayRecordingSegments.startMs),
   ]);
   if (!scenario || !rubric) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "This roleplay attempt has incomplete simulator data." });
   return {
-    attempt: { ...attempt, hasRecording: Boolean(recording) },
+    attempt: { ...attempt, hasRecording: Boolean(recording), recordingState: recording?.uploadStatus ?? null },
     event: getDecaRoleplayEvent(attempt.eventCode),
     timing: parseTiming(rubric),
     rubric: { version: rubric.version, season: rubric.season, verificationStatus: rubric.verificationStatus, sourceUrl: rubric.sourceUrl, disclosure: (rubric.rubricJson as Record<string, unknown>).practiceScore },
     scenario: scenarioView(scenario),
     judgeTurns: turns,
+    recording: recording ? { contentType: recording.contentType, durationSeconds: recording.durationSeconds, durationMs: recording.durationMs ?? recording.durationSeconds * 1_000, hasAudio: recording.hasAudio, hasVideo: recording.hasVideo, uploadStatus: recording.uploadStatus, segments: recordingSegments.map(({ roleplayRecordingSegments: segment }) => segment) } : null,
+    acousticAnalysis: acoustic ? acoustic.roleplayAcousticAnalyses : null,
     transcript: transcript ? { text: transcript.cleanedText, segments: transcript.segments, transcribedAt: transcript.transcribedAt } : null,
     evaluation: evaluation ? { piScores: evaluation.piScores, deliveryAnalysis: evaluation.deliveryAnalysis, overallScore: evaluation.overallScore, performanceLevel: evaluation.performanceLevel, strengths: evaluation.strengths, improvements: evaluation.improvements, trainingRecommendations: evaluation.trainingRecommendations, modelMetadata: evaluation.modelMetadata } : null,
   };
@@ -449,20 +456,29 @@ export const roleplayRouter = router({
 
   uploadInterviewAudio: protectedProcedure.input(z.object({
     attemptId: z.number().int().positive(),
-    audioBase64: z.string().min(4).max(22_500_000),
-    contentType: z.enum(AUDIO_CONTENT_TYPES),
+    audioBase64: z.string().min(4).max(33_600_000),
+    contentType: z.enum(MEDIA_CONTENT_TYPES),
     durationSeconds: z.number().int().min(1).max(1_200),
+    durationMs: z.number().int().min(1).max(1_290_000).optional(),
+    hasVideo: z.boolean().default(false),
+    segments: z.array(z.object({ segmentType: z.enum(["presentation", "judge_question", "participant_response"]), startMs: z.number().int().min(0), endMs: z.number().int().min(0), label: z.string().max(255).optional() })).max(50).optional(),
   })).mutation(async ({ ctx, input }) => {
     const database = requireDatabase(await getDb());
     const attempt = await ownedAttempt(database, ctx.user.id, input.attemptId);
     if (!ACTIVE_STATUSES.includes(attempt.status as typeof ACTIVE_STATUSES[number])) throw new TRPCError({ code: "CONFLICT", message: "This attempt is no longer accepting recordings." });
     const buffer = Buffer.from(input.audioBase64, "base64");
-    if (!buffer.length || buffer.length > MAX_AUDIO_BYTES) throw new TRPCError({ code: "BAD_REQUEST", message: "The recording must be a valid audio file smaller than 16 MB." });
+    if (!buffer.length || buffer.length > MAX_MEDIA_BYTES) throw new TRPCError({ code: "BAD_REQUEST", message: "The original recording must be a valid media file smaller than 24 MB." });
     if (input.durationSeconds > attempt.interviewDurationSeconds + 90) throw new TRPCError({ code: "BAD_REQUEST", message: "The recording exceeds the allowed roleplay interview window." });
     const storageKey = `roleplay-recordings/${ctx.user.id}/${attempt.id}/${randomUUID()}.${contentTypeExtension(input.contentType)}`;
     await storagePut(storageKey, buffer, input.contentType);
-    await database.insert(roleplayRecordings).values({ attemptId: attempt.id, phase: "interview", audioStorageKey: storageKey, contentType: input.contentType, durationSeconds: input.durationSeconds, fileSizeBytes: buffer.length })
-      .onDuplicateKeyUpdate({ set: { audioStorageKey: storageKey, contentType: input.contentType, durationSeconds: input.durationSeconds, fileSizeBytes: buffer.length, uploadedAt: new Date() } });
+    await database.insert(roleplayRecordings).values({ attemptId: attempt.id, phase: "interview", audioStorageKey: storageKey, contentType: input.contentType, durationSeconds: input.durationSeconds, durationMs: input.durationMs ?? input.durationSeconds * 1_000, hasAudio: true, hasVideo: input.hasVideo, uploadStatus: "uploaded", fileSizeBytes: buffer.length })
+      .onDuplicateKeyUpdate({ set: { audioStorageKey: storageKey, contentType: input.contentType, durationSeconds: input.durationSeconds, durationMs: input.durationMs ?? input.durationSeconds * 1_000, hasAudio: true, hasVideo: input.hasVideo, uploadStatus: "uploaded", fileSizeBytes: buffer.length, uploadedAt: new Date() } });
+    const [storedRecording] = await database.select().from(roleplayRecordings).where(eq(roleplayRecordings.attemptId, attempt.id)).limit(1);
+    if (!storedRecording) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "The original recording was stored but its metadata could not be recovered." });
+    if (input.segments?.length) {
+      await database.delete(roleplayRecordingSegments).where(eq(roleplayRecordingSegments.recordingId, storedRecording.id));
+      await database.insert(roleplayRecordingSegments).values(input.segments.filter((segment) => segment.endMs >= segment.startMs).map((segment) => ({ recordingId: storedRecording.id, ...segment })));
+    }
     await database.update(roleplayAttempts).set({ status: "submitted", submittedAt: new Date(), failureReason: null, updatedAt: new Date() }).where(eq(roleplayAttempts.id, attempt.id));
     return { success: true, durationSeconds: input.durationSeconds };
   }),
@@ -477,8 +493,21 @@ export const roleplayRouter = router({
     if (!recording) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Record your roleplay before requesting an evaluation." });
     await database.update(roleplayAttempts).set({ status: "transcribing", failureReason: null, updatedAt: new Date() }).where(eq(roleplayAttempts.id, current.id));
     try {
+      await database.update(roleplayRecordings).set({ uploadStatus: "processing" }).where(eq(roleplayRecordings.id, recording.id));
       const { url } = await storageGet(recording.audioStorageKey);
-      const transcribed = await transcribeAudio({ audioUrl: url, language: "en", prompt: "Transcribe a student DECA business roleplay interview. Preserve business vocabulary, recommendations, and numerical details where audible." });
+      const acousticMetrics = await analyzeStoredRecording(url);
+      const acousticConfidence = audioAnalysisConfidence(acousticMetrics);
+      await database.insert(roleplayAcousticAnalyses).values({ recordingId: recording.id, metrics: acousticMetrics, confidence: String(acousticConfidence), analysisVersion: acousticMetrics.analysisVersion })
+        .onDuplicateKeyUpdate({ set: { metrics: acousticMetrics, confidence: String(acousticConfidence), analysisVersion: acousticMetrics.analysisVersion, updatedAt: new Date() } });
+      if (!acousticMetrics.available) {
+        await database.update(roleplayAttempts).set({ status: "submitted", failureReason: acousticMetrics.reason ?? "Reliable audio delivery evidence was unavailable.", updatedAt: new Date() }).where(eq(roleplayAttempts.id, current.id));
+        await database.update(roleplayRecordings).set({ uploadStatus: "uploaded" }).where(eq(roleplayRecordings.id, recording.id));
+        throw new TRPCError({ code: "BAD_REQUEST", message: acousticMetrics.reason ?? "The saved recording could not support a reliable delivery evaluation. Please record again." });
+      }
+      const extracted = await extractAudioForTranscription(url);
+      const transcriptionKey = `roleplay-recordings/${ctx.user.id}/${current.id}/derived-${randomUUID()}.mp3`;
+      const { url: transcriptionUrl } = await storagePut(transcriptionKey, extracted.audio, extracted.contentType);
+      const transcribed = await transcribeAudio({ audioUrl: transcriptionUrl, language: "en", prompt: "Transcribe a student DECA business roleplay interview. Preserve business vocabulary, recommendations, and numerical details where audible." });
       if ("error" in transcribed) throw new Error(`${transcribed.error}${transcribed.details ? `: ${transcribed.details}` : ""}`);
       const text = transcribed.text.trim();
       if (text.length < 40) {
@@ -497,6 +526,7 @@ export const roleplayRouter = router({
         pis: detail.scenario.performanceIndicators,
         transcript: text,
         durationSeconds: recording.durationSeconds,
+        acousticMetrics,
       });
       const recommendations = trainingRecommendations(evaluation.piScores);
       await database.insert(roleplayEvaluations).values({
@@ -511,6 +541,7 @@ export const roleplayRouter = router({
         modelMetadata: evaluation.modelMetadata,
       }).onDuplicateKeyUpdate({ set: { piScores: evaluation.piScores, deliveryAnalysis: evaluation.deliveryAnalysis, overallScore: evaluation.overallScore, performanceLevel: evaluation.performanceLevel, strengths: evaluation.strengths, improvements: evaluation.improvements, trainingRecommendations: recommendations, modelMetadata: evaluation.modelMetadata, updatedAt: new Date() } });
       await updatePiMastery(database, ctx.user.id, evaluation.piScores);
+      await database.update(roleplayRecordings).set({ uploadStatus: "uploaded" }).where(eq(roleplayRecordings.id, recording.id));
       await database.update(roleplayAttempts).set({ status: "completed", totalScore: evaluation.overallScore, performanceLevel: evaluation.performanceLevel, completedAt: new Date(), failureReason: null, updatedAt: new Date() }).where(eq(roleplayAttempts.id, current.id));
       return attemptDetail(database, ctx.user.id, current.id);
     } catch (error) {
