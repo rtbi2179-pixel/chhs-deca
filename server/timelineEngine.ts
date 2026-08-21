@@ -1,7 +1,8 @@
-import { and, asc, desc, eq, gt, gte, inArray, ne, sql } from "drizzle-orm";
-import { eventPerformanceIndicators, eventTimelineCalendarEvents, piLearningModules, timelineItems, userAnswers, userEventTimelines, userPiProgress, users, questions } from "../drizzle/schema";
+import { and, asc, desc, eq, gt, gte, inArray, ne, notInArray, sql } from "drizzle-orm";
+import { eventPerformanceIndicators, eventTimelineCalendarEvents, piLearningModules, portfolioCheckpointTimelineLinks, portfolioCheckpoints, timelineItems, userAnswers, userEventTimelines, userPiProgress, users, questions } from "../drizzle/schema";
 import { clusterForEvent, getTimelineStrategy, strategyLabel, type TimelineStrategy } from "../shared/timelineRequirements";
 import * as db from "./db";
+import { syncCheckpointTimelineItems } from "./portfolioEngine";
 import { buildAdaptiveWeeklyRoadmap, TRAINING_INTENSITY_PROFILES, type TrainingIntensity, toIsoDate, weekStart } from "./weeklyRoadmap";
 
 type TimelineUser = { id: number; role: string; schoolCode?: string | null; selectedSchoolCode?: string | null };
@@ -248,7 +249,17 @@ export async function getOrGenerateTimeline(user: TimelineUser, requestedStartDa
   const activePlanningTarget = planningTarget(calendar, strategy, new Date());
   const stale = Boolean(timeline && ((latestCalendarEdit && timeline.updatedAt < latestCalendarEdit) || !measuredTask || !weeklyTask || (activePlanningTarget?.startDate && timeline.targetDate !== activePlanningTarget.startDate)));
   if (!timeline || stale) {
-    if (timeline) await database.delete(timelineItems).where(and(eq(timelineItems.timelineId, timeline.id), ne(timelineItems.status, "completed")));
+    if (timeline) {
+      const checkpointLinks = await database.select({ timelineItemId: portfolioCheckpointTimelineLinks.timelineItemId })
+        .from(portfolioCheckpointTimelineLinks)
+        .where(eq(portfolioCheckpointTimelineLinks.timelineId, timeline.id));
+      const protectedCheckpointItemIds = checkpointLinks.map((link) => link.timelineItemId);
+      await database.delete(timelineItems).where(and(
+        eq(timelineItems.timelineId, timeline.id),
+        ne(timelineItems.status, "completed"),
+        ...(protectedCheckpointItemIds.length ? [notInArray(timelineItems.id, protectedCheckpointItemIds)] : []),
+      ));
+    }
     const intensity = timeline?.trainingIntensity ?? requestedIntensity ?? "competitive";
     const milestonePeriodStart = readinessPeriodStart(start, nextCompetition, calendar, strategy);
     const progress = await getProgressContext(user.id, schoolCode, eventCode, milestonePeriodStart);
@@ -266,6 +277,11 @@ export async function getOrGenerateTimeline(user: TimelineUser, requestedStartDa
       timeline = (await database.select().from(userEventTimelines).where(eq(userEventTimelines.id, timeline.id)).limit(1))[0];
     }
     await database.insert(timelineItems).values(generation.tasks.map((task, index) => ({ timelineId: timeline!.id, title: task.title, description: task.description, itemType: task.itemType, dueDate: task.dueDate, weekStartDate: task.weekStartDate, weekTitle: task.weekTitle, priority: task.priority, status: "upcoming" as const, estimatedMinutes: task.estimatedMinutes, deepLink: task.deepLink, completionMetric: task.completionMetric ?? "manual", completionTarget: task.completionTarget ?? 0, completionBaseline: task.completionBaseline ?? 0, successCriteria: task.successCriteria ?? null, hardDeadline: false, generatedReason: task.generatedReason, sortOrder: index })));
+  }
+  const publishedCheckpoints = await database.select({ id: portfolioCheckpoints.id }).from(portfolioCheckpoints)
+    .where(and(eq(portfolioCheckpoints.schoolCode, schoolCode), eq(portfolioCheckpoints.status, "published")));
+  for (const checkpoint of publishedCheckpoints) {
+    await syncCheckpointTimelineItems(database, checkpoint.id, schoolCode, user.id);
   }
   const milestonePeriodStart = readinessPeriodStart(start, nextCompetition, calendar, strategy);
   let [items, progress] = await Promise.all([
@@ -308,7 +324,16 @@ export async function updateTimelineTrainingIntensity(user: TimelineUser, intens
   const [timeline] = await database.select().from(userEventTimelines).where(and(eq(userEventTimelines.userId, user.id), eq(userEventTimelines.eventCode, eventCode), eq(userEventTimelines.status, "active"))).orderBy(desc(userEventTimelines.updatedAt)).limit(1);
   if (!timeline) throw new Error("Create a roadmap before changing its training intensity.");
   const nextWeek = addDays(weekStart(new Date()), 7);
-  await database.delete(timelineItems).where(and(eq(timelineItems.timelineId, timeline.id), ne(timelineItems.status, "completed"), gt(timelineItems.weekStartDate, toIsoDate(weekStart(new Date())))));
+  const checkpointLinks = await database.select({ timelineItemId: portfolioCheckpointTimelineLinks.timelineItemId })
+    .from(portfolioCheckpointTimelineLinks)
+    .where(eq(portfolioCheckpointTimelineLinks.timelineId, timeline.id));
+  const protectedCheckpointItemIds = checkpointLinks.map((link) => link.timelineItemId);
+  await database.delete(timelineItems).where(and(
+    eq(timelineItems.timelineId, timeline.id),
+    ne(timelineItems.status, "completed"),
+    gt(timelineItems.weekStartDate, toIsoDate(weekStart(new Date()))),
+    ...(protectedCheckpointItemIds.length ? [notInArray(timelineItems.id, protectedCheckpointItemIds)] : []),
+  ));
   const strategy = getTimelineStrategy(eventCode);
   const calendar = await ensureTimelineCalendar(schoolCode);
   const nextCompetition = competitionMilestones(calendar, strategy, new Date())[0] ?? null;

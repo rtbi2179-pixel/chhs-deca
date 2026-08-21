@@ -1947,3 +1947,284 @@ export const gachaPulls = mysqlTable("gachaPulls", {
 });
 export type GachaPull = typeof gachaPulls.$inferSelect;
 export type InsertGachaPull = typeof gachaPulls.$inferInsert;
+
+/**
+ * Chapter-managed DECA competition teams. Teams are scoped to a chapter, event,
+ * and season so one shared prepared-event submission can be visible to each
+ * appropriate teammate without duplicating the work.
+ */
+export const decaTeams = mysqlTable("decaTeams", {
+  id: int("id").autoincrement().primaryKey(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  eventCode: varchar("eventCode", { length: 20 }).notNull(),
+  teamName: varchar("teamName", { length: 160 }).notNull(),
+  season: varchar("season", { length: 20 }).notNull(),
+  createdByUserId: int("createdByUserId").references(() => users.id, { onDelete: "set null" }),
+  archivedAt: timestamp("archivedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  chapterEventIndex: index("deca_teams_chapter_event_idx").on(table.schoolCode, table.eventCode, table.season),
+  chapterNameUnique: uniqueIndex("deca_teams_chapter_name_season_unique").on(table.schoolCode, table.teamName, table.season),
+}));
+export type DecaTeam = typeof decaTeams.$inferSelect;
+
+export const decaTeamMembers = mysqlTable("decaTeamMembers", {
+  id: int("id").autoincrement().primaryKey(),
+  teamId: int("teamId").notNull().references(() => decaTeams.id, { onDelete: "cascade" }),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  memberRole: mysqlEnum("memberRole", ["lead", "member"]).default("member").notNull(),
+  joinedAt: timestamp("joinedAt").defaultNow().notNull(),
+  leftAt: timestamp("leftAt"),
+}, (table) => ({
+  teamUserUnique: uniqueIndex("deca_team_members_team_user_unique").on(table.teamId, table.userId),
+  userMembershipIndex: index("deca_team_members_user_idx").on(table.userId, table.leftAt),
+}));
+export type DecaTeamMember = typeof decaTeamMembers.$inferSelect;
+
+/**
+ * Checkpoints are the chapter source of truth. Any personalized timeline item
+ * created for a checkpoint is linked back to this row and is never maintained
+ * as a separate deadline system.
+ */
+export const portfolioCheckpoints = mysqlTable("portfolioCheckpoints", {
+  id: int("id").autoincrement().primaryKey(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  season: varchar("season", { length: 20 }).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  status: mysqlEnum("status", ["draft", "published", "archived"]).default("draft").notNull(),
+  dueAt: timestamp("dueAt"),
+  submissionType: mysqlEnum("submissionType", ["pdf", "document", "presentation", "image_evidence", "spreadsheet", "any_file", "multiple_files", "completion_check"]).default("any_file").notNull(),
+  required: boolean("required").default(true).notNull(),
+  allowLate: boolean("allowLate").default(false).notNull(),
+  allowMultipleVersions: boolean("allowMultipleVersions").default(true).notNull(),
+  aiEvaluationMode: mysqlEnum("aiEvaluationMode", ["automatic", "advisor_launch", "disabled"]).default("advisor_launch").notNull(),
+  manualReviewRequired: boolean("manualReviewRequired").default(true).notNull(),
+  createdByUserId: int("createdByUserId").notNull().references(() => users.id, { onDelete: "restrict" }),
+  publishedAt: timestamp("publishedAt"),
+  archivedAt: timestamp("archivedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  chapterStatusDueIndex: index("portfolio_checkpoints_chapter_status_due_idx").on(table.schoolCode, table.status, table.dueAt),
+  chapterSeasonIndex: index("portfolio_checkpoints_chapter_season_idx").on(table.schoolCode, table.season),
+}));
+export type PortfolioCheckpoint = typeof portfolioCheckpoints.$inferSelect;
+
+/**
+ * A normalized assignment row supports chapter, event, team, and individual
+ * targeting without encoding member IDs inside unqueryable JSON.
+ */
+export const portfolioCheckpointAssignments = mysqlTable("portfolioCheckpointAssignments", {
+  id: int("id").autoincrement().primaryKey(),
+  checkpointId: int("checkpointId").notNull().references(() => portfolioCheckpoints.id, { onDelete: "cascade" }),
+  assignmentType: mysqlEnum("assignmentType", ["chapter", "event", "team", "member"]).notNull(),
+  eventCode: varchar("eventCode", { length: 20 }),
+  teamId: int("teamId").references(() => decaTeams.id, { onDelete: "cascade" }),
+  memberId: int("memberId").references(() => users.id, { onDelete: "cascade" }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  checkpointScopeIndex: index("portfolio_checkpoint_assignment_checkpoint_idx").on(table.checkpointId, table.assignmentType),
+  memberScopeIndex: index("portfolio_checkpoint_assignment_member_idx").on(table.memberId, table.checkpointId),
+  teamScopeIndex: index("portfolio_checkpoint_assignment_team_idx").on(table.teamId, table.checkpointId),
+}));
+export type PortfolioCheckpointAssignment = typeof portfolioCheckpointAssignments.$inferSelect;
+
+export const portfolioCheckpointTemplates = mysqlTable("portfolioCheckpointTemplates", {
+  id: int("id").autoincrement().primaryKey(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  season: varchar("season", { length: 20 }).notNull(),
+  name: varchar("name", { length: 160 }).notNull(),
+  eventCode: varchar("eventCode", { length: 20 }),
+  templateJson: json("templateJson").$type<Record<string, unknown>>().notNull(),
+  createdByUserId: int("createdByUserId").notNull().references(() => users.id, { onDelete: "restrict" }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  chapterSeasonIndex: index("portfolio_checkpoint_templates_chapter_season_idx").on(table.schoolCode, table.season),
+}));
+
+/**
+ * One submission is owned either by one member or one team. subjectKey makes
+ * that exclusivity enforceable even though the optional foreign keys are null
+ * on the other subject type.
+ */
+export const portfolioSubmissions = mysqlTable("portfolioSubmissions", {
+  id: int("id").autoincrement().primaryKey(),
+  checkpointId: int("checkpointId").notNull().references(() => portfolioCheckpoints.id, { onDelete: "restrict" }),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  subjectType: mysqlEnum("subjectType", ["member", "team"]).notNull(),
+  subjectKey: varchar("subjectKey", { length: 64 }).notNull(),
+  memberId: int("memberId").references(() => users.id, { onDelete: "restrict" }),
+  teamId: int("teamId").references(() => decaTeams.id, { onDelete: "restrict" }),
+  eventCode: varchar("eventCode", { length: 20 }).notNull(),
+  status: mysqlEnum("status", ["not_started", "uploading", "submitted", "processing", "review_ready", "needs_revision", "approved", "archived", "failed"]).default("not_started").notNull(),
+  submittedByUserId: int("submittedByUserId").references(() => users.id, { onDelete: "set null" }),
+  submittedAt: timestamp("submittedAt"),
+  isLate: boolean("isLate").default(false).notNull(),
+  activeVersionId: int("activeVersionId"),
+  archivedAt: timestamp("archivedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  checkpointSubjectUnique: uniqueIndex("portfolio_submissions_checkpoint_subject_unique").on(table.checkpointId, table.subjectKey),
+  memberSubmissionIndex: index("portfolio_submissions_member_idx").on(table.memberId, table.status),
+  teamSubmissionIndex: index("portfolio_submissions_team_idx").on(table.teamId, table.status),
+  chapterStatusIndex: index("portfolio_submissions_chapter_status_idx").on(table.schoolCode, table.status, table.updatedAt),
+}));
+export type PortfolioSubmission = typeof portfolioSubmissions.$inferSelect;
+
+/** A version records a submitted revision batch and exposes only real server-side processing states. */
+export const portfolioSubmissionVersions = mysqlTable("portfolioSubmissionVersions", {
+  id: int("id").autoincrement().primaryKey(),
+  submissionId: int("submissionId").notNull().references(() => portfolioSubmissions.id, { onDelete: "cascade" }),
+  versionNumber: int("versionNumber").notNull(),
+  notes: text("notes"),
+  uploadedByUserId: int("uploadedByUserId").notNull().references(() => users.id, { onDelete: "restrict" }),
+  processingStatus: mysqlEnum("processingStatus", ["uploading", "uploaded", "reading_submission", "checking_requirements", "analyzing_rubric", "reviewing_evidence", "checking_consistency", "building_evaluation", "ready", "failed"]).default("uploaded").notNull(),
+  processingError: varchar("processingError", { length: 512 }),
+  submittedAt: timestamp("submittedAt").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  submissionVersionUnique: uniqueIndex("portfolio_submission_versions_submission_version_unique").on(table.submissionId, table.versionNumber),
+  submissionVersionIndex: index("portfolio_submission_versions_submission_idx").on(table.submissionId, table.submittedAt),
+}));
+export type PortfolioSubmissionVersion = typeof portfolioSubmissionVersions.$inferSelect;
+
+/** Each revision may have one or more private files; bytes always remain in object storage. */
+export const portfolioVersionFiles = mysqlTable("portfolioVersionFiles", {
+  id: int("id").autoincrement().primaryKey(),
+  versionId: int("versionId").notNull().references(() => portfolioSubmissionVersions.id, { onDelete: "cascade" }),
+  storageKey: varchar("storageKey", { length: 1024 }).notNull(),
+  fileName: varchar("fileName", { length: 512 }).notNull(),
+  mimeType: varchar("mimeType", { length: 120 }).notNull(),
+  fileSizeBytes: int("fileSizeBytes").notNull(),
+  parsedContent: text("parsedContent"),
+  pageCount: int("pageCount"),
+  extractionStatus: mysqlEnum("extractionStatus", ["pending", "extracted", "unsupported", "failed"]).default("pending").notNull(),
+  extractionError: varchar("extractionError", { length: 512 }),
+  uploadedAt: timestamp("uploadedAt").defaultNow().notNull(),
+}, (table) => ({
+  versionFileIndex: index("portfolio_version_files_version_idx").on(table.versionId, table.uploadedAt),
+}));
+export type PortfolioVersionFile = typeof portfolioVersionFiles.$inferSelect;
+
+/** Advisor-visible evaluation runs are immutable history, never an overwrite of earlier scoring. */
+export const portfolioEvaluations = mysqlTable("portfolioEvaluations", {
+  id: int("id").autoincrement().primaryKey(),
+  submissionId: int("submissionId").notNull().references(() => portfolioSubmissions.id, { onDelete: "cascade" }),
+  versionId: int("versionId").notNull().references(() => portfolioSubmissionVersions.id, { onDelete: "cascade" }),
+  ruleSetId: int("ruleSetId").references(() => decaAiJudgeRuleSets.id, { onDelete: "set null" }),
+  evaluationMode: mysqlEnum("evaluationMode", ["ai", "manual", "combined"]).notNull(),
+  status: mysqlEnum("status", ["queued", "processing", "completed", "failed", "superseded"]).default("queued").notNull(),
+  eventCode: varchar("eventCode", { length: 20 }).notNull(),
+  season: varchar("season", { length: 20 }).notNull(),
+  rubricVersion: varchar("rubricVersion", { length: 100 }),
+  rubricScores: json("rubricScores").$type<unknown[]>(),
+  recommendedScore: int("recommendedScore"),
+  observableMaximumPoints: int("observableMaximumPoints"),
+  advisorScore: int("advisorScore"),
+  advisorNotes: text("advisorNotes"),
+  advisorUserId: int("advisorUserId").references(() => users.id, { onDelete: "set null" }),
+  advisorCompletedAt: timestamp("advisorCompletedAt"),
+  piAnalysis: json("piAnalysis").$type<unknown[]>(),
+  complianceFindings: json("complianceFindings").$type<unknown[]>(),
+  sourceReview: json("sourceReview").$type<Record<string, unknown>>(),
+  quantitativeReview: json("quantitativeReview").$type<Record<string, unknown>>(),
+  versionComparison: json("versionComparison").$type<Record<string, unknown>>(),
+  competitiveReadiness: json("competitiveReadiness").$type<Record<string, unknown>>(),
+  topPriorities: json("topPriorities").$type<string[]>(),
+  pointsLeftOnTable: json("pointsLeftOnTable").$type<unknown[]>(),
+  modelMetadata: json("modelMetadata").$type<Record<string, unknown>>(),
+  failureReason: varchar("failureReason", { length: 512 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+}, (table) => ({
+  submissionVersionCreatedIndex: index("portfolio_evaluations_submission_version_created_idx").on(table.submissionId, table.versionId, table.createdAt),
+  chapterStatusIndex: index("portfolio_evaluations_event_status_idx").on(table.eventCode, table.status, table.createdAt),
+}));
+export type PortfolioEvaluation = typeof portfolioEvaluations.$inferSelect;
+
+/** Integrity findings are advisory-only and never mutate rubric scores in storage. */
+export const portfolioIntegrityFindings = mysqlTable("portfolioIntegrityFindings", {
+  id: int("id").autoincrement().primaryKey(),
+  evaluationId: int("evaluationId").notNull().references(() => portfolioEvaluations.id, { onDelete: "cascade" }),
+  findingType: mysqlEnum("findingType", ["possible_ai_authorship", "date_inconsistency", "unsupported_claim", "source_verification", "numerical_inconsistency", "internal_contradiction", "potential_fabrication", "format_compliance", "possible_penalty"]).notNull(),
+  priority: mysqlEnum("priority", ["low", "moderate", "elevated", "high"]).notNull(),
+  confidence: mysqlEnum("confidence", ["low", "medium", "high"]).notNull(),
+  description: text("description").notNull(),
+  evidence: json("evidence").$type<unknown[]>().notNull(),
+  alternativeExplanations: json("alternativeExplanations").$type<string[]>(),
+  advisorAction: text("advisorAction").notNull(),
+  humanDecision: mysqlEnum("humanDecision", ["pending", "accepted", "rejected"]).default("pending").notNull(),
+  humanNote: text("humanNote"),
+  studentVisibleMessage: text("studentVisibleMessage"),
+  decidedByUserId: int("decidedByUserId").references(() => users.id, { onDelete: "set null" }),
+  decidedAt: timestamp("decidedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  evaluationDecisionIndex: index("portfolio_integrity_findings_evaluation_decision_idx").on(table.evaluationId, table.humanDecision),
+}));
+export type PortfolioIntegrityFinding = typeof portfolioIntegrityFindings.$inferSelect;
+
+export const portfolioReviewComments = mysqlTable("portfolioReviewComments", {
+  id: int("id").autoincrement().primaryKey(),
+  evaluationId: int("evaluationId").notNull().references(() => portfolioEvaluations.id, { onDelete: "cascade" }),
+  criterionId: varchar("criterionId", { length: 120 }),
+  authorUserId: int("authorUserId").notNull().references(() => users.id, { onDelete: "restrict" }),
+  visibility: mysqlEnum("visibility", ["advisor_only", "member"]).default("member").notNull(),
+  comment: text("comment").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({ evaluationVisibilityIndex: index("portfolio_review_comments_evaluation_visibility_idx").on(table.evaluationId, table.visibility) }));
+
+export const portfolioEvaluationCalibrationFeedback = mysqlTable("portfolioEvaluationCalibrationFeedback", {
+  id: int("id").autoincrement().primaryKey(),
+  evaluationId: int("evaluationId").notNull().references(() => portfolioEvaluations.id, { onDelete: "cascade" }),
+  advisorUserId: int("advisorUserId").notNull().references(() => users.id, { onDelete: "restrict" }),
+  aiCalibration: mysqlEnum("aiCalibration", ["too_high", "accurate", "too_low"]).notNull(),
+  criterionOverrides: json("criterionOverrides").$type<unknown[]>(),
+  note: text("note"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({ evaluationAdvisorUnique: uniqueIndex("portfolio_evaluation_calibration_evaluation_advisor_unique").on(table.evaluationId, table.advisorUserId) }));
+
+export const portfolioCheckpointTimelineLinks = mysqlTable("portfolioCheckpointTimelineLinks", {
+  id: int("id").autoincrement().primaryKey(),
+  checkpointId: int("checkpointId").notNull().references(() => portfolioCheckpoints.id, { onDelete: "cascade" }),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  timelineId: int("timelineId").notNull().references(() => userEventTimelines.id, { onDelete: "cascade" }),
+  timelineItemId: int("timelineItemId").notNull().references(() => timelineItems.id, { onDelete: "cascade" }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  checkpointUserUnique: uniqueIndex("portfolio_checkpoint_timeline_checkpoint_user_unique").on(table.checkpointId, table.userId),
+  timelineItemUnique: uniqueIndex("portfolio_checkpoint_timeline_item_unique").on(table.timelineItemId),
+  timelineIndex: index("portfolio_checkpoint_timeline_timeline_idx").on(table.timelineId, table.checkpointId),
+}));
+
+export const portfolioAuditLog = mysqlTable("portfolioAuditLog", {
+  id: int("id").autoincrement().primaryKey(),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  entityType: mysqlEnum("entityType", ["team", "checkpoint", "submission", "version", "evaluation", "integrity_finding", "comment", "timeline_link"]).notNull(),
+  entityId: int("entityId").notNull(),
+  action: varchar("action", { length: 100 }).notNull(),
+  actorUserId: int("actorUserId").references(() => users.id, { onDelete: "set null" }),
+  metadata: json("metadata").$type<Record<string, unknown>>(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  entityIndex: index("portfolio_audit_log_entity_idx").on(table.entityType, table.entityId, table.createdAt),
+  chapterCreatedIndex: index("portfolio_audit_log_chapter_created_idx").on(table.schoolCode, table.createdAt),
+}));
+export type PortfolioAuditLog = typeof portfolioAuditLog.$inferSelect;
+
+/** A single project-owned Heartbeat schedule powers idempotent chapter checkpoint reminders. */
+export const portfolioNotificationSchedules = mysqlTable("portfolioNotificationSchedules", {
+  id: int("id").autoincrement().primaryKey(),
+  scheduleCronTaskUid: varchar("scheduleCronTaskUid", { length: 65 }).notNull(),
+  lastRunAt: timestamp("lastRunAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  taskUidUnique: uniqueIndex("portfolio_notification_schedule_task_uid_unique").on(table.scheduleCronTaskUid),
+}));

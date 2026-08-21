@@ -13,11 +13,12 @@ import { advanceBbxSimulation, createBbxEvent } from "../bbxSimulation";
 import { updateAllCreditScores } from "../creditScoreUpdater";
 import { postCreditScoreRefreshNotifications } from "../blazerBuddy";
 import { getDb } from "../db";
-import { bbxCompanies, bbxMarketState, bbxNews, creditScoreUpdateSchedule, savingsInterestSchedule } from "../../drizzle/schema";
+import { bbxCompanies, bbxMarketState, bbxNews, creditScoreUpdateSchedule, portfolioNotificationSchedules, savingsInterestSchedule } from "../../drizzle/schema";
 import { eq, lt } from "drizzle-orm";
 import bbxEventBank from "../bbxEventBank.json";
 import { blueNewsRetentionCutoff, blueNewsScheduleKey, chooseCalibratedBlueNewsTemplate } from "../bbxScheduledNews";
 import { accrueMonthlySavingsInterestForAllAccounts } from "../savingsInterestService";
+import { postPortfolioDueDateNotifications } from "../portfolioEngine";
 
 type BbxEventTemplate = (typeof bbxEventBank)[number];
 
@@ -154,6 +155,23 @@ async function startServer() {
     } catch (error) {
       console.error("[Savings Interest Heartbeat]", error);
       return res.status(500).json({ error: error instanceof Error ? error.message : "Unable to accrue monthly savings interest", context: { url: req.originalUrl }, timestamp: new Date().toISOString() });
+    }
+  });
+  app.post("/api/scheduled/portfolio-reminders", async (req, res) => {
+    try {
+      const caller = await sdk.authenticateRequest(req);
+      if (!caller.isCron || !caller.taskUid) return res.status(403).json({ error: "cron-only" });
+      const database = await getDb();
+      if (!database) throw new Error("Portfolio storage is unavailable");
+      const [schedule] = await database.select().from(portfolioNotificationSchedules).where(eq(portfolioNotificationSchedules.scheduleCronTaskUid, caller.taskUid)).limit(1);
+      if (!schedule) return res.json({ ok: true, skipped: "orphan" });
+      const result = await postPortfolioDueDateNotifications();
+      const ranAt = new Date();
+      await database.update(portfolioNotificationSchedules).set({ lastRunAt: ranAt }).where(eq(portfolioNotificationSchedules.id, schedule.id));
+      return res.json({ ok: true, taskUid: caller.taskUid, ranAt: ranAt.toISOString(), result });
+    } catch (error) {
+      console.error("[Portfolio Reminder Heartbeat]", error);
+      return res.status(500).json({ error: error instanceof Error ? error.message : "Unable to send portfolio checkpoint reminders", context: { url: req.originalUrl }, timestamp: new Date().toISOString() });
     }
   });
   // development mode uses Vite, production mode uses static files

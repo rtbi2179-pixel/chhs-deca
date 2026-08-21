@@ -1,151 +1,75 @@
-import { useState, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Upload, FileText, Trash2, Download } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, CheckCircle2, Clock3, FileText, FolderUp, Upload } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLocation } from 'wouter';
+
+const MAX_BYTES = 12 * 1024 * 1024;
+
+async function fileToBase64(file: File) {
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  let binary = '';
+  const chunkSize = 0x8000;
+  for (let offset = 0; offset < bytes.length; offset += chunkSize) {
+    let chunk = '';
+    const end = Math.min(offset + chunkSize, bytes.length);
+    for (let index = offset; index < end; index += 1) chunk += String.fromCharCode(bytes[index] ?? 0);
+    binary += chunk;
+  }
+  return window.btoa(binary);
+}
+
+function statusCopy(status: string) {
+  const labels: Record<string, string> = {
+    uploading: 'Uploading file', uploaded: 'File uploaded', reading_submission: 'Reading submission', checking_requirements: 'Checking event requirements', analyzing_rubric: 'Analyzing rubric', reviewing_evidence: 'Reviewing evidence', checking_consistency: 'Checking consistency', building_evaluation: 'Building evaluation', ready: 'Ready for review', failed: 'Processing needs attention',
+  };
+  return labels[status] ?? status.replaceAll('_', ' ');
+}
 
 export default function PortfolioUpload() {
-  const [uploading, setUploading] = useState(false);
+  const [, navigate] = useLocation();
+  const checkpointId = useMemo(() => Number(new URLSearchParams(window.location.search).get('checkpoint') || 0), []);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Queries and mutations
-  const { data: portfolios = [], isLoading } = trpc.portfolios.getUserPortfolios.useQuery();
-  const uploadMutation = trpc.portfolios.uploadPortfolio.useMutation();
-
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [note, setNote] = useState('');
+  const utils = trpc.useUtils();
+  const { data: checkpoints = [], isLoading: checkpointsLoading } = trpc.portfolio.listMyCheckpoints.useQuery();
+  const selected = checkpoints.find((entry) => entry.checkpoint.id === checkpointId) ?? null;
+  const submissionId = selected?.submission?.id;
+  const { data: versions = [], isLoading: versionsLoading } = trpc.portfolio.listVersions.useQuery({ submissionId: submissionId || 0 }, { enabled: Boolean(submissionId) });
+  const upload = trpc.portfolio.uploadVersion.useMutation({
+    onSuccess: async (result) => {
+      await Promise.all([utils.portfolio.listMyCheckpoints.invalidate(), utils.portfolio.listVersions.invalidate()]);
+      setSelectedFile(null);
+      setNote('');
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      toast.success(`Version ${result.versionNumber} is saved and ready for review.`);
+    },
+    onError: (error) => toast.error(error.message),
+  });
+  const chooseFile = (file?: File) => {
     if (!file) return;
-
-    // Validate file size (max 10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error('File size must be less than 10MB');
-      return;
-    }
-
-    // Validate file type (PDF, DOC, DOCX)
-    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    if (!allowedTypes.includes(file.type)) {
-      toast.error('Only PDF and Word documents are allowed');
-      return;
-    }
-
-    setUploading(true);
+    if (file.size > MAX_BYTES) return toast.error('Choose a file smaller than 12 MB.');
+    setSelectedFile(file);
+  };
+  const submit = async () => {
+    if (!selected || !selectedFile) return;
     try {
-      // Upload file to S3 using manus-upload-file
-      const formData = new FormData();
-      formData.append('file', file);
-
-      // For now, we'll use a simple approach - in production, use the S3 storage helper
-      // This is a placeholder that would integrate with your storage system
-      const fileUrl = URL.createObjectURL(file);
-      const fileKey = `portfolios/${Date.now()}-${file.name}`;
-
-      // Save to database
-      await uploadMutation.mutateAsync({
-        fileName: file.name,
-        fileUrl,
-        fileKey,
-        fileSize: file.size,
-        mimeType: file.type,
-      });
-
-      toast.success('Portfolio uploaded successfully!');
-      
-      // Reset file input
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-
-      // Refetch portfolios
-      const utils = trpc.useUtils();
-      utils.portfolios.getUserPortfolios.invalidate();
-    } catch (error) {
-      console.error('Upload error:', error);
-      toast.error('Failed to upload portfolio');
-    } finally {
-      setUploading(false);
+      const fileBase64 = await fileToBase64(selectedFile);
+      upload.mutate({ checkpointId: selected.checkpoint.id, fileName: selectedFile.name, mimeType: selectedFile.type || 'application/octet-stream', fileBase64, notes: note.trim() || undefined });
+    } catch {
+      toast.error('The selected file could not be prepared for upload.');
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pt-24 pb-12">
-      <div className="max-w-4xl mx-auto px-4">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">Your Portfolios</h1>
-          <p className="text-slate-400">Upload and manage your DECA competition portfolios</p>
-        </div>
+  if (checkpointsLoading) return <main className="min-h-screen px-5 pb-12 pt-28"><Card className="mx-auto max-w-4xl border-white/10 bg-slate-950/55 p-6 text-slate-300">Loading your chapter portfolio checkpoints…</Card></main>;
+  if (!checkpointId || !selected) return <main className="min-h-screen px-5 pb-12 pt-28"><div className="mx-auto max-w-4xl"><button type="button" onClick={() => navigate('/timeline')} className="mb-5 inline-flex items-center gap-2 text-sm text-blue-200 hover:text-white"><ArrowLeft className="h-4 w-4" />Back to timeline</button><Card className="border-white/10 bg-slate-950/55 p-6"><div className="flex items-center gap-3"><FolderUp className="h-6 w-6 text-blue-300" /><div><h1 className="text-2xl font-semibold text-white">Your portfolio checkpoints</h1><p className="mt-1 text-sm text-slate-400">Choose a chapter-assigned checkpoint. Blue Blazer already knows the event, team, requirement, and due date.</p></div></div><div className="mt-6 space-y-3">{checkpoints.length ? checkpoints.map((entry) => <button type="button" key={`${entry.checkpoint.id}-${entry.subject.subjectKey}`} onClick={() => navigate(`/portfolio-upload?checkpoint=${entry.checkpoint.id}`)} className="w-full rounded-xl border border-white/10 bg-white/[0.03] p-4 text-left transition hover:border-blue-300/30 hover:bg-blue-400/[0.06]"><div className="flex flex-wrap items-center justify-between gap-3"><div><p className="font-semibold text-white">{entry.checkpoint.title}</p><p className="mt-1 text-sm text-slate-400">{entry.subject.subjectType === 'team' ? 'Shared team portfolio' : 'Individual portfolio'} · {entry.subject.eventCode}</p></div><div className="text-right"><p className="text-sm text-slate-200">{entry.checkpoint.dueAt ? new Date(entry.checkpoint.dueAt).toLocaleString() : 'No due date'}</p><p className="mt-1 text-xs text-blue-200">{entry.submission?.status?.replaceAll('_', ' ') || 'Not started'}</p></div></div></button>) : <div className="rounded-xl border border-dashed border-white/15 p-8 text-center"><CheckCircle2 className="mx-auto h-8 w-8 text-slate-500" /><p className="mt-3 font-medium text-white">No published portfolio checkpoints</p><p className="mt-1 text-sm text-slate-400">Your chapter advisor has not assigned portfolio work to your event or team yet.</p></div>}</div></Card></div></main>;
 
-        {/* Upload Card */}
-        <Card className="bg-slate-800/50 border-slate-700 mb-8 p-8">
-          <div className="flex flex-col items-center justify-center">
-            <div className="w-16 h-16 bg-blue-500/20 rounded-lg flex items-center justify-center mb-4">
-              <Upload className="w-8 h-8 text-blue-400" />
-            </div>
-            <h2 className="text-xl font-semibold text-white mb-2">Upload Your Portfolio</h2>
-            <p className="text-slate-400 text-center mb-6">
-              Upload PDF or Word documents (max 10MB). Only admins can view all portfolios.
-            </p>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".pdf,.doc,.docx"
-              onChange={handleFileSelect}
-              disabled={uploading}
-              className="hidden"
-            />
-            <Button
-              onClick={() => fileInputRef.current?.click()}
-              disabled={uploading}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              {uploading ? 'Uploading...' : 'Choose File'}
-            </Button>
-          </div>
-        </Card>
-
-        {/* Portfolios List */}
-        <div>
-          <h2 className="text-2xl font-bold text-white mb-4">Your Uploads</h2>
-          {isLoading ? (
-            <div className="text-center py-8 text-slate-400">Loading...</div>
-          ) : portfolios.length === 0 ? (
-            <Card className="bg-slate-800/50 border-slate-700 p-8 text-center">
-              <FileText className="w-12 h-12 text-slate-500 mx-auto mb-4" />
-              <p className="text-slate-400">No portfolios uploaded yet</p>
-            </Card>
-          ) : (
-            <div className="space-y-4">
-              {portfolios.map((portfolio: any) => (
-                <Card key={portfolio.id} className="bg-slate-800/50 border-slate-700 p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4 flex-1">
-                      <FileText className="w-8 h-8 text-blue-400 flex-shrink-0" />
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-white">{portfolio.fileName}</h3>
-                        <p className="text-sm text-slate-400">
-                          {(portfolio.fileSize / 1024 / 1024).toFixed(2)} MB • Uploaded {new Date(portfolio.uploadedAt).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <a
-                        href={portfolio.fileUrl}
-                        download={portfolio.fileName}
-                        className="p-2 text-blue-400 hover:bg-blue-500/10 rounded-lg transition-colors"
-                        title="Download"
-                      >
-                        <Download className="w-5 h-5" />
-                      </a>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+  const checkpoint = selected.checkpoint;
+  const isLate = Boolean(checkpoint.dueAt && new Date(checkpoint.dueAt).getTime() < Date.now());
+  return <main className="min-h-screen px-4 pb-12 pt-24 sm:px-6"><div className="mx-auto max-w-5xl"><button type="button" onClick={() => navigate('/portfolio-upload')} className="mb-5 inline-flex items-center gap-2 text-sm text-blue-200 hover:text-white"><ArrowLeft className="h-4 w-4" />All assigned checkpoints</button><div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]"><section className="space-y-5"><Card className="border-blue-300/15 bg-gradient-to-br from-blue-500/10 via-slate-950/60 to-slate-950/40 p-6"><div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-200">{selected.subject.eventCode} · {selected.subject.subjectType === 'team' ? 'Shared team submission' : 'Individual submission'}</p><h1 className="mt-2 text-3xl font-semibold text-white">{checkpoint.title}</h1><p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">{checkpoint.description || 'Your chapter advisor has not added additional instructions for this checkpoint.'}</p></div><div className="rounded-xl border border-white/10 bg-slate-950/35 px-4 py-3 text-right"><p className="text-xs uppercase tracking-[0.12em] text-slate-400">Due</p><p className="mt-1 font-medium text-white">{checkpoint.dueAt ? new Date(checkpoint.dueAt).toLocaleString() : 'No due date'}</p></div></div></Card>
+  {isLate && !checkpoint.allowLate ? <Card className="border-rose-300/20 bg-rose-500/10 p-4"><div className="flex gap-3"><AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-rose-200" /><p className="text-sm leading-6 text-rose-50">This deadline has passed and late submissions are not accepted. Contact your advisor; Blue Blazer does not discard prior portfolio work.</p></div></Card> : <Card className="border-white/10 bg-slate-950/55 p-6"><div className="flex items-center gap-3"><Upload className="h-5 w-5 text-blue-300" /><div><h2 className="font-semibold text-white">Upload a new version</h2><p className="text-sm text-slate-400">This is a real numbered submission version. The recorded processing status reflects completed server work, not a timer.</p></div></div><div className="mt-5 rounded-xl border border-dashed border-white/15 bg-white/[0.025] p-5"><input ref={fileInputRef} type="file" className="hidden" onChange={(event) => chooseFile(event.target.files?.[0])} disabled={upload.isPending} /><div className="flex flex-col items-center text-center"><FileText className="h-9 w-9 text-blue-300" /><p className="mt-3 font-medium text-white">{selectedFile ? selectedFile.name : 'Choose your portfolio file'}</p><p className="mt-1 text-xs text-slate-400">{selectedFile ? `${(selectedFile.size / 1024 / 1024).toFixed(2)} MB` : `Required type: ${checkpoint.submissionType.replaceAll('_', ' ')} · Maximum 12 MB`}</p><Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()} disabled={upload.isPending} className="mt-4 border-blue-300/20 text-blue-100 hover:bg-blue-400/10">Choose file</Button></div></div><label className="mt-4 block text-sm font-medium text-slate-200">Revision note <span className="font-normal text-slate-500">(optional)</span><textarea value={note} onChange={(event) => setNote(event.target.value)} maxLength={2000} placeholder="What changed in this version?" className="mt-2 min-h-24 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm font-normal text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-400/60" /></label><Button type="button" onClick={submit} disabled={!selectedFile || upload.isPending} className="mt-4 w-full bg-blue-600 text-white hover:bg-blue-500">{upload.isPending ? 'Saving version…' : 'Save portfolio version'}</Button></Card>}</section>
+  <aside><Card className="border-white/10 bg-slate-950/55 p-5"><div className="flex items-center gap-2"><Clock3 className="h-5 w-5 text-blue-300" /><h2 className="font-semibold text-white">Version history</h2></div><div className="mt-4 space-y-3">{versionsLoading ? <p className="text-sm text-slate-400">Loading versions…</p> : versions.length ? versions.map((version) => <div key={version.id} className="rounded-lg border border-white/10 bg-white/[0.025] p-3"><div className="flex items-center justify-between gap-2"><p className="font-medium text-white">Version {version.versionNumber}</p><span className="text-xs text-blue-200">{statusCopy(version.processingStatus)}</span></div><p className="mt-1 text-xs text-slate-400">{new Date(version.submittedAt).toLocaleString()}</p>{version.notes ? <p className="mt-2 text-xs leading-5 text-slate-300">{version.notes}</p> : null}{version.files.map((file) => <p key={file.id} className="mt-2 truncate text-xs text-slate-400">{file.fileName} · {file.extractionStatus === 'extracted' ? 'text read' : file.extractionStatus.replaceAll('_', ' ')}</p>)}</div>) : <p className="text-sm leading-6 text-slate-400">No saved version yet. Uploading does not overwrite your work.</p>}</div></Card></aside></div></div></main>;
 }

@@ -57,11 +57,14 @@ export type ToolChoice =
 
 export type InvokeParams = {
   messages: Message[];
+  model?: string;
   tools?: Tool[];
   toolChoice?: ToolChoice;
   tool_choice?: ToolChoice;
   maxTokens?: number;
   max_tokens?: number;
+  thinking?: { type?: "enabled"; budget_tokens: number };
+  reasoning?: { effort: "minimal" | "low" | "medium" | "high" };
   outputSchema?: OutputSchema;
   output_schema?: OutputSchema;
   responseFormat?: ResponseFormat;
@@ -277,10 +280,15 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
     output_schema,
     responseFormat,
     response_format,
+    model,
+    maxTokens,
+    max_tokens,
+    thinking,
+    reasoning,
   } = params;
 
   const payload: Record<string, unknown> = {
-    model: "gemini-2.5-flash",
+    model: model || "gemini-2.5-flash",
     messages: messages.map(normalizeMessage),
   };
 
@@ -296,10 +304,10 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
     payload.tool_choice = normalizedToolChoice;
   }
 
-  payload.max_tokens = 32768
-  payload.thinking = {
-    "budget_tokens": 128
-  }
+  payload.max_tokens = maxTokens || max_tokens || 32768;
+  if (thinking) payload.thinking = thinking;
+  else if (!model) payload.thinking = { budget_tokens: 128 };
+  if (reasoning) payload.reasoning = reasoning;
 
   const normalizedResponseFormat = normalizeResponseFormat({
     responseFormat,
