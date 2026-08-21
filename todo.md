@@ -8839,3 +8839,4 @@
 - [x] Remove debt presentation from Banking, declutter the Timeline, make roadmap refresh follow actual progress, rank the leaderboard by Blue Bucks net worth, and refine achievement presentation
 - [x] Update the Blue Blazer tour to walk through every active member and role-appropriate chapter feature, including current banking, roadmap, leaderboard, achievements, and portfolio tools
 - [x] Rigorously validate member, AI Judge, chapter-management, leaderboard, timeline, practice, mock-exam, calendar, announcement, and volunteer workflows; add unread chapter-update notification badges
+- [ ] Redesign the signed-out welcome page to explain Blue Blazer’s current offering persuasively and refine the achievements experience further

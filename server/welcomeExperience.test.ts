@@ -3,26 +3,31 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 describe("Blue Blazer welcome experience", () => {
-  it("communicates buyer-relevant chapter value without unsupported performance claims", () => {
+  it("communicates the current chapter-ready product offering without unsupported performance claims", () => {
     const welcome = readFileSync(join(process.cwd(), "client/src/components/SignedOutWelcome.tsx"), "utf8");
 
-    expect(welcome).toContain("A BETTER HOME");
-    expect(welcome).toContain("DECA PREP.");
-    expect(welcome).toContain("guided practice, DECA event resources, chapter communication, and member progress");
-    expect(welcome).toContain("MEMBER LEARNING");
-    expect(welcome).toContain("CHAPTER OPERATIONS");
-    expect(welcome).toContain("VISIBLE MOMENTUM");
-    expect(welcome).toContain("Give your chapter a more consistent path");
+    expect(welcome).toContain("PREP WITH");
+    expect(welcome).toContain("PERFORM WITH");
+    expect(welcome).toContain("featureGroups");
+    expect(welcome).toContain("Study with a purpose");
+    expect(welcome).toContain("Follow a real roadmap");
+    expect(welcome).toContain("Practice like competition day");
+    expect(welcome).toContain("Keep work organized");
+    expect(welcome).toContain("Stay connected");
+    expect(welcome).toContain("Make progress tangible");
+    expect(welcome).toContain("Secure chapter access");
+    expect(welcome).toContain('setLocation("/login")');
   });
 
-  it("animates the Blue Blazer mark on entry while respecting reduced-motion preferences", () => {
+  it("uses progressive motion and mobile-safe content structure while respecting reduced-motion preferences", () => {
     const welcome = readFileSync(join(process.cwd(), "client/src/components/SignedOutWelcome.tsx"), "utf8");
 
     expect(welcome).toContain("useReducedMotion");
-    expect(welcome).toContain("welcome-blueblazer-mark");
-    expect(welcome).toContain("scale: 0.76");
-    expect(welcome).toContain("rotate: -7");
-    expect(welcome).toContain("repeat: Infinity");
+    expect(welcome).toContain("fadeUp");
+    expect(welcome).toContain("whileHover");
+    expect(welcome).toContain("sm:grid-cols-3");
+    expect(welcome).toContain("md:grid-cols-2");
+    expect(welcome).toContain("xl:grid-cols-3");
     expect(welcome).toContain("shouldReduceMotion ? 0");
   });
 });
