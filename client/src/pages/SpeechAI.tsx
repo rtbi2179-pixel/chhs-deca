@@ -24,13 +24,13 @@ const aiTools = [
   },
   {
     href: '/ai/written',
-    title: 'Written Event AI Grader',
-    description: 'Submit your written event responses and receive detailed AI evaluation. Get scoring feedback and improvement suggestions.',
+    title: 'DECA AI Judge',
+    description: 'Review a presentation transcript against a verified event rubric, trace every assessed point to evidence, and receive separate coaching priorities.',
     icon: '',
     color: 'from-purple-600/20 to-purple-800/10',
     border: 'border-purple-500/20 hover:border-purple-500/50',
     glow: 'hover:shadow-[0_0_30px_oklch(0.65_0.22_290/0.2)]',
-    tag: 'Written Events',
+    tag: 'Verified Rubric',
   },
 ]
 

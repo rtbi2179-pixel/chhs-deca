@@ -40,6 +40,57 @@ export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
 /**
+ * Only structured, source-linked rule data needed to power the AI Judge is
+ * stored here. It is intentionally not a copy of DECA's full publications.
+ */
+export const decaAiJudgeRuleSets = mysqlTable("decaAiJudgeRuleSets", {
+  id: int("id").autoincrement().primaryKey(),
+  competitionYear: varchar("competitionYear", { length: 20 }).notNull(),
+  eventCode: varchar("eventCode", { length: 20 }).notNull(),
+  version: varchar("version", { length: 80 }).notNull(),
+  eventName: varchar("eventName", { length: 160 }).notNull(),
+  sourceUrl: varchar("sourceUrl", { length: 1024 }).notNull(),
+  sourceVersion: varchar("sourceVersion", { length: 255 }).notNull(),
+  verified: boolean("verified").default(false).notNull(),
+  verifiedAt: timestamp("verifiedAt"),
+  rulesJson: json("rulesJson").$type<Record<string, unknown>>().notNull(),
+  rubricJson: json("rubricJson").$type<unknown[]>().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  yearEventVersionUnique: unique("deca_ai_judge_rule_set_year_event_version_unique").on(table.competitionYear, table.eventCode, table.version),
+  verifiedEventIndex: index("deca_ai_judge_rule_set_verified_event_idx").on(table.verified, table.competitionYear, table.eventCode),
+}));
+export type DecaAiJudgeRuleSetRecord = typeof decaAiJudgeRuleSets.$inferSelect;
+
+export const decaAiJudgeSessions = mysqlTable("decaAiJudgeSessions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  ruleSetId: int("ruleSetId").notNull().references(() => decaAiJudgeRuleSets.id, { onDelete: "restrict" }),
+  competitionYear: varchar("competitionYear", { length: 20 }).notNull(),
+  eventCode: varchar("eventCode", { length: 20 }).notNull(),
+  ruleSetVersion: varchar("ruleSetVersion", { length: 80 }).notNull(),
+  groupSize: int("groupSize").notNull(),
+  submissionMode: mysqlEnum("submissionMode", ["reviewed_transcript"]).default("reviewed_transcript").notNull(),
+  rawTranscript: text("rawTranscript").notNull(),
+  correctedTranscript: text("correctedTranscript").notNull(),
+  durationSeconds: int("durationSeconds"),
+  status: mysqlEnum("status", ["analyzing", "completed", "failed"]).default("analyzing").notNull(),
+  observableScore: int("observableScore"),
+  observableMaximumPoints: int("observableMaximumPoints"),
+  fullEstimatedScore: int("fullEstimatedScore"),
+  confidence: decimal("confidence", { precision: 4, scale: 2 }),
+  resultJson: json("resultJson").$type<Record<string, unknown>>(),
+  modelMetadataJson: json("modelMetadataJson").$type<Record<string, unknown>>(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  userCreatedIndex: index("deca_ai_judge_session_user_created_idx").on(table.userId, table.createdAt),
+  ruleSetIndex: index("deca_ai_judge_session_rule_set_idx").on(table.ruleSetId, table.createdAt),
+}));
+export type DecaAiJudgeSession = typeof decaAiJudgeSessions.$inferSelect;
+
+/**
  * Password reset requests are deliberately separate from the user record so
  * chapter admins can approve a request without ever seeing or setting a password.
  */
