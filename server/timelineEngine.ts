@@ -2,6 +2,7 @@ import { and, asc, desc, eq, gt, ne, sql } from "drizzle-orm";
 import { eventTimelineCalendarEvents, piLearningModules, timelineItems, userAnswers, userEventTimelines, userPiProgress, users, questions } from "../drizzle/schema";
 import { clusterForEvent, getTimelineStrategy, strategyLabel, type TimelineStrategy } from "../shared/timelineRequirements";
 import * as db from "./db";
+import { buildAdaptiveWeeklyRoadmap, TRAINING_INTENSITY_PROFILES, type TrainingIntensity, toIsoDate, weekStart } from "./weeklyRoadmap";
 
 type TimelineUser = { id: number; role: string; schoolCode?: string | null; selectedSchoolCode?: string | null };
 type CalendarInput = {
@@ -147,7 +148,7 @@ function generatedTasks(strategy: TimelineStrategy, eventCode: string, start: Da
   return { tasks: [...common, ...strategyTasks, ...mockTask], targetDate: isoDate(target), mode, daysRemaining, cluster };
 }
 
-export async function getOrGenerateTimeline(user: TimelineUser, requestedStartDate?: string) {
+export async function getOrGenerateTimeline(user: TimelineUser, requestedStartDate?: string, requestedIntensity?: TrainingIntensity) {
   const database = await db.getDb();
   const schoolCode = effectiveSchoolCode(user);
   if (!database || !schoolCode) throw new Error("A school code is required to build a competition timeline.");
@@ -165,21 +166,28 @@ export async function getOrGenerateTimeline(user: TimelineUser, requestedStartDa
   const [measuredTask] = timeline ? await database.select({ id: timelineItems.id }).from(timelineItems)
     .where(and(eq(timelineItems.timelineId, timeline.id), ne(timelineItems.completionMetric, "manual")))
     .limit(1) : [];
-  const stale = Boolean(timeline && ((latestCalendarEdit && timeline.updatedAt < latestCalendarEdit) || !measuredTask));
+  const [weeklyTask] = timeline ? await database.select({ id: timelineItems.id }).from(timelineItems)
+    .where(and(eq(timelineItems.timelineId, timeline.id), sql`${timelineItems.weekStartDate} is not null`))
+    .limit(1) : [];
+  const stale = Boolean(timeline && ((latestCalendarEdit && timeline.updatedAt < latestCalendarEdit) || !measuredTask || !weeklyTask));
   if (!timeline || stale) {
     if (timeline) await database.delete(timelineItems).where(and(eq(timelineItems.timelineId, timeline.id), ne(timelineItems.status, "completed")));
     const progress = await getProgressContext(user.id, schoolCode);
-    const generation = generatedTasks(strategy, eventCode, start, calendar, progress);
+    const baseGeneration = generatedTasks(strategy, eventCode, start, calendar, progress);
+    const intensity = timeline?.trainingIntensity ?? requestedIntensity ?? "competitive";
+    const anchors = calendar.filter((event) => !event.isTbd && event.startDate && (event.hardDeadline || event.eventType === "mock_competition") && (!event.applicableEventTypes || event.applicableEventTypes.includes(strategy))).map((event) => ({ date: parseDate(event.startDate!)!, title: event.title }));
+    const weeklyGeneration = buildAdaptiveWeeklyRoadmap({ strategy, eventCode, cluster: baseGeneration.cluster, timelineStart: start, targetDate: parseDate(baseGeneration.targetDate) ?? addDays(start, 42), intensity, progress, anchors });
+    const generation = { ...baseGeneration, tasks: weeklyGeneration.tasks, currentWeekTitle: weeklyGeneration.currentWeekTitle, intensity };
     const readinessScore = readinessFromProgress(progress);
     if (!timeline) {
-      const created = await database.insert(userEventTimelines).values({ userId: user.id, eventCode, schoolCode, competitionYear: CURRENT_COMPETITION_YEAR, startDate: isoDate(start), targetDate: generation.targetDate, timelineMode: generation.mode, status: "active", readinessScore, currentPhase: strategyLabel(strategy) });
+      const created = await database.insert(userEventTimelines).values({ userId: user.id, eventCode, schoolCode, competitionYear: CURRENT_COMPETITION_YEAR, startDate: isoDate(start), targetDate: generation.targetDate, timelineMode: generation.mode, trainingIntensity: generation.intensity, status: "active", readinessScore, currentPhase: generation.currentWeekTitle });
       const timelineId = Number(created[0].insertId);
       timeline = (await database.select().from(userEventTimelines).where(eq(userEventTimelines.id, timelineId)).limit(1))[0];
     } else {
-      await database.update(userEventTimelines).set({ targetDate: generation.targetDate, timelineMode: generation.mode, readinessScore, currentPhase: strategyLabel(strategy), updatedAt: new Date() }).where(eq(userEventTimelines.id, timeline.id));
+      await database.update(userEventTimelines).set({ targetDate: generation.targetDate, timelineMode: generation.mode, trainingIntensity: generation.intensity, readinessScore, currentPhase: generation.currentWeekTitle, updatedAt: new Date() }).where(eq(userEventTimelines.id, timeline.id));
       timeline = (await database.select().from(userEventTimelines).where(eq(userEventTimelines.id, timeline.id)).limit(1))[0];
     }
-    await database.insert(timelineItems).values(generation.tasks.map((task, index) => ({ timelineId: timeline!.id, title: task.title, description: task.description, itemType: task.itemType, dueDate: task.dueDate, priority: task.priority, status: "upcoming" as const, estimatedMinutes: task.estimatedMinutes, deepLink: task.deepLink, completionMetric: task.completionMetric ?? "manual", completionTarget: task.completionTarget ?? 0, completionBaseline: task.completionBaseline ?? 0, successCriteria: task.successCriteria ?? null, hardDeadline: false, generatedReason: task.generatedReason, sortOrder: index })));
+    await database.insert(timelineItems).values(generation.tasks.map((task, index) => ({ timelineId: timeline!.id, title: task.title, description: task.description, itemType: task.itemType, dueDate: task.dueDate, weekStartDate: task.weekStartDate, weekTitle: task.weekTitle, priority: task.priority, status: "upcoming" as const, estimatedMinutes: task.estimatedMinutes, deepLink: task.deepLink, completionMetric: task.completionMetric ?? "manual", completionTarget: task.completionTarget ?? 0, completionBaseline: task.completionBaseline ?? 0, successCriteria: task.successCriteria ?? null, hardDeadline: false, generatedReason: task.generatedReason, sortOrder: index })));
   }
   let [items, progress] = await Promise.all([
     database.select().from(timelineItems).where(eq(timelineItems.timelineId, timeline.id)).orderBy(asc(timelineItems.dueDate), asc(timelineItems.sortOrder)),
@@ -202,7 +210,36 @@ export async function getOrGenerateTimeline(user: TimelineUser, requestedStartDa
   const completed = enrichedItems.filter((item) => item.status === "completed").length;
   const now = new Date();
   const nextTask = enrichedItems.find((item) => item.status !== "completed" && (!item.dueDate || parseDate(item.dueDate)! >= now)) ?? enrichedItems.find((item) => item.status !== "completed") ?? null;
-  return { timeline: { ...timeline, strategy, strategyLabel: strategyLabel(strategy), daysRemaining: daysBetween(now, parseDate(timeline.targetDate) ?? now), progressPercent: enrichedItems.length ? Math.round((completed / enrichedItems.length) * 100) : 0, readinessScore: readiness, progressContext: progress, nextTask }, items: enrichedItems, calendar, preview: { eventCode, currentPhase: timeline.currentPhase, readinessScore: readiness, nextTask, daysRemaining: daysBetween(now, parseDate(timeline.targetDate) ?? now) } };
+  const thisWeekStart = toIsoDate(weekStart(now));
+  const thisWeekItems = enrichedItems.filter((item) => item.weekStartDate === thisWeekStart);
+  const weeklyProgressPercent = thisWeekItems.length ? Math.round((thisWeekItems.filter((item) => item.status === "completed").length / thisWeekItems.length) * 100) : 0;
+  const intensityProfile = TRAINING_INTENSITY_PROFILES[timeline.trainingIntensity as TrainingIntensity];
+  return { timeline: { ...timeline, strategy, strategyLabel: strategyLabel(strategy), daysRemaining: daysBetween(now, parseDate(timeline.targetDate) ?? now), progressPercent: enrichedItems.length ? Math.round((completed / enrichedItems.length) * 100) : 0, readinessScore: readiness, progressContext: progress, nextTask, thisWeekStart, thisWeekItems, weeklyProgressPercent, intensityProfile }, items: enrichedItems, calendar, preview: { eventCode, currentPhase: timeline.currentPhase, readinessScore: readiness, nextTask, daysRemaining: daysBetween(now, parseDate(timeline.targetDate) ?? now), thisWeekItems, weeklyProgressPercent, trainingIntensity: timeline.trainingIntensity } };
+}
+
+/** Changes only unfinished work in upcoming weeks; current and historical progress remain intact. */
+export async function updateTimelineTrainingIntensity(user: TimelineUser, intensity: TrainingIntensity) {
+  const database = await db.getDb();
+  if (!database) throw new Error("Timeline storage is unavailable");
+  const schoolCode = effectiveSchoolCode(user);
+  if (!schoolCode) throw new Error("A school code is required to update training intensity.");
+  const [account] = await database.select({ primaryEventCode: users.primaryEventCode }).from(users).where(eq(users.id, user.id)).limit(1);
+  if (!account?.primaryEventCode) throw new Error("Select a DECA event before changing your training intensity.");
+  const eventCode = account.primaryEventCode;
+  const [timeline] = await database.select().from(userEventTimelines).where(and(eq(userEventTimelines.userId, user.id), eq(userEventTimelines.eventCode, eventCode), eq(userEventTimelines.status, "active"))).orderBy(desc(userEventTimelines.updatedAt)).limit(1);
+  if (!timeline) throw new Error("Create a roadmap before changing its training intensity.");
+  const nextWeek = addDays(weekStart(new Date()), 7);
+  await database.delete(timelineItems).where(and(eq(timelineItems.timelineId, timeline.id), ne(timelineItems.status, "completed"), gt(timelineItems.weekStartDate, toIsoDate(weekStart(new Date())))));
+  const calendar = await ensureTimelineCalendar(schoolCode);
+  const progress = await getProgressContext(user.id, schoolCode);
+  const strategy = getTimelineStrategy(eventCode);
+  const baseGeneration = generatedTasks(strategy, eventCode, parseDate(timeline.startDate) ?? new Date(), calendar, progress);
+  const anchors = calendar.filter((event) => !event.isTbd && event.startDate && (event.hardDeadline || event.eventType === "mock_competition") && (!event.applicableEventTypes || event.applicableEventTypes.includes(strategy))).map((event) => ({ date: parseDate(event.startDate!)!, title: event.title }));
+  const weeklyGeneration = buildAdaptiveWeeklyRoadmap({ strategy, eventCode, cluster: baseGeneration.cluster, timelineStart: parseDate(timeline.startDate) ?? new Date(), generationStart: nextWeek, targetDate: parseDate(timeline.targetDate) ?? parseDate(baseGeneration.targetDate) ?? addDays(nextWeek, 42), intensity, progress, anchors });
+  const existing = await database.select({ count: sql<number>`count(*)` }).from(timelineItems).where(eq(timelineItems.timelineId, timeline.id));
+  await database.insert(timelineItems).values(weeklyGeneration.tasks.map((task, index) => ({ timelineId: timeline.id, title: task.title, description: task.description, itemType: task.itemType, dueDate: task.dueDate, weekStartDate: task.weekStartDate, weekTitle: task.weekTitle, priority: task.priority, status: "upcoming" as const, estimatedMinutes: task.estimatedMinutes, deepLink: task.deepLink, completionMetric: task.completionMetric ?? "manual", completionTarget: task.completionTarget ?? 0, completionBaseline: task.completionBaseline ?? 0, successCriteria: task.successCriteria ?? null, hardDeadline: false, generatedReason: task.generatedReason, sortOrder: Number(existing[0]?.count ?? 0) + index })));
+  await database.update(userEventTimelines).set({ trainingIntensity: intensity, currentPhase: weeklyGeneration.currentWeekTitle, updatedAt: new Date() }).where(eq(userEventTimelines.id, timeline.id));
+  return { success: true, intensity, nextWeekStart: toIsoDate(nextWeek) };
 }
 
 export async function updateTimelineItem(user: TimelineUser, itemId: number, status?: "upcoming" | "current" | "completed" | "skipped" | "rescheduled", dueDate?: string) {

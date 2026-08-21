@@ -8827,3 +8827,4 @@
 - [x] Make the Admin Mode lighting more subtle while preserving a clear active-state cue
 - [x] Expand the personalized DECA timeline into a measurable, deadline-driven roadmap with Blue Blazer action links and adaptive progress
 - [x] Build an evidence-based, versioned DECA AI Judge with verified event criteria, criterion-level scoring, and separate coaching analytics
+- [x] Refine the personalized timeline into an adaptive weekly DECA training roadmap with saved intensity and fixed calendar anchors

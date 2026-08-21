@@ -13,6 +13,7 @@ describe("personalized competition timeline", () => {
   const home = readFileSync(resolve(process.cwd(), "client/src/pages/Home.tsx"), "utf8");
   const profilePreview = readFileSync(resolve(process.cwd(), "client/src/components/CompetitionTimelinePreview.tsx"), "utf8");
   const events = readFileSync(resolve(process.cwd(), "client/src/pages/Events.tsx"), "utf8");
+  const weeklyRoadmap = readFileSync(resolve(process.cwd(), "server/weeklyRoadmap.ts"), "utf8");
 
   it("assigns distinct preparation strategies to roleplay, written, pitch, presentation, and simulation events", () => {
     expect(getTimelineStrategy("MCS")).toBe("roleplay_exam");
@@ -34,6 +35,8 @@ describe("personalized competition timeline", () => {
     expect(engine).toContain('deepLink: "/project-workspace"');
     expect(schema).toContain('completionMetric: varchar("completionMetric"');
     expect(schema).toContain('successCriteria: text("successCriteria")');
+    expect(schema).toContain('trainingIntensity: mysqlEnum("trainingIntensity"');
+    expect(schema).toContain('weekStartDate: varchar("weekStartDate"');
     expect(engine).toContain('CURRENT_COMPETITION_YEAR = "2026-2027"');
   });
 
@@ -48,14 +51,21 @@ describe("personalized competition timeline", () => {
     expect(engine).toContain("requiresStartDate: true");
     expect(engine).toContain("Choose today or an earlier preparation start date.");
     expect(engine).toContain("!measuredTask");
+    expect(engine).toContain("updateTimelineTrainingIntensity");
+    expect(engine).toContain("gt(timelineItems.weekStartDate");
+    expect(weeklyRoadmap).toContain("TRAINING_INTENSITY_PROFILES");
+    expect(weeklyRoadmap).toContain("buildAdaptiveWeeklyRoadmap");
   });
 
   it("exposes the roadmap in the main timeline view, selected event, and Profile preview", () => {
-    expect(page).toContain("My Competition Timeline");
+    expect(page).toContain("My Weekly DECA Roadmap");
     expect(page).toContain("Your next step");
     expect(page).toContain("When are you starting DECA preparation?");
     expect(page).toContain("Start today");
     expect(page).toContain("Measured progress:");
+    expect(page).toContain("Choose your training style");
+    expect(page).toContain("My Weekly DECA Roadmap");
+    expect(page).toContain("Update upcoming weeks");
     expect(page).toContain("Manage dates");
     expect(projectWorkspace).toContain("Competition Project Workspace");
     expect(projectWorkspace).toContain("Deliverable checklist");
@@ -63,7 +73,7 @@ describe("personalized competition timeline", () => {
     expect(piQuizlet).toContain("getRequestedEventCode");
     expect(home).toContain("Your DECA roadmap");
     expect(home).toContain("trpc.timeline.getMine.useQuery");
-    expect(profilePreview).toContain("My competition timeline");
+    expect(profilePreview).toContain("My weekly DECA roadmap");
     expect(profilePreview).toContain('href="/timeline"');
     expect(events).toContain("Open Timeline");
   });
