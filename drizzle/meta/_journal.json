@@ -281,6 +281,20 @@
       "when": 1787291559302,
       "tag": "0039_sleepy_albert_cleary",
       "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "5",
+      "when": 1787293165437,
+      "tag": "0040_grey_mentor",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "5",
+      "when": 1787293452260,
+      "tag": "0041_outstanding_mojo",
+      "breakpoints": true
     }
   ]
 }

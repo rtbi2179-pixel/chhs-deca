@@ -23,8 +23,8 @@ import { EVENT_MATCH_PROFILES, scoreEventMatchQuiz } from "../shared/eventMatchQ
 import { calculateCreditScoreQuestionReward } from "../shared/creditScoreStages";
 
 import { initializeBanksForSchool, getBanksForSchool, getCreditCardsForBank } from './bankInitializer';
-import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback, notificationPreferences, userProfileSettings, adminActivityLogs, studySessions, sessionQuestions, stocks, userPiProgress, chapterExamConfigs, chapterExamAttempts, chapterExamActivity, userEventQuizResults } from "../drizzle/schema";
-import { and, eq, sql, inArray, desc, asc, lte, gte } from "drizzle-orm";
+import { questions, userAnswers, users, blueBucks, blueBucksTransactions, leaderboard, cosmetics, userCosmetics, gachaPulls, cardUsageTracking, marketTransactions, economicAuditLog, userFeedback, notificationPreferences, userProfileSettings, adminActivityLogs, studySessions, sessionQuestions, stocks, userPiProgress, chapterExamConfigs, chapterExamAttempts, chapterExamActivity, userEventQuizResults, chapterTabVisits, calendarEvents, announcements, discussionThreads, discussionReplies, volunteerOpportunities } from "../drizzle/schema";
+import { and, eq, sql, inArray, desc, asc, lte, gte, gt } from "drizzle-orm";
 import { piLearningRouter } from "./piLearningRouter";
 import { bbxRouter } from "./bbxRouter";
 import { superAdminDiagnosticsRouter } from "./superAdminDiagnosticsRouter";
@@ -36,6 +36,7 @@ import { portfolioRouter } from "./portfolioRouter";
 
 const mockExamClusterSchema = z.enum(CHAPTER_EXAM_CLUSTERS);
 const chapterExamQuestionCountSchema = z.union(CHAPTER_EXAM_QUESTION_COUNTS.map((count) => z.literal(count)) as [z.ZodLiteral<25>, z.ZodLiteral<50>, z.ZodLiteral<75>, z.ZodLiteral<100>]);
+const chapterUpdateTabSchema = z.enum(["calendar", "announcements", "discussions", "volunteer"]);
 const CREDIT_SCORE_REFRESH_HOUR_UTC = 3;
 export const BLUE_BUCKS_CORRECTED_ANSWER_REWARD = 50;
 export const BLUE_BUCKS_FIRST_CORRECT_BASE_REWARD = 100;
@@ -109,6 +110,10 @@ function getNextCreditScoreRefresh(now = new Date()) {
 }
 
 function getMockExamSchoolCode(user: { role: string; schoolCode?: string | null; selectedSchoolCode?: string | null }) {
+  return user.role === "super_admin" ? user.selectedSchoolCode || user.schoolCode : user.schoolCode;
+}
+
+function getChapterUpdateSchoolCode(user: { role: string; schoolCode?: string | null; selectedSchoolCode?: string | null }) {
   return user.role === "super_admin" ? user.selectedSchoolCode || user.schoolCode : user.schoolCode;
 }
 
@@ -576,7 +581,59 @@ export const gachaRouter = router({
     }),
 });
 
+export const chapterUpdatesRouter = router({
+  getUnreadCounts: protectedProcedure.query(async ({ ctx }) => {
+    const database = await db.getDb();
+    if (!database) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Chapter updates are unavailable" });
+    const schoolCode = getChapterUpdateSchoolCode(ctx.user);
+    const empty = { calendar: 0, announcements: 0, discussions: 0, volunteer: 0, total: 0 };
+    if (!schoolCode) return empty;
+
+    const visits = await database.select({ tab: chapterTabVisits.tab, lastSeenItemId: chapterTabVisits.lastSeenItemId, lastSeenReplyId: chapterTabVisits.lastSeenReplyId })
+      .from(chapterTabVisits)
+      .where(and(eq(chapterTabVisits.userId, ctx.user.id), eq(chapterTabVisits.schoolCode, schoolCode)));
+    const lastSeen = new Map(visits.map((visit) => [visit.tab, visit]));
+    const lastItemId = (tab: z.infer<typeof chapterUpdateTabSchema>) => lastSeen.get(tab)?.lastSeenItemId ?? 0;
+    const lastReplyId = (tab: z.infer<typeof chapterUpdateTabSchema>) => lastSeen.get(tab)?.lastSeenReplyId ?? 0;
+
+    const [calendarRows, announcementRows, discussionThreadRows, discussionReplyRows, volunteerRows] = await Promise.all([
+      database.select({ count: sql<number>`count(*)` }).from(calendarEvents).where(and(eq(calendarEvents.schoolCode, schoolCode), gt(calendarEvents.id, lastItemId("calendar")))),
+      database.select({ count: sql<number>`count(*)` }).from(announcements).where(and(eq(announcements.schoolCode, schoolCode), gt(announcements.id, lastItemId("announcements")))),
+      database.select({ count: sql<number>`count(*)` }).from(discussionThreads).where(and(eq(discussionThreads.discussionType, "chapter"), eq(discussionThreads.schoolCode, schoolCode), gt(discussionThreads.id, lastItemId("discussions")))),
+      database.select({ count: sql<number>`count(*)` }).from(discussionReplies).innerJoin(discussionThreads, eq(discussionReplies.threadId, discussionThreads.id)).where(and(eq(discussionThreads.discussionType, "chapter"), eq(discussionThreads.schoolCode, schoolCode), gt(discussionReplies.id, lastReplyId("discussions")))),
+      database.select({ count: sql<number>`count(*)` }).from(volunteerOpportunities).where(and(eq(volunteerOpportunities.schoolCode, schoolCode), gt(volunteerOpportunities.id, lastItemId("volunteer")))),
+    ]);
+    const calendar = Number(calendarRows[0]?.count ?? 0);
+    const announcementCount = Number(announcementRows[0]?.count ?? 0);
+    const discussions = Number(discussionThreadRows[0]?.count ?? 0) + Number(discussionReplyRows[0]?.count ?? 0);
+    const volunteer = Number(volunteerRows[0]?.count ?? 0);
+    return { calendar, announcements: announcementCount, discussions, volunteer, total: calendar + announcementCount + discussions + volunteer };
+  }),
+  markSeen: protectedProcedure.input(z.object({ tab: chapterUpdateTabSchema })).mutation(async ({ ctx, input }) => {
+    const database = await db.getDb();
+    if (!database) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Chapter updates are unavailable" });
+    const schoolCode = getChapterUpdateSchoolCode(ctx.user);
+    if (!schoolCode) return { marked: false };
+    const now = new Date();
+    let lastSeenItemId = 0;
+    let lastSeenReplyId = 0;
+    if (input.tab === "calendar") {
+      lastSeenItemId = (await database.select({ id: calendarEvents.id }).from(calendarEvents).where(eq(calendarEvents.schoolCode, schoolCode)).orderBy(desc(calendarEvents.id)).limit(1))[0]?.id ?? 0;
+    } else if (input.tab === "announcements") {
+      lastSeenItemId = (await database.select({ id: announcements.id }).from(announcements).where(eq(announcements.schoolCode, schoolCode)).orderBy(desc(announcements.id)).limit(1))[0]?.id ?? 0;
+    } else if (input.tab === "volunteer") {
+      lastSeenItemId = (await database.select({ id: volunteerOpportunities.id }).from(volunteerOpportunities).where(eq(volunteerOpportunities.schoolCode, schoolCode)).orderBy(desc(volunteerOpportunities.id)).limit(1))[0]?.id ?? 0;
+    } else {
+      lastSeenItemId = (await database.select({ id: discussionThreads.id }).from(discussionThreads).where(and(eq(discussionThreads.discussionType, "chapter"), eq(discussionThreads.schoolCode, schoolCode))).orderBy(desc(discussionThreads.id)).limit(1))[0]?.id ?? 0;
+      lastSeenReplyId = (await database.select({ id: discussionReplies.id }).from(discussionReplies).innerJoin(discussionThreads, eq(discussionReplies.threadId, discussionThreads.id)).where(and(eq(discussionThreads.discussionType, "chapter"), eq(discussionThreads.schoolCode, schoolCode))).orderBy(desc(discussionReplies.id)).limit(1))[0]?.id ?? 0;
+    }
+    await database.insert(chapterTabVisits).values({ userId: ctx.user.id, schoolCode, tab: input.tab, lastSeenAt: now, lastSeenItemId, lastSeenReplyId }).onDuplicateKeyUpdate({ set: { lastSeenAt: now, lastSeenItemId, lastSeenReplyId } });
+    return { marked: true, tab: input.tab, seenAt: now };
+  }),
+});
+
 export const appRouter = router({
+  chapterUpdates: chapterUpdatesRouter,
   superAdminDiagnostics: superAdminDiagnosticsRouter,
   achievements: achievementsRouter,
   timeline: timelineRouter,

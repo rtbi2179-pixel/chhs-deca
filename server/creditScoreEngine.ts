@@ -361,33 +361,19 @@ export async function updateCreditScore(userId: number, schoolCode: string, reas
 
     console.log(`[Credit Score] User ${userId}: ${previousScore} → ${newScore} (${scoreChange > 0 ? '+' : ''}${scoreChange})`);
 
-    // Update or create credit score record
-    if (currentScoreData.length > 0) {
-      await db
-        .update(creditScores)
-        .set({
-          score: newScore,
-          paymentReliabilityScore: factors.paymentReliability.toString(),
-          accountHistoryScore: factors.accountHistory.toString(),
-          practiceConsistencyScore: factors.practiceConsistency.toString(),
-          netWorthScore: factors.savingsDiscipline.toString(),
-          spendingBehaviorScore: factors.creditUtilization.toString(),
-          lastCalculatedDate: new Date(),
-          updatedAt: new Date(),
-        })
-        .where(and(eq(creditScores.userId, userId), eq(creditScores.schoolCode, schoolCode)));
-    } else {
-      await db.insert(creditScores).values([{
-        userId,
-        score: newScore,
-        paymentReliabilityScore: factors.paymentReliability.toString(),
-        accountHistoryScore: factors.accountHistory.toString(),
-        practiceConsistencyScore: factors.practiceConsistency.toString(),
-        netWorthScore: factors.savingsDiscipline.toString(),
-        spendingBehaviorScore: factors.creditUtilization.toString(),
-        schoolCode,
-      }]);
-    }
+    // A user can open several Banking-dependent views at once. Use an atomic
+    // MySQL upsert so concurrent first reads cannot race into a duplicate userId.
+    const persistedFactors = {
+      score: newScore,
+      paymentReliabilityScore: factors.paymentReliability.toString(),
+      accountHistoryScore: factors.accountHistory.toString(),
+      practiceConsistencyScore: factors.practiceConsistency.toString(),
+      netWorthScore: factors.savingsDiscipline.toString(),
+      spendingBehaviorScore: factors.creditUtilization.toString(),
+      lastCalculatedDate: new Date(),
+      updatedAt: new Date(),
+    };
+    await db.insert(creditScores).values({ userId, schoolCode, ...persistedFactors }).onDuplicateKeyUpdate({ set: persistedFactors });
 
     // Log credit history
     await db.insert(creditHistory).values({

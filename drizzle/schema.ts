@@ -687,6 +687,24 @@ export const announcementComments = mysqlTable("announcementComments", {
 export type AnnouncementComment = typeof announcementComments.$inferSelect;
 export type InsertAnnouncementComment = typeof announcementComments.$inferInsert;
 
+/** Per-member chapter navigation watermark used for unseen additions badges. */
+export const chapterTabVisits = mysqlTable("chapterTabVisits", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  schoolCode: varchar("schoolCode", { length: 50 }).notNull(),
+  tab: mysqlEnum("tab", ["calendar", "announcements", "discussions", "volunteer"]).notNull(),
+  lastSeenAt: timestamp("lastSeenAt").defaultNow().notNull(),
+  lastSeenItemId: int("lastSeenItemId").default(0).notNull(),
+  lastSeenReplyId: int("lastSeenReplyId").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  userSchoolTabUnique: unique("chapter_tab_visits_user_school_tab_unique").on(table.userId, table.schoolCode, table.tab),
+  schoolTabSeenIndex: index("chapter_tab_visits_school_tab_seen_idx").on(table.schoolCode, table.tab, table.lastSeenAt),
+}));
+export type ChapterTabVisit = typeof chapterTabVisits.$inferSelect;
+export type InsertChapterTabVisit = typeof chapterTabVisits.$inferInsert;
+
 /**
  * Calendar events for competitions and deadlines
  */

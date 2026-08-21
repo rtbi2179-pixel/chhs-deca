@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { trpc } from '@/lib/trpc';
@@ -93,6 +93,8 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
   const bankAccountQuery = trpc.banking.getBankAccount.useQuery(undefined, { enabled: !!user });
   const profileSettingsQuery = trpc.preferences.getProfileSettings.useQuery(undefined, { enabled: !!user });
   const unreadNews = trpc.bbx.getUnreadNewsCount.useQuery(undefined, { enabled: !!user, refetchInterval: 60_000 });
+  const chapterUpdates = trpc.chapterUpdates.getUnreadCounts.useQuery(undefined, { enabled: !!user, refetchInterval: 60_000, refetchOnWindowFocus: true });
+  const markChapterTabSeen = trpc.chapterUpdates.markSeen.useMutation({ onSuccess: () => chapterUpdates.refetch() });
   const atmosphere = atmosphereForRoute(location);
   const profileAvatar = getProfileAvatar(profileSettingsQuery.data?.avatarKey);
   const canManageChapter = Boolean(user && (user.role === 'admin' || user.role === 'super_admin'));
@@ -101,6 +103,13 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
     ...chapterManagementNavLinks.map((link) => link),
     ...(canViewDiagnostics ? [{ href: '/super-admin/diagnostics', label: 'Chapter Diagnostics', icon: ChartNoAxesCombined, group: 'CHAPTER_MANAGEMENT' }] : []),
   ];
+  const chapterTabForLocation = location === '/calendar' ? 'calendar' : location === '/announcements' ? 'announcements' : location === '/discussions' ? 'discussions' : location === '/volunteer' ? 'volunteer' : null;
+  const chapterBadgeForHref = (href: string) => href === '/calendar' ? chapterUpdates.data?.calendar ?? 0 : href === '/announcements' ? chapterUpdates.data?.announcements ?? 0 : href === '/discussions' ? chapterUpdates.data?.discussions ?? 0 : href === '/volunteer' ? chapterUpdates.data?.volunteer ?? 0 : 0;
+
+  useEffect(() => {
+    if (!user || !chapterTabForLocation || markChapterTabSeen.isPending) return;
+    markChapterTabSeen.mutate({ tab: chapterTabForLocation });
+  }, [chapterTabForLocation, markChapterTabSeen, user]);
 
   const handleLogout = async () => {
     try {
@@ -201,6 +210,7 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
             <div className="space-y-1">
               {chapterNavLinks.map(({ href, label, icon: Icon }) => {
                 const isActive = location === href;
+                const unreadCount = chapterBadgeForHref(href);
                 return (
                   <a
                     key={href}
@@ -215,6 +225,7 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                   >
                     <Icon size={20} className={isActive ? 'text-white' : 'text-cyan-300 group-hover:text-cyan-200'} />
                     {!collapsed && <span className="truncate">{label}</span>}
+                    {unreadCount > 0 && <span aria-label={`${unreadCount} unseen chapter updates`} className={`absolute ${collapsed ? 'top-1 right-1' : 'right-3'} min-w-5 rounded-full bg-blue-500 px-1.5 py-0.5 text-center text-[10px] font-bold leading-4 text-white shadow-[0_0_12px_oklch(0.65_0.16_250/0.32)]`}>{unreadCount > 99 ? '99+' : unreadCount}</span>}
                   </a>
                 );
               })}
@@ -414,7 +425,9 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
 	              <div data-nav-group="chapter">
 	                <p className="text-[10px] font-mono tracking-[0.18em] text-white/40 mb-2">CHAPTER</p>
                 <div className="space-y-1">
-                  {chapterNavLinks.map(({ href, label, icon: Icon }) => (
+                  {chapterNavLinks.map(({ href, label, icon: Icon }) => {
+                    const unreadCount = chapterBadgeForHref(href);
+                    return (
                     <a
                       key={href}
                       href={href}
@@ -425,8 +438,10 @@ export function SidebarNavigation({ children }: { children: React.ReactNode }) {
                     >
                       <Icon size={18} className="text-cyan-300" />
                       {label}
+                      {unreadCount > 0 && <span aria-label={`${unreadCount} unseen chapter updates`} className="ml-auto min-w-5 rounded-full bg-blue-500 px-1.5 py-0.5 text-center text-[10px] font-bold leading-4 text-white">{unreadCount > 99 ? '99+' : unreadCount}</span>}
                     </a>
-                  ))}
+                  );
+                  })}
                 </div>
               </div>
 

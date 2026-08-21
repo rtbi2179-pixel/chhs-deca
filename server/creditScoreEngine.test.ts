@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { calculateFinalScore, calculatePaymentReliabilityFromCounts, MAX_SCORE_CHANGE_PER_UPDATE, normalizeCreditScoreComposition, practiceConsistencyForInactiveDays, updateCreditScore } from "./creditScoreEngine";
 import { getDb } from "./db";
 import { banks, creditCardPayments, creditCards, creditHistory, creditScores, dailyPracticeStats, economicConfig, userCreditCards, users } from "../drizzle/schema";
@@ -81,6 +81,15 @@ describe("credit score engine", () => {
       await database.insert(dailyPracticeStats).values({ userId, practiceDate: new Date(Date.now() - 31 * 24 * 60 * 60 * 1000), questionsCompleted: 10, correctAnswers: 8, totalAnswered: 10, accuracy: "80.00", blueBucksEarned: 0, streakQualified: false, schoolCode });
       await database.update(economicConfig).set({ paymentReliabilityWeight: "0.00", accountHistoryWeight: "0.00", practiceConsistencyWeight: "100.00", netWorthWeight: "0.00", spendingBehaviorWeight: "0.00" }).where(eq(economicConfig.schoolCode, schoolCode));
       expect(await updateCreditScore(userId, schoolCode)).toBe(465);
+    });
+
+    it("atomically initializes one credit score when several account views request it at once", async () => {
+      const results = await Promise.all(Array.from({ length: 5 }, () => updateCreditScore(userId, schoolCode, "Concurrent first-read regression")));
+      expect(results).toHaveLength(5);
+      expect(results.every((score) => Number.isFinite(score))).toBe(true);
+      const database = await getDb();
+      const records = await database!.select().from(creditScores).where(and(eq(creditScores.userId, userId), eq(creditScores.schoolCode, schoolCode)));
+      expect(records).toHaveLength(1);
     });
   });
 });
