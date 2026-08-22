@@ -1,14 +1,20 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AlertCircle, ArrowLeft, ArrowRight, BarChart3, BookOpen, Camera, CheckCircle2, ChevronRight, CircleStop, Clock3, History, Lightbulb, Loader2, LockKeyhole, Mic, RotateCcw, ShieldCheck, Sparkles, Target, TimerReset, Trash2, Trophy, Video, Volume2 } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useJudgeSessionExpiry } from "@/hooks/useJudgeSessionExpiry";
+import { hasAiJudgeSelectorEntry, shouldRedirectToAiJudgeSelector } from "@/lib/aiJudgeSession";
+import { getRoleplayScoreAction } from "@/lib/aiJudgeWorkflow";
 
 type SourceType = "official_public_sample" | "blue_blazer_original" | "ai_generated";
 type TrainingMode = "competition" | "practice" | "coach";
 type Difficulty = "foundational" | "competition" | "stretch";
 type Step = "select" | "briefing" | "prepare" | "judge" | "record" | "submit" | "results";
+type EvaluationStage = "idle" | "uploading" | "transcribing" | "analyzing" | "saving";
+const ROLEPLAY_JUDGE_SESSION_KEY = "blue-blazer:roleplay-ai-judge:last-activity";
 
 const MODES: Record<TrainingMode, { label: string; text: string; selected: string }> = {
   competition: { label: "Competition", text: "Timed conditions and no in-round coaching.", selected: "border-blue-300/50 bg-blue-400/[0.09]" },
@@ -65,6 +71,7 @@ function clusterClass(cluster?: string) {
 
 export default function RoleplayAI() {
   const { user } = useAuth();
+  const [, navigate] = useLocation();
   const eventsQuery = trpc.roleplay.getCompatibleEvents.useQuery(undefined, { enabled: Boolean(user) });
   const activeQuery = trpc.roleplay.getActiveAttempt.useQuery(undefined, { enabled: Boolean(user) });
   const historyQuery = trpc.roleplay.listAttempts.useQuery({ limit: 12 }, { enabled: Boolean(user) });
@@ -86,6 +93,8 @@ export default function RoleplayAI() {
   const [microphoneLevel, setMicrophoneLevel] = useState(0);
   const [deviceChecked, setDeviceChecked] = useState(false);
   const [coachSummary, setCoachSummary] = useState("");
+  const [evaluationStage, setEvaluationStage] = useState<EvaluationStage>("idle");
+  const [judgeSessionActive, setJudgeSessionActive] = useState(false);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -102,8 +111,8 @@ export default function RoleplayAI() {
     onSuccess: (turn) => setAttempt((current: any) => current ? { ...current, judgeTurns: [...(current.judgeTurns ?? []), turn] } : current),
     onError: (cause) => setError(cause.message),
   });
-  const uploadMutation = trpc.roleplay.uploadInterviewAudio.useMutation({ onError: (cause) => setError(cause.message) });
-  const scoreMutation = trpc.roleplay.submitAttempt.useMutation({ onSuccess: openAttempt, onError: (cause) => setError(cause.message) });
+  const uploadMutation = trpc.roleplay.uploadInterviewAudio.useMutation({ onError: (cause) => { setEvaluationStage("idle"); setError(cause.message); } });
+  const scoreMutation = trpc.roleplay.submitAttempt.useMutation({ onSuccess: (data) => { setEvaluationStage("idle"); openAttempt(data); }, onError: (cause) => { setEvaluationStage("idle"); setError(cause.message); } });
   const deleteMutation = trpc.roleplay.deleteAttempt.useMutation({ onSuccess: () => { historyQuery.refetch(); reset(); }, onError: (cause) => setError(cause.message) });
   const resultQuery = trpc.roleplay.getAttemptResult.useQuery({ attemptId: attempt?.attempt?.id ?? 0 }, { enabled: Boolean(attempt?.attempt?.id && step === "results") });
   const playbackQuery = trpc.roleplay.getRecordingPlayback.useQuery({ attemptId: attempt?.attempt?.id ?? 0 }, { enabled: Boolean(attempt?.attempt?.id && step === "submit" && !recordingUrl) });
@@ -115,9 +124,20 @@ export default function RoleplayAI() {
   const interviewLeft = detail?.timing ? left(detail.attempt?.interviewStartedAt, detail.timing.interviewDurationSeconds, now) : 0;
   const judgePrompt = detail?.judgeTurns?.[detail.judgeTurns.length - 1]?.question;
   const busy = startMutation.isPending || saveMutation.isPending || judgeMutation.isPending || followUpMutation.isPending || uploadMutation.isPending || scoreMutation.isPending;
+  const serverProcessing = detail?.attempt?.status === "transcribing" || detail?.attempt?.status === "evaluating";
+
+  useJudgeSessionExpiry({
+    enabled: judgeSessionActive,
+    storageKey: ROLEPLAY_JUDGE_SESSION_KEY,
+    onExpire: () => {
+      reset();
+      navigate("/speech-ai");
+    },
+  });
 
   function openAttempt(data: any) {
     setAttempt(data);
+    setJudgeSessionActive(true);
     setScratchpad(data.attempt?.scratchpad ?? "");
     setStep(resumeStep(data.attempt?.status));
     setError(null);
@@ -128,11 +148,27 @@ export default function RoleplayAI() {
   function reset() {
     stopRecording();
     if (recordingUrl) URL.revokeObjectURL(recordingUrl);
-    setAttempt(null); setStep("select"); setScratchpad(""); setRecording(null); setRecordingUrl(null); setRecordingSeconds(0); setCoachSummary(""); setDeviceChecked(false); setError(null);
+    if (typeof window !== "undefined") window.sessionStorage.removeItem(ROLEPLAY_JUDGE_SESSION_KEY);
+    setJudgeSessionActive(false); setEvaluationStage("idle"); setAttempt(null); setStep("select"); setScratchpad(""); setRecording(null); setRecordingUrl(null); setRecordingSeconds(0); setCoachSummary(""); setDeviceChecked(false); setError(null);
   }
 
   useEffect(() => { if (!eventCode && eventsQuery.data?.preferredEventCode) setEventCode(eventsQuery.data.preferredEventCode); }, [eventCode, eventsQuery.data]);
-  useEffect(() => { if (!restored.current && activeQuery.data && !attempt) { restored.current = true; openAttempt(activeQuery.data); } }, [activeQuery.data, attempt]);
+  useEffect(() => {
+    if (restored.current || !activeQuery.data || attempt) return;
+    restored.current = true;
+    if (typeof window !== "undefined" && !window.sessionStorage.getItem(ROLEPLAY_JUDGE_SESSION_KEY)) {
+      if (shouldRedirectToAiJudgeSelector(hasAiJudgeSelectorEntry())) navigate("/speech-ai");
+      return;
+    }
+    openAttempt(activeQuery.data);
+  }, [activeQuery.data, attempt]);
+  useEffect(() => {
+    if (!scoreMutation.isPending) return;
+    setEvaluationStage("transcribing");
+    const analyzingTimer = window.setTimeout(() => setEvaluationStage("analyzing"), 1_500);
+    const savingTimer = window.setTimeout(() => setEvaluationStage("saving"), 6_000);
+    return () => { window.clearTimeout(analyzingTimer); window.clearTimeout(savingTimer); };
+  }, [scoreMutation.isPending]);
   useEffect(() => { if (step !== "prepare" && step !== "record") return; const id = window.setInterval(() => setNow(Date.now()), 500); return () => window.clearInterval(id); }, [step]);
   useEffect(() => () => { streamRef.current?.getTracks().forEach((track) => track.stop()); if (recordingUrl) URL.revokeObjectURL(recordingUrl); }, [recordingUrl]);
 
@@ -230,20 +266,25 @@ export default function RoleplayAI() {
 
   async function evaluate() {
     if (!attempt?.attempt?.id) return;
+    const scoreAction = getRoleplayScoreAction({ hasLocalRecording: Boolean(recording), hasSavedRecording: Boolean(detail?.attempt?.hasRecording), isProcessing: serverProcessing });
+    if (scoreAction === "blocked") return;
     try {
-      if (recording) {
+      if (scoreAction === "upload_then_score" && recording) {
+        setEvaluationStage("uploading");
         const base64 = await blobToBase64(recording);
         await uploadMutation.mutateAsync({ attemptId: attempt.attempt.id, audioBase64: base64, contentType: uploadMimeType(recording.type || "audio/webm"), durationSeconds: recordingSeconds, durationMs: recordingSeconds * 1_000, hasVideo: recordingHasVideo, segments: [{ segmentType: "presentation", startMs: 0, endMs: recordingSeconds * 1_000, label: "Participant presentation" }] });
+        setAttempt((current: any) => current ? { ...current, attempt: { ...current.attempt, hasRecording: true, status: "submitted" } } : current);
       }
       setStep("submit");
+      setEvaluationStage("transcribing");
       await scoreMutation.mutateAsync({ attemptId: attempt.attempt.id });
-    } catch (cause: any) { setError(cause?.message || "The recording is saved. Retry evaluation without recording again."); }
+    } catch (cause: any) { setEvaluationStage("idle"); setError(cause?.message || "The recording is saved. Retry evaluation without recording again."); }
   }
 
   if (!user) return <div className="flex min-h-[65vh] items-center justify-center px-5"><div className="max-w-lg rounded-2xl border border-blue-300/20 bg-slate-950/70 p-8 text-center"><LockKeyhole className="mx-auto h-8 w-8 text-blue-300" /><h1 className="mt-4 text-2xl font-semibold text-white">Sign in to enter the simulator</h1><p className="mt-3 text-sm leading-6 text-slate-400">Your recordings, scorecards, PI mastery, and recommendations are private to your Blue Blazer account.</p></div></div>;
 
   return <div className="mx-auto w-full max-w-[1450px] space-y-6 px-3 pb-10 pt-2 sm:px-5 lg:px-7">
-    <header className="overflow-hidden rounded-[1.6rem] border border-blue-300/20 bg-[radial-gradient(circle_at_12%_0%,rgba(37,99,235,0.3),transparent_34%),linear-gradient(135deg,rgba(8,20,48,0.96),rgba(4,9,22,0.98))] p-5 shadow-2xl sm:p-7"><div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"><div><p className="font-mono-data text-[10px] font-semibold uppercase tracking-[0.22em] text-blue-200/70">Native Blue Blazer tool</p><h1 className="mt-2 text-3xl font-semibold text-white sm:text-4xl">DECA Competition Simulation</h1><p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">Prepare, present, and review an original practice roleplay. PI scoring is evidence-based; delivery coaching remains separate.</p></div><div className="flex flex-wrap gap-2 text-xs"><span className="rounded-full border border-blue-300/20 bg-black/20 px-3 py-1.5 text-blue-100"><ShieldCheck className="mr-1 inline h-3.5 w-3.5" />Private account history</span><span className="rounded-full border border-white/10 bg-black/20 px-3 py-1.5 text-slate-300"><Clock3 className="mr-1 inline h-3.5 w-3.5" />Versioned DECA timing</span></div></div></header>
+    <header className="overflow-hidden rounded-[1.6rem] border border-blue-300/20 bg-[radial-gradient(circle_at_12%_0%,rgba(37,99,235,0.3),transparent_34%),linear-gradient(135deg,rgba(8,20,48,0.96),rgba(4,9,22,0.98))] p-5 shadow-2xl sm:p-7"><div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"><div><p className="font-mono-data text-[10px] font-semibold uppercase tracking-[0.22em] text-blue-200/70">Native Blue Blazer tool</p><h1 className="mt-2 text-3xl font-semibold text-white sm:text-4xl">ROLEPLAY AI JUDGE</h1><p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">Prepare, present, and review an original practice roleplay. PI scoring is evidence-based; delivery coaching remains separate.</p></div><div className="flex flex-wrap gap-2 text-xs"><span className="rounded-full border border-blue-300/20 bg-black/20 px-3 py-1.5 text-blue-100"><ShieldCheck className="mr-1 inline h-3.5 w-3.5" />Private account history</span><span className="rounded-full border border-white/10 bg-black/20 px-3 py-1.5 text-slate-300"><Clock3 className="mr-1 inline h-3.5 w-3.5" />Versioned DECA timing</span></div></div></header>
     {error && <div role="alert" className="flex gap-3 rounded-xl border border-amber-300/25 bg-amber-300/[0.07] p-4 text-sm text-amber-50"><AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" /><div>{error}<button type="button" onClick={() => setError(null)} className="ml-3 text-xs font-semibold underline">Dismiss</button></div></div>}
     <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]"><main className="min-w-0">
       {step === "select" && <Selection events={events} eventCode={eventCode} setEventCode={setEventCode} selected={selectedEvent} mode={mode} setMode={setMode} sourceType={sourceType} setSourceType={setSourceType} difficulty={difficulty} setDifficulty={setDifficulty} preferred={eventsQuery.data?.preferredEventCode ?? null} onStart={() => eventCode && startMutation.mutate({ eventCode, trainingMode: mode, sourceType, difficulty })} busy={eventsQuery.isLoading || startMutation.isPending} />}
@@ -251,7 +292,7 @@ export default function RoleplayAI() {
       {step === "prepare" && <Preparation detail={detail} remaining={prepLeft} scratchpad={scratchpad} setScratchpad={setScratchpad} onSave={() => attempt?.attempt?.id && saveMutation.mutate({ attemptId: attempt.attempt.id, stage: "preparing", scratchpad })} onJudge={enterJudge} busy={busy} />}
       {step === "judge" && <Judge detail={detail} onBack={() => setStep("prepare")} onCheck={checkDevices} onRecord={beginRecording} cameraEnabled={cameraEnabled} setCameraEnabled={setCameraEnabled} setDeviceChecked={setDeviceChecked} microphoneLevel={microphoneLevel} deviceChecked={deviceChecked} busy={busy} />}
       {step === "record" && <Record detail={detail} remaining={interviewLeft} live={recordingLive} seconds={recordingSeconds} url={recordingUrl} prompt={judgePrompt} mode={detail?.attempt?.trainingMode ?? mode} summary={coachSummary} setSummary={setCoachSummary} onRecord={beginRecording} onStop={stopRecording} microphoneLevel={microphoneLevel} hasVideo={recordingHasVideo} previewRef={previewRef} onFollowUp={() => attempt?.attempt?.id && followUpMutation.mutate({ attemptId: attempt.attempt.id, studentSummary: coachSummary || undefined })} onReview={() => setStep("submit")} busy={followUpMutation.isPending} />}
-      {step === "submit" && <Submit detail={detail} localUrl={recordingUrl} savedUrl={playbackQuery.data?.url} busy={uploadMutation.isPending || scoreMutation.isPending} canScore={Boolean(recording || detail?.attempt?.hasRecording)} onBack={() => setStep("record")} onScore={evaluate} />}
+      {step === "submit" && <Submit detail={detail} localUrl={recordingUrl} savedUrl={playbackQuery.data?.url} busy={uploadMutation.isPending || scoreMutation.isPending || serverProcessing} canScore={Boolean(recording || detail?.attempt?.hasRecording) && !serverProcessing} stage={evaluationStage} onBack={() => setStep("record")} onScore={evaluate} />}
       {step === "results" && <Results detail={detail} loading={resultQuery.isLoading} onNew={reset} onDelete={() => attempt?.attempt?.id && deleteMutation.mutate({ attemptId: attempt.attempt.id })} deleting={deleteMutation.isPending} />}
     </main><HistoryPanel history={historyQuery.data ?? []} loading={historyQuery.isLoading} onOpen={(id) => { setAttempt({ attempt: { id } }); setStep("results"); setError(null); }} /></div>
   </div>;
@@ -290,10 +331,13 @@ function Record({ detail, remaining, live, seconds, url, prompt, mode, summary, 
 
 function Block({ label, value }: { label: string; value?: string }) { return <div><p className="font-mono-data text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-200/70">{label}</p><p className="mt-1 text-sm leading-6 text-slate-300">{value}</p></div>; }
 
-function Submit({ detail, localUrl, savedUrl, busy, canScore, onBack, onScore }: any) {
+function Submit({ detail, localUrl, savedUrl, busy, canScore, stage, onBack, onScore }: any) {
   const audioUrl = localUrl ?? savedUrl;
   const uploaded = Boolean(detail?.attempt?.hasRecording);
-  return <section className="space-y-5"><SectionHeading number="06" eyebrow="Submission & evaluation" title="Review the recording, then build your scorecard." text="If transcription or scoring temporarily fails, the saved recording remains attached to your attempt for retry." /><div className="rounded-2xl border border-white/10 bg-slate-950/55 p-5 sm:p-6"><div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]"><div><h3 className="text-lg font-semibold text-white">Your roleplay recording</h3><p className="mt-2 text-sm leading-6 text-slate-400">Audio is used only to transcribe and evaluate this private attempt. Blue Blazer does not represent that it is used to train unrelated models.</p>{audioUrl ? <audio className="mt-5 w-full" controls src={audioUrl} /> : <div className="mt-5 rounded-xl border border-dashed border-white/10 p-5 text-sm text-slate-500">No browser playback is available after refresh. If already uploaded, the saved recording can still be evaluated.</div>}</div><div className="rounded-xl border border-blue-300/15 bg-blue-400/[0.04] p-4"><p className="text-sm font-semibold text-blue-50">Evaluation stages</p><div className="mt-4 space-y-3">{[{ label: "Uploading recording", active: busy || uploaded }, { label: "Transcribing presentation", active: busy }, { label: "Analyzing performance indicators", active: busy }, { label: "Analyzing delivery separately", active: busy }, { label: "Building scorecard", active: false }].map((stage) => <div key={stage.label} className="flex items-center gap-2 text-xs text-slate-300">{stage.active ? <Loader2 className="h-3.5 w-3.5 animate-spin text-blue-300" /> : <span className="h-3.5 w-3.5 rounded-full border border-slate-600" />}{stage.label}</div>)}</div></div></div></div><div className="flex flex-wrap justify-between gap-3"><Button variant="outline" disabled={busy} onClick={onBack} className="border-white/15 text-slate-300"><ArrowLeft className="mr-2 h-4 w-4" />Back to recording</Button><Button disabled={!canScore || busy} onClick={onScore} className="bg-blue-500 text-white hover:bg-blue-400">{busy ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Processing</> : <><BarChart3 className="mr-2 h-4 w-4" />Build scorecard</>}</Button></div></section>;
+  const stageOrder = ["uploading", "transcribing", "analyzing", "saving"];
+  const activeIndex = Math.max(0, stageOrder.indexOf(stage));
+  const progress = busy ? Math.max(12, ((activeIndex + 1) / stageOrder.length) * 90) : uploaded ? 100 : 0;
+  return <section className="space-y-5"><SectionHeading number="06" eyebrow="Submission & evaluation" title="Review the recording, then build your scorecard." text="Your original recording stays attached to this private attempt. If judging must retry, you can resume without recording again." /><div className="rounded-2xl border border-white/10 bg-slate-950/55 p-5 sm:p-6"><div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]"><div><h3 className="text-lg font-semibold text-white">Your roleplay recording</h3><p className="mt-2 text-sm leading-6 text-slate-400">Audio is used only to transcribe and evaluate this private attempt. Blue Blazer does not represent that it is used to train unrelated models.</p>{audioUrl ? <audio className="mt-5 w-full" controls src={audioUrl} /> : <div className="mt-5 rounded-xl border border-dashed border-white/10 p-5 text-sm text-slate-500">No browser playback is available after refresh. If already uploaded, the saved recording can still be evaluated.</div>}</div><div className="rounded-xl border border-blue-300/15 bg-blue-400/[0.04] p-4"><div className="flex items-center justify-between gap-3"><p className="text-sm font-semibold text-blue-50">Evaluation progress</p><span className="text-xs font-medium text-blue-200">{busy ? `${Math.round(progress)}%` : uploaded ? "Ready" : "Waiting"}</span></div><Progress value={progress} className="mt-3 bg-blue-950/70 [&>div]:bg-blue-400" /><div className="mt-4 space-y-3">{[{ label: "Saving original recording", state: "uploading" }, { label: "Transcribing presentation", state: "transcribing" }, { label: "Analyzing performance indicators and delivery", state: "analyzing" }, { label: "Saving your scorecard", state: "saving" }].map((item, index) => <div key={item.state} className="flex items-center gap-2 text-xs text-slate-300">{busy && index === activeIndex ? <Loader2 className="h-3.5 w-3.5 animate-spin text-blue-300" /> : ((busy && index < activeIndex) || (!busy && uploaded)) ? <CheckCircle2 className="h-3.5 w-3.5 text-emerald-300" /> : <span className="h-3.5 w-3.5 rounded-full border border-slate-600" />}{item.label}</div>)}</div><p className="mt-4 text-[11px] leading-5 text-slate-500">Keep this page open while Blue Blazer transcribes the presentation and verifies scoring evidence.</p></div></div></div><div className="flex flex-wrap justify-between gap-3"><Button variant="outline" disabled={busy} onClick={onBack} className="border-white/15 text-slate-300"><ArrowLeft className="mr-2 h-4 w-4" />Back to recording</Button><Button disabled={!canScore || busy} onClick={onScore} className="bg-blue-500 text-white hover:bg-blue-400">{busy ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Building scorecard</> : <><BarChart3 className="mr-2 h-4 w-4" />Build scorecard</>}</Button></div></section>;
 }
 
 function Results({ detail, loading, onNew, onDelete, deleting }: any) {

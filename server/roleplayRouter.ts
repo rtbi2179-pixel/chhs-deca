@@ -27,6 +27,7 @@ import { evaluateRoleplayTranscript, type ScenarioPi } from "./roleplayEngine";
 import { storageGet, storagePut } from "./storage";
 
 const ACTIVE_STATUSES = ["briefing", "preparing", "judge_intro", "interview", "follow_up", "submitted", "transcribing", "evaluating"] as const;
+export const ROLEPLAY_ATTEMPT_IDLE_LIMIT_MS = 60 * 60 * 1_000;
 const MAX_MEDIA_BYTES = 24 * 1024 * 1024;
 const MEDIA_CONTENT_TYPES = ["audio/webm", "audio/ogg", "audio/mp4", "audio/mpeg", "audio/wav", "video/webm", "video/mp4"] as const;
 
@@ -277,7 +278,26 @@ async function ownedAttempt(database: NonNullable<Awaited<ReturnType<typeof getD
   const [attempt] = await database.select().from(roleplayAttempts)
     .where(and(eq(roleplayAttempts.id, attemptId), eq(roleplayAttempts.userId, userId))).limit(1);
   if (!attempt) throw new TRPCError({ code: "NOT_FOUND", message: "That roleplay attempt was not found." });
+  if (await abandonExpiredAttempt(database, attempt)) {
+    throw new TRPCError({ code: "PRECONDITION_FAILED", message: "This Roleplay AI Judge session expired after more than one hour of inactivity. Start a new event from the AI Judge selection page." });
+  }
   return attempt;
+}
+
+export function isRoleplayAttemptExpired(attempt: Pick<typeof roleplayAttempts.$inferSelect, "status" | "updatedAt">, now = Date.now()) {
+  return ACTIVE_STATUSES.includes(attempt.status as typeof ACTIVE_STATUSES[number])
+    && Boolean(attempt.updatedAt)
+    && now - new Date(attempt.updatedAt).getTime() > ROLEPLAY_ATTEMPT_IDLE_LIMIT_MS;
+}
+
+async function abandonExpiredAttempt(database: NonNullable<Awaited<ReturnType<typeof getDb>>>, attempt: typeof roleplayAttempts.$inferSelect) {
+  if (!isRoleplayAttemptExpired(attempt)) return false;
+  await database.update(roleplayAttempts).set({
+    status: "abandoned",
+    failureReason: "This Roleplay AI Judge session expired after more than one hour of inactivity.",
+    updatedAt: new Date(),
+  }).where(eq(roleplayAttempts.id, attempt.id));
+  return true;
 }
 
 async function attemptDetail(database: NonNullable<Awaited<ReturnType<typeof getDb>>>, userId: number, attemptId: number) {
@@ -351,6 +371,7 @@ export const roleplayRouter = router({
     const [active] = await database.select().from(roleplayAttempts)
       .where(and(eq(roleplayAttempts.userId, ctx.user.id), inArray(roleplayAttempts.status, [...ACTIVE_STATUSES])))
       .orderBy(desc(roleplayAttempts.updatedAt)).limit(1);
+    if (active && await abandonExpiredAttempt(database, active)) return null;
     return active ? attemptDetail(database, ctx.user.id, active.id) : null;
   }),
 

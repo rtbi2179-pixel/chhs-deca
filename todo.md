@@ -10,3 +10,8 @@
 - [x] Reconcile the DECA question bank to the verified 50,000-record source and make displayed difficulty totals database-authoritative
 - [x] Restrict tour chapters to member workflows, hide chapter-management from normal members, and restrict diagnostics to Ricardo and Sahan
 - [x] Make the chapter leaderboard visibly available, add a global leaderboard view, and display credit-score history as a monthly trend
+- [x] Repair written and roleplay AI Judge submissions, add visible progress and clear evaluation results, improve judge navigation, and redirect expired judge sessions to event selection
+- [x] Verify and repair the Written AI Judge transcript and recorded-evidence evaluation actions end to end
+- [x] Complete AI Judge progress, result-discovery, title, and expired-session coverage with behavior-focused regressions
+- [x] Redirect fresh and expired AI Judge sessions to the selector, finish recorded-evidence progress, and align remaining roleplay naming
+- [x] Add direct workflow-state regression tests for both written evaluation paths and roleplay score/retry behavior

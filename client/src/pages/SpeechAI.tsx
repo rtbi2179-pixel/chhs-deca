@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Zap, ChevronRight } from 'lucide-react'
 import { useLocation } from 'wouter'
+import { markAiJudgeSelectorEntry } from "@/lib/aiJudgeSession"
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -14,7 +15,7 @@ const fadeUp = {
 const aiTools = [
   {
     href: '/ai/roleplay',
-    title: 'DECA Competition Simulation',
+    title: 'Roleplay AI Judge',
     description: 'Run a native, timed roleplay with original scenarios, recorded responses, evidence-based PI scoring, separate delivery coaching, and saved training recommendations.',
     icon: '',
     color: 'from-blue-600/20 to-blue-800/10',
@@ -24,7 +25,7 @@ const aiTools = [
   },
   {
     href: '/ai/written',
-    title: 'DECA AI Judge',
+    title: 'Written AI Judge',
     description: 'Review a presentation transcript against a verified event rubric, trace every assessed point to evidence, and receive separate coaching priorities.',
     icon: '',
     color: 'from-purple-600/20 to-purple-800/10',
@@ -51,7 +52,7 @@ export default function SpeechAI() {
             AI-Powered Training
           </div>
           <h1 className="font-display text-5xl sm:text-6xl text-white mb-4">
-            AI SPEECH TOOLS
+            AI JUDGE TOOLS
           </h1>
           <p className="text-white/50 text-lg max-w-2xl mx-auto">
             Leverage artificial intelligence to practice and perfect your DECA competitive event skills with instant feedback and coaching.
@@ -70,7 +71,7 @@ export default function SpeechAI() {
               variants={fadeUp}
             >
               <div
-                onClick={() => navigate(href)}
+                onClick={() => { markAiJudgeSelectorEntry(); navigate(href) }}
                 className={`group relative p-8 rounded-2xl bg-gradient-to-br ${color} border ${border} ${glow} transition-all duration-300 cursor-pointer overflow-hidden h-full flex flex-col justify-between`}
               >
                   {/* Shimmer on hover */}
